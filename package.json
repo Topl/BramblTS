@@ -1,0 +1,26 @@
+{
+  "name": "BramblTS",
+  "version": "1.0.0",
+  "description": "TypScript SDK for the Topl Blockchain",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "check": "npx prettier . --check",
+    "prettier": "npx prettier . --write",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MPL-2.0",
+  "devDependencies": {
+    "@types/node": "^20.5.4",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "eslint": "^8.47.0",
+    "eslint-config-prettier": "^9.0.0",
+    "prettier": "3.0.2",
+    "typescript": "^5.1.6"
+  }
+}
