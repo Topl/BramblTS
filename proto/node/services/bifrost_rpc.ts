@@ -3,14 +3,14 @@
  * compiler version: 3.6.1
  * source: node/services/bifrost_rpc.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
-import * as dependency_1 from "./../../models/transaction";
-import * as dependency_2 from "./../../consensus/models/block_id";
-import * as dependency_3 from "./../../consensus/models/block_header";
-import * as dependency_4 from "./../models/block";
-import * as dependency_5 from "./../../brambl/models/identifier";
-import * as dependency_6 from "./../../validate/validate";
-import * as dependency_7 from "./../../scalapb/scalapb";
-import * as dependency_8 from "./../../scalapb/validate";
+import * as dependency_1 from "../../models/transaction";
+import * as dependency_2 from "../../consensus/models/block_id";
+import * as dependency_3 from "../../consensus/models/block_header";
+import * as dependency_4 from "../models/block";
+import * as dependency_5 from "../../brambl/models/identifier";
+import * as dependency_6 from "../../validate/validate";
+import * as dependency_7 from "../../scalapb/scalapb";
+import * as dependency_8 from "../../scalapb/validate";
 import * as pb_1 from "google-protobuf";
 import * as grpc_1 from "@grpc/grpc-js";
 export namespace co.topl.node.services {

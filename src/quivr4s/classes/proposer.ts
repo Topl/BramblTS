@@ -1,21 +1,6 @@
-import { Int64, Int128 } from 'bson';
-import { Data, Digest, VerificationKey } from 'topl-common/proto/quivr/models/shared_pb';
-import {
-    Proposition,
-    Proposition_Locked,
-    Proposition_Digest,
-    Proposition_DigitalSignature,
-    Proposition_HeightRange,
-    Proposition_TickRange,
-    Proposition_ExactMatch,
-    Proposition_LessThan,
-    Proposition_GreaterThan,
-    Proposition_EqualTo,
-    Proposition_Threshold,
-    Proposition_Not,
-    Proposition_And,
-    Proposition_Or,
-} from 'topl-common/proto/quivr/models/proposition_pb';
+import * as dependency_1 from '../../../proto/models/verification_key.js';
+import * as dependency_2 from '../../../proto/quivr/models/proposition.js';
+import * as dependency_3 from '../../../proto/quivr/models/shared.js';
 
 /**
  * A class representing proposers for creating [Proposition]s from various arguments.
@@ -24,91 +9,91 @@ export class Proposer {
     /**
      * Returns a [Proposition] with the [Proposition_Locked] field set using the provided [data].
      */
-    static lockedProposer(data?: Data): Proposition {
-        return new Proposition().setLocked(new Proposition_Locked().setData(data));
+    static lockedProposer(data?: dependency_3.quivr.models.Data): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ locked: new dependency_2.quivr.models.Proposition.Locked({ data: data }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_Digest] field set using the provided [routine] and [digest].
      */
-    static digestProposer(routine: string, digest: Digest): Proposition {
-        return new Proposition().setDigest(new Proposition_Digest().setRoutine(routine).setDigest(digest));
+    static digestProposer(routine: string, digest: dependency_3.quivr.models.Digest): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ digest: new dependency_2.quivr.models.Proposition.Digest({ digest: digest, routine: routine, }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_DigitalSignature] field set using the provided [routine] and [verificationKey].
      */
-    static signatureProposer(routine: string, vk: VerificationKey): Proposition {
-        return new Proposition().setDigitalSignature(new Proposition_DigitalSignature().setRoutine(routine).setVerificationKey(vk));
+    static signatureProposer(routine: string, vk: dependency_1.co.topl.proto.models.VerificationKey): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ digitalSignature: new dependency_2.quivr.models.Proposition.DigitalSignature({ routine, verificationKey: vk }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_HeightRange] field set using the provided [chain], [min], and [max].
      */
-    static heightProposer(chain: string, min: Int64, max: Int64): Proposition {
-        return new Proposition().setHeightRange(new Proposition_HeightRange().setChain(chain).setMin(min).setMax(max));
+    static heightProposer(chain: string, min: number, max: number): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ heightRange: new dependency_2.quivr.models.Proposition.HeightRange({ chain, max, min }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_TickRange] field set using the provided [min] and [max].
      */
-    static tickProposer(min: Int64, max: Int64): Proposition {
-        return new Proposition().setTickRange(new Proposition_TickRange().setMin(min).setMax(max));
+    static tickProposer(min: number, max: number): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ tickRange: new dependency_2.quivr.models.Proposition.TickRange({ max, min }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_ExactMatch] field set using the provided [location] and [compareTo].
      */
-    static exactMatchProposer(location: string, compareTo: Uint8Array): Proposition {
-        return new Proposition().setExactMatch(new Proposition_ExactMatch().setLocation(location).setCompareTo(compareTo));
+    static exactMatchProposer(location: string, compareTo: Uint8Array): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ exactMatch: new dependency_2.quivr.models.Proposition.ExactMatch({ compareTo, location }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_LessThan] field set using the provided [location] and [compareTo].
      */
-    static lessThanProposer(location: string, compareTo: Int128): Proposition {
-        return new Proposition().setLessThan(new Proposition_LessThan().setLocation(location).setCompareTo(compareTo));
+    static lessThanProposer(location: string, compareTo: number): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ lessThan: new dependency_2.quivr.models.Proposition.LessThan({ compareTo, location }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_GreaterThan] field set using the provided [location] and [compareTo].
      */
-    static greaterThanProposer(location: string, compareTo: Int128): Proposition {
-        return new Proposition().setGreaterThan(new Proposition_GreaterThan().setLocation(location).setCompareTo(compareTo));
+    static greaterThanProposer(location: string, compareTo: number): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ greaterThan: new dependency_2.quivr.models.Proposition.GreaterThan({ compareTo, location }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_EqualTo] field set using the provided [location] and [compareTo].
      */
-    static equalToProposer(location: string, compareTo: Int128): Proposition {
-        return new Proposition().setEqualTo(new Proposition_EqualTo().setLocation(location).setCompareTo(compareTo));
+    static equalToProposer(location: string, compareTo: number): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ equalTo: new dependency_2.quivr.models.Proposition.EqualTo({ compareTo, location }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_Threshold] field set using the provided [challenges] and [threshold].
      */
-    static thresholdProposer(challenges: Proposition[], threshold: number): Proposition {
-        return new Proposition().setThreshold(new Proposition_Threshold().setChallengesList(challenges).setThreshold(threshold));
+    static thresholdProposer(challenges: dependency_2.quivr.models.Proposition[], threshold: number): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ threshold: new dependency_2.quivr.models.Proposition.Threshold({ challenges, threshold }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_Not] field set using the provided [not].
      */
-    static notProposer(not: Proposition): Proposition {
-        return new Proposition().setNot(new Proposition_Not().setProposition(not));
+    static notProposer(not: dependency_2.quivr.models.Proposition): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ not: new dependency_2.quivr.models.Proposition.Not({ proposition: not }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_And] field set using the provided [left] and [right].
      */
-    static andProposer(left: Proposition, right: Proposition): Proposition {
-        return new Proposition().setAnd(new Proposition_And().setLeft(left).setRight(right));
+    static andProposer(left: dependency_2.quivr.models.Proposition, right: dependency_2.quivr.models.Proposition): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ and: new dependency_2.quivr.models.Proposition.And({ left, right }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_Or] field set using the provided [left] and [right].
      */
-    static orProposer(left: Proposition, right: Proposition): Proposition {
-        return new Proposition().setOr(new Proposition_Or().setLeft(left).setRight(right));
+    static orProposer(left: dependency_2.quivr.models.Proposition, right: dependency_2.quivr.models.Proposition): dependency_2.quivr.models.Proposition {
+        return new dependency_2.quivr.models.Proposition({ or: new dependency_2.quivr.models.Proposition.Or({ left, right }) });
     }
 }
