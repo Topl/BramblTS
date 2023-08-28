@@ -22,5 +22,8 @@
     "eslint-config-prettier": "^9.0.0",
     "prettier": "3.0.2",
     "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "blakejs": "^1.2.1"
   }
 }

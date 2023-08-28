@@ -1,6 +1,6 @@
 import * as dependency_1 from '../../../proto/models/verification_key.js';
 import * as dependency_2 from '../../../proto/quivr/models/proposition.js';
-import * as dependency_3 from '../../../proto/quivr/models/shared.js';
+import * as shared from '../../../proto/quivr/models/shared.js';
 
 /**
  * A class representing proposers for creating [Proposition]s from various arguments.
@@ -9,14 +9,14 @@ export class Proposer {
     /**
      * Returns a [Proposition] with the [Proposition_Locked] field set using the provided [data].
      */
-    static lockedProposer(data?: dependency_3.quivr.models.Data): dependency_2.quivr.models.Proposition {
+    static lockedProposer(data?: shared.quivr.models.Data): dependency_2.quivr.models.Proposition {
         return new dependency_2.quivr.models.Proposition({ locked: new dependency_2.quivr.models.Proposition.Locked({ data: data }) });
     }
 
     /**
      * Returns a [Proposition] with the [Proposition_Digest] field set using the provided [routine] and [digest].
      */
-    static digestProposer(routine: string, digest: dependency_3.quivr.models.Digest): dependency_2.quivr.models.Proposition {
+    static digestProposer(routine: string, digest: shared.quivr.models.Digest): dependency_2.quivr.models.Proposition {
         return new dependency_2.quivr.models.Proposition({ digest: new dependency_2.quivr.models.Proposition.Digest({ digest: digest, routine: routine, }) });
     }
 
