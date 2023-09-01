@@ -1,10 +1,4 @@
-// import { blake2b256 } from 'hashlib';
-// import { Int8Array } from 'typedarray';
-// import { Proof, Proof_Locked, Proof_Digest, Proof_DigitalSignature, Proof_HeightRange, Proof_TickRange, Proof_ExactMatch, Proof_LessThan, Proof_GreaterThan, Proof_EqualTo, Proof_Threshold, Proof_Not, Proof_And, Proof_Or } from 'proof.pb';
-// import { TxBind } from 'shared.pb';
-// import { Tokens } from 'tokens';
-import * as shared from '../../../proto/quivr/models/shared.js';
-import * as proof from '../../../proto/quivr/models/proof.js';
+import { Preimage, Proof, SignableBytes, TxBind, Witness } from '../common/types.js';
 import { Tokens } from './tokens.js';
 import { blake2b } from 'blakejs';
 
@@ -18,74 +12,74 @@ export class Prover {
     /// [tag] is an identifier of the Operation
     /// [message] unique bytes from a transaction that will be bound to the proof
     /// @return [TxBind] / array of bytes that is similar to a "signature" for the proof
-    private static _blake2b56ToTxBind(tag: string, message: shared.quivr.models.SignableBytes): shared.quivr.models.TxBind {
+    private static _blake2b56ToTxBind(tag: string, message: SignableBytes): TxBind {
         const encoder = new TextEncoder();
         const m = new Uint8Array([...encoder.encode(tag), ...message.value]);
         const h = blake2b(m);
-        return new shared.quivr.models.TxBind({ value: h });
+        return new TxBind({ value: h });
     }
 
-    public static lockedProver(): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ locked: new proof.quivr.models.Proof.Locked() });
+    public static lockedProver(): Proof {
+        return new Proof({ locked: new Proof.Locked() });
     }
 
-    public static digestProver(preimage: shared.quivr.models.Preimage, message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ digest: new proof.quivr.models.Proof.Digest({ preimage, transactionBind: this._blake2b56ToTxBind(Tokens.digest, message) }) });
-
-    }
-
-    public static signatureProver(witness: shared.quivr.models.Witness, message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ digitalSignature: new proof.quivr.models.Proof.DigitalSignature({ witness, transactionBind: this._blake2b56ToTxBind(Tokens.digitalSignature, message) }) });
+    public static digestProver(preimage: Preimage, message: SignableBytes): Proof {
+        return new Proof({ digest: new Proof.Digest({ preimage, transactionBind: this._blake2b56ToTxBind(Tokens.digest, message) }) });
 
     }
 
-    public static heightProver(message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ heightRange: new proof.quivr.models.Proof.HeightRange({ transactionBind: this._blake2b56ToTxBind(Tokens.heightRange, message) }) });
+    public static signatureProver(witness: Witness, message: SignableBytes): Proof {
+        return new Proof({ digitalSignature: new Proof.DigitalSignature({ witness, transactionBind: this._blake2b56ToTxBind(Tokens.digitalSignature, message) }) });
 
     }
 
-    public static tickProver(message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ tickRange: new proof.quivr.models.Proof.TickRange({ transactionBind: this._blake2b56ToTxBind(Tokens.tickRange, message) }) });
+    public static heightProver(message: SignableBytes): Proof {
+        return new Proof({ heightRange: new Proof.HeightRange({ transactionBind: this._blake2b56ToTxBind(Tokens.heightRange, message) }) });
+
+    }
+
+    public static tickProver(message: SignableBytes): Proof {
+        return new Proof({ tickRange: new Proof.TickRange({ transactionBind: this._blake2b56ToTxBind(Tokens.tickRange, message) }) });
 
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public static exactMatchProver(message: shared.quivr.models.SignableBytes, compareTo: Int8Array): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ exactMatch: new proof.quivr.models.Proof.ExactMatch({ transactionBind: this._blake2b56ToTxBind(Tokens.exactMatch, message) }) });
+    public static exactMatchProver(message: SignableBytes, compareTo: Int8Array): Proof {
+        return new Proof({ exactMatch: new Proof.ExactMatch({ transactionBind: this._blake2b56ToTxBind(Tokens.exactMatch, message) }) });
 
     }
 
-    public static lessThanProver(message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ lessThan: new proof.quivr.models.Proof.LessThan({ transactionBind: this._blake2b56ToTxBind(Tokens.lessThan, message) }) });
+    public static lessThanProver(message: SignableBytes): Proof {
+        return new Proof({ lessThan: new Proof.LessThan({ transactionBind: this._blake2b56ToTxBind(Tokens.lessThan, message) }) });
 
     }
 
-    public static greaterThanProver(message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ greaterThan: new proof.quivr.models.Proof.GreaterThan({ transactionBind: this._blake2b56ToTxBind(Tokens.greaterThan, message) }) });
+    public static greaterThanProver(message: SignableBytes): Proof {
+        return new Proof({ greaterThan: new Proof.GreaterThan({ transactionBind: this._blake2b56ToTxBind(Tokens.greaterThan, message) }) });
 
     }
 
-    public static equalToProver(location: string, message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ equalTo: new proof.quivr.models.Proof.EqualTo({ transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) }) });
+    public static equalToProver(location: string, message: SignableBytes): Proof {
+        return new Proof({ equalTo: new Proof.EqualTo({ transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) }) });
 
     }
 
-    public static thresholdProver(responses: proof.quivr.models.Proof[], message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ threshold: new proof.quivr.models.Proof.Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) }) });
+    public static thresholdProver(responses: Proof[], message: SignableBytes): Proof {
+        return new Proof({ threshold: new Proof.Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) }) });
 
     }
 
-    public static notProver(responses: proof.quivr.models.Proof[], message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ threshold: new proof.quivr.models.Proof.Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.not, message) }) });
+    public static notProver(responses: Proof[], message: SignableBytes): Proof {
+        return new Proof({ threshold: new Proof.Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.not, message) }) });
     }
 
-    public static andProver(left: proof.quivr.models.Proof, right: proof.quivr.models.Proof, message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ and: new proof.quivr.models.Proof.And({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.and, message) }) });
+    public static andProver(left: Proof, right: Proof, message: SignableBytes): Proof {
+        return new Proof({ and: new Proof.And({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.and, message) }) });
 
     }
 
-    public static orProver(left: proof.quivr.models.Proof, right: proof.quivr.models.Proof, message: shared.quivr.models.SignableBytes): proof.quivr.models.Proof {
-        return new proof.quivr.models.Proof({ or: new proof.quivr.models.Proof.Or({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.or, message) }) });
+    public static orProver(left: Proof, right: Proof, message: SignableBytes): Proof {
+        return new Proof({ or: new Proof.Or({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.or, message) }) });
 
     }
 }

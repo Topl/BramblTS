@@ -1,41 +1,5 @@
-interface Datum {
-    [key: string]: any;
-}
+import * as datum from '../../../proto/brambl/models/datum.js'
 
-interface ParsableDataInterface {
-    parse(data: any): Datum;
-}
-
-interface SignatureVerifier {
-    validate(verification: SignatureVerification): QuivrResult<SignatureVerification>;
-}
-
-interface DigestVerifier {
-    validate(verification: DigestVerification): QuivrResult<DigestVerification>;
-}
-
-interface SignableBytes {
-    [key: string]: any;
-}
-
-interface QuivrResult<T> {
-    isLeft: boolean;
-    left: any;
-    right: T;
-}
-
-interface DigestVerification {
-    [key: string]: any;
-}
-
-interface SignatureVerification {
-    [key: string]: any;
-}
-
-interface Data {
-    value: any;
-    toBigInt: number;
-}
 
 enum ContextError {
     failedToFindDigestVerifier,
@@ -44,7 +8,7 @@ enum ContextError {
 }
 
 export class DynamicContext {
-    datum: Map<string, Datum | null>;
+    datum: Map<string, datum.co.topl.brambl.models.Datum | null>;
     interfaces: Map<string, ParsableDataInterface>;
     signingRoutines: Map<string, SignatureVerifier>;
     hashingRoutines: Map<string, DigestVerifier>;
@@ -53,7 +17,7 @@ export class DynamicContext {
     heightOf?: (arg0: string) => number | null;
 
     constructor(
-        datum: Map<string, Datum | null>,
+        datum: Map<string, datum.co.topl.brambl.models.Datum | null>,
         interfaces: Map<string, ParsableDataInterface>,
         signingRoutines: Map<string, SignatureVerifier>,
         hashingRoutines: Map<string, DigestVerifier>,

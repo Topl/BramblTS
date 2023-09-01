@@ -24,6 +24,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "blakejs": "^1.2.1"
+    "blakejs": "^1.2.1",
+    "fp-ts": "^2.16.1"
   }
 }
