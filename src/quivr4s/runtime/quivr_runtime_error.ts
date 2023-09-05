@@ -52,6 +52,39 @@ export class ValidationError implements QuivrRunTimeError {
             }
         );
     }
+
+    static failedToFindDigestVerifier({ name, message }: { name: string, message: string, }): ValidationError {
+        return new ValidationError(
+            {
+                type: ValidationErrorType.failedToFindDigestVerifier,
+                message: message,
+                name: name,
+            }
+        );
+    }
+
+
+    static failedToFindSignatureVerifier({ name, message }: { name: string, message: string, }): ValidationError {
+        return new ValidationError(
+            {
+                type: ValidationErrorType.failedToFindSignatureVerifier,
+                message: message,
+                name: name,
+            }
+        );
+    }
+
+    static failedToFindInterface({ name, message }: { name: string, message: string, }): ValidationError {
+        return new ValidationError(
+            {
+                type: ValidationErrorType.failedToFindInterface,
+                message: message,
+                name: name,
+            }
+        );
+    }
+
+
     toString(): string {
         return `ContextError{message: ${this.message}, type: ${this.type}}`;
     }
@@ -61,7 +94,10 @@ enum ValidationErrorType {
     evaluationAuthorizationFailure,
     messageAuthorizationFailure,
     lockedPropositionIsUnsatisfiable,
-    userProvidedInterfaceFailure
+    userProvidedInterfaceFailure,
+    failedToFindDigestVerifier,
+    failedToFindSignatureVerifier,
+    failedToFindInterface,
 }
 
 
