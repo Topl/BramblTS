@@ -1,14 +1,14 @@
-import * as data from '../../../proto/quivr/models/shared.js'
+import { Data } from './types.js';
 
 /// Provides Digest verification for use in a Dynamic Context
-export class ParsableDataInterface {
-    data: data.quivr.models.Data;
+export class ParsableDataInterface<T> {
+    data: Data;
 
-    constructor(data: data.quivr.models.Data) {
+    constructor(data: Data) {
         this.data = data;
     }
 
-    parse(f: (data: data.quivr.models.Data) => T): T {
+    parse(f: (data: Data) => T): T {
         return f(this.data);
     }
 }
