@@ -24,7 +24,7 @@ export class Verifier {
         const result = arraysEqual(verifierTxBind, proofTxBind.value);
 
 
-        return result ? either.left(ValidationError.messageAuthorizationFailure({ name: 'QQQQ', message: 'QQQQ' })) : either.right(result);
+        return result ? either.left(ValidationError.messageAuthorizationFailure({ name: 'Blake2b256Bind', message: 'Error in evaluating Blake2b256Bind' })) : either.right(result);
     }
 
 
@@ -54,8 +54,8 @@ export class Verifier {
     static verifyLocked(
     ): QuivrResult<boolean> {
         return either.left(ValidationError.lockedPropositionIsUnsatisfiable({
-            name: 'QQQQ',
-            message: 'QQQQ',
+            name: 'Locked',
+            message: 'Locked proposition is unsatisfiable',
         }));
     }
 
