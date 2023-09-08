@@ -3,12 +3,12 @@
  * compiler version: 3.6.1
  * source: node/models/block.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
-import * as dependency_1 from "./../../consensus/models/block_header";
-import * as dependency_2 from "./../../brambl/models/transaction/io_transaction";
-import * as dependency_3 from "./../../brambl/models/identifier";
-import * as dependency_4 from "./../../validate/validate";
-import * as dependency_5 from "./../../scalapb/scalapb";
-import * as dependency_6 from "./../../scalapb/validate";
+import * as dependency_1 from "../../consensus/models/block_header";
+import * as dependency_2 from "../../brambl/models/transaction/io_transaction";
+import * as dependency_3 from "../../brambl/models/identifier";
+import * as dependency_4 from "../../validate/validate";
+import * as dependency_5 from "../../scalapb/scalapb";
+import * as dependency_6 from "../../scalapb/validate";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.node.models {
     export class BlockBody extends pb_1.Message {
