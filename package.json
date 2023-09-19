@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "blakejs": "^1.2.1",
-    "fp-ts": "^2.16.1"
+    "fp-ts": "^2.16.1",
+    "google-protobuf": "^3.21.2"
   }
 }
