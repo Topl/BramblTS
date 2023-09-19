@@ -68,3 +68,20 @@ interface Option<T> {
     }
   }
   
+  type Either<L, R> = { kind: "Left", value: L } | { kind: "Right", value: R };
+  
+  class EitherException extends Error {
+    constructor(public readonly message: string) {
+      super(message);
+    }
+  
+    static rightIsUndefined() {
+      return new EitherException("Right value is undefined!");
+    }
+  
+    toString(): string {
+      return `EitherException{message: ${this.message}}`;
+    }
+  }
+  
+  class Unit { }  
