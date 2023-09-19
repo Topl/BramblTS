@@ -4,82 +4,207 @@
  * source: brambl/models/box/value.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../../validate/validate";
-import * as dependency_2 from "./../../../scalapb/scalapb";
-import * as dependency_3 from "./../../../scalapb/validate";
-import * as dependency_4 from "./../../../quivr/models/shared";
+import * as dependency_2 from "./../../../quivr/models/shared";
+import * as dependency_3 from "./../../../consensus/models/staking";
+import * as dependency_4 from "./../../../node/models/ratio";
+import * as dependency_5 from "./../identifier";
+import * as dependency_6 from "./asset";
+import * as dependency_7 from "./../../../google/protobuf/duration";
+import * as dependency_8 from "./../../../google/protobuf/wrappers";
+import * as dependency_9 from "./../../../google/protobuf/struct";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models.box {
     export class Value extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2]];
+        #one_of_decls: number[][] = [[1, 2, 3, 4, 5, 6]];
         constructor(data?: any[] | ({} & (({
-            token?: Value.Token;
+            lvl?: Value.LVL;
+            topl?: never;
             asset?: never;
+            group?: never;
+            series?: never;
+            updateProposal?: never;
         } | {
-            token?: never;
+            lvl?: never;
+            topl?: Value.TOPL;
+            asset?: never;
+            group?: never;
+            series?: never;
+            updateProposal?: never;
+        } | {
+            lvl?: never;
+            topl?: never;
             asset?: Value.Asset;
+            group?: never;
+            series?: never;
+            updateProposal?: never;
+        } | {
+            lvl?: never;
+            topl?: never;
+            asset?: never;
+            group?: Value.Group;
+            series?: never;
+            updateProposal?: never;
+        } | {
+            lvl?: never;
+            topl?: never;
+            asset?: never;
+            group?: never;
+            series?: Value.Series;
+            updateProposal?: never;
+        } | {
+            lvl?: never;
+            topl?: never;
+            asset?: never;
+            group?: never;
+            series?: never;
+            updateProposal?: Value.UpdateProposal;
         })))) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("token" in data && data.token != undefined) {
-                    this.token = data.token;
+                if ("lvl" in data && data.lvl != undefined) {
+                    this.lvl = data.lvl;
+                }
+                if ("topl" in data && data.topl != undefined) {
+                    this.topl = data.topl;
                 }
                 if ("asset" in data && data.asset != undefined) {
                     this.asset = data.asset;
                 }
+                if ("group" in data && data.group != undefined) {
+                    this.group = data.group;
+                }
+                if ("series" in data && data.series != undefined) {
+                    this.series = data.series;
+                }
+                if ("updateProposal" in data && data.updateProposal != undefined) {
+                    this.updateProposal = data.updateProposal;
+                }
             }
         }
-        get token() {
-            return pb_1.Message.getWrapperField(this, Value.Token, 1) as Value.Token;
+        get lvl() {
+            return pb_1.Message.getWrapperField(this, Value.LVL, 1) as Value.LVL;
         }
-        set token(value: Value.Token) {
+        set lvl(value: Value.LVL) {
             pb_1.Message.setOneofWrapperField(this, 1, this.#one_of_decls[0], value);
         }
-        get has_token() {
+        get has_lvl() {
             return pb_1.Message.getField(this, 1) != null;
         }
-        get asset() {
-            return pb_1.Message.getWrapperField(this, Value.Asset, 2) as Value.Asset;
+        get topl() {
+            return pb_1.Message.getWrapperField(this, Value.TOPL, 2) as Value.TOPL;
         }
-        set asset(value: Value.Asset) {
+        set topl(value: Value.TOPL) {
             pb_1.Message.setOneofWrapperField(this, 2, this.#one_of_decls[0], value);
         }
-        get has_asset() {
+        get has_topl() {
             return pb_1.Message.getField(this, 2) != null;
+        }
+        get asset() {
+            return pb_1.Message.getWrapperField(this, Value.Asset, 3) as Value.Asset;
+        }
+        set asset(value: Value.Asset) {
+            pb_1.Message.setOneofWrapperField(this, 3, this.#one_of_decls[0], value);
+        }
+        get has_asset() {
+            return pb_1.Message.getField(this, 3) != null;
+        }
+        get group() {
+            return pb_1.Message.getWrapperField(this, Value.Group, 4) as Value.Group;
+        }
+        set group(value: Value.Group) {
+            pb_1.Message.setOneofWrapperField(this, 4, this.#one_of_decls[0], value);
+        }
+        get has_group() {
+            return pb_1.Message.getField(this, 4) != null;
+        }
+        get series() {
+            return pb_1.Message.getWrapperField(this, Value.Series, 5) as Value.Series;
+        }
+        set series(value: Value.Series) {
+            pb_1.Message.setOneofWrapperField(this, 5, this.#one_of_decls[0], value);
+        }
+        get has_series() {
+            return pb_1.Message.getField(this, 5) != null;
+        }
+        get updateProposal() {
+            return pb_1.Message.getWrapperField(this, Value.UpdateProposal, 6) as Value.UpdateProposal;
+        }
+        set updateProposal(value: Value.UpdateProposal) {
+            pb_1.Message.setOneofWrapperField(this, 6, this.#one_of_decls[0], value);
+        }
+        get has_updateProposal() {
+            return pb_1.Message.getField(this, 6) != null;
         }
         get value() {
             const cases: {
-                [index: number]: "none" | "token" | "asset";
+                [index: number]: "none" | "lvl" | "topl" | "asset" | "group" | "series" | "updateProposal";
             } = {
                 0: "none",
-                1: "token",
-                2: "asset"
+                1: "lvl",
+                2: "topl",
+                3: "asset",
+                4: "group",
+                5: "series",
+                6: "updateProposal"
             };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2])];
+            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5, 6])];
         }
         static fromObject(data: {
-            token?: ReturnType<typeof Value.Token.prototype.toObject>;
+            lvl?: ReturnType<typeof Value.LVL.prototype.toObject>;
+            topl?: ReturnType<typeof Value.TOPL.prototype.toObject>;
             asset?: ReturnType<typeof Value.Asset.prototype.toObject>;
+            group?: ReturnType<typeof Value.Group.prototype.toObject>;
+            series?: ReturnType<typeof Value.Series.prototype.toObject>;
+            updateProposal?: ReturnType<typeof Value.UpdateProposal.prototype.toObject>;
         }): Value {
             const message = new Value({});
-            if (data.token != null) {
-                message.token = Value.Token.fromObject(data.token);
+            if (data.lvl != null) {
+                message.lvl = Value.LVL.fromObject(data.lvl);
+            }
+            if (data.topl != null) {
+                message.topl = Value.TOPL.fromObject(data.topl);
             }
             if (data.asset != null) {
                 message.asset = Value.Asset.fromObject(data.asset);
+            }
+            if (data.group != null) {
+                message.group = Value.Group.fromObject(data.group);
+            }
+            if (data.series != null) {
+                message.series = Value.Series.fromObject(data.series);
+            }
+            if (data.updateProposal != null) {
+                message.updateProposal = Value.UpdateProposal.fromObject(data.updateProposal);
             }
             return message;
         }
         toObject() {
             const data: {
-                token?: ReturnType<typeof Value.Token.prototype.toObject>;
+                lvl?: ReturnType<typeof Value.LVL.prototype.toObject>;
+                topl?: ReturnType<typeof Value.TOPL.prototype.toObject>;
                 asset?: ReturnType<typeof Value.Asset.prototype.toObject>;
+                group?: ReturnType<typeof Value.Group.prototype.toObject>;
+                series?: ReturnType<typeof Value.Series.prototype.toObject>;
+                updateProposal?: ReturnType<typeof Value.UpdateProposal.prototype.toObject>;
             } = {};
-            if (this.token != null) {
-                data.token = this.token.toObject();
+            if (this.lvl != null) {
+                data.lvl = this.lvl.toObject();
+            }
+            if (this.topl != null) {
+                data.topl = this.topl.toObject();
             }
             if (this.asset != null) {
                 data.asset = this.asset.toObject();
+            }
+            if (this.group != null) {
+                data.group = this.group.toObject();
+            }
+            if (this.series != null) {
+                data.series = this.series.toObject();
+            }
+            if (this.updateProposal != null) {
+                data.updateProposal = this.updateProposal.toObject();
             }
             return data;
         }
@@ -87,10 +212,18 @@ export namespace co.topl.brambl.models.box {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.has_token)
-                writer.writeMessage(1, this.token, () => this.token.serialize(writer));
+            if (this.has_lvl)
+                writer.writeMessage(1, this.lvl, () => this.lvl.serialize(writer));
+            if (this.has_topl)
+                writer.writeMessage(2, this.topl, () => this.topl.serialize(writer));
             if (this.has_asset)
-                writer.writeMessage(2, this.asset, () => this.asset.serialize(writer));
+                writer.writeMessage(3, this.asset, () => this.asset.serialize(writer));
+            if (this.has_group)
+                writer.writeMessage(4, this.group, () => this.group.serialize(writer));
+            if (this.has_series)
+                writer.writeMessage(5, this.series, () => this.series.serialize(writer));
+            if (this.has_updateProposal)
+                writer.writeMessage(6, this.updateProposal, () => this.updateProposal.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -101,10 +234,22 @@ export namespace co.topl.brambl.models.box {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.token, () => message.token = Value.Token.deserialize(reader));
+                        reader.readMessage(message.lvl, () => message.lvl = Value.LVL.deserialize(reader));
                         break;
                     case 2:
+                        reader.readMessage(message.topl, () => message.topl = Value.TOPL.deserialize(reader));
+                        break;
+                    case 3:
                         reader.readMessage(message.asset, () => message.asset = Value.Asset.deserialize(reader));
+                        break;
+                    case 4:
+                        reader.readMessage(message.group, () => message.group = Value.Group.deserialize(reader));
+                        break;
+                    case 5:
+                        reader.readMessage(message.series, () => message.series = Value.Series.deserialize(reader));
+                        break;
+                    case 6:
+                        reader.readMessage(message.updateProposal, () => message.updateProposal = Value.UpdateProposal.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -119,10 +264,10 @@ export namespace co.topl.brambl.models.box {
         }
     }
     export namespace Value {
-        export class Token extends pb_1.Message {
+        export class LVL extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                quantity?: dependency_4.quivr.models.Int128;
+                quantity?: dependency_2.quivr.models.Int128;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -133,26 +278,26 @@ export namespace co.topl.brambl.models.box {
                 }
             }
             get quantity() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.Int128, 1) as dependency_4.quivr.models.Int128;
+                return pb_1.Message.getWrapperField(this, dependency_2.quivr.models.Int128, 1) as dependency_2.quivr.models.Int128;
             }
-            set quantity(value: dependency_4.quivr.models.Int128) {
+            set quantity(value: dependency_2.quivr.models.Int128) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_quantity() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                quantity?: ReturnType<typeof dependency_4.quivr.models.Int128.prototype.toObject>;
-            }): Token {
-                const message = new Token({});
+                quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+            }): LVL {
+                const message = new LVL({});
                 if (data.quantity != null) {
-                    message.quantity = dependency_4.quivr.models.Int128.fromObject(data.quantity);
+                    message.quantity = dependency_2.quivr.models.Int128.fromObject(data.quantity);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    quantity?: ReturnType<typeof dependency_4.quivr.models.Int128.prototype.toObject>;
+                    quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
                 } = {};
                 if (this.quantity != null) {
                     data.quantity = this.quantity.toObject();
@@ -168,14 +313,14 @@ export namespace co.topl.brambl.models.box {
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Token {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Token();
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): LVL {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new LVL();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.quantity, () => message.quantity = dependency_4.quivr.models.Int128.deserialize(reader));
+                            reader.readMessage(message.quantity, () => message.quantity = dependency_2.quivr.models.Int128.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -185,86 +330,68 @@ export namespace co.topl.brambl.models.box {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): Token {
-                return Token.deserialize(bytes);
+            static deserializeBinary(bytes: Uint8Array): LVL {
+                return LVL.deserialize(bytes);
             }
         }
-        export class Asset extends pb_1.Message {
+        export class TOPL extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                label?: string;
-                quantity?: dependency_4.quivr.models.Int128;
-                metadata?: dependency_4.quivr.models.SmallData;
+                quantity?: dependency_2.quivr.models.Int128;
+                registration?: dependency_3.co.topl.consensus.models.StakingRegistration;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
                 if (!Array.isArray(data) && typeof data == "object") {
-                    if ("label" in data && data.label != undefined) {
-                        this.label = data.label;
-                    }
                     if ("quantity" in data && data.quantity != undefined) {
                         this.quantity = data.quantity;
                     }
-                    if ("metadata" in data && data.metadata != undefined) {
-                        this.metadata = data.metadata;
+                    if ("registration" in data && data.registration != undefined) {
+                        this.registration = data.registration;
                     }
                 }
             }
-            get label() {
-                return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
-            }
-            set label(value: string) {
-                pb_1.Message.setField(this, 1, value);
-            }
             get quantity() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.Int128, 2) as dependency_4.quivr.models.Int128;
+                return pb_1.Message.getWrapperField(this, dependency_2.quivr.models.Int128, 1) as dependency_2.quivr.models.Int128;
             }
-            set quantity(value: dependency_4.quivr.models.Int128) {
-                pb_1.Message.setWrapperField(this, 2, value);
+            set quantity(value: dependency_2.quivr.models.Int128) {
+                pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_quantity() {
-                return pb_1.Message.getField(this, 2) != null;
+                return pb_1.Message.getField(this, 1) != null;
             }
-            get metadata() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.SmallData, 3) as dependency_4.quivr.models.SmallData;
+            get registration() {
+                return pb_1.Message.getWrapperField(this, dependency_3.co.topl.consensus.models.StakingRegistration, 3) as dependency_3.co.topl.consensus.models.StakingRegistration;
             }
-            set metadata(value: dependency_4.quivr.models.SmallData) {
+            set registration(value: dependency_3.co.topl.consensus.models.StakingRegistration) {
                 pb_1.Message.setWrapperField(this, 3, value);
             }
-            get has_metadata() {
+            get has_registration() {
                 return pb_1.Message.getField(this, 3) != null;
             }
             static fromObject(data: {
-                label?: string;
-                quantity?: ReturnType<typeof dependency_4.quivr.models.Int128.prototype.toObject>;
-                metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
-            }): Asset {
-                const message = new Asset({});
-                if (data.label != null) {
-                    message.label = data.label;
-                }
+                quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                registration?: ReturnType<typeof dependency_3.co.topl.consensus.models.StakingRegistration.prototype.toObject>;
+            }): TOPL {
+                const message = new TOPL({});
                 if (data.quantity != null) {
-                    message.quantity = dependency_4.quivr.models.Int128.fromObject(data.quantity);
+                    message.quantity = dependency_2.quivr.models.Int128.fromObject(data.quantity);
                 }
-                if (data.metadata != null) {
-                    message.metadata = dependency_4.quivr.models.SmallData.fromObject(data.metadata);
+                if (data.registration != null) {
+                    message.registration = dependency_3.co.topl.consensus.models.StakingRegistration.fromObject(data.registration);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    label?: string;
-                    quantity?: ReturnType<typeof dependency_4.quivr.models.Int128.prototype.toObject>;
-                    metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
+                    quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                    registration?: ReturnType<typeof dependency_3.co.topl.consensus.models.StakingRegistration.prototype.toObject>;
                 } = {};
-                if (this.label != null) {
-                    data.label = this.label;
-                }
                 if (this.quantity != null) {
                     data.quantity = this.quantity.toObject();
                 }
-                if (this.metadata != null) {
-                    data.metadata = this.metadata.toObject();
+                if (this.registration != null) {
+                    data.registration = this.registration.toObject();
                 }
                 return data;
             }
@@ -272,12 +399,261 @@ export namespace co.topl.brambl.models.box {
             serialize(w: pb_1.BinaryWriter): void;
             serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
                 const writer = w || new pb_1.BinaryWriter();
-                if (this.label.length)
-                    writer.writeString(1, this.label);
                 if (this.has_quantity)
-                    writer.writeMessage(2, this.quantity, () => this.quantity.serialize(writer));
-                if (this.has_metadata)
-                    writer.writeMessage(3, this.metadata, () => this.metadata.serialize(writer));
+                    writer.writeMessage(1, this.quantity, () => this.quantity.serialize(writer));
+                if (this.has_registration)
+                    writer.writeMessage(3, this.registration, () => this.registration.serialize(writer));
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TOPL {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TOPL();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            reader.readMessage(message.quantity, () => message.quantity = dependency_2.quivr.models.Int128.deserialize(reader));
+                            break;
+                        case 3:
+                            reader.readMessage(message.registration, () => message.registration = dependency_3.co.topl.consensus.models.StakingRegistration.deserialize(reader));
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): TOPL {
+                return TOPL.deserialize(bytes);
+            }
+        }
+        export class Asset extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                groupId?: dependency_5.co.topl.brambl.models.GroupId;
+                seriesId?: dependency_5.co.topl.brambl.models.SeriesId;
+                quantity?: dependency_2.quivr.models.Int128;
+                groupAlloy?: dependency_8.google.protobuf.BytesValue;
+                seriesAlloy?: dependency_8.google.protobuf.BytesValue;
+                fungibility?: dependency_6.co.topl.brambl.models.box.FungibilityType;
+                quantityDescriptor?: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+                ephemeralMetadata?: dependency_9.google.protobuf.Struct;
+                commitment?: dependency_8.google.protobuf.BytesValue;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("groupId" in data && data.groupId != undefined) {
+                        this.groupId = data.groupId;
+                    }
+                    if ("seriesId" in data && data.seriesId != undefined) {
+                        this.seriesId = data.seriesId;
+                    }
+                    if ("quantity" in data && data.quantity != undefined) {
+                        this.quantity = data.quantity;
+                    }
+                    if ("groupAlloy" in data && data.groupAlloy != undefined) {
+                        this.groupAlloy = data.groupAlloy;
+                    }
+                    if ("seriesAlloy" in data && data.seriesAlloy != undefined) {
+                        this.seriesAlloy = data.seriesAlloy;
+                    }
+                    if ("fungibility" in data && data.fungibility != undefined) {
+                        this.fungibility = data.fungibility;
+                    }
+                    if ("quantityDescriptor" in data && data.quantityDescriptor != undefined) {
+                        this.quantityDescriptor = data.quantityDescriptor;
+                    }
+                    if ("ephemeralMetadata" in data && data.ephemeralMetadata != undefined) {
+                        this.ephemeralMetadata = data.ephemeralMetadata;
+                    }
+                    if ("commitment" in data && data.commitment != undefined) {
+                        this.commitment = data.commitment;
+                    }
+                }
+            }
+            get groupId() {
+                return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.GroupId, 1) as dependency_5.co.topl.brambl.models.GroupId;
+            }
+            set groupId(value: dependency_5.co.topl.brambl.models.GroupId) {
+                pb_1.Message.setWrapperField(this, 1, value);
+            }
+            get has_groupId() {
+                return pb_1.Message.getField(this, 1) != null;
+            }
+            get seriesId() {
+                return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.SeriesId, 2) as dependency_5.co.topl.brambl.models.SeriesId;
+            }
+            set seriesId(value: dependency_5.co.topl.brambl.models.SeriesId) {
+                pb_1.Message.setWrapperField(this, 2, value);
+            }
+            get has_seriesId() {
+                return pb_1.Message.getField(this, 2) != null;
+            }
+            get quantity() {
+                return pb_1.Message.getWrapperField(this, dependency_2.quivr.models.Int128, 3) as dependency_2.quivr.models.Int128;
+            }
+            set quantity(value: dependency_2.quivr.models.Int128) {
+                pb_1.Message.setWrapperField(this, 3, value);
+            }
+            get has_quantity() {
+                return pb_1.Message.getField(this, 3) != null;
+            }
+            get groupAlloy() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.BytesValue, 4) as dependency_8.google.protobuf.BytesValue;
+            }
+            set groupAlloy(value: dependency_8.google.protobuf.BytesValue) {
+                pb_1.Message.setWrapperField(this, 4, value);
+            }
+            get has_groupAlloy() {
+                return pb_1.Message.getField(this, 4) != null;
+            }
+            get seriesAlloy() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.BytesValue, 5) as dependency_8.google.protobuf.BytesValue;
+            }
+            set seriesAlloy(value: dependency_8.google.protobuf.BytesValue) {
+                pb_1.Message.setWrapperField(this, 5, value);
+            }
+            get has_seriesAlloy() {
+                return pb_1.Message.getField(this, 5) != null;
+            }
+            get fungibility() {
+                return pb_1.Message.getFieldWithDefault(this, 6, dependency_6.co.topl.brambl.models.box.FungibilityType.GROUP_AND_SERIES) as dependency_6.co.topl.brambl.models.box.FungibilityType;
+            }
+            set fungibility(value: dependency_6.co.topl.brambl.models.box.FungibilityType) {
+                pb_1.Message.setField(this, 6, value);
+            }
+            get quantityDescriptor() {
+                return pb_1.Message.getFieldWithDefault(this, 7, dependency_6.co.topl.brambl.models.box.QuantityDescriptorType.LIQUID) as dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+            }
+            set quantityDescriptor(value: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType) {
+                pb_1.Message.setField(this, 7, value);
+            }
+            get ephemeralMetadata() {
+                return pb_1.Message.getWrapperField(this, dependency_9.google.protobuf.Struct, 8) as dependency_9.google.protobuf.Struct;
+            }
+            set ephemeralMetadata(value: dependency_9.google.protobuf.Struct) {
+                pb_1.Message.setWrapperField(this, 8, value);
+            }
+            get has_ephemeralMetadata() {
+                return pb_1.Message.getField(this, 8) != null;
+            }
+            get commitment() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.BytesValue, 9) as dependency_8.google.protobuf.BytesValue;
+            }
+            set commitment(value: dependency_8.google.protobuf.BytesValue) {
+                pb_1.Message.setWrapperField(this, 9, value);
+            }
+            get has_commitment() {
+                return pb_1.Message.getField(this, 9) != null;
+            }
+            static fromObject(data: {
+                groupId?: ReturnType<typeof dependency_5.co.topl.brambl.models.GroupId.prototype.toObject>;
+                seriesId?: ReturnType<typeof dependency_5.co.topl.brambl.models.SeriesId.prototype.toObject>;
+                quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                groupAlloy?: ReturnType<typeof dependency_8.google.protobuf.BytesValue.prototype.toObject>;
+                seriesAlloy?: ReturnType<typeof dependency_8.google.protobuf.BytesValue.prototype.toObject>;
+                fungibility?: dependency_6.co.topl.brambl.models.box.FungibilityType;
+                quantityDescriptor?: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+                ephemeralMetadata?: ReturnType<typeof dependency_9.google.protobuf.Struct.prototype.toObject>;
+                commitment?: ReturnType<typeof dependency_8.google.protobuf.BytesValue.prototype.toObject>;
+            }): Asset {
+                const message = new Asset({});
+                if (data.groupId != null) {
+                    message.groupId = dependency_5.co.topl.brambl.models.GroupId.fromObject(data.groupId);
+                }
+                if (data.seriesId != null) {
+                    message.seriesId = dependency_5.co.topl.brambl.models.SeriesId.fromObject(data.seriesId);
+                }
+                if (data.quantity != null) {
+                    message.quantity = dependency_2.quivr.models.Int128.fromObject(data.quantity);
+                }
+                if (data.groupAlloy != null) {
+                    message.groupAlloy = dependency_8.google.protobuf.BytesValue.fromObject(data.groupAlloy);
+                }
+                if (data.seriesAlloy != null) {
+                    message.seriesAlloy = dependency_8.google.protobuf.BytesValue.fromObject(data.seriesAlloy);
+                }
+                if (data.fungibility != null) {
+                    message.fungibility = data.fungibility;
+                }
+                if (data.quantityDescriptor != null) {
+                    message.quantityDescriptor = data.quantityDescriptor;
+                }
+                if (data.ephemeralMetadata != null) {
+                    message.ephemeralMetadata = dependency_9.google.protobuf.Struct.fromObject(data.ephemeralMetadata);
+                }
+                if (data.commitment != null) {
+                    message.commitment = dependency_8.google.protobuf.BytesValue.fromObject(data.commitment);
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    groupId?: ReturnType<typeof dependency_5.co.topl.brambl.models.GroupId.prototype.toObject>;
+                    seriesId?: ReturnType<typeof dependency_5.co.topl.brambl.models.SeriesId.prototype.toObject>;
+                    quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                    groupAlloy?: ReturnType<typeof dependency_8.google.protobuf.BytesValue.prototype.toObject>;
+                    seriesAlloy?: ReturnType<typeof dependency_8.google.protobuf.BytesValue.prototype.toObject>;
+                    fungibility?: dependency_6.co.topl.brambl.models.box.FungibilityType;
+                    quantityDescriptor?: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+                    ephemeralMetadata?: ReturnType<typeof dependency_9.google.protobuf.Struct.prototype.toObject>;
+                    commitment?: ReturnType<typeof dependency_8.google.protobuf.BytesValue.prototype.toObject>;
+                } = {};
+                if (this.groupId != null) {
+                    data.groupId = this.groupId.toObject();
+                }
+                if (this.seriesId != null) {
+                    data.seriesId = this.seriesId.toObject();
+                }
+                if (this.quantity != null) {
+                    data.quantity = this.quantity.toObject();
+                }
+                if (this.groupAlloy != null) {
+                    data.groupAlloy = this.groupAlloy.toObject();
+                }
+                if (this.seriesAlloy != null) {
+                    data.seriesAlloy = this.seriesAlloy.toObject();
+                }
+                if (this.fungibility != null) {
+                    data.fungibility = this.fungibility;
+                }
+                if (this.quantityDescriptor != null) {
+                    data.quantityDescriptor = this.quantityDescriptor;
+                }
+                if (this.ephemeralMetadata != null) {
+                    data.ephemeralMetadata = this.ephemeralMetadata.toObject();
+                }
+                if (this.commitment != null) {
+                    data.commitment = this.commitment.toObject();
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.has_groupId)
+                    writer.writeMessage(1, this.groupId, () => this.groupId.serialize(writer));
+                if (this.has_seriesId)
+                    writer.writeMessage(2, this.seriesId, () => this.seriesId.serialize(writer));
+                if (this.has_quantity)
+                    writer.writeMessage(3, this.quantity, () => this.quantity.serialize(writer));
+                if (this.has_groupAlloy)
+                    writer.writeMessage(4, this.groupAlloy, () => this.groupAlloy.serialize(writer));
+                if (this.has_seriesAlloy)
+                    writer.writeMessage(5, this.seriesAlloy, () => this.seriesAlloy.serialize(writer));
+                if (this.fungibility != dependency_6.co.topl.brambl.models.box.FungibilityType.GROUP_AND_SERIES)
+                    writer.writeEnum(6, this.fungibility);
+                if (this.quantityDescriptor != dependency_6.co.topl.brambl.models.box.QuantityDescriptorType.LIQUID)
+                    writer.writeEnum(7, this.quantityDescriptor);
+                if (this.has_ephemeralMetadata)
+                    writer.writeMessage(8, this.ephemeralMetadata, () => this.ephemeralMetadata.serialize(writer));
+                if (this.has_commitment)
+                    writer.writeMessage(9, this.commitment, () => this.commitment.serialize(writer));
                 if (!w)
                     return writer.getResultBuffer();
             }
@@ -288,13 +664,31 @@ export namespace co.topl.brambl.models.box {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            message.label = reader.readString();
+                            reader.readMessage(message.groupId, () => message.groupId = dependency_5.co.topl.brambl.models.GroupId.deserialize(reader));
                             break;
                         case 2:
-                            reader.readMessage(message.quantity, () => message.quantity = dependency_4.quivr.models.Int128.deserialize(reader));
+                            reader.readMessage(message.seriesId, () => message.seriesId = dependency_5.co.topl.brambl.models.SeriesId.deserialize(reader));
                             break;
                         case 3:
-                            reader.readMessage(message.metadata, () => message.metadata = dependency_4.quivr.models.SmallData.deserialize(reader));
+                            reader.readMessage(message.quantity, () => message.quantity = dependency_2.quivr.models.Int128.deserialize(reader));
+                            break;
+                        case 4:
+                            reader.readMessage(message.groupAlloy, () => message.groupAlloy = dependency_8.google.protobuf.BytesValue.deserialize(reader));
+                            break;
+                        case 5:
+                            reader.readMessage(message.seriesAlloy, () => message.seriesAlloy = dependency_8.google.protobuf.BytesValue.deserialize(reader));
+                            break;
+                        case 6:
+                            message.fungibility = reader.readEnum();
+                            break;
+                        case 7:
+                            message.quantityDescriptor = reader.readEnum();
+                            break;
+                        case 8:
+                            reader.readMessage(message.ephemeralMetadata, () => message.ephemeralMetadata = dependency_9.google.protobuf.Struct.deserialize(reader));
+                            break;
+                        case 9:
+                            reader.readMessage(message.commitment, () => message.commitment = dependency_8.google.protobuf.BytesValue.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -306,6 +700,649 @@ export namespace co.topl.brambl.models.box {
             }
             static deserializeBinary(bytes: Uint8Array): Asset {
                 return Asset.deserialize(bytes);
+            }
+        }
+        export class Group extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                groupId?: dependency_5.co.topl.brambl.models.GroupId;
+                quantity?: dependency_2.quivr.models.Int128;
+                fixedSeries?: dependency_5.co.topl.brambl.models.SeriesId;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("groupId" in data && data.groupId != undefined) {
+                        this.groupId = data.groupId;
+                    }
+                    if ("quantity" in data && data.quantity != undefined) {
+                        this.quantity = data.quantity;
+                    }
+                    if ("fixedSeries" in data && data.fixedSeries != undefined) {
+                        this.fixedSeries = data.fixedSeries;
+                    }
+                }
+            }
+            get groupId() {
+                return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.GroupId, 1) as dependency_5.co.topl.brambl.models.GroupId;
+            }
+            set groupId(value: dependency_5.co.topl.brambl.models.GroupId) {
+                pb_1.Message.setWrapperField(this, 1, value);
+            }
+            get has_groupId() {
+                return pb_1.Message.getField(this, 1) != null;
+            }
+            get quantity() {
+                return pb_1.Message.getWrapperField(this, dependency_2.quivr.models.Int128, 2) as dependency_2.quivr.models.Int128;
+            }
+            set quantity(value: dependency_2.quivr.models.Int128) {
+                pb_1.Message.setWrapperField(this, 2, value);
+            }
+            get has_quantity() {
+                return pb_1.Message.getField(this, 2) != null;
+            }
+            get fixedSeries() {
+                return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.SeriesId, 3) as dependency_5.co.topl.brambl.models.SeriesId;
+            }
+            set fixedSeries(value: dependency_5.co.topl.brambl.models.SeriesId) {
+                pb_1.Message.setWrapperField(this, 3, value);
+            }
+            get has_fixedSeries() {
+                return pb_1.Message.getField(this, 3) != null;
+            }
+            static fromObject(data: {
+                groupId?: ReturnType<typeof dependency_5.co.topl.brambl.models.GroupId.prototype.toObject>;
+                quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                fixedSeries?: ReturnType<typeof dependency_5.co.topl.brambl.models.SeriesId.prototype.toObject>;
+            }): Group {
+                const message = new Group({});
+                if (data.groupId != null) {
+                    message.groupId = dependency_5.co.topl.brambl.models.GroupId.fromObject(data.groupId);
+                }
+                if (data.quantity != null) {
+                    message.quantity = dependency_2.quivr.models.Int128.fromObject(data.quantity);
+                }
+                if (data.fixedSeries != null) {
+                    message.fixedSeries = dependency_5.co.topl.brambl.models.SeriesId.fromObject(data.fixedSeries);
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    groupId?: ReturnType<typeof dependency_5.co.topl.brambl.models.GroupId.prototype.toObject>;
+                    quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                    fixedSeries?: ReturnType<typeof dependency_5.co.topl.brambl.models.SeriesId.prototype.toObject>;
+                } = {};
+                if (this.groupId != null) {
+                    data.groupId = this.groupId.toObject();
+                }
+                if (this.quantity != null) {
+                    data.quantity = this.quantity.toObject();
+                }
+                if (this.fixedSeries != null) {
+                    data.fixedSeries = this.fixedSeries.toObject();
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.has_groupId)
+                    writer.writeMessage(1, this.groupId, () => this.groupId.serialize(writer));
+                if (this.has_quantity)
+                    writer.writeMessage(2, this.quantity, () => this.quantity.serialize(writer));
+                if (this.has_fixedSeries)
+                    writer.writeMessage(3, this.fixedSeries, () => this.fixedSeries.serialize(writer));
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Group {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Group();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            reader.readMessage(message.groupId, () => message.groupId = dependency_5.co.topl.brambl.models.GroupId.deserialize(reader));
+                            break;
+                        case 2:
+                            reader.readMessage(message.quantity, () => message.quantity = dependency_2.quivr.models.Int128.deserialize(reader));
+                            break;
+                        case 3:
+                            reader.readMessage(message.fixedSeries, () => message.fixedSeries = dependency_5.co.topl.brambl.models.SeriesId.deserialize(reader));
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): Group {
+                return Group.deserialize(bytes);
+            }
+        }
+        export class Series extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                seriesId?: dependency_5.co.topl.brambl.models.SeriesId;
+                quantity?: dependency_2.quivr.models.Int128;
+                tokenSupply?: dependency_8.google.protobuf.UInt32Value;
+                quantityDescriptor?: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+                fungibility?: dependency_6.co.topl.brambl.models.box.FungibilityType;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("seriesId" in data && data.seriesId != undefined) {
+                        this.seriesId = data.seriesId;
+                    }
+                    if ("quantity" in data && data.quantity != undefined) {
+                        this.quantity = data.quantity;
+                    }
+                    if ("tokenSupply" in data && data.tokenSupply != undefined) {
+                        this.tokenSupply = data.tokenSupply;
+                    }
+                    if ("quantityDescriptor" in data && data.quantityDescriptor != undefined) {
+                        this.quantityDescriptor = data.quantityDescriptor;
+                    }
+                    if ("fungibility" in data && data.fungibility != undefined) {
+                        this.fungibility = data.fungibility;
+                    }
+                }
+            }
+            get seriesId() {
+                return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.SeriesId, 1) as dependency_5.co.topl.brambl.models.SeriesId;
+            }
+            set seriesId(value: dependency_5.co.topl.brambl.models.SeriesId) {
+                pb_1.Message.setWrapperField(this, 1, value);
+            }
+            get has_seriesId() {
+                return pb_1.Message.getField(this, 1) != null;
+            }
+            get quantity() {
+                return pb_1.Message.getWrapperField(this, dependency_2.quivr.models.Int128, 2) as dependency_2.quivr.models.Int128;
+            }
+            set quantity(value: dependency_2.quivr.models.Int128) {
+                pb_1.Message.setWrapperField(this, 2, value);
+            }
+            get has_quantity() {
+                return pb_1.Message.getField(this, 2) != null;
+            }
+            get tokenSupply() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt32Value, 3) as dependency_8.google.protobuf.UInt32Value;
+            }
+            set tokenSupply(value: dependency_8.google.protobuf.UInt32Value) {
+                pb_1.Message.setWrapperField(this, 3, value);
+            }
+            get has_tokenSupply() {
+                return pb_1.Message.getField(this, 3) != null;
+            }
+            get quantityDescriptor() {
+                return pb_1.Message.getFieldWithDefault(this, 4, dependency_6.co.topl.brambl.models.box.QuantityDescriptorType.LIQUID) as dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+            }
+            set quantityDescriptor(value: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType) {
+                pb_1.Message.setField(this, 4, value);
+            }
+            get fungibility() {
+                return pb_1.Message.getFieldWithDefault(this, 5, dependency_6.co.topl.brambl.models.box.FungibilityType.GROUP_AND_SERIES) as dependency_6.co.topl.brambl.models.box.FungibilityType;
+            }
+            set fungibility(value: dependency_6.co.topl.brambl.models.box.FungibilityType) {
+                pb_1.Message.setField(this, 5, value);
+            }
+            static fromObject(data: {
+                seriesId?: ReturnType<typeof dependency_5.co.topl.brambl.models.SeriesId.prototype.toObject>;
+                quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                tokenSupply?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                quantityDescriptor?: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+                fungibility?: dependency_6.co.topl.brambl.models.box.FungibilityType;
+            }): Series {
+                const message = new Series({});
+                if (data.seriesId != null) {
+                    message.seriesId = dependency_5.co.topl.brambl.models.SeriesId.fromObject(data.seriesId);
+                }
+                if (data.quantity != null) {
+                    message.quantity = dependency_2.quivr.models.Int128.fromObject(data.quantity);
+                }
+                if (data.tokenSupply != null) {
+                    message.tokenSupply = dependency_8.google.protobuf.UInt32Value.fromObject(data.tokenSupply);
+                }
+                if (data.quantityDescriptor != null) {
+                    message.quantityDescriptor = data.quantityDescriptor;
+                }
+                if (data.fungibility != null) {
+                    message.fungibility = data.fungibility;
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    seriesId?: ReturnType<typeof dependency_5.co.topl.brambl.models.SeriesId.prototype.toObject>;
+                    quantity?: ReturnType<typeof dependency_2.quivr.models.Int128.prototype.toObject>;
+                    tokenSupply?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                    quantityDescriptor?: dependency_6.co.topl.brambl.models.box.QuantityDescriptorType;
+                    fungibility?: dependency_6.co.topl.brambl.models.box.FungibilityType;
+                } = {};
+                if (this.seriesId != null) {
+                    data.seriesId = this.seriesId.toObject();
+                }
+                if (this.quantity != null) {
+                    data.quantity = this.quantity.toObject();
+                }
+                if (this.tokenSupply != null) {
+                    data.tokenSupply = this.tokenSupply.toObject();
+                }
+                if (this.quantityDescriptor != null) {
+                    data.quantityDescriptor = this.quantityDescriptor;
+                }
+                if (this.fungibility != null) {
+                    data.fungibility = this.fungibility;
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.has_seriesId)
+                    writer.writeMessage(1, this.seriesId, () => this.seriesId.serialize(writer));
+                if (this.has_quantity)
+                    writer.writeMessage(2, this.quantity, () => this.quantity.serialize(writer));
+                if (this.has_tokenSupply)
+                    writer.writeMessage(3, this.tokenSupply, () => this.tokenSupply.serialize(writer));
+                if (this.quantityDescriptor != dependency_6.co.topl.brambl.models.box.QuantityDescriptorType.LIQUID)
+                    writer.writeEnum(4, this.quantityDescriptor);
+                if (this.fungibility != dependency_6.co.topl.brambl.models.box.FungibilityType.GROUP_AND_SERIES)
+                    writer.writeEnum(5, this.fungibility);
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Series {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Series();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            reader.readMessage(message.seriesId, () => message.seriesId = dependency_5.co.topl.brambl.models.SeriesId.deserialize(reader));
+                            break;
+                        case 2:
+                            reader.readMessage(message.quantity, () => message.quantity = dependency_2.quivr.models.Int128.deserialize(reader));
+                            break;
+                        case 3:
+                            reader.readMessage(message.tokenSupply, () => message.tokenSupply = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
+                            break;
+                        case 4:
+                            message.quantityDescriptor = reader.readEnum();
+                            break;
+                        case 5:
+                            message.fungibility = reader.readEnum();
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): Series {
+                return Series.deserialize(bytes);
+            }
+        }
+        export class UpdateProposal extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                label?: string;
+                fEffective?: dependency_4.co.topl.node.models.Ratio;
+                vrfLddCutoff?: dependency_8.google.protobuf.UInt32Value;
+                vrfPrecision?: dependency_8.google.protobuf.UInt32Value;
+                vrfBaselineDifficulty?: dependency_4.co.topl.node.models.Ratio;
+                vrfAmplitude?: dependency_4.co.topl.node.models.Ratio;
+                chainSelectionKLookback?: dependency_8.google.protobuf.UInt64Value;
+                slotDuration?: dependency_7.google.protobuf.Duration;
+                forwardBiasedSlotWindow?: dependency_8.google.protobuf.UInt64Value;
+                operationalPeriodsPerEpoch?: dependency_8.google.protobuf.UInt64Value;
+                kesKeyHours?: dependency_8.google.protobuf.UInt32Value;
+                kesKeyMinutes?: dependency_8.google.protobuf.UInt32Value;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("label" in data && data.label != undefined) {
+                        this.label = data.label;
+                    }
+                    if ("fEffective" in data && data.fEffective != undefined) {
+                        this.fEffective = data.fEffective;
+                    }
+                    if ("vrfLddCutoff" in data && data.vrfLddCutoff != undefined) {
+                        this.vrfLddCutoff = data.vrfLddCutoff;
+                    }
+                    if ("vrfPrecision" in data && data.vrfPrecision != undefined) {
+                        this.vrfPrecision = data.vrfPrecision;
+                    }
+                    if ("vrfBaselineDifficulty" in data && data.vrfBaselineDifficulty != undefined) {
+                        this.vrfBaselineDifficulty = data.vrfBaselineDifficulty;
+                    }
+                    if ("vrfAmplitude" in data && data.vrfAmplitude != undefined) {
+                        this.vrfAmplitude = data.vrfAmplitude;
+                    }
+                    if ("chainSelectionKLookback" in data && data.chainSelectionKLookback != undefined) {
+                        this.chainSelectionKLookback = data.chainSelectionKLookback;
+                    }
+                    if ("slotDuration" in data && data.slotDuration != undefined) {
+                        this.slotDuration = data.slotDuration;
+                    }
+                    if ("forwardBiasedSlotWindow" in data && data.forwardBiasedSlotWindow != undefined) {
+                        this.forwardBiasedSlotWindow = data.forwardBiasedSlotWindow;
+                    }
+                    if ("operationalPeriodsPerEpoch" in data && data.operationalPeriodsPerEpoch != undefined) {
+                        this.operationalPeriodsPerEpoch = data.operationalPeriodsPerEpoch;
+                    }
+                    if ("kesKeyHours" in data && data.kesKeyHours != undefined) {
+                        this.kesKeyHours = data.kesKeyHours;
+                    }
+                    if ("kesKeyMinutes" in data && data.kesKeyMinutes != undefined) {
+                        this.kesKeyMinutes = data.kesKeyMinutes;
+                    }
+                }
+            }
+            get label() {
+                return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
+            }
+            set label(value: string) {
+                pb_1.Message.setField(this, 1, value);
+            }
+            get fEffective() {
+                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.node.models.Ratio, 2) as dependency_4.co.topl.node.models.Ratio;
+            }
+            set fEffective(value: dependency_4.co.topl.node.models.Ratio) {
+                pb_1.Message.setWrapperField(this, 2, value);
+            }
+            get has_fEffective() {
+                return pb_1.Message.getField(this, 2) != null;
+            }
+            get vrfLddCutoff() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt32Value, 3) as dependency_8.google.protobuf.UInt32Value;
+            }
+            set vrfLddCutoff(value: dependency_8.google.protobuf.UInt32Value) {
+                pb_1.Message.setWrapperField(this, 3, value);
+            }
+            get has_vrfLddCutoff() {
+                return pb_1.Message.getField(this, 3) != null;
+            }
+            get vrfPrecision() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt32Value, 4) as dependency_8.google.protobuf.UInt32Value;
+            }
+            set vrfPrecision(value: dependency_8.google.protobuf.UInt32Value) {
+                pb_1.Message.setWrapperField(this, 4, value);
+            }
+            get has_vrfPrecision() {
+                return pb_1.Message.getField(this, 4) != null;
+            }
+            get vrfBaselineDifficulty() {
+                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.node.models.Ratio, 5) as dependency_4.co.topl.node.models.Ratio;
+            }
+            set vrfBaselineDifficulty(value: dependency_4.co.topl.node.models.Ratio) {
+                pb_1.Message.setWrapperField(this, 5, value);
+            }
+            get has_vrfBaselineDifficulty() {
+                return pb_1.Message.getField(this, 5) != null;
+            }
+            get vrfAmplitude() {
+                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.node.models.Ratio, 6) as dependency_4.co.topl.node.models.Ratio;
+            }
+            set vrfAmplitude(value: dependency_4.co.topl.node.models.Ratio) {
+                pb_1.Message.setWrapperField(this, 6, value);
+            }
+            get has_vrfAmplitude() {
+                return pb_1.Message.getField(this, 6) != null;
+            }
+            get chainSelectionKLookback() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt64Value, 7) as dependency_8.google.protobuf.UInt64Value;
+            }
+            set chainSelectionKLookback(value: dependency_8.google.protobuf.UInt64Value) {
+                pb_1.Message.setWrapperField(this, 7, value);
+            }
+            get has_chainSelectionKLookback() {
+                return pb_1.Message.getField(this, 7) != null;
+            }
+            get slotDuration() {
+                return pb_1.Message.getWrapperField(this, dependency_7.google.protobuf.Duration, 8) as dependency_7.google.protobuf.Duration;
+            }
+            set slotDuration(value: dependency_7.google.protobuf.Duration) {
+                pb_1.Message.setWrapperField(this, 8, value);
+            }
+            get has_slotDuration() {
+                return pb_1.Message.getField(this, 8) != null;
+            }
+            get forwardBiasedSlotWindow() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt64Value, 9) as dependency_8.google.protobuf.UInt64Value;
+            }
+            set forwardBiasedSlotWindow(value: dependency_8.google.protobuf.UInt64Value) {
+                pb_1.Message.setWrapperField(this, 9, value);
+            }
+            get has_forwardBiasedSlotWindow() {
+                return pb_1.Message.getField(this, 9) != null;
+            }
+            get operationalPeriodsPerEpoch() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt64Value, 10) as dependency_8.google.protobuf.UInt64Value;
+            }
+            set operationalPeriodsPerEpoch(value: dependency_8.google.protobuf.UInt64Value) {
+                pb_1.Message.setWrapperField(this, 10, value);
+            }
+            get has_operationalPeriodsPerEpoch() {
+                return pb_1.Message.getField(this, 10) != null;
+            }
+            get kesKeyHours() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt32Value, 11) as dependency_8.google.protobuf.UInt32Value;
+            }
+            set kesKeyHours(value: dependency_8.google.protobuf.UInt32Value) {
+                pb_1.Message.setWrapperField(this, 11, value);
+            }
+            get has_kesKeyHours() {
+                return pb_1.Message.getField(this, 11) != null;
+            }
+            get kesKeyMinutes() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.UInt32Value, 12) as dependency_8.google.protobuf.UInt32Value;
+            }
+            set kesKeyMinutes(value: dependency_8.google.protobuf.UInt32Value) {
+                pb_1.Message.setWrapperField(this, 12, value);
+            }
+            get has_kesKeyMinutes() {
+                return pb_1.Message.getField(this, 12) != null;
+            }
+            static fromObject(data: {
+                label?: string;
+                fEffective?: ReturnType<typeof dependency_4.co.topl.node.models.Ratio.prototype.toObject>;
+                vrfLddCutoff?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                vrfPrecision?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                vrfBaselineDifficulty?: ReturnType<typeof dependency_4.co.topl.node.models.Ratio.prototype.toObject>;
+                vrfAmplitude?: ReturnType<typeof dependency_4.co.topl.node.models.Ratio.prototype.toObject>;
+                chainSelectionKLookback?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
+                slotDuration?: ReturnType<typeof dependency_7.google.protobuf.Duration.prototype.toObject>;
+                forwardBiasedSlotWindow?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
+                operationalPeriodsPerEpoch?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
+                kesKeyHours?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                kesKeyMinutes?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+            }): UpdateProposal {
+                const message = new UpdateProposal({});
+                if (data.label != null) {
+                    message.label = data.label;
+                }
+                if (data.fEffective != null) {
+                    message.fEffective = dependency_4.co.topl.node.models.Ratio.fromObject(data.fEffective);
+                }
+                if (data.vrfLddCutoff != null) {
+                    message.vrfLddCutoff = dependency_8.google.protobuf.UInt32Value.fromObject(data.vrfLddCutoff);
+                }
+                if (data.vrfPrecision != null) {
+                    message.vrfPrecision = dependency_8.google.protobuf.UInt32Value.fromObject(data.vrfPrecision);
+                }
+                if (data.vrfBaselineDifficulty != null) {
+                    message.vrfBaselineDifficulty = dependency_4.co.topl.node.models.Ratio.fromObject(data.vrfBaselineDifficulty);
+                }
+                if (data.vrfAmplitude != null) {
+                    message.vrfAmplitude = dependency_4.co.topl.node.models.Ratio.fromObject(data.vrfAmplitude);
+                }
+                if (data.chainSelectionKLookback != null) {
+                    message.chainSelectionKLookback = dependency_8.google.protobuf.UInt64Value.fromObject(data.chainSelectionKLookback);
+                }
+                if (data.slotDuration != null) {
+                    message.slotDuration = dependency_7.google.protobuf.Duration.fromObject(data.slotDuration);
+                }
+                if (data.forwardBiasedSlotWindow != null) {
+                    message.forwardBiasedSlotWindow = dependency_8.google.protobuf.UInt64Value.fromObject(data.forwardBiasedSlotWindow);
+                }
+                if (data.operationalPeriodsPerEpoch != null) {
+                    message.operationalPeriodsPerEpoch = dependency_8.google.protobuf.UInt64Value.fromObject(data.operationalPeriodsPerEpoch);
+                }
+                if (data.kesKeyHours != null) {
+                    message.kesKeyHours = dependency_8.google.protobuf.UInt32Value.fromObject(data.kesKeyHours);
+                }
+                if (data.kesKeyMinutes != null) {
+                    message.kesKeyMinutes = dependency_8.google.protobuf.UInt32Value.fromObject(data.kesKeyMinutes);
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    label?: string;
+                    fEffective?: ReturnType<typeof dependency_4.co.topl.node.models.Ratio.prototype.toObject>;
+                    vrfLddCutoff?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                    vrfPrecision?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                    vrfBaselineDifficulty?: ReturnType<typeof dependency_4.co.topl.node.models.Ratio.prototype.toObject>;
+                    vrfAmplitude?: ReturnType<typeof dependency_4.co.topl.node.models.Ratio.prototype.toObject>;
+                    chainSelectionKLookback?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
+                    slotDuration?: ReturnType<typeof dependency_7.google.protobuf.Duration.prototype.toObject>;
+                    forwardBiasedSlotWindow?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
+                    operationalPeriodsPerEpoch?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
+                    kesKeyHours?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                    kesKeyMinutes?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+                } = {};
+                if (this.label != null) {
+                    data.label = this.label;
+                }
+                if (this.fEffective != null) {
+                    data.fEffective = this.fEffective.toObject();
+                }
+                if (this.vrfLddCutoff != null) {
+                    data.vrfLddCutoff = this.vrfLddCutoff.toObject();
+                }
+                if (this.vrfPrecision != null) {
+                    data.vrfPrecision = this.vrfPrecision.toObject();
+                }
+                if (this.vrfBaselineDifficulty != null) {
+                    data.vrfBaselineDifficulty = this.vrfBaselineDifficulty.toObject();
+                }
+                if (this.vrfAmplitude != null) {
+                    data.vrfAmplitude = this.vrfAmplitude.toObject();
+                }
+                if (this.chainSelectionKLookback != null) {
+                    data.chainSelectionKLookback = this.chainSelectionKLookback.toObject();
+                }
+                if (this.slotDuration != null) {
+                    data.slotDuration = this.slotDuration.toObject();
+                }
+                if (this.forwardBiasedSlotWindow != null) {
+                    data.forwardBiasedSlotWindow = this.forwardBiasedSlotWindow.toObject();
+                }
+                if (this.operationalPeriodsPerEpoch != null) {
+                    data.operationalPeriodsPerEpoch = this.operationalPeriodsPerEpoch.toObject();
+                }
+                if (this.kesKeyHours != null) {
+                    data.kesKeyHours = this.kesKeyHours.toObject();
+                }
+                if (this.kesKeyMinutes != null) {
+                    data.kesKeyMinutes = this.kesKeyMinutes.toObject();
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.label.length)
+                    writer.writeString(1, this.label);
+                if (this.has_fEffective)
+                    writer.writeMessage(2, this.fEffective, () => this.fEffective.serialize(writer));
+                if (this.has_vrfLddCutoff)
+                    writer.writeMessage(3, this.vrfLddCutoff, () => this.vrfLddCutoff.serialize(writer));
+                if (this.has_vrfPrecision)
+                    writer.writeMessage(4, this.vrfPrecision, () => this.vrfPrecision.serialize(writer));
+                if (this.has_vrfBaselineDifficulty)
+                    writer.writeMessage(5, this.vrfBaselineDifficulty, () => this.vrfBaselineDifficulty.serialize(writer));
+                if (this.has_vrfAmplitude)
+                    writer.writeMessage(6, this.vrfAmplitude, () => this.vrfAmplitude.serialize(writer));
+                if (this.has_chainSelectionKLookback)
+                    writer.writeMessage(7, this.chainSelectionKLookback, () => this.chainSelectionKLookback.serialize(writer));
+                if (this.has_slotDuration)
+                    writer.writeMessage(8, this.slotDuration, () => this.slotDuration.serialize(writer));
+                if (this.has_forwardBiasedSlotWindow)
+                    writer.writeMessage(9, this.forwardBiasedSlotWindow, () => this.forwardBiasedSlotWindow.serialize(writer));
+                if (this.has_operationalPeriodsPerEpoch)
+                    writer.writeMessage(10, this.operationalPeriodsPerEpoch, () => this.operationalPeriodsPerEpoch.serialize(writer));
+                if (this.has_kesKeyHours)
+                    writer.writeMessage(11, this.kesKeyHours, () => this.kesKeyHours.serialize(writer));
+                if (this.has_kesKeyMinutes)
+                    writer.writeMessage(12, this.kesKeyMinutes, () => this.kesKeyMinutes.serialize(writer));
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): UpdateProposal {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new UpdateProposal();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            message.label = reader.readString();
+                            break;
+                        case 2:
+                            reader.readMessage(message.fEffective, () => message.fEffective = dependency_4.co.topl.node.models.Ratio.deserialize(reader));
+                            break;
+                        case 3:
+                            reader.readMessage(message.vrfLddCutoff, () => message.vrfLddCutoff = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
+                            break;
+                        case 4:
+                            reader.readMessage(message.vrfPrecision, () => message.vrfPrecision = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
+                            break;
+                        case 5:
+                            reader.readMessage(message.vrfBaselineDifficulty, () => message.vrfBaselineDifficulty = dependency_4.co.topl.node.models.Ratio.deserialize(reader));
+                            break;
+                        case 6:
+                            reader.readMessage(message.vrfAmplitude, () => message.vrfAmplitude = dependency_4.co.topl.node.models.Ratio.deserialize(reader));
+                            break;
+                        case 7:
+                            reader.readMessage(message.chainSelectionKLookback, () => message.chainSelectionKLookback = dependency_8.google.protobuf.UInt64Value.deserialize(reader));
+                            break;
+                        case 8:
+                            reader.readMessage(message.slotDuration, () => message.slotDuration = dependency_7.google.protobuf.Duration.deserialize(reader));
+                            break;
+                        case 9:
+                            reader.readMessage(message.forwardBiasedSlotWindow, () => message.forwardBiasedSlotWindow = dependency_8.google.protobuf.UInt64Value.deserialize(reader));
+                            break;
+                        case 10:
+                            reader.readMessage(message.operationalPeriodsPerEpoch, () => message.operationalPeriodsPerEpoch = dependency_8.google.protobuf.UInt64Value.deserialize(reader));
+                            break;
+                        case 11:
+                            reader.readMessage(message.kesKeyHours, () => message.kesKeyHours = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
+                            break;
+                        case 12:
+                            reader.readMessage(message.kesKeyMinutes, () => message.kesKeyMinutes = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): UpdateProposal {
+                return UpdateProposal.deserialize(bytes);
             }
         }
     }
