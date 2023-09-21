@@ -1,6 +1,6 @@
 import { Either, EitherException } from '@/common/either.js';
 
-class Digest {
+export class Digest {
   constructor(public readonly bytes: Uint8Array) {}
 
   static empty(): Digest {
@@ -16,7 +16,7 @@ class Digest {
   }
 }
 
-class Digest32 {
+export class Digest32 {
   private static readonly size: number = 32;
 
   private constructor() {}
@@ -29,7 +29,7 @@ class Digest32 {
   }
 }
 
-class Digest64 {
+export class Digest64 {
   private static readonly size: number = 64;
 
   private constructor() {}
