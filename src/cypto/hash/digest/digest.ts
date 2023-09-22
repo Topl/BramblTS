@@ -1,4 +1,4 @@
-import { Either, EitherException } from '@/common/either.js';
+import { Either, EitherException } from "@/common/either";
 
 export class Digest {
   constructor(public readonly bytes: Uint8Array) {}
