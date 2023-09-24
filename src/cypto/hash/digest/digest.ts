@@ -1,4 +1,4 @@
-import { Either, EitherException } from "@/common/either";
+import { Either, EitherException } from '@/common/either';
 
 export class Digest {
   constructor(public readonly bytes: Uint8Array) {}
@@ -42,6 +42,7 @@ export class Digest64 {
   }
 }
 
+export // remove export - needs check
 class InvalidDigestFailure extends EitherException {
   constructor(message: string) {
     super(message);
