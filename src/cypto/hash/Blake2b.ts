@@ -1,90 +1,66 @@
-import { Digest32 } from './digest/digest.js';
-// import { Digest, Message, InvalidDigestFailure } from './path/to/your/dependencies';
-// import { Blake2bDigest } from 'path/to/pointycastle/digests/blake2b';
-
-abstract class Hash {
-  abstract hash(bytes: Uint8Array): Uint8Array;
-
-  abstract hashComplex(options: { prefix?: number, messages: Message[] }): Digest;
-}
+import { Digest, Digest32, Digest64 } from './digest/digest';
+import { Hash, Message } from './hash';
+import * as blake from 'blakejs';
 
 abstract class Blake2b extends Hash {
   abstract hash(bytes: Uint8Array): Uint8Array;
-  abstract hashComplex(options: { prefix?: number, messages: Message[] }): Digest;
+  abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
 }
 
-class Blake2b256 extends Blake2b {
-  private readonly _digest: Blake2bDigest;
-
-  constructor() {
-    super();
-    this._digest = new Blake2bDigest(Digest32.size);
-  }
-
+export class Blake2b256 extends Blake2b {
   hash(bytes: Uint8Array): Uint8Array {
-    const out = new Uint8Array(this._digest.digestSize);
-    this._digest.update(bytes, 0, bytes.length);
-    this._digest.doFinal(out, 0);
-    return out;
+    return blake.blake2b(bytes, undefined, 32);
   }
 
-  hashComplex({ prefix, messages }: { prefix?: number, messages: Message[] }): Digest {
-    if (prefix !== undefined) {
-      for (const byte of [prefix]) {
-        this._digest.updateByte(byte);
-      }
+  hashComplex({ prefix, messages }: { prefix?: number; messages: Message[] }): Digest {
+    let input: Uint8Array[] = [];
+    if (prefix) {
+      input.push(new Uint8Array([prefix]));
     }
+    input = input.concat(messages);
 
-    for (const m of messages) {
-      this._digest.update(m, 0, m.length);
+    let flattened: number[] = [];
+    input.forEach((arr) => {
+      flattened.push(...arr);
+    });
+
+    const result = blake.blake2b(new Uint8Array(flattened), undefined, 32);
+
+    const digestResult = Digest32.from(result);
+
+    if (digestResult.kind === 'Right') {
+      return digestResult.value;
+    } else {
+      throw digestResult.value;
     }
-
-    const res = new Message(this._digest.digestSize);
-    this._digest.doFinal(res, 0);
-
-    const x = Digest32.from(res);
-    if (x.isLeft) {
-      throw new Error(x.left!.message);
-    }
-
-    return x.right!;
   }
 }
 
-class Blake2b512 extends Blake2b {
-  private readonly _digest: Blake2bDigest;
-
-  constructor() {
-    super();
-    this._digest = new Blake2bDigest(Digest64.size);
-  }
-
+export class Blake2b512 extends Blake2b {
   hash(bytes: Uint8Array): Uint8Array {
-    const out = new Uint8Array(this._digest.digestSize);
-    this._digest.update(bytes, 0, bytes.length);
-    this._digest.doFinal(out, 0);
-    return out;
+    return blake.blake2b(bytes, undefined, 64);
   }
 
-  hashComplex({ prefix, messages }: { prefix?: number, messages: Message[] }): Digest {
-    if (prefix !== undefined) {
-      this._digest.update([prefix], 0, 1);
+  hashComplex({ prefix, messages }: { prefix?: number; messages: Message[] }): Digest {
+    let input: Uint8Array[] = [];
+    if (prefix) {
+      input.push(new Uint8Array([prefix]));
     }
+    input = input.concat(messages);
 
-    for (const m of messages) {
-      this._digest.update(m, 0, m.length);
+    let flattened: number[] = [];
+    input.forEach((arr) => {
+      flattened.push(...arr);
+    });
+
+    const result = blake.blake2b(new Uint8Array(flattened), undefined, 64);
+
+    const digestResult = Digest64.from(result);
+
+    if (digestResult.kind === 'Right') {
+      return digestResult.value;
+    } else {
+      throw digestResult.value;
     }
-
-    const res = new Message(this._digest.digestSize);
-    this._digest.doFinal(res, 0);
-
-    const x = Digest64.from(res);
-    if (x.isLeft) {
-      throw new Error(x.left!.message);
-    }
-
-    return x.right!;
   }
 }
-
-export { Blake2b256, Blake2b512 };
