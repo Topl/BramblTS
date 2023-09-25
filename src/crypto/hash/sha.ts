@@ -21,7 +21,7 @@ export class SHA256 extends SHA {
     }
     input = input.concat(options.messages);
 
-    let flattened: number[] = [];
+    const flattened: number[] = [];
     input.forEach((arr) => {
       flattened.push(...arr);
     });
@@ -52,7 +52,7 @@ export class SHA512 extends SHA {
     }
     input = input.concat(options.messages);
 
-    let flattened: number[] = [];
+    const flattened: number[] = [];
     input.forEach((arr) => {
       flattened.push(...arr);
     });
