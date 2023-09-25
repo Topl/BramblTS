@@ -15,7 +15,7 @@ export class Some<T> implements Option<T> {
     return true;
   }
 
-  getOrElse(defaultValue: T): T {
+  getOrElse(_defaultValue: T): T {
     return this.value;
   }
 
@@ -35,7 +35,7 @@ export class Some<T> implements Option<T> {
     return f(this.value);
   }
 
-  fold<U>(onDefined: (t: T) => U, onUndefined: () => U): U {
+  fold<U>(onDefined: (t: T) => U, _onUndefined: () => U): U {
     return onDefined(this.value);
   }
 }
