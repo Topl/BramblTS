@@ -1,6 +1,6 @@
-import { Digest, Digest32, Digest64 } from './digest/digest';
-import { Hash, Message } from './hash';
 import * as crypto from 'crypto';
+import { Digest, Digest32, Digest64 } from './digest/digest';
+import { Hash, Message } from './baseHash';
 
 abstract class SHA extends Hash {
   abstract hash(bytes: Uint8Array): Uint8Array;
