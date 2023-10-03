@@ -90,7 +90,7 @@ export class ValidationError implements QuivrRunTimeError {
     }
 }
 
-enum ValidationErrorType {
+export enum ValidationErrorType {
     evaluationAuthorizationFailure,
     messageAuthorizationFailure,
     lockedPropositionIsUnsatisfiable,

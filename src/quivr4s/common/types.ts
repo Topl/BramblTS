@@ -1,6 +1,8 @@
 import * as proof from '../../../proto/quivr/models/proof.js';
 import * as shared from '../../../proto/quivr/models/shared.js';
 import * as proposition from '../../../proto/quivr/models/proposition.js';
+import * as datum from '../../../proto/brambl/models/datum.js';
+import * as event from '../../../proto/brambl/models/event.js';
 
 
 /// Proofs
@@ -29,6 +31,8 @@ export class Data extends shared.quivr.models.Data { };
 export class DigestVerification extends shared.quivr.models.DigestVerification { };
 export class SignatureVerification extends shared.quivr.models.SignatureVerification { };
 export class Message extends shared.quivr.models.Message { };
+export class Datum extends datum.co.topl.brambl.models.Datum { }
+export class Event extends event.co.topl.brambl.models.Event { }
 
 /// Propositions
 export class Proposition extends proposition.quivr.models.Proposition { };

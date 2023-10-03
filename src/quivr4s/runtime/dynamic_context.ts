@@ -11,7 +11,7 @@ import { ValidationError } from './quivr_runtime_error.js';
 
 export class DynamicContext {
     datum: Map<string, datum.co.topl.brambl.models.Datum | null>;
-    interfaces: Map<string, ParsableDataInterface>;
+    interfaces: Map<string, ParsableDataInterface<Data>>;
     signingRoutines: Map<string, SignatureVerifier<unknown>>;
     hashingRoutines: Map<string, DigestVerifier<unknown>>;
     signableBytes: SignableBytes;
@@ -20,7 +20,7 @@ export class DynamicContext {
 
     constructor(
         datum: Map<string, datum.co.topl.brambl.models.Datum | null>,
-        interfaces: Map<string, ParsableDataInterface>,
+        interfaces: Map<string, ParsableDataInterface<Data>>,
         signingRoutines: Map<string, SignatureVerifier<unknown>>,
         hashingRoutines: Map<string, DigestVerifier<unknown>>,
         signableBytes: SignableBytes,
