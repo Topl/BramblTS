@@ -1,11 +1,9 @@
-import { describe, it, expect } from "@jest/globals"
 import { Proposer } from "../../src/quivr4s/classes/proposer"
 import { Prover } from "../../src/quivr4s/classes/prover"
 import { Data } from "../../src/quivr4s/common/types"
 import { Verifier } from "../../src/quivr4s/classes/verifier"
 import { MockHelpers } from "./helpers/mock_helpers"
 import { ValidationErrorType, ValidationError } from "../../src/quivr4s/runtime/quivr_runtime_error"
-import { either } from "fp-ts"
 
 
 describe('Quivr Atomic Tests', () => {
@@ -18,10 +16,10 @@ describe('Quivr Atomic Tests', () => {
             lockedProverPoof,
             MockHelpers.dynamicContext(lockedProposition, lockedProverPoof),
         );
-        expect(result._tag == "Left", true);
+        expect(result._tag == "Left").toBe(true);
 
 
         const left = result as ValidationError;
-        expect((left.type == ValidationErrorType.lockedPropositionIsUnsatisfiable), true);
+        expect((left.type == ValidationErrorType.lockedPropositionIsUnsatisfiable)).toBe(true);
     })
 })
