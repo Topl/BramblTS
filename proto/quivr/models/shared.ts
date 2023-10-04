@@ -3,6 +3,7 @@
  * compiler version: 3.6.1
  * source: quivr/models/shared.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
+import * as dependency_1 from "./../../validate/validate";
 import * as pb_1 from "google-protobuf";
 export namespace quivr.models {
     export class Data extends pb_1.Message {
@@ -140,76 +141,39 @@ export namespace quivr.models {
         }
     }
     export class Root extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2]];
-        constructor(data?: any[] | ({} & (({
-            root32?: Uint8Array;
-            root64?: never;
-        } | {
-            root32?: never;
-            root64?: Uint8Array;
-        })))) {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("root32" in data && data.root32 != undefined) {
-                    this.root32 = data.root32;
-                }
-                if ("root64" in data && data.root64 != undefined) {
-                    this.root64 = data.root64;
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
                 }
             }
-        }
-        get root32() {
-            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
-        }
-        set root32(value: Uint8Array) {
-            pb_1.Message.setOneofField(this, 1, this.#one_of_decls[0], value);
-        }
-        get has_root32() {
-            return pb_1.Message.getField(this, 1) != null;
-        }
-        get root64() {
-            return pb_1.Message.getFieldWithDefault(this, 2, new Uint8Array(0)) as Uint8Array;
-        }
-        set root64(value: Uint8Array) {
-            pb_1.Message.setOneofField(this, 2, this.#one_of_decls[0], value);
-        }
-        get has_root64() {
-            return pb_1.Message.getField(this, 2) != null;
         }
         get value() {
-            const cases: {
-                [index: number]: "none" | "root32" | "root64";
-            } = {
-                0: "none",
-                1: "root32",
-                2: "root64"
-            };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2])];
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
         }
         static fromObject(data: {
-            root32?: Uint8Array;
-            root64?: Uint8Array;
+            value?: Uint8Array;
         }): Root {
             const message = new Root({});
-            if (data.root32 != null) {
-                message.root32 = data.root32;
-            }
-            if (data.root64 != null) {
-                message.root64 = data.root64;
+            if (data.value != null) {
+                message.value = data.value;
             }
             return message;
         }
         toObject() {
             const data: {
-                root32?: Uint8Array;
-                root64?: Uint8Array;
+                value?: Uint8Array;
             } = {};
-            if (this.root32 != null) {
-                data.root32 = this.root32;
-            }
-            if (this.root64 != null) {
-                data.root64 = this.root64;
+            if (this.value != null) {
+                data.value = this.value;
             }
             return data;
         }
@@ -217,10 +181,8 @@ export namespace quivr.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.has_root32)
-                writer.writeBytes(1, this.root32);
-            if (this.has_root64)
-                writer.writeBytes(2, this.root64);
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -231,10 +193,7 @@ export namespace quivr.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.root32 = reader.readBytes();
-                        break;
-                    case 2:
-                        message.root64 = reader.readBytes();
+                        message.value = reader.readBytes();
                         break;
                     default: reader.skipField();
                 }
@@ -339,76 +298,39 @@ export namespace quivr.models {
         }
     }
     export class Digest extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2]];
-        constructor(data?: any[] | ({} & (({
-            digest32?: Digest.Digest32;
-            digest64?: never;
-        } | {
-            digest32?: never;
-            digest64?: Digest.Digest64;
-        })))) {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("digest32" in data && data.digest32 != undefined) {
-                    this.digest32 = data.digest32;
-                }
-                if ("digest64" in data && data.digest64 != undefined) {
-                    this.digest64 = data.digest64;
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
                 }
             }
-        }
-        get digest32() {
-            return pb_1.Message.getWrapperField(this, Digest.Digest32, 1) as Digest.Digest32;
-        }
-        set digest32(value: Digest.Digest32) {
-            pb_1.Message.setOneofWrapperField(this, 1, this.#one_of_decls[0], value);
-        }
-        get has_digest32() {
-            return pb_1.Message.getField(this, 1) != null;
-        }
-        get digest64() {
-            return pb_1.Message.getWrapperField(this, Digest.Digest64, 2) as Digest.Digest64;
-        }
-        set digest64(value: Digest.Digest64) {
-            pb_1.Message.setOneofWrapperField(this, 2, this.#one_of_decls[0], value);
-        }
-        get has_digest64() {
-            return pb_1.Message.getField(this, 2) != null;
         }
         get value() {
-            const cases: {
-                [index: number]: "none" | "digest32" | "digest64";
-            } = {
-                0: "none",
-                1: "digest32",
-                2: "digest64"
-            };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2])];
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
         }
         static fromObject(data: {
-            digest32?: ReturnType<typeof Digest.Digest32.prototype.toObject>;
-            digest64?: ReturnType<typeof Digest.Digest64.prototype.toObject>;
+            value?: Uint8Array;
         }): Digest {
             const message = new Digest({});
-            if (data.digest32 != null) {
-                message.digest32 = Digest.Digest32.fromObject(data.digest32);
-            }
-            if (data.digest64 != null) {
-                message.digest64 = Digest.Digest64.fromObject(data.digest64);
+            if (data.value != null) {
+                message.value = data.value;
             }
             return message;
         }
         toObject() {
             const data: {
-                digest32?: ReturnType<typeof Digest.Digest32.prototype.toObject>;
-                digest64?: ReturnType<typeof Digest.Digest64.prototype.toObject>;
+                value?: Uint8Array;
             } = {};
-            if (this.digest32 != null) {
-                data.digest32 = this.digest32.toObject();
-            }
-            if (this.digest64 != null) {
-                data.digest64 = this.digest64.toObject();
+            if (this.value != null) {
+                data.value = this.value;
             }
             return data;
         }
@@ -416,10 +338,8 @@ export namespace quivr.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.has_digest32)
-                writer.writeMessage(1, this.digest32, () => this.digest32.serialize(writer));
-            if (this.has_digest64)
-                writer.writeMessage(2, this.digest64, () => this.digest64.serialize(writer));
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -430,10 +350,7 @@ export namespace quivr.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.digest32, () => message.digest32 = Digest.Digest32.deserialize(reader));
-                        break;
-                    case 2:
-                        reader.readMessage(message.digest64, () => message.digest64 = Digest.Digest64.deserialize(reader));
+                        message.value = reader.readBytes();
                         break;
                     default: reader.skipField();
                 }
@@ -445,142 +362,6 @@ export namespace quivr.models {
         }
         static deserializeBinary(bytes: Uint8Array): Digest {
             return Digest.deserialize(bytes);
-        }
-    }
-    export namespace Digest {
-        export class Digest32 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                value?: Uint8Array;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("value" in data && data.value != undefined) {
-                        this.value = data.value;
-                    }
-                }
-            }
-            get value() {
-                return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
-            }
-            set value(value: Uint8Array) {
-                pb_1.Message.setField(this, 1, value);
-            }
-            static fromObject(data: {
-                value?: Uint8Array;
-            }): Digest32 {
-                const message = new Digest32({});
-                if (data.value != null) {
-                    message.value = data.value;
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    value?: Uint8Array;
-                } = {};
-                if (this.value != null) {
-                    data.value = this.value;
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.value.length)
-                    writer.writeBytes(1, this.value);
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Digest32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Digest32();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            message.value = reader.readBytes();
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Digest32 {
-                return Digest32.deserialize(bytes);
-            }
-        }
-        export class Digest64 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                value?: Uint8Array;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("value" in data && data.value != undefined) {
-                        this.value = data.value;
-                    }
-                }
-            }
-            get value() {
-                return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
-            }
-            set value(value: Uint8Array) {
-                pb_1.Message.setField(this, 1, value);
-            }
-            static fromObject(data: {
-                value?: Uint8Array;
-            }): Digest64 {
-                const message = new Digest64({});
-                if (data.value != null) {
-                    message.value = data.value;
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    value?: Uint8Array;
-                } = {};
-                if (this.value != null) {
-                    data.value = this.value;
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.value.length)
-                    writer.writeBytes(1, this.value);
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Digest64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Digest64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            message.value = reader.readBytes();
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Digest64 {
-                return Digest64.deserialize(bytes);
-            }
         }
     }
     export class DigestVerification extends pb_1.Message {
@@ -680,39 +461,76 @@ export namespace quivr.models {
         }
     }
     export class VerificationKey extends pb_1.Message {
-        #one_of_decls: number[][] = [];
-        constructor(data?: any[] | {
-            value?: Uint8Array;
-        }) {
+        #one_of_decls: number[][] = [[1, 2]];
+        constructor(data?: any[] | ({} & (({
+            ed25519?: VerificationKey.Ed25519Vk;
+            extendedEd25519?: never;
+        } | {
+            ed25519?: never;
+            extendedEd25519?: VerificationKey.ExtendedEd25519Vk;
+        })))) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("value" in data && data.value != undefined) {
-                    this.value = data.value;
+                if ("ed25519" in data && data.ed25519 != undefined) {
+                    this.ed25519 = data.ed25519;
+                }
+                if ("extendedEd25519" in data && data.extendedEd25519 != undefined) {
+                    this.extendedEd25519 = data.extendedEd25519;
                 }
             }
         }
-        get value() {
-            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        get ed25519() {
+            return pb_1.Message.getWrapperField(this, VerificationKey.Ed25519Vk, 1) as VerificationKey.Ed25519Vk;
         }
-        set value(value: Uint8Array) {
-            pb_1.Message.setField(this, 1, value);
+        set ed25519(value: VerificationKey.Ed25519Vk) {
+            pb_1.Message.setOneofWrapperField(this, 1, this.#one_of_decls[0], value);
+        }
+        get has_ed25519() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        get extendedEd25519() {
+            return pb_1.Message.getWrapperField(this, VerificationKey.ExtendedEd25519Vk, 2) as VerificationKey.ExtendedEd25519Vk;
+        }
+        set extendedEd25519(value: VerificationKey.ExtendedEd25519Vk) {
+            pb_1.Message.setOneofWrapperField(this, 2, this.#one_of_decls[0], value);
+        }
+        get has_extendedEd25519() {
+            return pb_1.Message.getField(this, 2) != null;
+        }
+        get vk() {
+            const cases: {
+                [index: number]: "none" | "ed25519" | "extendedEd25519";
+            } = {
+                0: "none",
+                1: "ed25519",
+                2: "extendedEd25519"
+            };
+            return cases[pb_1.Message.computeOneofCase(this, [1, 2])];
         }
         static fromObject(data: {
-            value?: Uint8Array;
+            ed25519?: ReturnType<typeof VerificationKey.Ed25519Vk.prototype.toObject>;
+            extendedEd25519?: ReturnType<typeof VerificationKey.ExtendedEd25519Vk.prototype.toObject>;
         }): VerificationKey {
             const message = new VerificationKey({});
-            if (data.value != null) {
-                message.value = data.value;
+            if (data.ed25519 != null) {
+                message.ed25519 = VerificationKey.Ed25519Vk.fromObject(data.ed25519);
+            }
+            if (data.extendedEd25519 != null) {
+                message.extendedEd25519 = VerificationKey.ExtendedEd25519Vk.fromObject(data.extendedEd25519);
             }
             return message;
         }
         toObject() {
             const data: {
-                value?: Uint8Array;
+                ed25519?: ReturnType<typeof VerificationKey.Ed25519Vk.prototype.toObject>;
+                extendedEd25519?: ReturnType<typeof VerificationKey.ExtendedEd25519Vk.prototype.toObject>;
             } = {};
-            if (this.value != null) {
-                data.value = this.value;
+            if (this.ed25519 != null) {
+                data.ed25519 = this.ed25519.toObject();
+            }
+            if (this.extendedEd25519 != null) {
+                data.extendedEd25519 = this.extendedEd25519.toObject();
             }
             return data;
         }
@@ -720,8 +538,10 @@ export namespace quivr.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.value.length)
-                writer.writeBytes(1, this.value);
+            if (this.has_ed25519)
+                writer.writeMessage(1, this.ed25519, () => this.ed25519.serialize(writer));
+            if (this.has_extendedEd25519)
+                writer.writeMessage(2, this.extendedEd25519, () => this.extendedEd25519.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -732,7 +552,10 @@ export namespace quivr.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.value = reader.readBytes();
+                        reader.readMessage(message.ed25519, () => message.ed25519 = VerificationKey.Ed25519Vk.deserialize(reader));
+                        break;
+                    case 2:
+                        reader.readMessage(message.extendedEd25519, () => message.extendedEd25519 = VerificationKey.ExtendedEd25519Vk.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -746,40 +569,239 @@ export namespace quivr.models {
             return VerificationKey.deserialize(bytes);
         }
     }
+    export namespace VerificationKey {
+        export class Ed25519Vk extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                value?: Uint8Array;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("value" in data && data.value != undefined) {
+                        this.value = data.value;
+                    }
+                }
+            }
+            get value() {
+                return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+            }
+            set value(value: Uint8Array) {
+                pb_1.Message.setField(this, 1, value);
+            }
+            static fromObject(data: {
+                value?: Uint8Array;
+            }): Ed25519Vk {
+                const message = new Ed25519Vk({});
+                if (data.value != null) {
+                    message.value = data.value;
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    value?: Uint8Array;
+                } = {};
+                if (this.value != null) {
+                    data.value = this.value;
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.value.length)
+                    writer.writeBytes(1, this.value);
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Ed25519Vk {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Ed25519Vk();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            message.value = reader.readBytes();
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): Ed25519Vk {
+                return Ed25519Vk.deserialize(bytes);
+            }
+        }
+        export class ExtendedEd25519Vk extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                vk?: VerificationKey.Ed25519Vk;
+                chainCode?: Uint8Array;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("vk" in data && data.vk != undefined) {
+                        this.vk = data.vk;
+                    }
+                    if ("chainCode" in data && data.chainCode != undefined) {
+                        this.chainCode = data.chainCode;
+                    }
+                }
+            }
+            get vk() {
+                return pb_1.Message.getWrapperField(this, VerificationKey.Ed25519Vk, 1) as VerificationKey.Ed25519Vk;
+            }
+            set vk(value: VerificationKey.Ed25519Vk) {
+                pb_1.Message.setWrapperField(this, 1, value);
+            }
+            get has_vk() {
+                return pb_1.Message.getField(this, 1) != null;
+            }
+            get chainCode() {
+                return pb_1.Message.getFieldWithDefault(this, 2, new Uint8Array(0)) as Uint8Array;
+            }
+            set chainCode(value: Uint8Array) {
+                pb_1.Message.setField(this, 2, value);
+            }
+            static fromObject(data: {
+                vk?: ReturnType<typeof VerificationKey.Ed25519Vk.prototype.toObject>;
+                chainCode?: Uint8Array;
+            }): ExtendedEd25519Vk {
+                const message = new ExtendedEd25519Vk({});
+                if (data.vk != null) {
+                    message.vk = VerificationKey.Ed25519Vk.fromObject(data.vk);
+                }
+                if (data.chainCode != null) {
+                    message.chainCode = data.chainCode;
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    vk?: ReturnType<typeof VerificationKey.Ed25519Vk.prototype.toObject>;
+                    chainCode?: Uint8Array;
+                } = {};
+                if (this.vk != null) {
+                    data.vk = this.vk.toObject();
+                }
+                if (this.chainCode != null) {
+                    data.chainCode = this.chainCode;
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.has_vk)
+                    writer.writeMessage(1, this.vk, () => this.vk.serialize(writer));
+                if (this.chainCode.length)
+                    writer.writeBytes(2, this.chainCode);
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): ExtendedEd25519Vk {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new ExtendedEd25519Vk();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            reader.readMessage(message.vk, () => message.vk = VerificationKey.Ed25519Vk.deserialize(reader));
+                            break;
+                        case 2:
+                            message.chainCode = reader.readBytes();
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): ExtendedEd25519Vk {
+                return ExtendedEd25519Vk.deserialize(bytes);
+            }
+        }
+    }
     export class SigningKey extends pb_1.Message {
-        #one_of_decls: number[][] = [];
-        constructor(data?: any[] | {
-            value?: Uint8Array;
-        }) {
+        #one_of_decls: number[][] = [[1, 2]];
+        constructor(data?: any[] | ({} & (({
+            ed25519?: SigningKey.Ed25519Sk;
+            extendedEd25519?: never;
+        } | {
+            ed25519?: never;
+            extendedEd25519?: SigningKey.ExtendedEd25519Sk;
+        })))) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("value" in data && data.value != undefined) {
-                    this.value = data.value;
+                if ("ed25519" in data && data.ed25519 != undefined) {
+                    this.ed25519 = data.ed25519;
+                }
+                if ("extendedEd25519" in data && data.extendedEd25519 != undefined) {
+                    this.extendedEd25519 = data.extendedEd25519;
                 }
             }
         }
-        get value() {
-            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        get ed25519() {
+            return pb_1.Message.getWrapperField(this, SigningKey.Ed25519Sk, 1) as SigningKey.Ed25519Sk;
         }
-        set value(value: Uint8Array) {
-            pb_1.Message.setField(this, 1, value);
+        set ed25519(value: SigningKey.Ed25519Sk) {
+            pb_1.Message.setOneofWrapperField(this, 1, this.#one_of_decls[0], value);
+        }
+        get has_ed25519() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        get extendedEd25519() {
+            return pb_1.Message.getWrapperField(this, SigningKey.ExtendedEd25519Sk, 2) as SigningKey.ExtendedEd25519Sk;
+        }
+        set extendedEd25519(value: SigningKey.ExtendedEd25519Sk) {
+            pb_1.Message.setOneofWrapperField(this, 2, this.#one_of_decls[0], value);
+        }
+        get has_extendedEd25519() {
+            return pb_1.Message.getField(this, 2) != null;
+        }
+        get sk() {
+            const cases: {
+                [index: number]: "none" | "ed25519" | "extendedEd25519";
+            } = {
+                0: "none",
+                1: "ed25519",
+                2: "extendedEd25519"
+            };
+            return cases[pb_1.Message.computeOneofCase(this, [1, 2])];
         }
         static fromObject(data: {
-            value?: Uint8Array;
+            ed25519?: ReturnType<typeof SigningKey.Ed25519Sk.prototype.toObject>;
+            extendedEd25519?: ReturnType<typeof SigningKey.ExtendedEd25519Sk.prototype.toObject>;
         }): SigningKey {
             const message = new SigningKey({});
-            if (data.value != null) {
-                message.value = data.value;
+            if (data.ed25519 != null) {
+                message.ed25519 = SigningKey.Ed25519Sk.fromObject(data.ed25519);
+            }
+            if (data.extendedEd25519 != null) {
+                message.extendedEd25519 = SigningKey.ExtendedEd25519Sk.fromObject(data.extendedEd25519);
             }
             return message;
         }
         toObject() {
             const data: {
-                value?: Uint8Array;
+                ed25519?: ReturnType<typeof SigningKey.Ed25519Sk.prototype.toObject>;
+                extendedEd25519?: ReturnType<typeof SigningKey.ExtendedEd25519Sk.prototype.toObject>;
             } = {};
-            if (this.value != null) {
-                data.value = this.value;
+            if (this.ed25519 != null) {
+                data.ed25519 = this.ed25519.toObject();
+            }
+            if (this.extendedEd25519 != null) {
+                data.extendedEd25519 = this.extendedEd25519.toObject();
             }
             return data;
         }
@@ -787,8 +809,10 @@ export namespace quivr.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.value.length)
-                writer.writeBytes(1, this.value);
+            if (this.has_ed25519)
+                writer.writeMessage(1, this.ed25519, () => this.ed25519.serialize(writer));
+            if (this.has_extendedEd25519)
+                writer.writeMessage(2, this.extendedEd25519, () => this.extendedEd25519.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -799,7 +823,10 @@ export namespace quivr.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.value = reader.readBytes();
+                        reader.readMessage(message.ed25519, () => message.ed25519 = SigningKey.Ed25519Sk.deserialize(reader));
+                        break;
+                    case 2:
+                        reader.readMessage(message.extendedEd25519, () => message.extendedEd25519 = SigningKey.ExtendedEd25519Sk.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -811,6 +838,188 @@ export namespace quivr.models {
         }
         static deserializeBinary(bytes: Uint8Array): SigningKey {
             return SigningKey.deserialize(bytes);
+        }
+    }
+    export namespace SigningKey {
+        export class Ed25519Sk extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                value?: Uint8Array;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("value" in data && data.value != undefined) {
+                        this.value = data.value;
+                    }
+                }
+            }
+            get value() {
+                return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+            }
+            set value(value: Uint8Array) {
+                pb_1.Message.setField(this, 1, value);
+            }
+            static fromObject(data: {
+                value?: Uint8Array;
+            }): Ed25519Sk {
+                const message = new Ed25519Sk({});
+                if (data.value != null) {
+                    message.value = data.value;
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    value?: Uint8Array;
+                } = {};
+                if (this.value != null) {
+                    data.value = this.value;
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.value.length)
+                    writer.writeBytes(1, this.value);
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Ed25519Sk {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Ed25519Sk();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            message.value = reader.readBytes();
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): Ed25519Sk {
+                return Ed25519Sk.deserialize(bytes);
+            }
+        }
+        export class ExtendedEd25519Sk extends pb_1.Message {
+            #one_of_decls: number[][] = [];
+            constructor(data?: any[] | {
+                leftKey?: Uint8Array;
+                rightKey?: Uint8Array;
+                chainCode?: Uint8Array;
+            }) {
+                super();
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+                if (!Array.isArray(data) && typeof data == "object") {
+                    if ("leftKey" in data && data.leftKey != undefined) {
+                        this.leftKey = data.leftKey;
+                    }
+                    if ("rightKey" in data && data.rightKey != undefined) {
+                        this.rightKey = data.rightKey;
+                    }
+                    if ("chainCode" in data && data.chainCode != undefined) {
+                        this.chainCode = data.chainCode;
+                    }
+                }
+            }
+            get leftKey() {
+                return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+            }
+            set leftKey(value: Uint8Array) {
+                pb_1.Message.setField(this, 1, value);
+            }
+            get rightKey() {
+                return pb_1.Message.getFieldWithDefault(this, 2, new Uint8Array(0)) as Uint8Array;
+            }
+            set rightKey(value: Uint8Array) {
+                pb_1.Message.setField(this, 2, value);
+            }
+            get chainCode() {
+                return pb_1.Message.getFieldWithDefault(this, 3, new Uint8Array(0)) as Uint8Array;
+            }
+            set chainCode(value: Uint8Array) {
+                pb_1.Message.setField(this, 3, value);
+            }
+            static fromObject(data: {
+                leftKey?: Uint8Array;
+                rightKey?: Uint8Array;
+                chainCode?: Uint8Array;
+            }): ExtendedEd25519Sk {
+                const message = new ExtendedEd25519Sk({});
+                if (data.leftKey != null) {
+                    message.leftKey = data.leftKey;
+                }
+                if (data.rightKey != null) {
+                    message.rightKey = data.rightKey;
+                }
+                if (data.chainCode != null) {
+                    message.chainCode = data.chainCode;
+                }
+                return message;
+            }
+            toObject() {
+                const data: {
+                    leftKey?: Uint8Array;
+                    rightKey?: Uint8Array;
+                    chainCode?: Uint8Array;
+                } = {};
+                if (this.leftKey != null) {
+                    data.leftKey = this.leftKey;
+                }
+                if (this.rightKey != null) {
+                    data.rightKey = this.rightKey;
+                }
+                if (this.chainCode != null) {
+                    data.chainCode = this.chainCode;
+                }
+                return data;
+            }
+            serialize(): Uint8Array;
+            serialize(w: pb_1.BinaryWriter): void;
+            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+                const writer = w || new pb_1.BinaryWriter();
+                if (this.leftKey.length)
+                    writer.writeBytes(1, this.leftKey);
+                if (this.rightKey.length)
+                    writer.writeBytes(2, this.rightKey);
+                if (this.chainCode.length)
+                    writer.writeBytes(3, this.chainCode);
+                if (!w)
+                    return writer.getResultBuffer();
+            }
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): ExtendedEd25519Sk {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new ExtendedEd25519Sk();
+                while (reader.nextField()) {
+                    if (reader.isEndGroup())
+                        break;
+                    switch (reader.getFieldNumber()) {
+                        case 1:
+                            message.leftKey = reader.readBytes();
+                            break;
+                        case 2:
+                            message.rightKey = reader.readBytes();
+                            break;
+                        case 3:
+                            message.chainCode = reader.readBytes();
+                            break;
+                        default: reader.skipField();
+                    }
+                }
+                return message;
+            }
+            serializeBinary(): Uint8Array {
+                return this.serialize();
+            }
+            static deserializeBinary(bytes: Uint8Array): ExtendedEd25519Sk {
+                return ExtendedEd25519Sk.deserialize(bytes);
+            }
         }
     }
     export class KeyPair extends pb_1.Message {

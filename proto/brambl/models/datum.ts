@@ -4,85 +4,67 @@
  * source: brambl/models/datum.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../validate/validate";
-import * as dependency_2 from "./../../scalapb/scalapb";
-import * as dependency_3 from "./../../scalapb/validate";
-import * as dependency_4 from "./event";
+import * as dependency_2 from "./event";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models {
     export class Datum extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2, 3, 4, 5, 6, 7, 8]];
+        #one_of_decls: number[][] = [[1, 2, 3, 4, 5, 6, 7]];
         constructor(data?: any[] | ({} & (({
             eon?: Datum.Eon;
             era?: never;
             epoch?: never;
             header?: never;
-            root?: never;
             ioTransaction?: never;
-            spentOutput?: never;
-            unspentOutput?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: Datum.Era;
             epoch?: never;
             header?: never;
-            root?: never;
             ioTransaction?: never;
-            spentOutput?: never;
-            unspentOutput?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: Datum.Epoch;
             header?: never;
-            root?: never;
             ioTransaction?: never;
-            spentOutput?: never;
-            unspentOutput?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: Datum.Header;
-            root?: never;
             ioTransaction?: never;
-            spentOutput?: never;
-            unspentOutput?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: never;
-            root?: Datum.Root;
-            ioTransaction?: never;
-            spentOutput?: never;
-            unspentOutput?: never;
-        } | {
-            eon?: never;
-            era?: never;
-            epoch?: never;
-            header?: never;
-            root?: never;
             ioTransaction?: Datum.IoTransaction;
-            spentOutput?: never;
-            unspentOutput?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: never;
-            root?: never;
             ioTransaction?: never;
-            spentOutput?: Datum.SpentOutput;
-            unspentOutput?: never;
+            groupPolicy?: Datum.GroupPolicy;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: never;
-            root?: never;
             ioTransaction?: never;
-            spentOutput?: never;
-            unspentOutput?: Datum.UnspentOutput;
+            groupPolicy?: never;
+            seriesPolicy?: Datum.SeriesPolicy;
         })))) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -99,17 +81,14 @@ export namespace co.topl.brambl.models {
                 if ("header" in data && data.header != undefined) {
                     this.header = data.header;
                 }
-                if ("root" in data && data.root != undefined) {
-                    this.root = data.root;
-                }
                 if ("ioTransaction" in data && data.ioTransaction != undefined) {
                     this.ioTransaction = data.ioTransaction;
                 }
-                if ("spentOutput" in data && data.spentOutput != undefined) {
-                    this.spentOutput = data.spentOutput;
+                if ("groupPolicy" in data && data.groupPolicy != undefined) {
+                    this.groupPolicy = data.groupPolicy;
                 }
-                if ("unspentOutput" in data && data.unspentOutput != undefined) {
-                    this.unspentOutput = data.unspentOutput;
+                if ("seriesPolicy" in data && data.seriesPolicy != undefined) {
+                    this.seriesPolicy = data.seriesPolicy;
                 }
             }
         }
@@ -149,67 +128,56 @@ export namespace co.topl.brambl.models {
         get has_header() {
             return pb_1.Message.getField(this, 4) != null;
         }
-        get root() {
-            return pb_1.Message.getWrapperField(this, Datum.Root, 5) as Datum.Root;
-        }
-        set root(value: Datum.Root) {
-            pb_1.Message.setOneofWrapperField(this, 5, this.#one_of_decls[0], value);
-        }
-        get has_root() {
-            return pb_1.Message.getField(this, 5) != null;
-        }
         get ioTransaction() {
-            return pb_1.Message.getWrapperField(this, Datum.IoTransaction, 6) as Datum.IoTransaction;
+            return pb_1.Message.getWrapperField(this, Datum.IoTransaction, 5) as Datum.IoTransaction;
         }
         set ioTransaction(value: Datum.IoTransaction) {
-            pb_1.Message.setOneofWrapperField(this, 6, this.#one_of_decls[0], value);
+            pb_1.Message.setOneofWrapperField(this, 5, this.#one_of_decls[0], value);
         }
         get has_ioTransaction() {
+            return pb_1.Message.getField(this, 5) != null;
+        }
+        get groupPolicy() {
+            return pb_1.Message.getWrapperField(this, Datum.GroupPolicy, 6) as Datum.GroupPolicy;
+        }
+        set groupPolicy(value: Datum.GroupPolicy) {
+            pb_1.Message.setOneofWrapperField(this, 6, this.#one_of_decls[0], value);
+        }
+        get has_groupPolicy() {
             return pb_1.Message.getField(this, 6) != null;
         }
-        get spentOutput() {
-            return pb_1.Message.getWrapperField(this, Datum.SpentOutput, 7) as Datum.SpentOutput;
+        get seriesPolicy() {
+            return pb_1.Message.getWrapperField(this, Datum.SeriesPolicy, 7) as Datum.SeriesPolicy;
         }
-        set spentOutput(value: Datum.SpentOutput) {
+        set seriesPolicy(value: Datum.SeriesPolicy) {
             pb_1.Message.setOneofWrapperField(this, 7, this.#one_of_decls[0], value);
         }
-        get has_spentOutput() {
+        get has_seriesPolicy() {
             return pb_1.Message.getField(this, 7) != null;
-        }
-        get unspentOutput() {
-            return pb_1.Message.getWrapperField(this, Datum.UnspentOutput, 8) as Datum.UnspentOutput;
-        }
-        set unspentOutput(value: Datum.UnspentOutput) {
-            pb_1.Message.setOneofWrapperField(this, 8, this.#one_of_decls[0], value);
-        }
-        get has_unspentOutput() {
-            return pb_1.Message.getField(this, 8) != null;
         }
         get value() {
             const cases: {
-                [index: number]: "none" | "eon" | "era" | "epoch" | "header" | "root" | "ioTransaction" | "spentOutput" | "unspentOutput";
+                [index: number]: "none" | "eon" | "era" | "epoch" | "header" | "ioTransaction" | "groupPolicy" | "seriesPolicy";
             } = {
                 0: "none",
                 1: "eon",
                 2: "era",
                 3: "epoch",
                 4: "header",
-                5: "root",
-                6: "ioTransaction",
-                7: "spentOutput",
-                8: "unspentOutput"
+                5: "ioTransaction",
+                6: "groupPolicy",
+                7: "seriesPolicy"
             };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5, 6, 7, 8])];
+            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5, 6, 7])];
         }
         static fromObject(data: {
             eon?: ReturnType<typeof Datum.Eon.prototype.toObject>;
             era?: ReturnType<typeof Datum.Era.prototype.toObject>;
             epoch?: ReturnType<typeof Datum.Epoch.prototype.toObject>;
             header?: ReturnType<typeof Datum.Header.prototype.toObject>;
-            root?: ReturnType<typeof Datum.Root.prototype.toObject>;
             ioTransaction?: ReturnType<typeof Datum.IoTransaction.prototype.toObject>;
-            spentOutput?: ReturnType<typeof Datum.SpentOutput.prototype.toObject>;
-            unspentOutput?: ReturnType<typeof Datum.UnspentOutput.prototype.toObject>;
+            groupPolicy?: ReturnType<typeof Datum.GroupPolicy.prototype.toObject>;
+            seriesPolicy?: ReturnType<typeof Datum.SeriesPolicy.prototype.toObject>;
         }): Datum {
             const message = new Datum({});
             if (data.eon != null) {
@@ -224,17 +192,14 @@ export namespace co.topl.brambl.models {
             if (data.header != null) {
                 message.header = Datum.Header.fromObject(data.header);
             }
-            if (data.root != null) {
-                message.root = Datum.Root.fromObject(data.root);
-            }
             if (data.ioTransaction != null) {
                 message.ioTransaction = Datum.IoTransaction.fromObject(data.ioTransaction);
             }
-            if (data.spentOutput != null) {
-                message.spentOutput = Datum.SpentOutput.fromObject(data.spentOutput);
+            if (data.groupPolicy != null) {
+                message.groupPolicy = Datum.GroupPolicy.fromObject(data.groupPolicy);
             }
-            if (data.unspentOutput != null) {
-                message.unspentOutput = Datum.UnspentOutput.fromObject(data.unspentOutput);
+            if (data.seriesPolicy != null) {
+                message.seriesPolicy = Datum.SeriesPolicy.fromObject(data.seriesPolicy);
             }
             return message;
         }
@@ -244,10 +209,9 @@ export namespace co.topl.brambl.models {
                 era?: ReturnType<typeof Datum.Era.prototype.toObject>;
                 epoch?: ReturnType<typeof Datum.Epoch.prototype.toObject>;
                 header?: ReturnType<typeof Datum.Header.prototype.toObject>;
-                root?: ReturnType<typeof Datum.Root.prototype.toObject>;
                 ioTransaction?: ReturnType<typeof Datum.IoTransaction.prototype.toObject>;
-                spentOutput?: ReturnType<typeof Datum.SpentOutput.prototype.toObject>;
-                unspentOutput?: ReturnType<typeof Datum.UnspentOutput.prototype.toObject>;
+                groupPolicy?: ReturnType<typeof Datum.GroupPolicy.prototype.toObject>;
+                seriesPolicy?: ReturnType<typeof Datum.SeriesPolicy.prototype.toObject>;
             } = {};
             if (this.eon != null) {
                 data.eon = this.eon.toObject();
@@ -261,17 +225,14 @@ export namespace co.topl.brambl.models {
             if (this.header != null) {
                 data.header = this.header.toObject();
             }
-            if (this.root != null) {
-                data.root = this.root.toObject();
-            }
             if (this.ioTransaction != null) {
                 data.ioTransaction = this.ioTransaction.toObject();
             }
-            if (this.spentOutput != null) {
-                data.spentOutput = this.spentOutput.toObject();
+            if (this.groupPolicy != null) {
+                data.groupPolicy = this.groupPolicy.toObject();
             }
-            if (this.unspentOutput != null) {
-                data.unspentOutput = this.unspentOutput.toObject();
+            if (this.seriesPolicy != null) {
+                data.seriesPolicy = this.seriesPolicy.toObject();
             }
             return data;
         }
@@ -287,14 +248,12 @@ export namespace co.topl.brambl.models {
                 writer.writeMessage(3, this.epoch, () => this.epoch.serialize(writer));
             if (this.has_header)
                 writer.writeMessage(4, this.header, () => this.header.serialize(writer));
-            if (this.has_root)
-                writer.writeMessage(5, this.root, () => this.root.serialize(writer));
             if (this.has_ioTransaction)
-                writer.writeMessage(6, this.ioTransaction, () => this.ioTransaction.serialize(writer));
-            if (this.has_spentOutput)
-                writer.writeMessage(7, this.spentOutput, () => this.spentOutput.serialize(writer));
-            if (this.has_unspentOutput)
-                writer.writeMessage(8, this.unspentOutput, () => this.unspentOutput.serialize(writer));
+                writer.writeMessage(5, this.ioTransaction, () => this.ioTransaction.serialize(writer));
+            if (this.has_groupPolicy)
+                writer.writeMessage(6, this.groupPolicy, () => this.groupPolicy.serialize(writer));
+            if (this.has_seriesPolicy)
+                writer.writeMessage(7, this.seriesPolicy, () => this.seriesPolicy.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -317,16 +276,13 @@ export namespace co.topl.brambl.models {
                         reader.readMessage(message.header, () => message.header = Datum.Header.deserialize(reader));
                         break;
                     case 5:
-                        reader.readMessage(message.root, () => message.root = Datum.Root.deserialize(reader));
-                        break;
-                    case 6:
                         reader.readMessage(message.ioTransaction, () => message.ioTransaction = Datum.IoTransaction.deserialize(reader));
                         break;
-                    case 7:
-                        reader.readMessage(message.spentOutput, () => message.spentOutput = Datum.SpentOutput.deserialize(reader));
+                    case 6:
+                        reader.readMessage(message.groupPolicy, () => message.groupPolicy = Datum.GroupPolicy.deserialize(reader));
                         break;
-                    case 8:
-                        reader.readMessage(message.unspentOutput, () => message.unspentOutput = Datum.UnspentOutput.deserialize(reader));
+                    case 7:
+                        reader.readMessage(message.seriesPolicy, () => message.seriesPolicy = Datum.SeriesPolicy.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -344,7 +300,7 @@ export namespace co.topl.brambl.models {
         export class Eon extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.Eon;
+                event?: dependency_2.co.topl.brambl.models.Event.Eon;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -355,26 +311,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.Eon, 1) as dependency_4.co.topl.brambl.models.Event.Eon;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.Eon, 1) as dependency_2.co.topl.brambl.models.Event.Eon;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.Eon) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.Eon) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Eon.prototype.toObject>;
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Eon.prototype.toObject>;
             }): Eon {
                 const message = new Eon({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.Eon.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.Eon.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Eon.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Eon.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -397,7 +353,7 @@ export namespace co.topl.brambl.models {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.Eon.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.Eon.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -414,7 +370,7 @@ export namespace co.topl.brambl.models {
         export class Era extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.Era;
+                event?: dependency_2.co.topl.brambl.models.Event.Era;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -425,26 +381,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.Era, 1) as dependency_4.co.topl.brambl.models.Event.Era;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.Era, 1) as dependency_2.co.topl.brambl.models.Event.Era;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.Era) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.Era) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Era.prototype.toObject>;
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Era.prototype.toObject>;
             }): Era {
                 const message = new Era({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.Era.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.Era.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Era.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Era.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -467,7 +423,7 @@ export namespace co.topl.brambl.models {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.Era.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.Era.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -484,7 +440,7 @@ export namespace co.topl.brambl.models {
         export class Epoch extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.Epoch;
+                event?: dependency_2.co.topl.brambl.models.Event.Epoch;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -495,26 +451,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.Epoch, 1) as dependency_4.co.topl.brambl.models.Event.Epoch;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.Epoch, 1) as dependency_2.co.topl.brambl.models.Event.Epoch;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.Epoch) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.Epoch) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Epoch.prototype.toObject>;
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Epoch.prototype.toObject>;
             }): Epoch {
                 const message = new Epoch({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.Epoch.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.Epoch.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Epoch.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Epoch.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -537,7 +493,7 @@ export namespace co.topl.brambl.models {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.Epoch.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.Epoch.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -554,7 +510,7 @@ export namespace co.topl.brambl.models {
         export class Header extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.Header;
+                event?: dependency_2.co.topl.brambl.models.Event.Header;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -565,26 +521,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.Header, 1) as dependency_4.co.topl.brambl.models.Event.Header;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.Header, 1) as dependency_2.co.topl.brambl.models.Event.Header;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.Header) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.Header) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Header.prototype.toObject>;
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Header.prototype.toObject>;
             }): Header {
                 const message = new Header({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.Header.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.Header.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Header.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.Header.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -607,7 +563,7 @@ export namespace co.topl.brambl.models {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.Header.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.Header.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -621,80 +577,10 @@ export namespace co.topl.brambl.models {
                 return Header.deserialize(bytes);
             }
         }
-        export class Root extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.Root;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("event" in data && data.event != undefined) {
-                        this.event = data.event;
-                    }
-                }
-            }
-            get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.Root, 1) as dependency_4.co.topl.brambl.models.Event.Root;
-            }
-            set event(value: dependency_4.co.topl.brambl.models.Event.Root) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_event() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Root.prototype.toObject>;
-            }): Root {
-                const message = new Root({});
-                if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.Root.fromObject(data.event);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.Root.prototype.toObject>;
-                } = {};
-                if (this.event != null) {
-                    data.event = this.event.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_event)
-                    writer.writeMessage(1, this.event, () => this.event.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Root {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Root();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.Root.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Root {
-                return Root.deserialize(bytes);
-            }
-        }
         export class IoTransaction extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.IoTransaction;
+                event?: dependency_2.co.topl.brambl.models.Event.IoTransaction;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -705,26 +591,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.IoTransaction, 1) as dependency_4.co.topl.brambl.models.Event.IoTransaction;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.IoTransaction, 1) as dependency_2.co.topl.brambl.models.Event.IoTransaction;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.IoTransaction) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.IoTransaction) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.IoTransaction.prototype.toObject>;
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.IoTransaction.prototype.toObject>;
             }): IoTransaction {
                 const message = new IoTransaction({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.IoTransaction.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.IoTransaction.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.IoTransaction.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.IoTransaction.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -747,7 +633,7 @@ export namespace co.topl.brambl.models {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.IoTransaction.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.IoTransaction.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -761,10 +647,10 @@ export namespace co.topl.brambl.models {
                 return IoTransaction.deserialize(bytes);
             }
         }
-        export class SpentOutput extends pb_1.Message {
+        export class GroupPolicy extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput;
+                event?: dependency_2.co.topl.brambl.models.Event.GroupPolicy;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -775,26 +661,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput, 1) as dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.GroupPolicy, 1) as dependency_2.co.topl.brambl.models.Event.GroupPolicy;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.GroupPolicy) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput.prototype.toObject>;
-            }): SpentOutput {
-                const message = new SpentOutput({});
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.GroupPolicy.prototype.toObject>;
+            }): GroupPolicy {
+                const message = new GroupPolicy({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.GroupPolicy.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.GroupPolicy.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -810,14 +696,14 @@ export namespace co.topl.brambl.models {
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SpentOutput {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SpentOutput();
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GroupPolicy {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GroupPolicy();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.SpentTransactionOutput.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.GroupPolicy.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -827,14 +713,14 @@ export namespace co.topl.brambl.models {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): SpentOutput {
-                return SpentOutput.deserialize(bytes);
+            static deserializeBinary(bytes: Uint8Array): GroupPolicy {
+                return GroupPolicy.deserialize(bytes);
             }
         }
-        export class UnspentOutput extends pb_1.Message {
+        export class SeriesPolicy extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                event?: dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput;
+                event?: dependency_2.co.topl.brambl.models.Event.SeriesPolicy;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -845,26 +731,26 @@ export namespace co.topl.brambl.models {
                 }
             }
             get event() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput, 1) as dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput;
+                return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.Event.SeriesPolicy, 1) as dependency_2.co.topl.brambl.models.Event.SeriesPolicy;
             }
-            set event(value: dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput) {
+            set event(value: dependency_2.co.topl.brambl.models.Event.SeriesPolicy) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_event() {
                 return pb_1.Message.getField(this, 1) != null;
             }
             static fromObject(data: {
-                event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput.prototype.toObject>;
-            }): UnspentOutput {
-                const message = new UnspentOutput({});
+                event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.SeriesPolicy.prototype.toObject>;
+            }): SeriesPolicy {
+                const message = new SeriesPolicy({});
                 if (data.event != null) {
-                    message.event = dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput.fromObject(data.event);
+                    message.event = dependency_2.co.topl.brambl.models.Event.SeriesPolicy.fromObject(data.event);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    event?: ReturnType<typeof dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput.prototype.toObject>;
+                    event?: ReturnType<typeof dependency_2.co.topl.brambl.models.Event.SeriesPolicy.prototype.toObject>;
                 } = {};
                 if (this.event != null) {
                     data.event = this.event.toObject();
@@ -880,14 +766,14 @@ export namespace co.topl.brambl.models {
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): UnspentOutput {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new UnspentOutput();
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SeriesPolicy {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SeriesPolicy();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.event, () => message.event = dependency_4.co.topl.brambl.models.Event.UnspentTransactionOutput.deserialize(reader));
+                            reader.readMessage(message.event, () => message.event = dependency_2.co.topl.brambl.models.Event.SeriesPolicy.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -897,8 +783,8 @@ export namespace co.topl.brambl.models {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): UnspentOutput {
-                return UnspentOutput.deserialize(bytes);
+            static deserializeBinary(bytes: Uint8Array): SeriesPolicy {
+                return SeriesPolicy.deserialize(bytes);
             }
         }
     }

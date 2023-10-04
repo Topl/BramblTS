@@ -3,18 +3,17 @@
  * compiler version: 3.6.1
  * source: node/models/block.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
-import * as dependency_1 from "../../consensus/models/block_header";
-import * as dependency_2 from "../../brambl/models/transaction/io_transaction";
-import * as dependency_3 from "../../brambl/models/identifier";
-import * as dependency_4 from "../../validate/validate";
-import * as dependency_5 from "../../scalapb/scalapb";
-import * as dependency_6 from "../../scalapb/validate";
+import * as dependency_1 from "./../../consensus/models/block_header";
+import * as dependency_2 from "./../../brambl/models/transaction/io_transaction";
+import * as dependency_3 from "./../../brambl/models/identifier";
+import * as dependency_4 from "./../../validate/validate";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.node.models {
     export class BlockBody extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            transactionIds?: dependency_3.co.topl.brambl.models.Identifier.IoTransaction32[];
+            transactionIds?: dependency_3.co.topl.brambl.models.TransactionId[];
+            rewardTransactionId?: dependency_3.co.topl.brambl.models.TransactionId;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
@@ -22,29 +21,49 @@ export namespace co.topl.node.models {
                 if ("transactionIds" in data && data.transactionIds != undefined) {
                     this.transactionIds = data.transactionIds;
                 }
+                if ("rewardTransactionId" in data && data.rewardTransactionId != undefined) {
+                    this.rewardTransactionId = data.rewardTransactionId;
+                }
             }
         }
         get transactionIds() {
-            return pb_1.Message.getRepeatedWrapperField(this, dependency_3.co.topl.brambl.models.Identifier.IoTransaction32, 1) as dependency_3.co.topl.brambl.models.Identifier.IoTransaction32[];
+            return pb_1.Message.getRepeatedWrapperField(this, dependency_3.co.topl.brambl.models.TransactionId, 1) as dependency_3.co.topl.brambl.models.TransactionId[];
         }
-        set transactionIds(value: dependency_3.co.topl.brambl.models.Identifier.IoTransaction32[]) {
+        set transactionIds(value: dependency_3.co.topl.brambl.models.TransactionId[]) {
             pb_1.Message.setRepeatedWrapperField(this, 1, value);
         }
+        get rewardTransactionId() {
+            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.TransactionId, 2) as dependency_3.co.topl.brambl.models.TransactionId;
+        }
+        set rewardTransactionId(value: dependency_3.co.topl.brambl.models.TransactionId) {
+            pb_1.Message.setWrapperField(this, 2, value);
+        }
+        get has_rewardTransactionId() {
+            return pb_1.Message.getField(this, 2) != null;
+        }
         static fromObject(data: {
-            transactionIds?: ReturnType<typeof dependency_3.co.topl.brambl.models.Identifier.IoTransaction32.prototype.toObject>[];
+            transactionIds?: ReturnType<typeof dependency_3.co.topl.brambl.models.TransactionId.prototype.toObject>[];
+            rewardTransactionId?: ReturnType<typeof dependency_3.co.topl.brambl.models.TransactionId.prototype.toObject>;
         }): BlockBody {
             const message = new BlockBody({});
             if (data.transactionIds != null) {
-                message.transactionIds = data.transactionIds.map(item => dependency_3.co.topl.brambl.models.Identifier.IoTransaction32.fromObject(item));
+                message.transactionIds = data.transactionIds.map(item => dependency_3.co.topl.brambl.models.TransactionId.fromObject(item));
+            }
+            if (data.rewardTransactionId != null) {
+                message.rewardTransactionId = dependency_3.co.topl.brambl.models.TransactionId.fromObject(data.rewardTransactionId);
             }
             return message;
         }
         toObject() {
             const data: {
-                transactionIds?: ReturnType<typeof dependency_3.co.topl.brambl.models.Identifier.IoTransaction32.prototype.toObject>[];
+                transactionIds?: ReturnType<typeof dependency_3.co.topl.brambl.models.TransactionId.prototype.toObject>[];
+                rewardTransactionId?: ReturnType<typeof dependency_3.co.topl.brambl.models.TransactionId.prototype.toObject>;
             } = {};
             if (this.transactionIds != null) {
-                data.transactionIds = this.transactionIds.map((item: dependency_3.co.topl.brambl.models.Identifier.IoTransaction32) => item.toObject());
+                data.transactionIds = this.transactionIds.map((item: dependency_3.co.topl.brambl.models.TransactionId) => item.toObject());
+            }
+            if (this.rewardTransactionId != null) {
+                data.rewardTransactionId = this.rewardTransactionId.toObject();
             }
             return data;
         }
@@ -53,7 +72,9 @@ export namespace co.topl.node.models {
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
             if (this.transactionIds.length)
-                writer.writeRepeatedMessage(1, this.transactionIds, (item: dependency_3.co.topl.brambl.models.Identifier.IoTransaction32) => item.serialize(writer));
+                writer.writeRepeatedMessage(1, this.transactionIds, (item: dependency_3.co.topl.brambl.models.TransactionId) => item.serialize(writer));
+            if (this.has_rewardTransactionId)
+                writer.writeMessage(2, this.rewardTransactionId, () => this.rewardTransactionId.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -64,7 +85,10 @@ export namespace co.topl.node.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.transactionIds, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_3.co.topl.brambl.models.Identifier.IoTransaction32.deserialize(reader), dependency_3.co.topl.brambl.models.Identifier.IoTransaction32));
+                        reader.readMessage(message.transactionIds, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_3.co.topl.brambl.models.TransactionId.deserialize(reader), dependency_3.co.topl.brambl.models.TransactionId));
+                        break;
+                    case 2:
+                        reader.readMessage(message.rewardTransactionId, () => message.rewardTransactionId = dependency_3.co.topl.brambl.models.TransactionId.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -81,37 +105,58 @@ export namespace co.topl.node.models {
     export class FullBlockBody extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            transaction?: dependency_2.co.topl.brambl.models.transaction.IoTransaction[];
+            transactions?: dependency_2.co.topl.brambl.models.transaction.IoTransaction[];
+            rewardTransaction?: dependency_2.co.topl.brambl.models.transaction.IoTransaction;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("transaction" in data && data.transaction != undefined) {
-                    this.transaction = data.transaction;
+                if ("transactions" in data && data.transactions != undefined) {
+                    this.transactions = data.transactions;
+                }
+                if ("rewardTransaction" in data && data.rewardTransaction != undefined) {
+                    this.rewardTransaction = data.rewardTransaction;
                 }
             }
         }
-        get transaction() {
+        get transactions() {
             return pb_1.Message.getRepeatedWrapperField(this, dependency_2.co.topl.brambl.models.transaction.IoTransaction, 1) as dependency_2.co.topl.brambl.models.transaction.IoTransaction[];
         }
-        set transaction(value: dependency_2.co.topl.brambl.models.transaction.IoTransaction[]) {
+        set transactions(value: dependency_2.co.topl.brambl.models.transaction.IoTransaction[]) {
             pb_1.Message.setRepeatedWrapperField(this, 1, value);
         }
+        get rewardTransaction() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.transaction.IoTransaction, 2) as dependency_2.co.topl.brambl.models.transaction.IoTransaction;
+        }
+        set rewardTransaction(value: dependency_2.co.topl.brambl.models.transaction.IoTransaction) {
+            pb_1.Message.setWrapperField(this, 2, value);
+        }
+        get has_rewardTransaction() {
+            return pb_1.Message.getField(this, 2) != null;
+        }
         static fromObject(data: {
-            transaction?: ReturnType<typeof dependency_2.co.topl.brambl.models.transaction.IoTransaction.prototype.toObject>[];
+            transactions?: ReturnType<typeof dependency_2.co.topl.brambl.models.transaction.IoTransaction.prototype.toObject>[];
+            rewardTransaction?: ReturnType<typeof dependency_2.co.topl.brambl.models.transaction.IoTransaction.prototype.toObject>;
         }): FullBlockBody {
             const message = new FullBlockBody({});
-            if (data.transaction != null) {
-                message.transaction = data.transaction.map(item => dependency_2.co.topl.brambl.models.transaction.IoTransaction.fromObject(item));
+            if (data.transactions != null) {
+                message.transactions = data.transactions.map(item => dependency_2.co.topl.brambl.models.transaction.IoTransaction.fromObject(item));
+            }
+            if (data.rewardTransaction != null) {
+                message.rewardTransaction = dependency_2.co.topl.brambl.models.transaction.IoTransaction.fromObject(data.rewardTransaction);
             }
             return message;
         }
         toObject() {
             const data: {
-                transaction?: ReturnType<typeof dependency_2.co.topl.brambl.models.transaction.IoTransaction.prototype.toObject>[];
+                transactions?: ReturnType<typeof dependency_2.co.topl.brambl.models.transaction.IoTransaction.prototype.toObject>[];
+                rewardTransaction?: ReturnType<typeof dependency_2.co.topl.brambl.models.transaction.IoTransaction.prototype.toObject>;
             } = {};
-            if (this.transaction != null) {
-                data.transaction = this.transaction.map((item: dependency_2.co.topl.brambl.models.transaction.IoTransaction) => item.toObject());
+            if (this.transactions != null) {
+                data.transactions = this.transactions.map((item: dependency_2.co.topl.brambl.models.transaction.IoTransaction) => item.toObject());
+            }
+            if (this.rewardTransaction != null) {
+                data.rewardTransaction = this.rewardTransaction.toObject();
             }
             return data;
         }
@@ -119,8 +164,10 @@ export namespace co.topl.node.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.transaction.length)
-                writer.writeRepeatedMessage(1, this.transaction, (item: dependency_2.co.topl.brambl.models.transaction.IoTransaction) => item.serialize(writer));
+            if (this.transactions.length)
+                writer.writeRepeatedMessage(1, this.transactions, (item: dependency_2.co.topl.brambl.models.transaction.IoTransaction) => item.serialize(writer));
+            if (this.has_rewardTransaction)
+                writer.writeMessage(2, this.rewardTransaction, () => this.rewardTransaction.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -131,7 +178,10 @@ export namespace co.topl.node.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.transaction, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_2.co.topl.brambl.models.transaction.IoTransaction.deserialize(reader), dependency_2.co.topl.brambl.models.transaction.IoTransaction));
+                        reader.readMessage(message.transactions, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_2.co.topl.brambl.models.transaction.IoTransaction.deserialize(reader), dependency_2.co.topl.brambl.models.transaction.IoTransaction));
+                        break;
+                    case 2:
+                        reader.readMessage(message.rewardTransaction, () => message.rewardTransaction = dependency_2.co.topl.brambl.models.transaction.IoTransaction.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }

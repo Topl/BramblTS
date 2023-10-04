@@ -4,6 +4,7 @@
  * source: quivr/models/proof.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./shared";
+import * as dependency_2 from "./../../validate/validate";
 import * as pb_1 from "google-protobuf";
 export namespace quivr.models {
     export class Proof extends pb_1.Message {
