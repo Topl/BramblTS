@@ -1,5 +1,3 @@
-import bigInt, { BigInteger } from 'big-integer';
-
 const SIZE = 10;
 const M24 = 0x00ffffff;
 const M25 = 0x01ffffff;
@@ -9,121 +7,684 @@ const ROOT_NEG_ONE: number[] = [
   0x00570649,
 ];
 
-function create(): number[] {
-  return new Array(SIZE).fill(0);
+function add(x: Int32Array, y: Int32Array, z: Int32Array): void {
+  for (let i = 0; i < SIZE; i++) {
+    z[i] = x[i] + y[i];
+  }
 }
 
-function isZero(x: number[]): number {
+function addOne1(z: Int32Array): void {
+  z[0] += 1;
+}
+
+function addOne2(z: Int32Array, zOff: number): void {
+  z[zOff] += 1;
+}
+
+function apm(x: Int32Array, y: Int32Array, zp: Int32Array, zm: Int32Array): void {
+  for (let i = 0; i < SIZE; i++) {
+    const xi = x[i];
+    const yi = y[i];
+    zp[i] = (xi + yi) | 0;
+    zm[i] = (xi - yi) | 0;
+  }
+}
+
+function carry(z: Int32Array) {
+  let z0 = z[0],
+    z1 = z[1],
+    z2 = z[2],
+    z3 = z[3],
+    z4 = z[4],
+    z5 = z[5],
+    z6 = z[6],
+    z7 = z[7],
+    z8 = z[8],
+    z9 = z[9];
+
+  z3 += z2 >> 25;
+  z2 &= M25;
+  z5 += z4 >> 25;
+  z4 &= M25;
+  z8 += z7 >> 25;
+  z7 &= M25;
+  z0 += (z9 >> 25) * 38;
+  z9 &= M25;
+  z1 += z0 >> 26;
+  z0 &= M26;
+  z6 += z5 >> 26;
+  z5 &= M26;
+  z2 += z1 >> 26;
+  z1 &= M26;
+  z4 += z3 >> 26;
+  z3 &= M26;
+  z7 += z6 >> 26;
+  z6 &= M26;
+  z9 += z8 >> 26;
+  z8 &= M26;
+
+  z[0] = z0;
+  z[1] = z1;
+  z[2] = z2;
+  z[3] = z3;
+  z[4] = z4;
+  z[5] = z5;
+  z[6] = z6;
+  z[7] = z7;
+  z[8] = z8;
+  z[9] = z9;
+}
+
+function cmov(cond: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
+  for (let i = 0; i < SIZE; i++) {
+    let z_i = z[zOff + i];
+    const diff = z_i ^ x[xOff + i];
+    z_i ^= diff & cond;
+    z[zOff + i] = z_i;
+  }
+}
+
+function cnegate(negate: number, z: Int32Array) {
+  const mask = -negate | 0;
+  for (let i = 0; i < SIZE; i++) {
+    z[i] = ((z[i] ^ mask) - mask) | 0;
+  }
+}
+
+function copy(x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
+  for (let i = 0; i < SIZE; i++) {
+    z[zOff + i] = x[xOff + i];
+  }
+}
+
+function cswap(swap: number, a: Int32Array, b: Int32Array) {
+  const mask = -swap;
+  for (let i = 0; i < SIZE; i++) {
+    const ai = a[i];
+    const bi = b[i];
+    const dummy = mask & (ai ^ bi);
+    a[i] = ai ^ dummy;
+    b[i] = bi ^ dummy;
+  }
+}
+
+function create(): Int32Array {
+  return new Int32Array(SIZE);
+}
+
+function decode(x: Uint8Array, xOff: number, z: Int32Array): void {
+  decode128(x, xOff, z, 0);
+  decode128(x, xOff + 16, z, 5);
+  z[9] = z[9] & M24;
+}
+
+function decode128(bs: Uint8Array, off: number, z: Int32Array, zOff: number): void {
+  const t0 = decode32(bs, off + 0);
+  const t1 = decode32(bs, off + 4);
+  const t2 = decode32(bs, off + 8);
+  const t3 = decode32(bs, off + 12);
+
+  z[zOff + 0] = t0 & M26;
+  z[zOff + 1] = ((t1 << 6) | (t0 >>> 26)) & M26;
+  z[zOff + 2] = ((t2 << 12) | (t1 >>> 20)) & M25;
+  z[zOff + 3] = ((t3 << 19) | (t2 >>> 13)) & M26;
+  z[zOff + 4] = t3 >>> 7;
+}
+
+function decode32(bs: Uint8Array, off: number): number {
+  const n =
+    (bs[off] & 0xff) | ((bs[off + 1] & 0xff) << 8) | ((bs[off + 2] & 0xff) << 16) | ((bs[off + 3] & 0xff) << 24);
+  return n;
+}
+
+function encode(x: Int32Array, z: Uint8Array, zOff: number): void {
+  encode128(x, 0, z, zOff);
+  encode128(x, 5, z, zOff + 16);
+}
+
+function encode128(x: Int32Array, xOff: number, bs: Uint8Array, off: number): void {
+  const x0 = x[xOff + 0];
+  const x1 = x[xOff + 1];
+  const x2 = x[xOff + 2];
+  const x3 = x[xOff + 3];
+  const x4 = x[xOff + 4];
+
+  const t0 = x0 | (x1 << 26);
+  encode32(t0, bs, off + 0);
+
+  const t1 = (x1 >>> 6) | (x2 << 20);
+  encode32(t1, bs, off + 4);
+
+  const t2 = (x2 >>> 12) | (x3 << 13);
+  encode32(t2, bs, off + 8);
+
+  const t3 = (x3 >>> 19) | (x4 << 7);
+  encode32(t3, bs, off + 12);
+}
+
+function encode32(n: number, bs: Uint8Array, off: number): void {
+  bs[off + 0] = n & 0xff;
+  bs[off + 1] = (n >>> 8) & 0xff;
+  bs[off + 2] = (n >>> 16) & 0xff;
+  bs[off + 3] = (n >>> 24) & 0xff;
+}
+
+function inv(x: Int32Array, z: Int32Array): void {
+  const x2 = create();
+  const t = create();
+  powPm5d8(x, x2, t);
+  sqr2(t, 3, t);
+  mul2(t, x2, z);
+}
+
+function isZero(x: Int32List): number {
   let d = 0;
   for (let i = 0; i < SIZE; i++) {
     d |= x[i];
   }
   d = (d >>> 1) | (d & 1);
-  return ((d - 1) >> 31) & 1;
+  return ((d - 1) >> 31) | 0;
 }
 
-function isZeroVar(x: number[]): boolean {
+function isZeroVar(x: Int32List): boolean {
   return isZero(x) !== 0;
 }
 
-function mul2(x: Int32Array, y: Int32Array, z: Int32Array): void {
-  const M26 = 0x3ffffffn; // example values; adjust accordingly
-  const M25 = 0x1ffffffn; // example values; adjust accordingly
+function mul1(x: Int32List, y: number, z: Int32List) {
+  const x0 = x[0];
+  const x1 = x[1];
+  let x2 = x[2];
+  const x3 = x[3];
+  let x4 = x[4];
+  const x5 = x[5];
+  const x6 = x[6];
+  let x7 = x[7];
+  const x8 = x[8];
+  let x9 = x[9];
 
-  let x0 = BigInt(x[0]);
-  let y0 = BigInt(y[0]);
-  let x1 = BigInt(x[1]);
-  let y1 = BigInt(y[1]);
-  let x2 = BigInt(x[2]);
-  let y2 = BigInt(y[2]);
-  let x3 = BigInt(x[3]);
-  let y3 = BigInt(y[3]);
-  let x4 = BigInt(x[4]);
-  let y4 = BigInt(y[4]);
-  const u0 = BigInt(x[5]);
-  const v0 = BigInt(y[5]);
-  const u1 = BigInt(x[6]);
-  const v1 = BigInt(y[6]);
-  const u2 = BigInt(x[7]);
-  const v2 = BigInt(y[7]);
-  const u3 = BigInt(x[8]);
-  const v3 = BigInt(y[8]);
-  const u4 = BigInt(x[9]);
-  const v4 = BigInt(y[9]);
-  // ... [same code structure with BigInts replacing Int64]
+  let c0 = 0n;
+  let c1 = 0n;
+  let c2 = 0n;
+  let c3 = 0n;
 
-  // Example for conversion:
-  // Dart: var a0 = Int64(x0) * y0;
-  // TypeScript: let a0 = x0 * y0;
+  c0 = BigInt(x2) * BigInt(y);
+  x2 = Number(c0 & 0x1ffffffn);
+  c0 >>= 25n;
 
-  // ... [rest of the function with BigInts]
+  c1 = BigInt(x4) * BigInt(y);
+  x4 = Number(c1 & 0x1ffffffn);
+  c1 >>= 25n;
 
-  // When assigning to the Int32Array:
-  // Dart: z[0] = (t.toInt32() & M26).toInt();
-  // TypeScript: z[0] = Number(t & M26);
+  c2 = BigInt(x7) * BigInt(y);
+  x7 = Number(c2 & 0x1ffffffn);
+  c2 >>= 25n;
+
+  c3 = BigInt(x9) * BigInt(y);
+  x9 = Number(c3 & 0x1ffffffn);
+  c3 >>= 25n;
+
+  c3 *= 38n;
+  c3 += BigInt(x0) * BigInt(y);
+  z[0] = Number(c3 & 0x3ffffffn);
+  c3 >>= 26n;
+
+  c1 += BigInt(x5) * BigInt(y);
+  z[5] = Number(c1 & 0x3ffffffn);
+  c1 >>= 26n;
+
+  c3 += BigInt(x1) * BigInt(y);
+  z[1] = Number(c3 & 0x3ffffffn);
+  c3 >>= 26n;
+
+  c0 += BigInt(x3) * BigInt(y);
+  z[3] = Number(c0 & 0x3ffffffn);
+  c0 >>= 26n;
+
+  c1 += BigInt(x6) * BigInt(y);
+  z[6] = Number(c1 & 0x3ffffffn);
+  c1 >>= 26n;
+
+  c2 += BigInt(x8) * BigInt(y);
+  z[8] = Number(c2 & 0x3ffffffn);
+  c2 >>= 26n;
+
+  z[2] = x2 + Number(c3);
+  z[4] = x4 + Number(c0);
+  z[7] = x7 + Number(c1);
+  z[9] = x9 + Number(c2);
 }
-function sqr(x: number[], z: number[]): void {
-  const x0 = bigInt(x[0]);
-  // Partial implementation...
-  let x1_2 = x[1] * 2;
-  // ... rest of the conversion using bigInt arithmetic
+
+function mul2(x: Int32List, y: Int32List, z: Int32List) {
+  let x0 = x[0];
+  let y0 = y[0];
+  let x1 = x[1];
+  let y1 = y[1];
+  let x2 = x[2];
+  let y2 = y[2];
+  let x3 = x[3];
+  let y3 = y[3];
+  let x4 = x[4];
+  let y4 = y[4];
+  const u0 = x[5];
+  const v0 = y[5];
+  const u1 = x[6];
+  const v1 = y[6];
+  const u2 = x[7];
+  const v2 = y[7];
+  const u3 = x[8];
+  const v3 = y[8];
+  const u4 = x[9];
+  const v4 = y[9];
+
+  let a0 = BigInt(x0) * BigInt(y0);
+  let a1 = BigInt(x0) * BigInt(y1) + BigInt(x1) * BigInt(y0);
+  let a2 = BigInt(x0) * BigInt(y2) + BigInt(x1) * BigInt(y1) + BigInt(x2) * BigInt(y0);
+  let a3 = BigInt(x1) * BigInt(y2) + BigInt(x2) * BigInt(y1);
+  a3 <<= 1n;
+  a3 += BigInt(x0) * BigInt(y3) + BigInt(x3) * BigInt(y0);
+  let a4 = BigInt(x2) * BigInt(y2);
+  a4 <<= 1n;
+  a4 += BigInt(x0) * BigInt(y4) + BigInt(x1) * BigInt(y3) + BigInt(x3) * BigInt(y1) + BigInt(x4) * BigInt(y0);
+  let a5 = BigInt(x1) * BigInt(y4) + BigInt(x2) * BigInt(y3) + BigInt(x3) * BigInt(y2) + BigInt(x4) * BigInt(y1);
+  a5 <<= 1n;
+  let a6 = BigInt(x2) * BigInt(y4) + BigInt(x4) * BigInt(y2);
+  a6 <<= 1n;
+  a6 += BigInt(x3) * BigInt(y3);
+  let a7 = BigInt(x3) * BigInt(y4) + BigInt(x4) * BigInt(y3);
+  let a8 = BigInt(x4) * BigInt(y4);
+  a8 <<= 1n;
+
+  const b0 = BigInt(u0) * BigInt(v0);
+  const b1 = BigInt(u0) * BigInt(v1) + BigInt(u1) * BigInt(v0);
+  const b2 = BigInt(u0) * BigInt(v2) + BigInt(u1) * BigInt(v1) + BigInt(u2) * BigInt(v0);
+  let b3 = BigInt(u1) * BigInt(v2) + BigInt(u2) * BigInt(v1);
+  b3 <<= 1n;
+  b3 += BigInt(u0) * BigInt(v3) + BigInt(u3) * BigInt(v0);
+  let b4 = BigInt(u2) * BigInt(v2);
+  b4 <<= 1n;
+  b4 += BigInt(u0) * BigInt(v4) + BigInt(u1) * BigInt(v3) + BigInt(u3) * BigInt(v1) + BigInt(u4) * BigInt(v0);
+  const b5 = BigInt(u1) * BigInt(v4) + BigInt(u2) * BigInt(v3) + BigInt(u3) * BigInt(v2) + BigInt(u4) * BigInt(v1);
+  let b6 = BigInt(u2) * BigInt(v4) + BigInt(u4) * BigInt(v2);
+  b6 <<= 1n;
+  b6 += BigInt(u3) * BigInt(v3);
+  const b7 = BigInt(u3) * BigInt(v4) + BigInt(u4) * BigInt(v3);
+  let b8 = BigInt(u4) * BigInt(v4);
+  b8 <<= 1n;
+
+  a0 -= b5 * 76n;
+  a1 -= b6 * 38n;
+  a2 -= b7 * 38n;
+  a3 -= b8 * 76n;
+  a5 -= b0;
+  a6 -= b1;
+  a7 -= b2;
+  a8 -= b3;
+
+  x0 += u0;
+  y0 += v0;
+  x1 += u1;
+  y1 += v1;
+  x2 += u2;
+  y2 += v2;
+  x3 += u3;
+  y3 += v3;
+  x4 += u4;
+  y4 += v4;
+
+  const c0 = BigInt(x0) * BigInt(y0);
+  const c1 = BigInt(x0) * BigInt(y1) + BigInt(x1) * BigInt(y0);
+  const c2 = BigInt(x0) * BigInt(y2) + BigInt(x1) * BigInt(y1) + BigInt(x2) * BigInt(y0);
+  let c3 = BigInt(x1) * BigInt(y2) + BigInt(x2) * BigInt(y1);
+  c3 <<= 1n;
+  c3 += BigInt(x0) * BigInt(y3) + BigInt(x3) * BigInt(y0);
+  let c4 = BigInt(x2) * BigInt(y2);
+  c4 <<= 1n;
+  c4 += BigInt(x0) * BigInt(y4) + BigInt(x1) * BigInt(y3) + BigInt(x3) * BigInt(y1) + BigInt(x4) * BigInt(y0);
+  let c5 = BigInt(x1) * BigInt(y4) + BigInt(x2) * BigInt(y3) + BigInt(x3) * BigInt(y2) + BigInt(x4) * BigInt(y1);
+  c5 <<= 1n;
+  let c6 = BigInt(x2) * BigInt(y4) + BigInt(x4) * BigInt(y2);
+  c6 <<= 1n;
+  c6 += BigInt(x3) * BigInt(y3);
+  const c7 = BigInt(x3) * BigInt(y4) + BigInt(x4) * BigInt(y3);
+  let c8 = BigInt(x4) * BigInt(y4);
+  c8 <<= 1n;
+
+  let z8 = 0;
+  let z9 = 0;
+  let t = BigInt(0);
+
+  t = a8 + (c3 - a3);
+  z8 = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += c4 - a4 - b4;
+  z9 = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t = a0 + (t + c5 - a5) * 38n;
+  z[0] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += a1 + (c6 - a6) * 38n;
+  z[1] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += a2 + (c7 - a7) * 38n;
+  z[2] = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t += a3 + (c8 - a8) * 38n;
+  z[3] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += a4 + b4 * 38n;
+  z[4] = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t += a5 + (c0 - a0);
+  z[5] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += a6 + (c1 - a1);
+  z[6] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += a7 + (c2 - a2);
+  z[7] = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t = BigInt(t + BigInt(z8));
+  z[8] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  z[9] = z9 + Number(t);
 }
 
-// ... rest of your functions ...
-
-function sqr2(x: number[], y: number[], z: number[]): void {
-  const x0 = bigInt(x[0]);
-  const x1 = bigInt(x[1]);
-  // ... get other values similarly
-
-  let x1_2 = x1.shiftLeft(1);
-  // ... more computations using bigInt arithmetic
-
-  const y0 = bigInt(y[0]);
-  const y1 = bigInt(y[1]);
-  // ... get other values similarly
-
-  let y1_2 = y1.shiftLeft(1);
-  // ... more computations using bigInt arithmetic
-
-  // Convert the rest of the Dart code to TypeScript/bigInt
-  // Make sure you use bigInt methods for operations, e.g., .add(), .multiply(), etc.
+function negate(x: Int32List, z: Int32List): void {
+  for (let i = 0; i < SIZE; i++) {
+    z[i] = -x[i];
+  }
 }
 
-function powPm5d8(x: number[], rx2: number[], rz: number[]): void {
-  // (250 1s) (1 0s) (1 1s)
-  // Addition chain: [1] 2 3 5 10 15 25 50 75 125 [250]
+function normalize(z: Int32List): void {
+  const x = (z[9] >>> 23) & 1;
+  reduce(z, x);
+  reduce(z, -x);
+}
+
+function one(z: Int32List): void {
+  z[0] = 1;
+  for (let i = 1; i < SIZE; i++) {
+    z[i] = 0;
+  }
+}
+
+function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
   const x2 = rx2;
   sqr(x, x2);
   mul2(x, x2, x2);
-  const x3: number[] = [];
+
+  const x3 = create();
   sqr(x2, x3);
   mul2(x, x3, x3);
+
   const x5 = x3;
   sqr2(x3, 2, x5);
   mul2(x2, x5, x5);
-  const x10: number[] = [];
+
+  const x10 = create();
   sqr2(x5, 5, x10);
   mul2(x5, x10, x10);
-  const x15: number[] = [];
+
+  const x15 = create();
   sqr2(x10, 5, x15);
   mul2(x5, x15, x15);
+
   const x25 = x5;
   sqr2(x15, 10, x25);
   mul2(x10, x25, x25);
+
   const x50 = x10;
   sqr2(x25, 25, x50);
   mul2(x25, x50, x50);
+
   const x75 = x15;
   sqr2(x50, 25, x75);
   mul2(x25, x75, x75);
+
   const x125 = x25;
   sqr2(x75, 50, x125);
   mul2(x50, x125, x125);
+
   const x250 = x50;
   sqr2(x125, 125, x250);
   mul2(x125, x250, x250);
-  const t: number[] = [];
+
+  const t = x125;
   sqr2(x250, 2, t);
   mul2(t, x, rz);
+}
+
+function reduce(z: Int32List, c: number): void {
+  let z9 = z[9] | 0;
+  let t = z9;
+  z9 = (t & M24) | 0;
+  t >>= 24;
+  t = (t + c) | 0;
+  t = (t * 19) | 0;
+  t = (t + z[0]) | 0;
+  z[0] = t & M26;
+  t >>= 26;
+  t = (t + z[1]) | 0;
+  z[1] = t & M26;
+  t >>= 26;
+  t = (t + z[2]) | 0;
+  z[2] = t & M25;
+  t >>= 25;
+  t = (t + z[3]) | 0;
+  z[3] = t & M26;
+  t >>= 26;
+  t = (t + z[4]) | 0;
+  z[4] = t & M25;
+  t >>= 25;
+  t = (t + z[5]) | 0;
+  z[5] = t & M26;
+  t >>= 26;
+  t = (t + z[6]) | 0;
+  z[6] = t & M26;
+  t >>= 26;
+  t = (t + z[7]) | 0;
+  z[7] = t & M25;
+  t >>= 25;
+  t = (t + z[8]) | 0;
+  z[8] = t & M26;
+  t >>= 26;
+  t = (t + z9) | 0;
+  z[9] = t;
+}
+
+function sqr(x: Int32List, z: Int32List): void {
+  let x0 = x[0];
+  let x1 = x[1];
+  let x2 = x[2];
+  let x3 = x[3];
+  let x4 = x[4];
+  const u0 = x[5];
+  const u1 = x[6];
+  const u2 = x[7];
+  const u3 = x[8];
+  const u4 = x[9];
+
+  let x1_2 = x1 * 2;
+  let x2_2 = x2 * 2;
+  let x3_2 = x3 * 2;
+  let x4_2 = x4 * 2;
+
+  let a0 = BigInt(x0) * BigInt(x0);
+  let a1 = BigInt(x0) * BigInt(x1_2);
+  let a2 = BigInt(x0) * BigInt(x2_2) + BigInt(x1) * BigInt(x1);
+  let a3 = BigInt(x1_2) * BigInt(x2_2) + BigInt(x0) * BigInt(x3_2);
+  const a4 = BigInt(x2) * BigInt(x2_2) + BigInt(x0) * BigInt(x4_2) + BigInt(x1) * BigInt(x3_2);
+  let a5 = BigInt(x1_2) * BigInt(x4_2) + BigInt(x2_2) * BigInt(x3_2);
+  let a6 = BigInt(x2_2) * BigInt(x4_2) + BigInt(x3) * BigInt(x3);
+  let a7 = BigInt(x3) * BigInt(x4_2);
+  let a8 = BigInt(x4) * BigInt(x4_2);
+
+  const u1_2 = BigInt(u1) * 2n;
+  const u2_2 = BigInt(u2) * 2n;
+  const u3_2 = BigInt(u3) * 2n;
+  const u4_2 = BigInt(u4) * 2n;
+
+  const b0 = BigInt(u0) * BigInt(u0);
+  const b1 = BigInt(u0) * BigInt(u1_2);
+  const b2 = BigInt(u0) * BigInt(u2_2) + BigInt(u1) * BigInt(u1);
+  const b3 = BigInt(u1_2) * BigInt(u2_2) + BigInt(u0) * BigInt(u3_2);
+  const b4 = BigInt(u2) * BigInt(u2_2) + BigInt(u0) * BigInt(u4_2) + BigInt(u1) * BigInt(u3_2);
+  const b5 = BigInt(u1_2) * BigInt(u4_2) + BigInt(u2_2) * BigInt(u3_2);
+  const b6 = BigInt(u2_2) * BigInt(u4_2) + BigInt(u3) * BigInt(u3);
+  const b7 = BigInt(u3) * BigInt(u4_2);
+  const b8 = BigInt(u4) * BigInt(u4_2);
+
+  a0 -= b5 * 38n;
+  a1 -= b6 * 38n;
+  a2 -= b7 * 38n;
+  a3 -= b8 * 38n;
+  a5 -= b0;
+  a6 -= b1;
+  a7 -= b2;
+  a8 -= b3;
+
+  x0 += u0;
+  x1 += u1;
+  x2 += u2;
+  x3 += u3;
+  x4 += u4;
+
+  x1_2 = x1 * 2;
+  x2_2 = x2 * 2;
+  x3_2 = x3 * 2;
+  x4_2 = x4 * 2;
+
+  const c0 = BigInt(x0) * BigInt(x0);
+  const c1 = BigInt(x0) * BigInt(x1_2);
+  const c2 = BigInt(x0) * BigInt(x2_2) + BigInt(x1) * BigInt(x1);
+  const c3 = BigInt(x1_2) * BigInt(x2_2) + BigInt(x0) * BigInt(x3_2);
+  const c4 = BigInt(x2) * BigInt(x2_2) + BigInt(x0) * BigInt(x4_2) + BigInt(x1) * BigInt(x3_2);
+  const c5 = BigInt(x1_2) * BigInt(x4_2) + BigInt(x2_2) * BigInt(x3_2);
+  const c6 = BigInt(x2_2) * BigInt(x4_2) + BigInt(x3) * BigInt(x3);
+  const c7 = BigInt(x3) * BigInt(x4_2);
+  const c8 = BigInt(x4) * BigInt(x4_2);
+
+  let z8 = 0;
+  let z9 = 0;
+  let t = 0n;
+
+  t = a8 + (c3 - a3);
+  z8 = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += BigInt(c4 - a4) - b4;
+  z9 = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t += BigInt(a0 + (t + c5 - a5) * 38n);
+  z[0] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += BigInt(a1 + (c6 - a6) * 38n);
+  z[1] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += BigInt(a2 + (c7 - a7) * 38n);
+  z[2] = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t += BigInt(a3 + (c8 - a8) * 38n);
+  z[3] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += BigInt(a4 + b4 * 38n);
+  z[4] = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t += BigInt(a5 + (c0 - a0));
+  z[5] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += BigInt(a6 + (c1 - a1));
+  z[6] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  t += BigInt(a7 + (c2 - a2));
+  z[7] = Number(t & 0x1ffffffn);
+  t >>= 25n;
+
+  t = BigInt(t + BigInt(z8));
+  z[8] = Number(t & 0x3ffffffn);
+  t >>= 26n;
+
+  z[9] = z9 + Number(t);
+}
+
+function sqr2(x: Int32List, n: number, z: Int32List): void {
+  let nv = n;
+  sqr(x, z);
+  while (--nv > 0) {
+    sqr(z, z);
+  }
+}
+
+function sqrtRatioVar(u: Int32List, v: Int32List, z: Int32List): boolean {
+  const uv3 = create();
+  const uv7 = create();
+
+  mul2(u, v, uv3);
+  sqr(v, uv7);
+  mul2(uv3, uv7, uv3);
+  sqr(uv7, uv7);
+  mul2(uv7, uv3, uv7);
+
+  const t = create();
+  const x = create();
+
+  powPm5d8(uv7, t, x);
+  mul2(x, uv3, x);
+
+  const vx2 = create();
+  sqr(x, vx2);
+  mul2(vx2, v, vx2);
+
+  sub(vx2, u, t);
+  normalize(t);
+
+  if (isZeroVar(t)) {
+    copy(x, 0, z, 0);
+    return true;
+  }
+
+  add(vx2, u, t);
+  normalize(t);
+
+  if (isZeroVar(t)) {
+    mul2(x, ROOT_NEG_ONE, z);
+    return true;
+  }
+
+  return false;
+}
+
+function sub(x: Int32List, y: Int32List, z: Int32List) {
+  for (let i = 0; i < SIZE; i++) {
+    z[i] = x[i] - y[i];
+  }
+}
+
+function subOne(z: Int32List) {
+  z[0] -= 1;
+}
+
+function zero(z: Int32List) {
+  for (let i = 0; i < SIZE; i++) {
+    z[i] = 0;
+  }
 }
