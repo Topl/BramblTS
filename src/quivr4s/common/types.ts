@@ -29,6 +29,7 @@ export class Data extends shared.quivr.models.Data { };
 export class DigestVerification extends shared.quivr.models.DigestVerification { };
 export class SignatureVerification extends shared.quivr.models.SignatureVerification { };
 export class Message extends shared.quivr.models.Message { };
+export class Int128 extends shared.quivr.models.Int128 { };
 
 /// Propositions
 export class Proposition extends proposition.quivr.models.Proposition { };

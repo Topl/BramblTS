@@ -1,8 +1,7 @@
-import { Either, left, right, isLeft, isRight, liftOption } from 'fp-ts/Either';
+import { Either, left, right, isLeft, isRight } from 'fp-ts/Either';
 import { BuilderError } from '../builder_error.js';
-import { Data, Digest, Proposition, VerificationKey } from "../../quivr4s/common/types.js";
-import { Proposer } from '../../quivr4s/classes/proposer.js';
-
+import { Data, Digest, Proposition, VerificationKey } from "../../../quivr4s/common/types.js";
+import { Proposer } from '../../../quivr4s/classes/proposer.js';
 
 enum PropositionType {
     locked = 'locked',
@@ -16,8 +15,7 @@ enum PropositionType {
     threshold = 'threshold',
 }
 
-//TODO: unused class
-class UnableToBuildPropositionTemplate extends BuilderError {
+export class UnableToBuildPropositionTemplate extends BuilderError {
     constructor({message}: {message: string}) {
         super(message);
     }
@@ -204,25 +202,6 @@ export class NotTemplate implements PropositionTemplate {
     }
 }
 
-function buildInner(templates: PropositionTemplate[], accumulator: Either<BuilderError, Proposition[]>): Either<BuilderError, Proposition[]> {
-    if (isLeft(accumulator)) {
-        return accumulator;
-    } else {
-        if (templates.length === 0) {
-            return right(accumulator.right);
-        } else {
-            const accProps = accumulator.right;
-            const head = templates[0].build(entityVks);
-            return head.flatMap((curProp) => buildInner(
-                  templates.slice(1),
-                  right(accProps..add(curProp)),
-                )); 
-        }
-    }
-}
-
-//TODO: finish build method
-
 export class ThresholdTemplate implements PropositionTemplate {
     public innerTemplates: PropositionTemplate[];
     public threshold: number;
@@ -234,10 +213,42 @@ export class ThresholdTemplate implements PropositionTemplate {
     }
 
     build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+
+        const buildInner = (
+            templates: PropositionTemplate[],
+            accumulator: Either<BuilderError, Proposition[]>
+        ): Either<BuilderError, Proposition[]> => {
+    
+            if (isLeft(accumulator)) {
+                return accumulator;
+            } 
+    
+            if (templates.length === 0) {
+                return accumulator;
+            }
+    
+            const accProps = accumulator.right;
+            const head = templates[0].build(entityVks);
+    
+            if (isLeft(head)) {
+                return head;
+            }
+    
+            const updatedProps = [...accProps, head.right];
+            return buildInner(templates.slice(1), right(updatedProps));
+        }
+    
+        const result = buildInner(this.innerTemplates, right([]));
+    
+        if (isLeft(result)) {
+            return result;
+        }
+    
         try {
-               
+            return right(Proposer.thresholdProposer(result.right, this.threshold));
         } catch (e) {
-            return left(new BuilderError(e.toString()));
+            return left(new BuilderError(e.toString(), e));
         }
     }
+
 }

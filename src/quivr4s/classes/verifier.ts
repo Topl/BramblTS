@@ -41,7 +41,7 @@ export class Verifier {
         }
     ): QuivrResult<boolean> {
         if (messageResult._tag === 'Right' && evalResult._tag === 'Right') {
-            return either.right(true);
+            return (true);
 
         } else {
             return quivrEvaluationAuthorizationFailure(proof, proposition);
