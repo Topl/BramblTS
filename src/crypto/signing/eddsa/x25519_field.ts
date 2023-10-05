@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 const SIZE = 10;
 const M24 = 0x00ffffff;
 const M25 = 0x01ffffff;
@@ -7,7 +8,7 @@ const ROOT_NEG_ONE: number[] = [
   0x00570649,
 ];
 
-function add(x: Int32Array, y: Int32Array, z: Int32Array): void {
+function add(x: Int32List, y: Int32List, z: Int32List): void {
   for (let i = 0; i < SIZE; i++) {
     z[i] = x[i] + y[i];
   }
@@ -86,12 +87,13 @@ function cmov(cond: number, x: Int32Array, xOff: number, z: Int32Array, zOff: nu
 
 function cnegate(negate: number, z: Int32Array) {
   const mask = -negate | 0;
+
   for (let i = 0; i < SIZE; i++) {
     z[i] = ((z[i] ^ mask) - mask) | 0;
   }
 }
 
-function copy(x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
+function copy(x: Int32List, xOff: number, z: Int32List, zOff: number) {
   for (let i = 0; i < SIZE; i++) {
     z[zOff + i] = x[xOff + i];
   }
@@ -99,6 +101,7 @@ function copy(x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
 
 function cswap(swap: number, a: Int32Array, b: Int32Array) {
   const mask = -swap;
+
   for (let i = 0; i < SIZE; i++) {
     const ai = a[i];
     const bi = b[i];
@@ -172,6 +175,7 @@ function encode32(n: number, bs: Uint8Array, off: number): void {
 function inv(x: Int32Array, z: Int32Array): void {
   const x2 = create();
   const t = create();
+
   powPm5d8(x, x2, t);
   sqr2(t, 3, t);
   mul2(t, x2, z);
@@ -179,10 +183,13 @@ function inv(x: Int32Array, z: Int32Array): void {
 
 function isZero(x: Int32List): number {
   let d = 0;
+
   for (let i = 0; i < SIZE; i++) {
     d |= x[i];
   }
+
   d = (d >>> 1) | (d & 1);
+
   return ((d - 1) >> 31) | 0;
 }
 
@@ -265,6 +272,7 @@ function mul2(x: Int32List, y: Int32List, z: Int32List) {
   let y3 = y[3];
   let x4 = x[4];
   let y4 = y[4];
+
   const u0 = x[5];
   const v0 = y[5];
   const u1 = x[6];
@@ -280,35 +288,51 @@ function mul2(x: Int32List, y: Int32List, z: Int32List) {
   let a1 = BigInt(x0) * BigInt(y1) + BigInt(x1) * BigInt(y0);
   let a2 = BigInt(x0) * BigInt(y2) + BigInt(x1) * BigInt(y1) + BigInt(x2) * BigInt(y0);
   let a3 = BigInt(x1) * BigInt(y2) + BigInt(x2) * BigInt(y1);
+
   a3 <<= 1n;
   a3 += BigInt(x0) * BigInt(y3) + BigInt(x3) * BigInt(y0);
+
   let a4 = BigInt(x2) * BigInt(y2);
+
   a4 <<= 1n;
   a4 += BigInt(x0) * BigInt(y4) + BigInt(x1) * BigInt(y3) + BigInt(x3) * BigInt(y1) + BigInt(x4) * BigInt(y0);
+
   let a5 = BigInt(x1) * BigInt(y4) + BigInt(x2) * BigInt(y3) + BigInt(x3) * BigInt(y2) + BigInt(x4) * BigInt(y1);
+
   a5 <<= 1n;
+
   let a6 = BigInt(x2) * BigInt(y4) + BigInt(x4) * BigInt(y2);
+
   a6 <<= 1n;
   a6 += BigInt(x3) * BigInt(y3);
+
   let a7 = BigInt(x3) * BigInt(y4) + BigInt(x4) * BigInt(y3);
   let a8 = BigInt(x4) * BigInt(y4);
+
   a8 <<= 1n;
 
   const b0 = BigInt(u0) * BigInt(v0);
   const b1 = BigInt(u0) * BigInt(v1) + BigInt(u1) * BigInt(v0);
   const b2 = BigInt(u0) * BigInt(v2) + BigInt(u1) * BigInt(v1) + BigInt(u2) * BigInt(v0);
   let b3 = BigInt(u1) * BigInt(v2) + BigInt(u2) * BigInt(v1);
+
   b3 <<= 1n;
   b3 += BigInt(u0) * BigInt(v3) + BigInt(u3) * BigInt(v0);
+
   let b4 = BigInt(u2) * BigInt(v2);
+
   b4 <<= 1n;
   b4 += BigInt(u0) * BigInt(v4) + BigInt(u1) * BigInt(v3) + BigInt(u3) * BigInt(v1) + BigInt(u4) * BigInt(v0);
+
   const b5 = BigInt(u1) * BigInt(v4) + BigInt(u2) * BigInt(v3) + BigInt(u3) * BigInt(v2) + BigInt(u4) * BigInt(v1);
   let b6 = BigInt(u2) * BigInt(v4) + BigInt(u4) * BigInt(v2);
+
   b6 <<= 1n;
   b6 += BigInt(u3) * BigInt(v3);
+
   const b7 = BigInt(u3) * BigInt(v4) + BigInt(u4) * BigInt(v3);
   let b8 = BigInt(u4) * BigInt(v4);
+
   b8 <<= 1n;
 
   a0 -= b5 * 76n;
@@ -335,18 +359,27 @@ function mul2(x: Int32List, y: Int32List, z: Int32List) {
   const c1 = BigInt(x0) * BigInt(y1) + BigInt(x1) * BigInt(y0);
   const c2 = BigInt(x0) * BigInt(y2) + BigInt(x1) * BigInt(y1) + BigInt(x2) * BigInt(y0);
   let c3 = BigInt(x1) * BigInt(y2) + BigInt(x2) * BigInt(y1);
+
   c3 <<= 1n;
   c3 += BigInt(x0) * BigInt(y3) + BigInt(x3) * BigInt(y0);
+
   let c4 = BigInt(x2) * BigInt(y2);
+
   c4 <<= 1n;
   c4 += BigInt(x0) * BigInt(y4) + BigInt(x1) * BigInt(y3) + BigInt(x3) * BigInt(y1) + BigInt(x4) * BigInt(y0);
+
   let c5 = BigInt(x1) * BigInt(y4) + BigInt(x2) * BigInt(y3) + BigInt(x3) * BigInt(y2) + BigInt(x4) * BigInt(y1);
+
   c5 <<= 1n;
+
   let c6 = BigInt(x2) * BigInt(y4) + BigInt(x4) * BigInt(y2);
+
   c6 <<= 1n;
   c6 += BigInt(x3) * BigInt(y3);
+
   const c7 = BigInt(x3) * BigInt(y4) + BigInt(x4) * BigInt(y3);
   let c8 = BigInt(x4) * BigInt(y4);
+
   c8 <<= 1n;
 
   let z8 = 0;
@@ -414,6 +447,7 @@ function normalize(z: Int32List): void {
 
 function one(z: Int32List): void {
   z[0] = 1;
+
   for (let i = 1; i < SIZE; i++) {
     z[i] = 0;
   }
@@ -468,6 +502,7 @@ function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
 function reduce(z: Int32List, c: number): void {
   let z9 = z[9] | 0;
   let t = z9;
+
   z9 = (t & M24) | 0;
   t >>= 24;
   t = (t + c) | 0;
@@ -509,6 +544,7 @@ function sqr(x: Int32List, z: Int32List): void {
   let x2 = x[2];
   let x3 = x[3];
   let x4 = x[4];
+
   const u0 = x[5];
   const u1 = x[6];
   const u2 = x[7];
@@ -628,7 +664,9 @@ function sqr(x: Int32List, z: Int32List): void {
 
 function sqr2(x: Int32List, n: number, z: Int32List): void {
   let nv = n;
+
   sqr(x, z);
+
   while (--nv > 0) {
     sqr(z, z);
   }
@@ -687,4 +725,17 @@ function zero(z: Int32List) {
   for (let i = 0; i < SIZE; i++) {
     z[i] = 0;
   }
+}
+
+const x25519_field = {
+  decode,
+  create,
+  sqr,
+  mul2,
+  subOne,
+  addOne1,
+  sqrtRatioVar,
+  normalize,
+  negate,
+  isZeroVar
 }
