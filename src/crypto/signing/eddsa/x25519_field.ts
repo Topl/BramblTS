@@ -737,5 +737,15 @@ const x25519_field = {
   sqrtRatioVar,
   normalize,
   negate,
-  isZeroVar
+  isZeroVar,
+  inv,
+  encode,
+  copy,
+  add,
+  apm,
+  carry,
+  sub,
+  one,
+  SIZE,
+  zero,
 }
