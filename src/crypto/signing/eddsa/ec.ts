@@ -971,4 +971,79 @@ let PRECOMP_POINTS = 1 << PRECOMP_TEETH - 1;
 let PRECOMP_MASK = PRECOMP_POINTS - 1;
 let M = BigInt(0xffffffff);
 
+class PointAccum {
+  readonly x: Int32Array;
+  readonly y: Int32Array;
+  readonly z: Int32Array;
+  readonly u: Int32Array;
+  readonly v: Int32Array;
+
+  constructor(x: Int32Array, y: Int32Array, z: Int32Array, u: Int32Array, v: Int32Array) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.u = u;
+    this.v = v;
+  }
+
+  static create(): PointAccum {
+    return new PointAccum(
+      new Int32Array(x25519_field.SIZE), 
+      new Int32Array(x25519_field.SIZE), 
+      new Int32Array(x25519_field.SIZE), 
+      new Int32Array(x25519_field.SIZE), 
+      new Int32Array(x25519_field.SIZE)
+    );
+  }
+}
+
+class PointExt {
+  readonly x: Int32Array;
+  readonly y: Int32Array;
+  readonly z: Int32Array;
+  readonly t: Int32Array;
+
+  constructor(x: Int32Array, y: Int32Array, z: Int32Array, t: Int32Array) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.t = t;
+  }
+
+  static create(): PointExt {
+    return new PointExt(
+      new Int32Array(x25519_field.SIZE),
+      new Int32Array(x25519_field.SIZE),
+      new Int32Array(x25519_field.SIZE),
+      new Int32Array(x25519_field.SIZE)
+    );
+  }
+}
+
+class PointPrecomp {
+  readonly ypxH: Int32Array;
+  readonly ymxH: Int32Array;
+  readonly xyd: Int32Array;
+
+  constructor(ypxH: Int32Array, ymxH: Int32Array, xyd: Int32Array) {
+    this.ypxH = ypxH;
+    this.ymxH = ymxH;
+    this.xyd = xyd;
+  }
+
+  static create(): PointPrecomp {
+    return new PointPrecomp(
+      new Int32Array(x25519_field.SIZE),
+      new Int32Array(x25519_field.SIZE),
+      new Int32Array(x25519_field.SIZE)
+    );
+  }
+}
+
+function toByte(n: number): number {
+  const buffer = new ArrayBuffer(1);
+  const view = new DataView(buffer);
+  view.setInt8(0, n);
+  return view.getUint8(0);
+}
 
