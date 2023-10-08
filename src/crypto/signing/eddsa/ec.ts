@@ -41,8 +41,8 @@ class EC {
 
   constructor() {
     const precompute = this._precompute();
-    this._precompBaseTable = precompute.$1;
-    this._precompBase = precompute.$2;
+    this._precompBaseTable = precompute[0];
+    this._precompBase = precompute[1];
   }
 
   mulAddTo256(x: Int32List, y: Int32List, zz: Int32List): number {
@@ -497,9 +497,10 @@ class EC {
     x25519_field.copy(p.y, 0, p.v, 0);
   }
 
-  pointExtendXY(p: PointExt) {
+  pointExtendXY(p: PointExt): PointExt {
     x25519_field.one(p.z);
     x25519_field.mul2(p.x, p.y, p.t);
+    return p;
   }
 
   pointLookup(block: number, index: number, p: PointPrecomp) {
@@ -534,11 +535,13 @@ class EC {
     x25519_field.one(p.v);
   }
 
-  pointSetNeutralExt(p: PointExt) {
+  pointSetNeutralExt(p: PointExt): PointExt {
     x25519_field.zero(p.x);
     x25519_field.one(p.y);
     x25519_field.one(p.z);
     x25519_field.zero(p.t);
+
+    return p;
   }
 
   _precompute(): [PointExt[], Int32List] {
