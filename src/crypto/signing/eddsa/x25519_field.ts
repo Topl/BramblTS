@@ -121,7 +121,7 @@ function decode(x: Uint8Array, xOff: number, z: Int32List): void {
   z[9] = z[9] & M24;
 }
 
-function decode128(bs: Uint8Array, off: number, z: Int32Array, zOff: number): void {
+function decode128(bs: Uint8Array, off: number, z: Int32List, zOff: number): void {
   const t0 = decode32(bs, off + 0);
   const t1 = decode32(bs, off + 4);
   const t2 = decode32(bs, off + 8);
