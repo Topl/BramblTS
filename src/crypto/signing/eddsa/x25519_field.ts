@@ -22,7 +22,7 @@ function addOne2(z: Int32Array, zOff: number): void {
   z[zOff] += 1;
 }
 
-function apm(x: Int32Array, y: Int32Array, zp: Int32Array, zm: Int32Array): void {
+function apm(x: Int32List, y: Int32List, zp: Int32Array, zm: Int32Array): void {
   for (let i = 0; i < SIZE; i++) {
     const xi = x[i];
     const yi = y[i];
@@ -115,7 +115,7 @@ function create(): Int32Array {
   return new Int32Array(SIZE);
 }
 
-function decode(x: Uint8Array, xOff: number, z: Int32Array): void {
+function decode(x: Uint8Array, xOff: number, z: Int32List): void {
   decode128(x, xOff, z, 0);
   decode128(x, xOff + 16, z, 5);
   z[9] = z[9] & M24;
@@ -748,4 +748,6 @@ const x25519_field = {
   one,
   SIZE,
   zero,
+  cswap,
+  cnegate,
 }

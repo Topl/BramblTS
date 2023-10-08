@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 /*
   Ed25519 is EdDSA instantiated with:
 +-----------+-------------------------------------------------------+
@@ -44,7 +45,7 @@ class EC {
     this._precompBase = precompute.$2;
   }
 
-  function mulAddTo256(x: Int32List, y: Int32List, zz: Int32List): number {
+  mulAddTo256(x: Int32List, y: Int32List, zz: Int32List): number {
     const y_0 = BigInt(y[0]) & M;
     const y_1 = BigInt(y[1]) & M;
     const y_2 = BigInt(y[2]) & M;
@@ -99,7 +100,7 @@ class EC {
     return Number(zc);
   }
 
-  function gte256(x: Int32List, y: Int32List): boolean {
+  gte256(x: Int32List, y: Int32List): boolean {
     const MIN_VALUE = 0x80000000; // Int32.MIN_VALUE in Dart
 
     for (let i = 7; i >= 0; i--) {
@@ -113,7 +114,7 @@ class EC {
     return true;
   }
 
-  function cmov(len: number, mask: number, x: Int32List, xOff: number, z: Int32List, zOff: number): void {
+  cmov(len: number, mask: number, x: Int32List, xOff: number, z: Int32List, zOff: number): void {
     let maskv = mask;
     maskv = -(maskv & 1);
 
@@ -125,7 +126,7 @@ class EC {
     }
   }
 
-  function cadd(len: number, mask: number, x: Int32List, y: Int32List, z: Int32List): number {
+  cadd(len: number, mask: number, x: Int32List, y: Int32List, z: Int32List): number {
     const m = -(mask & 1) & Number(M);
     let c = 0;
 
@@ -138,7 +139,7 @@ class EC {
     return c;
   }
   
-  function shiftDownBit(len: number, z: Int32List, c: number): number {
+  shiftDownBit(len: number, z: Int32List, c: number): number {
     let i = len;
     let cv = c;
 
@@ -151,7 +152,7 @@ class EC {
     return (cv << 31) >>> 0;
   }
 
-  function shuffle2(x: number): number {
+  shuffle2(x: number): number {
     let t = 0;
     let xv = x;
 
@@ -170,7 +171,7 @@ class EC {
     return xv >>> 0;
   }
 
-  function areAllZeroes(buf: Uint32List, off: number, len: number): boolean {
+  areAllZeroes(buf: Uint32List, off: number, len: number): boolean {
     let bits = 0;
 
     for (let i = 0; i < len; i++) {
@@ -180,40 +181,40 @@ class EC {
     return bits === 0;
   }
 
-  function calculateS(r: Uint8Array, k: Uint8Array, s: Uint8Array): Uint8Array {
+  calculateS(r: Uint8Array, k: Uint8Array, s: Uint8Array): Uint8Array {
     const t = new Int32Array(SCALAR_INTS * 2);
-    decodeScalar(r, 0, t);
+    this.decodeScalar(r, 0, t);
     const u = new Int32Array(SCALAR_INTS * 2);
-    decodeScalar(k, 0, u);
+    this.decodeScalar(k, 0, u);
     const v = new Int32Array(SCALAR_INTS * 2);
-    decodeScalar(s, 0, v);
-    mulAddTo256(u, v, t);
+    this.decodeScalar(s, 0, v);
+    this.mulAddTo256(u, v, t);
     const result = new Uint8Array(SCALAR_BYTES * 2);
     for (let i = 0; i < t.length; i++) {
         encode32(t[i], result, i * 4);
     }
-    return reduceScalar(result);
+    return this.reduceScalar(result);
   }
 
-  function checkContextVar(ctx: Uint8Array, phflag: number): boolean {
+  checkContextVar(ctx: Uint8Array, phflag: number): boolean {
     return (ctx.length === 0 && phflag === 0x00) || (ctx.length > 0 && ctx.length < 256);
   }
 
-  function checkPointVar(p: Uint8Array): boolean {
+  checkPointVar(p: Uint8Array): boolean {
     const t = new Int32Array(8);
-    decode32(p, 0, t, 0, 8);
+    this.decode32(p, 0, t, 0, 8);
     t[7] = t[7] & 0x7fffffff;
-    return !gte256(t, P);
+    return !this.gte256(t, P);
   }
 
-  function checkScalarVar(s: Uint8Array): boolean {
+  checkScalarVar(s: Uint8Array): boolean {
     const t = new Int32Array(SCALAR_INTS);
-    decodeScalar(s, 0, t);
-    return !gte256(t, L);
+    this.decodeScalar(s, 0, t);
+    return !this.gte256(t, L);
   }
 
   /// Decodes a 24-bit integer from a byte array starting at the specified offset.
-  function decode24(bs: Uint8Array, off: number): number {
+  decode24(bs: Uint8Array, off: number): number {
     let n = bs[off] & 0xff;
     n |= (bs[off + 1] & 0xff) << 8;
     n |= (bs[off + 2] & 0xff) << 16;
@@ -221,7 +222,7 @@ class EC {
   }
 
   /// Decodes a 32-bit integer from the given byte array starting at the specified offset.
-  function decode32v(bs: Uint8Array, off: number): number {
+  decode32v(bs: Uint8Array, off: number): number {
     let n = bs[off] & 0xff;
     n |= (bs[off + 1] & 0xff) << 8;
     n |= (bs[off + 2] & 0xff) << 16;
@@ -229,15 +230,15 @@ class EC {
     return n >>> 0;
   }
 
-  function decode32(bs: Uint8Array, bsOff: number, n: Int32List, nOff: number, nLen: number): void {
+  decode32(bs: Uint8Array, bsOff: number, n: Int32List, nOff: number, nLen: number): void {
     for (let i = 0; i < nLen; i++) {
-        n[nOff + i] = decode32v(bs, bsOff + i * 4);
+        n[nOff + i] = this.decode32v(bs, bsOff + i * 4);
     }
   }
 
-  function decodePointVar(p: Uint8Array, pOff: number, { negate, r }: { negate: boolean; r: PointExt; }): boolean {
+  decodePointVar(p: Uint8Array, pOff: number, { negate, r }: { negate: boolean; r: PointExt; }): boolean {
     const py = new Uint8Array(p.subarray(pOff, pOff + POINT_BYTES));
-    if (!checkPointVar(py)) return false;
+    if (!this.checkPointVar(py)) return false;
     const x_0 = (py[POINT_BYTES - 1] & 0x80) >>> 7;
     py[POINT_BYTES - 1] = py[POINT_BYTES - 1] & 0x7f;
     x25519_field.decode(py, 0, r.y);
@@ -251,33 +252,33 @@ class EC {
     x25519_field.normalize(r.x);
     if (x_0 === 1 && x25519_field.isZeroVar(r.x)) return false;
     if (negate !== (x_0 !== (r.x[0] & 1))) x25519_field.negate(r.x, r.x);
-    pointExtendXY(r);
+    this.pointExtendXY(r);
     return true;
   }
 
-  function decodeScalar(k: Uint8Array, kOff: number, n: Int32Array): void {
-    decode32(k, kOff, n, 0, SCALAR_INTS);
+  decodeScalar(k: Uint8Array, kOff: number, n: Int32Array): void {
+    this.decode32(k, kOff, n, 0, SCALAR_INTS);
   }
 
-  function encode24(n: number, bs: Uint8Array, off: number): void {
+  encode24(n: number, bs: Uint8Array, off: number): void {
     bs[off] = n & 0xFF;
     bs[off + 1] = (n >>> 8) & 0xFF;
     bs[off + 2] = (n >>> 16) & 0xFF;
   }
 
-  function encode32(n: number, bs: Uint8Array, off: number): void {
+  encode32(n: number, bs: Uint8Array, off: number): void {
     bs[off] = n & 0xFF;
     bs[off + 1] = (n >>> 8) & 0xFF;
     bs[off + 2] = (n >>> 16) & 0xFF;
     bs[off + 3] = (n >>> 24) & 0xFF;
   }
 
-  function encode56(n: bigint, bs: Uint8Array, off: number): void {
-    encode32(Number(n & BigInt(0xFFFFFFFF)), bs, off);
-    encode24(Number(n >> BigInt(32) & BigInt(0xFFFFFF)), bs, off + 4);
+  encode56(n: bigint, bs: Uint8Array, off: number): void {
+    this.encode32(Number(n & BigInt(0xFFFFFFFF)), bs, off);
+    this.encode24(Number(n >> BigInt(32) & BigInt(0xFFFFFF)), bs, off + 4);
   }
 
-  function encodePoint(p: PointAccum, r: Uint8Array, rOff: number): void {
+  encodePoint(p: PointAccum, r: Uint8Array, rOff: number): void {
     const x = x25519_field.create();
     const y = x25519_field.create();
     x25519_field.inv(p.z, y);
@@ -289,7 +290,7 @@ class EC {
     r[rOff + POINT_BYTES - 1] = (r[rOff + POINT_BYTES - 1] | ((x[0] & 1) << 7)) & 0xFF;
   }
 
-  function getWNAF(n: Int32Array, width: number): Uint8Array {
+  getWNAF(n: Int32Array, width: number): Uint8Array {
     const t = new Int32Array(SCALAR_INTS * 2);
     let tPos = t.length;
     let c = 0;
@@ -329,16 +330,16 @@ class EC {
     return ws;
   }
 
-  function scalarMultBaseYZ(k: Uint8Array, kOff: number, y: Int32List, z: Int32List): void {
+  scalarMultBaseYZ(k: Uint8Array, kOff: number, y: Int32List, z: Int32List): void {
     const n = new Uint8Array(SCALAR_BYTES);
-    pruneScalar(k, kOff, n);
+    this.pruneScalar(k, kOff, n);
     const p = PointAccum.create();
-    scalarMultBase(n, p);
+    this.scalarMultBase(n, p);
     x25519_field.copy(p.y, 0, y, 0);
     x25519_field.copy(p.z, 0, z, 0);
   }
 
-  function pointAddVar1(negate: boolean, p: PointExt, r: PointAccum): void {
+  pointAddVar1(negate: boolean, p: PointExt, r: PointAccum): void {
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -382,7 +383,7 @@ class EC {
     x25519_field.mul2(F, G, r.z);
   }
 
-  function pointAddVar2(negate: boolean, p: PointExt, q: PointExt, r: PointExt): void {
+  pointAddVar2(negate: boolean, p: PointExt, q: PointExt, r: PointExt): void {
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -426,7 +427,7 @@ class EC {
     x25519_field.mul2(E, H, r.t);
   }
 
-  function pointAddPrecomp(p: PointPrecomp, r: PointAccum): void {
+  pointAddPrecomp(p: PointPrecomp, r: PointAccum): void {
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -448,7 +449,7 @@ class EC {
     x25519_field.mul2(F, G, r.z);
   }
 
-  function pointCopyAccum(p: PointAccum): PointExt {
+  pointCopyAccum(p: PointAccum): PointExt {
     const r = PointExt.create();
     x25519_field.copy(p.x, 0, r.x, 0);
     x25519_field.copy(p.y, 0, r.y, 0);
@@ -457,7 +458,7 @@ class EC {
     return r;
   }
 
-  function pointCopyExt(p: PointExt): PointExt {
+  pointCopyExt(p: PointExt): PointExt {
     const r = PointExt.create();
     x25519_field.copy(p.x, 0, r.x, 0);
     x25519_field.copy(p.y, 0, r.y, 0);
@@ -466,7 +467,7 @@ class EC {
     return r;
   }
 
-  function pointDouble(r: PointAccum) {
+  pointDouble(r: PointAccum) {
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -490,42 +491,42 @@ class EC {
     x25519_field.mul2(F, G, r.z);
   }
 
-  function pointExtendXYAccum(p: PointAccum) {
+  pointExtendXYAccum(p: PointAccum) {
     x25519_field.one(p.z);
     x25519_field.copy(p.x, 0, p.u, 0);
     x25519_field.copy(p.y, 0, p.v, 0);
   }
 
-  function pointExtendXY(p: PointExt) {
+  pointExtendXY(p: PointExt) {
     x25519_field.one(p.z);
     x25519_field.mul2(p.x, p.y, p.t);
   }
 
-  function pointLookup(block: number, index: number, p: PointPrecomp) {
+  pointLookup(block: number, index: number, p: PointPrecomp) {
     let off = block * PRECOMP_POINTS * 3 * x25519_field.SIZE;
     for (let i = 0; i < PRECOMP_POINTS; i++) {
         const mask = ((i ^ index) - 1) >> 31;
-        cmov(x25519_field.SIZE, mask, _precompBase, off, p.ypxH, 0);
+        this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ypxH, 0);
         off += x25519_field.SIZE;
-        cmov(x25519_field.SIZE, mask, _precompBase, off, p.ymxH, 0);
+        this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ymxH, 0);
         off += x25519_field.SIZE;
-        cmov(x25519_field.SIZE, mask, _precompBase, off, p.xyd, 0);
+        this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.xyd, 0);
         off += x25519_field.SIZE;
     }
   }
 
-  function pointPrecompVar(p: PointExt, count: number): PointExt[] {
-    const d = pointCopyExt(p);
-    pointAddVar2(false, p, p, d);
-    const table: PointExt[] = [pointCopyExt(p)];
+  pointPrecompVar(p: PointExt, count: number): PointExt[] {
+    const d = this.pointCopyExt(p);
+    this.pointAddVar2(false, p, p, d);
+    const table: PointExt[] = [this.pointCopyExt(p)];
     for (let i = 1; i < count; i++) {
-        table.push(pointCopyExt(PointExt.create()));
-        pointAddVar2(false, table[i - 1], d, table[i]);
+        table.push(this.pointCopyExt(PointExt.create()));
+        this.pointAddVar2(false, table[i - 1], d, table[i]);
     }
     return table;
   }
 
-  function pointSetNeutralAccum(p: PointAccum) {
+  pointSetNeutralAccum(p: PointAccum) {
     x25519_field.zero(p.x);
     x25519_field.one(p.y);
     x25519_field.one(p.z);
@@ -533,17 +534,17 @@ class EC {
     x25519_field.one(p.v);
   }
 
-  function pointSetNeutralExt(p: PointExt) {
+  pointSetNeutralExt(p: PointExt) {
     x25519_field.zero(p.x);
     x25519_field.one(p.y);
     x25519_field.one(p.z);
     x25519_field.zero(p.t);
   }
 
-  function precompute(): [PointExt[], Int32List] {
+  _precompute(): [PointExt[], Int32List] {
     // Precomputed table for the base point in verification ladder
-    const b = pointExtendXY(pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: create(), t: create() }));
-    const precompBaseTable = pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
+    const b = this.pointExtendXY(this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: create(), t: create() }));
+    const precompBaseTable = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
 
     const p: PointAccum = {
         x: B_x.slice(),
@@ -552,24 +553,24 @@ class EC {
         u: create(),
         v: create(),
     };
-    pointExtendXYAccum(p);
+    this.pointExtendXYAccum(p);
 
     const precompBase = new Int32Array(PRECOMP_BLOCKS * PRECOMP_POINTS * 3 * x25519_field.SIZE);
     let off = 0;
 
     for (let b = 0; b < PRECOMP_BLOCKS; b++) {
         const ds: PointExt[] = [];
-        const sum = pointSetNeutralExt({ x: create(), y: create(), z: create(), t: create() });
+        const sum = this.pointSetNeutralExt({ x: create(), y: create(), z: create(), t: create() });
 
         for (let t = 0; t < PRECOMP_TEETH; t++) {
-            const q = pointCopyAccum(p);
-            pointAddVar2(true, sum, q, sum);
-            pointDouble(p);
-            ds.push(pointCopyAccum(p));
+            const q = this.pointCopyAccum(p);
+            this.pointAddVar2(true, sum, q, sum);
+            this.pointDouble(p);
+            ds.push(this.pointCopyAccum(p));
 
             if (b + t !== PRECOMP_BLOCKS + PRECOMP_TEETH - 2) {
                 for (let i = 1; i < PRECOMP_SPACING; i++) {
-                    pointDouble(p);
+                    this.pointDouble(p);
                 }
             }
         }
@@ -583,8 +584,8 @@ class EC {
             let j = 0;
 
             while (j < size) {
-                points[k] = pointCopyExt(points[k - size]!);
-                pointAddVar2(false, points[k - size]!, ds[t], points[k]!);
+                points[k] = this.pointCopyExt(points[k - size]!);
+                this.pointAddVar2(false, points[k - size]!, ds[t], points[k]!);
                 j++;
                 k++;
             }
@@ -624,7 +625,7 @@ class EC {
     return [precompBaseTable, precompBase];
   }
 
-  function pruneScalar(n: Uint8Array, nOff: number, r: Uint8Array): void {
+  pruneScalar(n: Uint8Array, nOff: number, r: Uint8Array): void {
     for (let i = 0; i < SCALAR_BYTES; i++) {
         r[i] = n[nOff + i];
     }
@@ -632,7 +633,7 @@ class EC {
     r[SCALAR_BYTES - 1] = (r[SCALAR_BYTES - 1] & 0x7f) | 0x40;
   }
 
-  function reduceScalar(n: Uint8Array): Uint8Array {
+  reduceScalar(n: Uint8Array): Uint8Array {
     const L0 = BigInt('0xfcf5d3ed');
     const L1 = BigInt('0x012631a6');
     const L2 = BigInt('0x079cd658');
@@ -642,24 +643,24 @@ class EC {
     const M28L = BigInt('0x0fffffff');
     const M32L = BigInt('0xffffffff');
 
-    let x00 = BigInt(decode32v(n, 0)) & M32L;
-    let x01 = BigInt(decode24(n, 4)) << BigInt(4) & M32L;
-    let x02 = BigInt(decode32v(n, 7)) & M32L;
-    let x03 = BigInt(decode24(n, 11)) << BigInt(4) & M32L;
-    let x04 = BigInt(decode32v(n, 14)) & M32L;
-    let x05 = BigInt(decode24(n, 18)) << BigInt(4) & M32L;
-    let x06 = BigInt(decode32v(n, 21)) & M32L;
-    let x07 = BigInt(decode24(n, 25)) << BigInt(4) & M32L;
-    let x08 = BigInt(decode32v(n, 28)) & M32L;
-    let x09 = BigInt(decode24(n, 32)) << BigInt(4) & M32L;
-    let x10 = BigInt(decode32v(n, 35)) & M32L;
-    let x11 = BigInt(decode24(n, 39)) << BigInt(4) & M32L;
-    let x12 = BigInt(decode32v(n, 42)) & M32L;
-    let x13 = BigInt(decode24(n, 46)) << BigInt(4) & M32L;
-    let x14 = BigInt(decode32v(n, 49)) & M32L;
-    let x15 = BigInt(decode24(n, 53)) << BigInt(4) & M32L;
-    let x16 = BigInt(decode32v(n, 56)) & M32L;
-    let x17 = BigInt(decode24(n, 60)) << BigInt(4) & M32L;
+    let x00 = BigInt(this.decode32v(n, 0)) & M32L;
+    let x01 = BigInt(this.decode24(n, 4)) << BigInt(4) & M32L;
+    let x02 = BigInt(this.decode32v(n, 7)) & M32L;
+    let x03 = BigInt(this.decode24(n, 11)) << BigInt(4) & M32L;
+    let x04 = BigInt(this.decode32v(n, 14)) & M32L;
+    let x05 = BigInt(this.decode24(n, 18)) << BigInt(4) & M32L;
+    let x06 = BigInt(this.decode32v(n, 21)) & M32L;
+    let x07 = BigInt(this.decode24(n, 25)) << BigInt(4) & M32L;
+    let x08 = BigInt(this.decode32v(n, 28)) & M32L;
+    let x09 = BigInt(this.decode24(n, 32)) << BigInt(4) & M32L;
+    let x10 = BigInt(this.decode32v(n, 35)) & M32L;
+    let x11 = BigInt(this.decode24(n, 39)) << BigInt(4) & M32L;
+    let x12 = BigInt(this.decode32v(n, 42)) & M32L;
+    let x13 = BigInt(this.decode24(n, 46)) << BigInt(4) & M32L;
+    let x14 = BigInt(this.decode32v(n, 49)) & M32L;
+    let x15 = BigInt(this.decode24(n, 53)) << BigInt(4) & M32L;
+    let x16 = BigInt(this.decode32v(n, 56)) & M32L;
+    let x17 = BigInt(this.decode24(n, 60)) << BigInt(4) & M32L;
     const x18 = BigInt(n[63]) & BigInt(0xff);
 
     let t = BigInt(0);
@@ -775,28 +776,28 @@ class EC {
     x08 += x07 >> BigInt(28);
     x07 &= M28L;
 
-    let r = new Uint8Array(SCALAR_BYTES);
-    encode56(x00 | (x01 << BigInt(28)), r, 0);
-    encode56(x02 | (x03 << BigInt(28)), r, 7);
-    encode56(x04 | (x05 << BigInt(28)), r, 14);
-    encode56(x06 | (x07 << BigInt(28)), r, 21);
-    encode32(Number(x08), r, 28);
+    const r = new Uint8Array(SCALAR_BYTES);
+    this.encode56(x00 | (x01 << BigInt(28)), r, 0);
+    this.encode56(x02 | (x03 << BigInt(28)), r, 7);
+    this.encode56(x04 | (x05 << BigInt(28)), r, 14);
+    this.encode56(x06 | (x07 << BigInt(28)), r, 21);
+    this.encode32(Number(x08), r, 28);
 
     return r;
   }
 
-  function scalarMultBase(k: Uint8Array, r: PointAccum): void {
-    pointSetNeutralAccum(r);
+  scalarMultBase(k: Uint8Array, r: PointAccum): void {
+    this.pointSetNeutralAccum(r);
 
     const n = new Int32Array(SCALAR_INTS);
-    decodeScalar(k, 0, n);
+    this.decodeScalar(k, 0, n);
 
     // Recode the scalar into signed-digit form, then group comb bits in each block
-    cadd(SCALAR_INTS, ~n[0] & 1, n, L, n);
-    shiftDownBit(SCALAR_INTS, n, 1);
+    this.cadd(SCALAR_INTS, ~n[0] & 1, n, L, n);
+    this.shiftDownBit(SCALAR_INTS, n, 1);
 
     for (let i = 0; i < SCALAR_INTS; i++) {
-        n[i] = shuffle2(n[i]) >>> 0;
+        n[i] = this.shuffle2(n[i]) >>> 0;
     }
 
     const p = PointPrecomp.create();
@@ -808,12 +809,12 @@ class EC {
             const sign = (w >>> (PRECOMP_TEETH - 1)) & 1;
             const abs = (w ^ -sign) & PRECOMP_MASK;
 
-            pointLookup(b, abs, p);
+            this.pointLookup(b, abs, p);
 
             x25519_field.cswap(sign, p.ypxH, p.ymxH);
             x25519_field.cnegate(sign, p.xyd);
 
-            pointAddPrecomp(p, r);
+            this.pointAddPrecomp(p, r);
         }
 
         cOff -= PRECOMP_TEETH;
@@ -822,36 +823,36 @@ class EC {
             break;
         }
 
-        pointDouble(r);
+        this.pointDouble(r);
     }
   }
 
-  function createScalarMultBaseEncoded(s: Uint8Array): Uint8Array {
+  createScalarMultBaseEncoded(s: Uint8Array): Uint8Array {
     const r = new Uint8Array(SCALAR_BYTES);
-    scalarMultBaseEncoded(s, r, 0);
+    this.scalarMultBaseEncoded(s, r, 0);
     return r;
   }
 
-  function scalarMultBaseEncoded(k: Uint8Array, r: Uint8Array, rOff: number): void {
+  scalarMultBaseEncoded(k: Uint8Array, r: Uint8Array, rOff: number): void {
     const p = PointAccum.create();
-    scalarMultBase(k, p);
-    encodePoint(p, r, rOff);
+    this.scalarMultBase(k, p);
+    this.encodePoint(p, r, rOff);
   }
 
   // This function performs scalar multiplication of a point on an elliptic curve using the Strauss algorithm with variable-time windowing.
-  function scalarMultStraussVar(nb: Int32Array, np: Int32Array, p: PointExt, r: PointAccum): void {
+  scalarMultStraussVar(nb: Int32Array, np: Int32Array, p: PointExt, r: PointAccum): void {
     // Set the window size to 5.
     const width = 5;
 
     // Compute the WNAF of the scalar values nb and np.
-    const wsB = getWNAF(nb, WNAF_WIDTH_BASE).map((value) => value | 0);
-    const wsP = getWNAF(np, width).map((value) => value | 0);
+    const wsB = this.getWNAF(nb, WNAF_WIDTH_BASE).map((value) => value | 0);
+    const wsP = this.getWNAF(np, width).map((value) => value | 0);
 
     // Compute a precomputed table of points based on the input point p.
-    const tp = pointPrecompVar(p, 1 << (width - 2));
+    const tp = this.pointPrecompVar(p, 1 << (width - 2));
 
     // Initialize the result to the neutral element of the elliptic curve.
-    pointSetNeutralAccum(r);
+    this.pointSetNeutralAccum(r);
 
     // Start from the most significant bit and skip over any leading zero bits in both scalar values.
     let bit = 255;
@@ -868,7 +869,7 @@ class EC {
         if (wb !== 0) {
             const sign = wb < 0 ? 1 : 0;
             const index = (sign !== 0 ? -wb : wb) >>> 1;
-            pointAddVar1(sign !== 0, precompBaseTable[index], r);
+            this.pointAddVar1(sign !== 0, this._precompBaseTable[index], r);
         }
 
         // Get the current bit of the scalar value np.
@@ -879,11 +880,11 @@ class EC {
         if (wp !== 0) {
             const sign = wp < 0 ? 1 : 0;
             const index = (sign !== 0 ? -wp : wp) >>> 1;
-            pointAddVar1(sign !== 0, tp[index], r);
+            this.pointAddVar1(sign !== 0, tp[index], r);
         }
 
         if (--bit < 0) break;
-        pointDouble(r);
+        this.pointDouble(r);
     }
   }
 }
@@ -896,9 +897,9 @@ const PUBLIC_KEY_SIZE = POINT_BYTES;
 const SECRET_KEY_SIZE = 32;
 const SIGNATURE_SIZE = POINT_BYTES + SCALAR_BYTES;
 const DOM2_PREFIX = "SigEd25519 no Ed25519 collisions";
-let P = [0xffffffed, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0x7fffffff];
-let L = [0x5cf5d3ed, 0x5812631a, 0xa2f79cd6, 0x14def9de, 0x00000000, 0x00000000, 0x00000000, 0x10000000];
-let B_x = [
+const P = [0xffffffed, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0x7fffffff];
+const L = [0x5cf5d3ed, 0x5812631a, 0xa2f79cd6, 0x14def9de, 0x00000000, 0x00000000, 0x00000000, 0x10000000];
+const B_x = [
   0x0325d51a,
   0x018b5823,
   0x007b2c95,
@@ -911,7 +912,7 @@ let B_x = [
   0x0042d26d
 ];
 
-let B_y = [
+const B_y = [
   0x02666658,
   0x01999999,
   0x00666666,
@@ -924,7 +925,7 @@ let B_y = [
   0x00cccccc
 ];
 
-let C_d = [
+const C_d = [
   0x035978a3,
   0x02d37284,
   0x018ab75e,
@@ -937,7 +938,7 @@ let C_d = [
   0x00a406d9
 ];
 
-let C_d2 = [
+const C_d2 = [
   0x02b2f159,
   0x01a6e509,
   0x01156ebd,
@@ -950,7 +951,7 @@ let C_d2 = [
   0x00480db3
 ];
 
-let C_d4 = [
+const C_d4 = [
   0x0165e2b2,
   0x034dca13,
   0x002add7a,
@@ -963,17 +964,17 @@ let C_d4 = [
   0x00901b67
 ];
 
-let WNAF_WIDTH_BASE = 7;
-let PRECOMP_BLOCKS = 8;
-let PRECOMP_TEETH = 4;
-let PRECOMP_SPACING = 8;
-let PRECOMP_POINTS = 1 << PRECOMP_TEETH - 1;
-let PRECOMP_MASK = PRECOMP_POINTS - 1;
-let M = BigInt(0xffffffff);
+const WNAF_WIDTH_BASE = 7;
+const PRECOMP_BLOCKS = 8;
+const PRECOMP_TEETH = 4;
+const PRECOMP_SPACING = 8;
+const PRECOMP_POINTS = 1 << PRECOMP_TEETH - 1;
+const PRECOMP_MASK = PRECOMP_POINTS - 1;
+const M = BigInt(0xffffffff);
 
 class PointAccum {
-  readonly x: Int32Array;
-  readonly y: Int32Array;
+  readonly x: Int32List;
+  readonly y: Int32List;
   readonly z: Int32Array;
   readonly u: Int32Array;
   readonly v: Int32Array;
@@ -998,8 +999,8 @@ class PointAccum {
 }
 
 class PointExt {
-  readonly x: Int32Array;
-  readonly y: Int32Array;
+  readonly x: Int32List;
+  readonly y: Int32List;
   readonly z: Int32Array;
   readonly t: Int32Array;
 
