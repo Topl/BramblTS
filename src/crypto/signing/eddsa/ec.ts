@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-constant-condition */
 /*
   Ed25519 is EdDSA instantiated with:
@@ -35,7 +36,7 @@ Table 1: Parameters of Ed25519
 /// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class EC {
+export class EC {
   private _precompBaseTable: PointExt[];
   private _precompBase: Int32List;
 
@@ -892,14 +893,14 @@ class EC {
   }
 }
 
-const POINT_BYTES = 32;
-const SCALAR_INTS = 8;
-const SCALAR_BYTES = SCALAR_INTS * 4;
-const PREHASH_SIZE = 64;
-const PUBLIC_KEY_SIZE = POINT_BYTES;
-const SECRET_KEY_SIZE = 32;
-const SIGNATURE_SIZE = POINT_BYTES + SCALAR_BYTES;
-const DOM2_PREFIX = "SigEd25519 no Ed25519 collisions";
+export const POINT_BYTES = 32;
+export const SCALAR_INTS = 8;
+export const SCALAR_BYTES = SCALAR_INTS * 4;
+export const PREHASH_SIZE = 64;
+export const PUBLIC_KEY_SIZE = POINT_BYTES;
+export const SECRET_KEY_SIZE = 32;
+export const SIGNATURE_SIZE = POINT_BYTES + SCALAR_BYTES;
+export const DOM2_PREFIX = "SigEd25519 no Ed25519 collisions";
 const P = [0xffffffed, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0x7fffffff];
 const L = [0x5cf5d3ed, 0x5812631a, 0xa2f79cd6, 0x14def9de, 0x00000000, 0x00000000, 0x00000000, 0x10000000];
 const B_x = [
@@ -975,7 +976,7 @@ const PRECOMP_POINTS = 1 << PRECOMP_TEETH - 1;
 const PRECOMP_MASK = PRECOMP_POINTS - 1;
 const M = BigInt(0xffffffff);
 
-class PointAccum {
+export class PointAccum {
   readonly x: Int32List;
   readonly y: Int32List;
   readonly z: Int32Array;
@@ -1001,7 +1002,7 @@ class PointAccum {
   }
 }
 
-class PointExt {
+export class PointExt {
   readonly x: Int32List;
   readonly y: Int32List;
   readonly z: Int32Array;
@@ -1050,4 +1051,3 @@ function toByte(n: number): number {
   view.setInt8(0, n);
   return view.getUint8(0);
 }
-
