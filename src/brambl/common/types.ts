@@ -15,6 +15,30 @@ import * as spent_transaction_output from '../../../proto/brambl/models/transact
 import * as unspent_transaction_output from '../../../proto/brambl/models/transaction/unspent_transaction_output.js';
 import * as io_transaction from '../../../proto/brambl/models/transaction/io_transaction.js';
 import * as txo from '../../../proto/genus/genus_models.js';
+import * as block_id from '../../../proto/consensus/models/block_id.js';
+import * as block from '../../../proto/node/models/block.js';
+import * as bifrost_rpc from '../../../proto/node/services/bifrost_rpc.js';
+import * as genus_rpc from '../../../proto/genus/genus_rpc.js';
+
+//Consensus
+export class BlockId extends block_id.co.topl.consensus.models.BlockId {};
+
+//Node
+export class BlockBody extends block.co.topl.node.models.BlockBody {};
+export class FetchBlockIdAtHeightReq extends bifrost_rpc.co.topl.node.services.FetchBlockIdAtHeightReq {};
+export class FetchBlockIdAtHeightRes extends bifrost_rpc.co.topl.node.services.FetchBlockIdAtHeightRes {};
+export class FetchBlockBodyReq extends bifrost_rpc.co.topl.node.services.FetchBlockBodyReq {};
+export class FetchBlockBodyRes extends bifrost_rpc.co.topl.node.services.FetchBlockBodyRes {};
+export class FetchTransactionReq extends bifrost_rpc.co.topl.node.services.FetchTransactionReq {};
+export class FetchTransactionRes extends bifrost_rpc.co.topl.node.services.FetchTransactionRes {};
+export class NodeRpcClient extends bifrost_rpc.co.topl.node.services.NodeRpcClient {};
+
+//Genus RPC
+export class TransactionServiceClient extends genus_rpc.co.topl.genus.services.TransactionServiceClient {};
+export class QueryByLockAddressRequest extends genus_rpc.co.topl.genus.services.QueryByLockAddressRequest {};
+export class TxoLockAddressResponse extends genus_rpc.co.topl.genus.services.TxoLockAddressResponse {};
+
+//Brambl
 
 //Asset
 export const FungibilityType = asset.co.topl.brambl.models.box.FungibilityType;
@@ -73,6 +97,7 @@ export class IoTransaction extends io_transaction.co.topl.brambl.models.transact
 
 //TXO
 export class Txo extends txo.co.topl.genus.services.Txo {}
+export const TxoState = txo.co.topl.genus.services.TxoState;
 
 //Challenge
 export class Challenge extends challenge.co.topl.brambl.models.box.Challenge {}
