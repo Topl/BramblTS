@@ -6,6 +6,7 @@ import * as datum from '../../../proto/brambl/models/datum.js';
 import * as event from '../../../proto/brambl/models/event.js';
 import * as address from '../../../proto/brambl/models/address.js';
 import * as identifier from '../../../proto/brambl/models/identifier.js';
+import * as indices from '../../../proto/brambl/models/indices.js';
 import * as evidence from '../../../proto/brambl/models/evidence.js';
 import * as common from '../../../proto/brambl/models/common.js';
 import * as attestation from '../../../proto/brambl/models/transaction/attestation.js';
@@ -26,6 +27,9 @@ export class Lock_Commitment extends lock.co.topl.brambl.models.box.Lock.Commitm
 
 //Value
 export class Value extends value.co.topl.brambl.models.box.Value {}
+
+//Indices
+export class Indices extends indices.co.topl.brambl.models.Indices {}
 
 //Identifier
 export class LockId extends identifier.co.topl.brambl.models.LockId {}

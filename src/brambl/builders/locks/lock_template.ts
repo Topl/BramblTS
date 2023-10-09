@@ -1,8 +1,8 @@
 import { Either, left, right, flatMap } from 'fp-ts/Either';
 import { PropositionTemplate, ThresholdTemplate } from './proposition_template.js';
 import { BuilderError } from '../builder_error.js';
-import { VerificationKey, Proposition_Threshold } from '../../quivr4s/common/types.js';
-import { Lock, Challenge } from '../common/types.js';
+import { VerificationKey, Proposition_Threshold } from '../../../quivr4s/common/types.js';
+import { Lock, Challenge } from '../../common/types.js';
 
 abstract class LockTemplate {
   lockType: LockType;
@@ -51,5 +51,24 @@ export class PredicateTemplate implements LockTemplate {
     };
 
     return flatMap(getLock)(result);
+  }
+
+  //used for pickling
+  toJson() {
+    return {
+      type: this.lockType.label,
+      threshold: this.threshold,
+      innerTemplates: this.innerTemplates.map((innerTemplate) => {
+        return innerTemplate.toJson();
+      })
+    };
+  }
+
+  fromJson(json): PredicateTemplate {
+    const innerTemplates = json.innerTemplates.map((innerTemplateJson) => {
+      return PropositionTemplate.fromJson(innerTemplateJson);
+    });
+
+    return new PredicateTemplate(innerTemplates, json.threshold);
   }
 }

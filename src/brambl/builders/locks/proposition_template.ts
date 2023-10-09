@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Either, left, right, isLeft, isRight } from 'fp-ts/Either';
 import { BuilderError } from '../builder_error.js';
 import { Data, Digest, Proposition, VerificationKey } from '../../../quivr4s/common/types.js';
@@ -24,17 +25,49 @@ export class UnableToBuildPropositionTemplate extends BuilderError {
 export abstract class PropositionTemplate {
   public propositionType: PropositionType;
   abstract build(entityVks: VerificationKey[]): Either<BuilderError, Proposition>;
+  abstract toJson();
+  static fromJson(json) {
+    const type = json.propositionType;
+    switch (type) {
+      case 'locked':
+        return LockedTemplate.fromJson(json);
+        break;
+      case 'height':
+        return HeightTemplate.fromJson(json);
+        break;
+      case 'tick':
+        return TickTemplate.fromJson(json);
+        break;
+      case 'digest':
+        return DigestTemplate.fromJson(json);
+        break;
+      case 'signature':
+        return SignatureTemplate.fromJson(json);
+        break;
+      case 'and':
+        return AndTemplate.fromJson(json);
+        break;
+      case 'or':
+        return OrTemplate.fromJson(json);
+        break;
+      case 'not':
+        return NotTemplate.fromJson(json);
+        break;
+      case 'threshold':
+        return ThresholdTemplate.fromJson(json);
+        break;
+    }
+  };
 }
 
 export class LockedTemplate implements PropositionTemplate {
   public data?: Data;
   public propositionType = PropositionType.locked;
 
-  constructor(data: Data) {
+  constructor(data: Data | null) {
     this.data = data;
   }
 
-  //TODO: unused var
   build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       return right(Proposer.lockedProposer(this.data));
@@ -42,6 +75,18 @@ export class LockedTemplate implements PropositionTemplate {
       return left(new BuilderError(e.toString()));
     }
   }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      data: this.data.serialize()
+    }
+  }
+
+  static fromJson(json) {
+    return new LockedTemplate(json.data ? Data.deserialize(json.data) : null)
+  }
+
 }
 
 export class HeightTemplate implements PropositionTemplate {
@@ -63,6 +108,19 @@ export class HeightTemplate implements PropositionTemplate {
       return left(new BuilderError(e.toString()));
     }
   }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      chain: this.chain,
+      min: this.min,
+      max: this.max
+    }
+  }
+
+  static fromJson(json) {
+    return new HeightTemplate(json.chain, json.min, json.max);
+  }
 }
 
 export class TickTemplate implements PropositionTemplate {
@@ -82,6 +140,18 @@ export class TickTemplate implements PropositionTemplate {
       return left(new BuilderError(e.toString()));
     }
   }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      min: this.min,
+      max: this.max
+    }
+  }
+
+  static fromJson(json) {
+    return new TickTemplate(json.min, json.max);
+  }
 }
 
 export class DigestTemplate implements PropositionTemplate {
@@ -100,6 +170,18 @@ export class DigestTemplate implements PropositionTemplate {
     } catch (e) {
       return left(new BuilderError(e.toString()));
     }
+  }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      routine: this.routine,
+      digest: this.digest.serialize()
+    };
+  }
+
+  static fromJson(json) {
+    return new DigestTemplate(json.routine, Digest.deserialize(json.digest));
   }
 }
 
@@ -128,6 +210,18 @@ export class SignatureTemplate implements PropositionTemplate {
       return left(new BuilderError(e.toString()));
     }
   }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      routine: this.routine,
+      entityIdx: this.entityIdx
+    }
+  }
+
+  static fromJson(json) {
+    return new SignatureTemplate(json.routine, json.entityIdx);
+  }
 }
 
 export class AndTemplate implements PropositionTemplate {
@@ -154,6 +248,18 @@ export class AndTemplate implements PropositionTemplate {
     } catch (e) {
       return left(new BuilderError(e.toString()));
     }
+  }
+
+  toJson() {
+    return {
+      propsitionType: this.propositionType,
+      leftTemplate: this.leftTemplate.toJson(),
+      rightTemplate: this.rightTemplate.toJson()
+    }
+  }
+
+  static fromJson(json) {
+    return new AndTemplate(json.leftTemplate.fromJson(), json.rightTemplate.fromJson());
   }
 }
 
@@ -182,6 +288,18 @@ export class OrTemplate implements PropositionTemplate {
       return left(new BuilderError(e.toString()));
     }
   }
+
+  toJson() {
+    return {
+      propsitionType: this.propositionType,
+      leftTemplate: this.leftTemplate.toJson(),
+      rightTemplate: this.rightTemplate.toJson()
+    }
+  }
+
+  static fromJson(json) {
+    return new OrTemplate(json.leftTemplate.fromJson(), json.rightTemplate.fromJson());
+  }
 }
 
 export class NotTemplate implements PropositionTemplate {
@@ -203,6 +321,17 @@ export class NotTemplate implements PropositionTemplate {
     } catch (e) {
       return left(new BuilderError(e.toString()));
     }
+  }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      innerTemplate: this.innerTemplate.toJson()
+    }
+  }
+
+  static fromJson(json) {
+    return new NotTemplate(json.innerTemplate.fromJson());
   }
 }
 
@@ -251,5 +380,21 @@ export class ThresholdTemplate implements PropositionTemplate {
     } catch (e) {
       return left(new BuilderError(e.toString(), e));
     }
+  }
+
+  toJson() {
+    return {
+      propositionType: this.propositionType,
+      threshold: this.threshold,
+      innerTemplates: this.innerTemplates.map((innerTemplate) => {
+        return innerTemplate.toJson();
+      })
+    }
+  }
+
+  static fromJson(json) {
+    return new ThresholdTemplate(json.innerTemplates.map((innerTemplateJson) => {
+      return innerTemplateJson.fromJson()
+    }), json.threshold);
   }
 }

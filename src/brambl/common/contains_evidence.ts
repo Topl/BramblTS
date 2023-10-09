@@ -10,7 +10,7 @@ export class ContainsEvidence {
     this.evidence = evidence;
   }
 
-  emptry(): ContainsEvidence {
+  empty(): ContainsEvidence {
     return new ContainsEvidence(new Evidence());
   }
 
