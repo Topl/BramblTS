@@ -5,6 +5,12 @@ import { Hash, Message } from './baseHash';
 abstract class SHA extends Hash {
   abstract hash(bytes: Uint8Array): Uint8Array;
   abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
+  // Flag to track finalization
+  protected finalized: boolean = false;
+
+  abstract updateByte(inp: Uint8Array): void;
+  abstract update(inp: Uint8Array, inpOff: number, len: number): void;
+  abstract doFinal(): Uint8Array;
 }
 
 export class SHA256 extends SHA {
