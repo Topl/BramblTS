@@ -23,19 +23,19 @@ class SecretKey {
     }
   }
 
-  // equals(other: SecretKey): boolean {
-  //   return (
-  //     this === other || (other instanceof SecretKey && this.bytes.every((val, index) => val === other.bytes[index]))
-  //   );
-  // }
+  equals(other: SecretKey): boolean {
+    return (
+      this === other || (other instanceof SecretKey && this.bytes.every((val, index) => val === other.bytes[index]))
+    );
+  }
 
-  // hashCode(): number {
-  //   let hash = 0;
-  //   for (const byte of this.bytes) {
-  //     hash = (hash << 5) - hash + byte;
-  //   }
-  //   return hash;
-  // }
+  hashCode(): number {
+    let hash = 0;
+    for (const byte of this.bytes) {
+      hash = (hash << 5) - hash + byte;
+    }
+    return hash;
+  }
 }
 
 class PublicKey {
@@ -51,19 +51,19 @@ class PublicKey {
     }
   }
 
-  // equals(other: PublicKey): boolean {
-  //   return (
-  //     this === other || (other instanceof PublicKey && this.bytes.every((val, index) => val === other.bytes[index]))
-  //   );
-  // }
+  equals(other: PublicKey): boolean {
+    return (
+      this === other || (other instanceof PublicKey && this.bytes.every((val, index) => val === other.bytes[index]))
+    );
+  }
 
-  // hashCode(): number {
-  //   let hash = 0;
-  //   for (const byte of this.bytes) {
-  //     hash = (hash << 5) - hash + byte;
-  //   }
-  //   return hash;
-  // }
+  hashCode(): number {
+    let hash = 0;
+    for (const byte of this.bytes) {
+      hash = (hash << 5) - hash + byte;
+    }
+    return hash;
+  }
 }
 
 export { PublicKey, SecretKey, ed25519Spec };
