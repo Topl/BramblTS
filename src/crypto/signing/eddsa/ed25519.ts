@@ -2,7 +2,7 @@ import { SHA512 } from "@/crypto/hash/sha";
 import { DOM2_PREFIX, EC, POINT_BYTES, PREHASH_SIZE, PointAccum, PointExt, SCALAR_BYTES, SCALAR_INTS, SECRET_KEY_SIZE, SIGNATURE_SIZE } from "./ec";
 import { randomBytes } from "crypto";
 
-class Ed25519 extends EC {
+export class Ed25519 extends EC {
   private readonly defaultDigest = new SHA512();
   private readonly random = randomBytes;
 
