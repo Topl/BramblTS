@@ -14,13 +14,26 @@ abstract class SHA extends Hash {
 }
 
 export class SHA256 extends SHA {
+  digest = crypto.createHash('sha256');
+  hashDigest: Uint8Array;
+
+  doFinal(): Uint8Array {
+    if (this.finalized) {
+      throw new Error('Instance has already been finalized.');
+    }
+    this.finalized = true;
+    return this.digest.digest();
+  }
+
   hash(bytes: Uint8Array): Uint8Array {
-    const hash = crypto.createHash('sha256');
-    return hash.update(bytes).digest();
+    if (this.finalized) {
+      throw new Error('Instance has been finalized and cannot be used for hashing.');
+    }
+    this.update(bytes, 0, bytes.length);
+    return this.doFinal();
   }
 
   hashComplex(options: { prefix?: number; messages: Message[] }): Digest {
-    const hash = crypto.createHash('sha256');
     let input: Uint8Array[] = [];
     if (options.prefix !== undefined) {
       input.push(new Uint8Array([options.prefix]));
@@ -32,7 +45,7 @@ export class SHA256 extends SHA {
       flattened.push(...arr);
     });
 
-    const result = hash.update(new Uint8Array(flattened)).digest();
+    const result = this.hash(new Uint8Array(flattened));
 
     const digestResult = Digest32.from(result);
 
@@ -45,13 +58,26 @@ export class SHA256 extends SHA {
 }
 
 export class SHA512 extends SHA {
+  digest = crypto.createHash('sha512');
+  hashDigest: Uint8Array;
+
+  doFinal(): Uint8Array {
+    if (this.finalized) {
+      throw new Error('Instance has already been finalized.');
+    }
+    this.finalized = true;
+    return this.digest.digest();
+  }
+
   hash(bytes: Uint8Array): Uint8Array {
-    const hash = crypto.createHash('sha512');
-    return hash.update(bytes).digest();
+    if (this.finalized) {
+      throw new Error('Instance has been finalized and cannot be used for hashing.');
+    }
+    this.update(bytes, 0, bytes.length);
+    return this.doFinal();
   }
 
   hashComplex(options: { prefix?: number; messages: Message[] }): Digest {
-    const hash = crypto.createHash('sha512');
     let input: Uint8Array[] = [];
     if (options.prefix !== undefined) {
       input.push(new Uint8Array([options.prefix]));
@@ -63,7 +89,7 @@ export class SHA512 extends SHA {
       flattened.push(...arr);
     });
 
-    const result = hash.update(new Uint8Array(flattened)).digest();
+    const result = this.hash(new Uint8Array(flattened));
 
     const digestResult = Digest64.from(result);
 
