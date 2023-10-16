@@ -40,7 +40,7 @@ export class SHA256 extends SHA {
     if (this.finalized) {
       throw new Error('Instance has been finalized and cannot be updated.');
     }
-    this.digest.update(inp.slice(inpOff, inpOff + len));
+    this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
   hash(bytes: Uint8Array): Uint8Array {
@@ -102,7 +102,7 @@ export class SHA512 extends SHA {
     if (this.finalized) {
       throw new Error('Instance has been finalized and cannot be updated.');
     }
-    this.digest.update(inp.slice(inpOff, inpOff + len));
+    this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
   hash(bytes: Uint8Array): Uint8Array {
