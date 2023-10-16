@@ -36,6 +36,13 @@ export class SHA256 extends SHA {
     this.digest.update(inp);
   } 
 
+  update(inp: Uint8Array, inpOff: number, len: number): void {
+    if (this.finalized) {
+      throw new Error('Instance has been finalized and cannot be updated.');
+    }
+    this.digest.update(inp.slice(inpOff, inpOff + len));
+  } 
+
   hash(bytes: Uint8Array): Uint8Array {
     if (this.finalized) {
       throw new Error('Instance has been finalized and cannot be used for hashing.');
