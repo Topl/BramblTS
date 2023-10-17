@@ -15,7 +15,7 @@ const ed25519Spec: Ed25519Spec = {
 };
 
 class SecretKey {
-  chainCode(chainCode: any, zHmacData: Uint8Array) {
+  chainCode(chainCode: Uint8Array, zHmacData: Uint8Array) {
     throw new Error('Method not implemented.');
   }
   readonly bytes: Uint8Array;
