@@ -1,33 +1,21 @@
-interface Entropy {
-  // Define the properties and methods of the Entropy interface
-}
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// import { Entropy } from './entropy'; // Assuming Entropy class definition
+// import { KeyPair } from './key-pair'; // Assuming KeyPair class definition
+// import { Pbkdf2Sha512 } from './entropy-to-seed'; // Assuming Pbkdf2Sha512 class definition
 
-interface EntropyToSeed {
-  // Define the properties and methods of the EntropyToSeed interface
-}
-
-interface SigningKey {
-  // Define the properties and methods of the SigningKey interface
-}
-
-interface VerificationKey {
-  // Define the properties and methods of the VerificationKey interface
-}
-
-interface KeyPair<SK, VK> {
-  // Define the properties and methods of the KeyPair interface
-}
-
-export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {
-  private readonly seedLength: number;
+abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {
+  readonly seedLength: number;
 
   constructor(seedLength: number) {
     this.seedLength = seedLength;
   }
 
-  deriveKeyPairFromEntropy(entropy: Entropy, passphrase: string | null, options: { entropyToSeed?: EntropyToSeed } = {}): KeyPair<SK, VK> {
-    const { entropyToSeed = { toSeed: () => new Uint8Array() } } = options;
-    const seed = entropyToSeed.toSeed(entropy, passphrase, this.seedLength);
+  deriveKeyPairFromEntropy(
+    entropy: Entropy,
+    passphrase: string | null,
+    options: { entropyToSeed: EntropyToSeed } = { entropyToSeed: new Pbkdf2Sha512() }
+  ): KeyPair<SK, VK> {
+    const seed = options.entropyToSeed.toSeed(entropy, passphrase, this.seedLength);
     return this.deriveKeyPairFromSeed(seed);
   }
 
