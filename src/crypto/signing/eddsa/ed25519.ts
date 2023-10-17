@@ -116,9 +116,9 @@ export class Ed25519 extends EC {
     }
   
     // Compute the SHA-512 hash of the private key.
-    const h = new Uint8Array(this.defaultDigest.digestSize);
-    this.defaultDigest.update(sk.slice(skOffset, skOffset + SECRET_KEY_SIZE));
-    this.defaultDigest.doFinal(h);
+    // const h = new Uint8Array(this.defaultDigest.digestSize);
+    this.defaultDigest.update(sk, skOffset, SECRET_KEY_SIZE);
+    const h = this.defaultDigest.doFinal();
   
     // Prune the hash to obtain a 32-byte scalar value.
     const s = new Uint8Array(SCALAR_BYTES);
@@ -171,9 +171,9 @@ export class Ed25519 extends EC {
     }
   
     // Compute the SHA-512 hash of the private key.
-    const h = new Uint8Array(this.defaultDigest.digestSize);
-    this.defaultDigest.update(sk.slice(skOffset, skOffset + SECRET_KEY_SIZE));
-    this.defaultDigest.doFinal(h);
+    // const h = new Uint8Array(this.defaultDigest.digestSize);
+    this.defaultDigest.update(sk, skOffset, SECRET_KEY_SIZE);
+    const h = this.defaultDigest.doFinal();
   
     // Prune the hash to obtain a 32-byte scalar value.
     const s = new Uint8Array(SCALAR_BYTES);
@@ -225,12 +225,12 @@ export class Ed25519 extends EC {
     if (!this.decodePointVar(pk, pkOffset, true, pA)) return false;
   
     // Compute the SHA-512 hash of the message and the other parameters.
-    const h = new Uint8Array(this.defaultDigest.digestSize);
+    // const h = new Uint8Array(this.defaultDigest.digestSize);
     this._dom2(this.defaultDigest, phflag, context);
     this.defaultDigest.update(R, 0, POINT_BYTES);
     this.defaultDigest.update(pk, pkOffset, POINT_BYTES);
     this.defaultDigest.update(message, messageOffset, messageLength);
-    this.defaultDigest.doFinal(h);
+    const h = this.defaultDigest.doFinal();
   
     // Reduce the hash to obtain a scalar value.
     const k = this.reduceScalar(h);
