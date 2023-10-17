@@ -63,9 +63,9 @@ export class Ed25519 extends EC {
     this._dom2(digest, phflag, context);
   
     // Update hash context with message hash
-    digest.update(h.subarray(SCALAR_BYTES, 2 * SCALAR_BYTES));
-    digest.update(message.subarray(messageOffset, messageOffset + messageLength));
-    digest.doFinal(h, 0);
+    digest.update(h, SCALAR_BYTES, SCALAR_BYTES);
+    digest.update(message, messageOffset, messageLength);
+    h = digest.doFinal();
   
     // Compute random scalar r and corresponding point R
     const r = this.reduceScalar(h);
@@ -76,10 +76,10 @@ export class Ed25519 extends EC {
     this._dom2(digest, phflag, context);
   
     // Update hash context with point R, public key, and message hash
-    digest.update(R);
-    digest.update(pk.subarray(pkOffset, pkOffset + POINT_BYTES));
-    digest.update(message.subarray(messageOffset, messageOffset + messageLength));
-    digest.doFinal(h, 0);
+    digest.update(R, 0, POINT_BYTES);
+    digest.update(pk, pkOffset, POINT_BYTES);
+    digest.update(message, messageOffset, messageLength);
+    h = digest.doFinal();
   
     // Compute scalar k and signature scalar S
     const k = this.reduceScalar(h);
