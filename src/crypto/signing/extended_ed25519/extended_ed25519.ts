@@ -1,6 +1,8 @@
+import { SHA512 } from '@/crypto/hash/sha';
 import { PublicKey, SecretKey } from '../ed25519/ed25519_spec';
 import { Ed25519 } from '../eddsa/ed25519';
 import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
+import { PointAccum, PointExt } from '../eddsa/ec';
 
 class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
   private impl: Ed25519;
@@ -170,16 +172,16 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
 
     // Compute the scalar multiplication of the base point by zL*8 to obtain scaledZL.
     const scaledZL = PointAccum.create();
-    impl.scalarMultBase(zLMult8.toUint8List(), scaledZL);
+    this.impl.scalarMultBase(zLMult8.toUint8List(), scaledZL);
 
     // Decode the parent public key into a point and add scaledZL to it to obtain the next public key point.
     const publicKeyPoint = PointExt.create();
-    impl.decodePointVar(verificationKey.vk.bytes, 0, { negate: false, r: publicKeyPoint });
-    impl.pointAddVar1(false, publicKeyPoint, scaledZL);
+    this.impl.decodePointVar(verificationKey.vk.bytes, 0, { negate: false, r: publicKeyPoint });
+    this.impl.pointAddVar1(false, publicKeyPoint, scaledZL);
 
     // Encode the next public key point as a byte array and compute the HMAC-SHA-512 of the parent chain code.
     const nextPublicKeyBytes = new Uint8Array(ExtendedEd25519Spec.publicKeyLength);
-    impl.encodePoint(scaledZL, nextPublicKeyBytes, 0);
+    this.impl.encodePoint(scaledZL, nextPublicKeyBytes, 0);
 
     const nextChainCode = ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,
@@ -199,7 +201,7 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// Returns the public verification key
   getVerificationKey(secretKey: SecretKey): PublicKey {
     const pk = new Uint8Array(ExtendedEd25519Spec.publicKeyLength);
-    impl.scalarMultBaseEncoded(secretKey.leftKey, pk, 0);
+    this.impl.scalarMultBaseEncoded(secretKey.leftKey, pk, 0);
 
     return new PublicKey(new ed25519_spec.PublicKey(pk), secretKey.chainCode);
   }
@@ -230,9 +232,9 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// Returns an extended secret key
   deriveSecretKeyFromChildPath(secretKey: SecretKey, indices: Bip32Index[]): SecretKey {
     if (indices.length === 1) {
-      return deriveChildSecretKey(secretKey, indices[0]);
+      return this.deriveChildSecretKey(secretKey, indices[0]);
     } else {
-      return deriveSecretKeyFromChildPath(deriveChildSecretKey(secretKey, indices[0]), indices.slice(1));
+      return this.deriveSecretKeyFromChildPath(this.deriveChildSecretKey(secretKey, indices[0]), indices.slice(1));
     }
   }
 
@@ -245,8 +247,8 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// [indices] - list of indices representing the path of the key pair to derive
   /// Returns the key pair
   deriveKeyPairFromChildPath(secretKey: SecretKey, indices: Bip32Index[]): KeyPair<SecretKey, PublicKey> {
-    const derivedSecretKey = deriveSecretKeyFromChildPath(secretKey, indices);
-    const derivedPublicKey = getVerificationKey(derivedSecretKey);
+    const derivedSecretKey = this.deriveSecretKeyFromChildPath(secretKey, indices);
+    const derivedPublicKey = this.getVerificationKey(derivedSecretKey);
     return new KeyPair(derivedSecretKey, derivedPublicKey);
   }
 }

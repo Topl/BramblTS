@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 interface Ed25519Spec {
   signatureLength: number;
   keyLength: number;
@@ -13,7 +15,12 @@ const ed25519Spec: Ed25519Spec = {
 };
 
 class SecretKey {
+  chainCode(chainCode: any, zHmacData: Uint8Array) {
+    throw new Error('Method not implemented.');
+  }
   readonly bytes: Uint8Array;
+  leftKey: any;
+  rightKey: any;
 
   constructor(bytes: Uint8Array) {
     this.bytes = bytes;
@@ -39,7 +46,11 @@ class SecretKey {
 }
 
 class PublicKey {
+  chainCode(chainCode: any, arg1: Uint8Array) {
+    throw new Error('Method not implemented.');
+  }
   readonly bytes: Uint8Array;
+  vk: any;
 
   constructor(bytes: Uint8Array) {
     this.bytes = bytes;

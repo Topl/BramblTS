@@ -1,6 +1,7 @@
-import { Either } from "@/common/either";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Either } from '@/common/either';
 
-interface ExtendedEd25519Spec {
+export interface ExtendedEd25519Spec {
   signatureLength: number;
   keyLength: number;
   publicKeyLength: number;
@@ -36,6 +37,26 @@ class SecretKey extends SigningKey implements ExtendedEd25519Spec {
       throw new Error(`Invalid chain code length. Expected: ${this.keyLength}, Received: ${chainCode.length}`);
     }
   }
+  signatureLength: number;
+  keyLength: number;
+  publicKeyLength: number;
+  seedLength: number;
+  clampBits(sizedSeed: Uint8Array): SecretKey {
+    throw new Error('Method not implemented.');
+  }
+  edBaseN: bigint;
+  validate(value: SecretKey): Either<InvalidDerivedKey, SecretKey> {
+    throw new Error('Method not implemented.');
+  }
+  leftNumber(secretKey: SecretKey): bigint {
+    throw new Error('Method not implemented.');
+  }
+  rightNumber(secretKey: SecretKey): bigint {
+    throw new Error('Method not implemented.');
+  }
+  hmac512WithKey(key: Uint8Array, data: Uint8Array): Uint8Array {
+    throw new Error('Method not implemented.');
+  }
 
   static proto(sk: pb.SigningKey_ExtendedEd25519Sk): SecretKey {
     return new SecretKey(sk.leftKey as Uint8Array, sk.rightKey as Uint8Array, sk.chainCode as Uint8Array);
@@ -51,10 +72,10 @@ class SecretKey extends SigningKey implements ExtendedEd25519Spec {
 }
 
 class PublicKey extends VerificationKey implements ExtendedEd25519Spec {
-  vk: spec.PublicKey;
+  vk: PublicKey;
   chainCode: Uint8Array;
 
-  constructor(vk: spec.PublicKey, chainCode: Uint8Array) {
+  constructor(vk: PublicKey, chainCode: Uint8Array) {
     super();
     this.vk = vk;
     this.chainCode = chainCode;
@@ -62,6 +83,26 @@ class PublicKey extends VerificationKey implements ExtendedEd25519Spec {
     if (chainCode.length !== this.keyLength) {
       throw new Error(`Invalid chain code length. Expected: ${this.keyLength}, Received: ${chainCode.length}`);
     }
+  }
+  signatureLength: number;
+  keyLength: number;
+  publicKeyLength: number;
+  seedLength: number;
+  clampBits(sizedSeed: Uint8Array): SecretKey {
+    throw new Error('Method not implemented.');
+  }
+  edBaseN: bigint;
+  validate(value: SecretKey): Either<InvalidDerivedKey, SecretKey> {
+    throw new Error('Method not implemented.');
+  }
+  leftNumber(secretKey: SecretKey): bigint {
+    throw new Error('Method not implemented.');
+  }
+  rightNumber(secretKey: SecretKey): bigint {
+    throw new Error('Method not implemented.');
+  }
+  hmac512WithKey(key: Uint8Array, data: Uint8Array): Uint8Array {
+    throw new Error('Method not implemented.');
   }
 
   static proto(vk: pb.VerificationKey_ExtendedEd25519Vk): PublicKey {
@@ -83,16 +124,3 @@ function arrayEquals(a: Uint8Array, b: Uint8Array): boolean {
   }
   return true;
 }
-
-// Define BigInt in TypeScript
-declare interface BigInt {
-  toString(radix?: number): string;
-}
-
-declare var BigInt: {
-  (value: number): bigint;
-  (value: string): bigint;
-  new (value: number): bigint;
-  new (value: string): bigint;
-  readonly prototype: bigint;
-};
