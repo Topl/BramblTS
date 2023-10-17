@@ -222,7 +222,7 @@ export class Ed25519 extends EC {
   
     // Decode the public key.
     const pA = PointExt.create();
-    if (!this.decodePointVar(pk, pkOffset, true, pA)) return false;
+    if (!this.decodePointVar(pk, pkOffset, { negate: true, r: pA })) return false;
   
     // Compute the SHA-512 hash of the message and the other parameters.
     // const h = new Uint8Array(this.defaultDigest.digestSize);
