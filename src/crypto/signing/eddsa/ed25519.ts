@@ -8,10 +8,10 @@ export class Ed25519 extends EC {
 
   private _dom2(d: SHA512, phflag: number, ctx: Uint8Array): void {
     if (ctx.length > 0) {
-      d.update(Buffer.from(DOM2_PREFIX, 'utf-8'));
-      d.update(Buffer.from([phflag]));
-      d.update(Buffer.from([ctx.length]));
-      d.update(ctx);
+      d.update(Buffer.from(DOM2_PREFIX, 'utf-8'), 0, DOM2_PREFIX.length);
+      d.updateByte(Buffer.from([phflag]));
+      d.updateByte(Buffer.from([ctx.length]));
+      d.update(ctx, 0, ctx.length);
     }
   }
 
