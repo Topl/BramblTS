@@ -14,7 +14,7 @@ class InvalidDerivedKey implements Error {
   stack?: string;
 }
 
-class ExtendedEd25519Spec {
+export class ExtendedEd25519Spec {
   static readonly signatureLength: number = 64;
   static readonly keyLength: number = 32;
   static readonly publicKeyLength: number = 32;

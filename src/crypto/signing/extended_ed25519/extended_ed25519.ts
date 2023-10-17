@@ -1,16 +1,23 @@
-import { SHA512 } from '@/crypto/hash/sha';
-import { PublicKey, SecretKey } from '../ed25519/ed25519_spec';
-import { Ed25519 } from '../eddsa/ed25519';
-// import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
-import { PointAccum, PointExt } from '../eddsa/ec';
-import { extendedEd25519Spec } from './extended_ed25519_spec';
+// import { SHA512 } from '@/crypto/hash/sha';
+// import { PublicKey, SecretKey } from '../ed25519/ed25519_spec';
+// import { Ed25519 } from '../eddsa/ed25519';
+// // import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
+// import { PointAccum, PointExt } from '../eddsa/ec';
+// import { extendedEd25519Spec } from './extended_ed25519_spec';
+
+import { SHA512 } from "@/crypto/hash/sha";
+// import * as ed25519_spec from "../ed25519/ed25519_spec";
+import * as eddsa from "../eddsa/ed25519";
+import { ExtendedEd25519Spec } from "./extended_ed25519_spec";
+import { Bip32Index, SoftIndex } from "@/crypto/generation/bip32_index";
+import { PointAccum, PointExt } from "../eddsa/ec";
+import { PublicKey, SecretKey, ed25519Spec } from "../ed25519/ed25519_spec";
 
 class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
-  private impl: Ed25519;
+  private impl: eddsa.Ed25519;
 
   constructor() {
-    super({ seedLength: extendedEd25519Spec.seedLength });
-    this.impl = new Ed25519();
+    super(ExtendedEd25519Spec.seedLength);
   }
 
   /// Sign a given message with a given signing key.
@@ -22,8 +29,8 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// [message] - a message that the the signature will be generated for
   /// Returns the signature
   sign(privateKey: SecretKey, message: Uint8Array): Uint8Array {
-    const resultSig = new Uint8Array(extendedEd25519Spec.signatureLength);
-    const pk = new Uint8Array(extendedEd25519Spec.publicKeyLength);
+    const resultSig = new Uint8Array(ExtendedEd25519Spec.signatureLength);
+    const pk = new Uint8Array(ExtendedEd25519Spec.publicKeyLength);
     const ctx = new Uint8Array(0);
     const phflag = 0x00;
     const leftKeyDataArray = privateKey.leftKey;
@@ -47,10 +54,10 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// [verifyKey] - The key to use for verification
   /// Returns true if the signature is verified; otherwise false.
   async verifyWithEd25519Pk(signature: Uint8Array, message: Uint8Array, verifyKey: PublicKey): Promise<boolean> {
-    if (signature.length !== extendedEd25519Spec.signatureLength) {
+    if (signature.length !== ed25519Spec.signatureLength) {
       return false;
     }
-    if (verifyKey.bytes.length !== extendedEd25519Spec.publicKeyLength) {
+    if (verifyKey.bytes.length !== ed25519Spec.publicKeyLength) {
       return false;
     }
 
@@ -75,10 +82,10 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// [verifyKey] - The key to use for verification
   /// Returns true if the signature is verified; otherwise false.
   verify(signature: Uint8Array, message: Uint8Array, verifyKey: PublicKey): boolean {
-    if (signature.length !== extendedEd25519Spec.signatureLength) {
+    if (signature.length !== ExtendedEd25519Spec.signatureLength) {
       return false;
     }
-    if (verifyKey.vk.bytes.length !== extendedEd25519Spec.publicKeyLength) {
+    if (verifyKey.vk.bytes.length !== ExtendedEd25519Spec.publicKeyLength) {
       return false;
     }
 
@@ -104,8 +111,8 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// Returns an extended secret key.
   deriveChildSecretKey(secretKey: SecretKey, index: Bip32Index): SecretKey {
     // Get the left and right numbers from the secret key
-    const lNum = extendedEd25519Spec.leftNumber(secretKey);
-    const rNum = extendedEd25519Spec.rightNumber(secretKey);
+    const lNum = ExtendedEd25519Spec.leftNumber(secretKey);
+    const rNum = ExtendedEd25519Spec.rightNumber(secretKey);
 
     // Get the public key from the secret key
     const publicKey = this.getVerificationKey(secretKey);
@@ -117,29 +124,49 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
         : new Uint8Array([0x00, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
 
     // Compute z using HMAC-SHA-512 with the chain code as the key
-    const z = extendedEd25519Spec.hmac512WithKey(secretKey.chainCode, zHmacData);
+    const z = ExtendedEd25519Spec.hmac512WithKey(secretKey.chainCode, zHmacData);
+
+    function fromLittleEndian(bytes: Uint8Array): bigint {
+      let result = BigInt(0);
+      for (let i = bytes.length - 1; i >= 0; i--) {
+          result = (result << 8n) | BigInt(bytes[i]);
+      }
+      return result;
+    }
 
     // Parse the left and right halves of z as big integers
-    const zLeft = z.slice(0, 28).fromLittleEndian();
-    const zRight = z.slice(32, 64).fromLittleEndian();
+    const zLeft = fromLittleEndian(z.slice(0, 28));
+    const zRight = fromLittleEndian(z.slice(32, 64));
+
+    // function toUint8List(value: bigint): Uint8Array {
+    //   const hexString = value.toString(16);
+    //   const paddedHexString = hexString.length % 2 === 0 ? hexString : '0' + hexString;
+    //   const byteArray = new Uint8Array(paddedHexString.length / 2);
+  
+    //   for (let i = 0; i < byteArray.length; i++) {
+    //       byteArray[i] = parseInt(paddedHexString.substr(i * 2, 2), 16);
+    //   }
+  
+    //   return byteArray;
+    // }
 
     // Compute the next left key by adding zLeft * 8 to the current left key
     const nextLeftBigInt = zLeft * BigInt(8) + lNum;
-    const nextLeftPre = nextLeftBigInt.toUint8List();
-    const nextLeft = nextLeftPre.reverse().slice(0, 32).toUint8List();
-
+    const nextLeftPre = new Uint8Array(BigInt.asUintN(256, nextLeftBigInt).toString(16).match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+    const nextLeft = new Uint8Array(nextLeftPre.slice(nextLeftPre.length - 32));
+    
     // Compute the next right key by adding zRight to the current right key
-    const nextRightBigInt = (zRight + rNum) % BigInt(2).pow(256);
-    const nextRightPre = nextRightBigInt.toUint8List();
-    const nextRight = nextRightPre.reverse().slice(0, 32).toUint8List();
-
+    const nextRightBigInt = BigInt.asUintN(256, zRight + rNum);
+    const nextRightPre = new Uint8Array(BigInt.asUintN(256, nextRightBigInt).toString(16).match(/.{2}/g)!.map(byte => parseInt(byte, 16)));
+    const nextRight = new Uint8Array(nextRightPre.slice(nextRightPre.length - 32))
+    
     // Compute the next chain code using HMAC-SHA-512 with the chain code as the key
     const chaincodeHmacData =
       index instanceof SoftIndex
         ? new Uint8Array([0x03, ...publicKey.vk.bytes, ...index.bytes])
         : new Uint8Array([0x01, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
 
-    const nextChainCode = extendedEd25519Spec.hmac512WithKey(secretKey.chainCode, chaincodeHmacData).slice(32, 64);
+    const nextChainCode = ExtendedEd25519Spec.hmac512WithKey(secretKey.chainCode, chaincodeHmacData).slice(32, 64);
 
     // Return the new secret key
     return new SecretKey(nextLeft, nextRight, nextChainCode);
@@ -153,7 +180,7 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
   /// A new `PublicKey` object representing the derived child public key.
   deriveChildVerificationKey(verificationKey: PublicKey, index: SoftIndex): PublicKey {
     // Compute the HMAC-SHA-512 of the parent chain code
-    const z = extendedEd25519Spec.hmac512WithKey(
+    const z = ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,
       new Uint8Array([0x02, ...verificationKey.vk.bytes, ...index.bytes]),
     );
@@ -177,15 +204,15 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
     this.impl.pointAddVar1(false, publicKeyPoint, scaledZL);
 
     // Encode the next public key point as a byte array and compute the HMAC-SHA-512 of the parent chain code.
-    const nextPublicKeyBytes = new Uint8Array(extendedEd25519Spec.publicKeyLength);
+    const nextPublicKeyBytes = new Uint8Array(ExtendedEd25519Spec.publicKeyLength);
     this.impl.encodePoint(scaledZL, nextPublicKeyBytes, 0);
 
-    const nextChainCode = extendedEd25519Spec
+    const nextChainCode = ExtendedEd25519Spec
       .hmac512WithKey(verificationKey.chainCode, new Uint8Array([0x03, ...verificationKey.vk.bytes, ...index.bytes]))
       .slice(32, 64);
 
     // Return the next public key and chain code as a PublicKey object.
-    return new PublicKey(new extendedEd25519Spec.PublicKey(nextPublicKeyBytes), nextChainCode);
+    return new ed25519_spec.PublicKey(new ed25519_spec.PublicKey(nextPublicKeyBytes), nextChainCode);
   }
 
   /// Get the public key from the secret key
