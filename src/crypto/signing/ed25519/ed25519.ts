@@ -1,9 +1,9 @@
-import { Ed25519 as EdDSAEd25519 } from 'ed25519';
+import { Ed25519 as EdDSAEd25519 } from '../eddsa/ed25519';
 
-import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
+// import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
 import { PublicKey, SecretKey, ed25519Spec } from './ed25519_spec';
 
-class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
+abstract class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
   private impl: EdDSAEd25519;
 
   constructor() {
@@ -13,7 +13,15 @@ class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
 
   sign(privateKey: SecretKey, message: Uint8Array): Uint8Array {
     const sig = new Uint8Array(ed25519Spec.signatureLength);
-    this.impl.sign(privateKey.bytes, 0, message, 0, message.length, sig, 0);
+    this.impl.sign({
+      sk: privateKey.bytes,
+      skOffset: 0,
+      message,
+      messageOffset: 0,
+      messageLength: message.length,
+      signature: sig,
+      signatureOffset: 0,
+    });
     return sig;
   }
 
@@ -25,7 +33,15 @@ class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
     return (
       sigByteArray.length === ed25519Spec.signatureLength &&
       vkByteArray.length === ed25519Spec.publicKeyLength &&
-      this.impl.verify(sigByteArray, 0, vkByteArray, 0, msgByteArray, 0, msgByteArray.length)
+      this.impl.verify({
+        signature: sigByteArray,
+        signatureOffset: 0,
+        pk: vkByteArray,
+        pkOffset: 0,
+        message: msgByteArray,
+        messageOffset: 0,
+        messageLength: msgByteArray.length,
+      })
     );
   }
 
