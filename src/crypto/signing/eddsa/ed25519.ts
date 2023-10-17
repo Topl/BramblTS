@@ -25,9 +25,9 @@ export class Ed25519 extends EC {
   generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
     const d = digest || this.defaultDigest;
 
-    const h = Buffer.alloc(d.digestSize);
-    d.update(Buffer.from(sk.slice(skOff, skOff + SECRET_KEY_SIZE)));
-    d.doFinal(h, 0);
+    // let h = Buffer.alloc(d.digestSize);
+    d.update(sk, skOff, skOff + SECRET_KEY_SIZE);
+    const h = d.doFinal();
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
 
