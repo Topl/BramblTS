@@ -396,8 +396,8 @@ export class Ed25519 extends EC {
         signatureOffset,
       });
     } else if (phSha && !ph) {
-      const m = new Uint8Array(PREHASH_SIZE);
-      if (PREHASH_SIZE !== phSha.doFinal(m, 0)) {
+      const m = phSha.doFinal();
+      if (PREHASH_SIZE !== m.length) {
         throw new Error('Prehash Invalid');
       }
       this.sign({
@@ -503,8 +503,8 @@ export class Ed25519 extends EC {
     }
   
     if (phSha && !ph) {
-      const m = new Uint8Array(PREHASH_SIZE);
-      if (PREHASH_SIZE !== phSha.doFinal(m, 0)) {
+      const m = phSha.doFinal();
+      if (PREHASH_SIZE !== m.length) {
         throw new Error('Prehash as Sha Invalid');
       }
       return this._implVerify(
