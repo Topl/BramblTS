@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Either } from '@/common/either';
 
-export interface ExtendedEd25519Spec {
+interface ExtendedEd25519Spec {
   signatureLength: number;
   keyLength: number;
   publicKeyLength: number;
@@ -13,6 +13,13 @@ export interface ExtendedEd25519Spec {
   rightNumber(secretKey: SecretKey): bigint;
   hmac512WithKey(key: Uint8Array, data: Uint8Array): Uint8Array;
 }
+
+export const extendedEd25519Spec: ExtendedEd25519Spec = {
+  signatureLength: 64,
+  keyLength: 32,
+  publicKeyLength: 32,
+  seedLength: 32,
+};
 
 class SecretKey extends SigningKey implements ExtendedEd25519Spec {
   leftKey: Uint8Array;
@@ -71,7 +78,7 @@ class SecretKey extends SigningKey implements ExtendedEd25519Spec {
   }
 }
 
-class PublicKey extends VerificationKey implements ExtendedEd25519Spec {
+export class PublicKey extends VerificationKey implements ExtendedEd25519Spec {
   vk: PublicKey;
   chainCode: Uint8Array;
 
