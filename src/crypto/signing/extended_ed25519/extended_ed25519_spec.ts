@@ -56,7 +56,7 @@ export class ExtendedEd25519Spec {
   }
 }
 
-class SecretKey {
+export class SecretKey {
   leftKey: Uint8Array;
   rightKey: Uint8Array;
   chainCode: Uint8Array;
@@ -106,7 +106,7 @@ class SecretKey {
   }
 }
 
-class PublicKey {
+export class PublicKey {
   vk: spec.PublicKey;
   chainCode: Uint8Array;
 
