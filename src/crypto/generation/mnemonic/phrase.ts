@@ -1,3 +1,9 @@
+import { Either } from "@/common/either";
+import { Language, LanguageWordList } from "./language";
+import { MnemonicSize } from "./mnemonic";
+import { Entropy } from "./entropy";
+import { sha256 } from "@/crypto/hash/hash";
+
 class Phrase {
   readonly value: string[];
   readonly size: MnemonicSize;
@@ -114,7 +120,7 @@ class Phrase {
       entropyBytes.push(parseInt(byte, 2));
     }
 
-    const sha256Digest = SHA256.hash(Uint8Array.from(entropyBytes));
+    const sha256Digest = sha256.hash(Uint8Array.from(entropyBytes));
     const hashString = Array.from(sha256Digest, (byte) => byte.toString(2).padStart(8, '0')).join('');
 
     return hashString.substring(0, size.checksumLength);

@@ -27,7 +27,7 @@ class ChineseTraditional extends Language {
   }
 }
 
-class English extends Language {
+export class English extends Language {
   constructor() {
     super('english.txt', 'ad90bf3beb7b0eb7e5acd74727dc0da96e0a280a258354e7293fb7e211ac03db');
   }
@@ -75,7 +75,7 @@ class Portuguese extends Language {
   }
 }
 
-class LanguageWordList {
+export class LanguageWordList {
   readonly value: string[];
 
   constructor(value: string[]) {

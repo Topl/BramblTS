@@ -1,4 +1,6 @@
-import { randomBytes } from 'crypto';
+import { Either } from '@/common/either';
+import { UUID, randomBytes } from 'crypto';
+import { English, Language } from './language';
 import { MnemonicSize } from './mnemonic';
 
 const defaultMnemonicSize = MnemonicSize.words12();
@@ -7,7 +9,7 @@ enum EntropyFailureType {
   InvalidByteSize,
   PhraseToEntropyFailure,
   WordListFailure,
-  InvalidSizeMismatch
+  InvalidSizeMismatch,
 }
 
 export class Entropy {
@@ -26,18 +28,18 @@ export class Entropy {
 
   public static async toMnemonicString(
     entropy: Entropy,
-    options: { language?: Language } = {}
+    options: { language?: Language } = {},
   ): Promise<Either<EntropyFailure, string[]>> {
     const language = options.language || new English();
-    
-    const sizeResult = sizeFromEntropyLength(entropy.value.length);
+
+    const sizeResult = this.sizeFromEntropyLength(entropy.value.length);
     if (sizeResult.isLeft()) return left(sizeResult.value);
     const size = sizeResult.value;
 
     const phraseResult = await Phrase.fromEntropy({
       entropy: entropy,
       size: size,
-      language: language
+      language: language,
     });
 
     if (phraseResult.isLeft()) {
@@ -50,7 +52,7 @@ export class Entropy {
 
   public static async fromMnemonicString(
     mnemonic: string,
-    options: { language?: Language } = {}
+    options: { language?: Language } = {},
   ): Promise<Either<EntropyFailure, Entropy>> {
     const language = options.language || new English(); // Define default language or replace with appropriate logic
 
@@ -60,13 +62,17 @@ export class Entropy {
     }
     const phrase = phraseResult.value;
 
-    const entropy = unsafeFromPhrase(phrase);
+    const entropy = this.unsafeFromPhrase(phrase);
     return right(new Entropy(entropy));
   }
 
-  public static fromUuid(uuid: Uuid): Entropy {
+  public static fromUuid(uuid: UUID): Entropy {
     const bytes = new Uint8Array(
-      uuid.v4().replace(/-/g, '').split('').map((c) => parseInt(c, 16))
+      uuid
+        .v4()
+        .replace(/-/g, '')
+        .split('')
+        .map((c) => parseInt(c, 16)),
     );
     return new Entropy(bytes);
   }
@@ -127,6 +133,8 @@ class EntropyFailure implements Error {
     this.type = type;
     this.message = message;
   }
+  name: string;
+  stack?: string;
 
   static invalidByteSize({ context }: { context?: string } = {}): EntropyFailure {
     return new EntropyFailure(EntropyFailureType.InvalidByteSize, context);
@@ -148,4 +156,3 @@ class EntropyFailure implements Error {
     return `EntropyFailure{message: ${this.message}, type: ${this.type}}`;
   }
 }
-

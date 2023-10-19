@@ -2,11 +2,11 @@
 import Ed25519 from "@/crypto/signing/ed25519/ed25519";
 import { KeyInitializer } from "./key_initializer";
 import { Entropy } from "../mnemonic/entropy";
-import { Language } from "../mnemonic/language";
+import { English, Language } from "../mnemonic/language";
 import { Either } from "@/common/either";
 import { InitializationFailure, InitializationFailureType } from "./initialization_failure";
 
-class Ed25519Initializer implements KeyInitializer<Ed25519> {
+class Ed25519Initializer implements KeyInitializer {
   private readonly ed25519 : Ed25519;
 
   constructor(ed25519 : Ed25519) {

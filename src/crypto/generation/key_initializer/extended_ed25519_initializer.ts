@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Either } from '@/common/either';
 import { randomUUID } from 'crypto';
 import * as spec from '../../signing/extended_ed25519/extended_ed25519_spec';
 import { Entropy } from '../mnemonic/entropy';
-import { Language } from '../mnemonic/language';
+import { English, Language } from '../mnemonic/language';
 import { InitializationFailure, InitializationFailureType } from './initialization_failure';
 import { KeyInitializer } from './key_initializer';
 
