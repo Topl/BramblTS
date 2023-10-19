@@ -11,7 +11,7 @@ class Mnemonic {
     }
   }
   
-  class MnemonicSize {
+  export class MnemonicSize {
     wordLength: number;
     checksumLength: number;
     entropyLength: number;
