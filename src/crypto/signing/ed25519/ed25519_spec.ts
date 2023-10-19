@@ -46,7 +46,7 @@ class SecretKey {
 }
 
 class PublicKey {
-  chainCode(chainCode: any, arg1: Uint8Array) {
+  chainCode(chainCode: Uint8Array, arg1: Uint8Array) {
     throw new Error('Method not implemented.');
   }
   readonly bytes: Uint8Array;
