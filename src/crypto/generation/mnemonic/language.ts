@@ -4,7 +4,7 @@ import { Either } from "@/common/either";
 import { SHA256 } from "@/crypto/hash/sha";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
-abstract class Language {
+export abstract class Language {
   readonly filePath: string;
   readonly hash: string;
   readonly wordlistDirectory = 'bip-0039';
