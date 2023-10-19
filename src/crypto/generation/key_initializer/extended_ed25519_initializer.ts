@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Either } from '@/common/either';
+import { Either } from '@/common/functional/either';
 import { randomUUID } from 'crypto';
 import * as spec from '../../signing/extended_ed25519/extended_ed25519_spec';
 import { Entropy } from '../mnemonic/entropy';
@@ -35,7 +35,7 @@ class ExtendedEd25519Initializer implements KeyInitializer {
     try {
       const entropyResult = await Entropy.fromMnemonicString(mnemonicString, { language });
 
-      if (entropyResult.isLeft()) {
+      if (entropyResult.isLeft) {
         return Either.left(
           new InitializationFailure(InitializationFailureType.FailedToCreateEntropy, {
             context: entropyResult.getLeft().toString(),

@@ -1,7 +1,8 @@
-import { Either } from '@/common/either';
+import { Either } from '@/common/functional/either';
 import { UUID, randomBytes } from 'crypto';
 import { English, Language } from './language';
 import { MnemonicSize } from './mnemonic';
+import { Phrase } from './phrase';
 
 const defaultMnemonicSize = MnemonicSize.words12();
 
@@ -33,7 +34,7 @@ export class Entropy {
     const language = options.language || new English();
 
     const sizeResult = this.sizeFromEntropyLength(entropy.value.length);
-    if (sizeResult.isLeft()) return left(sizeResult.value);
+    if (sizeResult.isLeft) return Either.left(sizeResult.value);
     const size = sizeResult.value;
 
     const phraseResult = await Phrase.fromEntropy({
@@ -42,12 +43,12 @@ export class Entropy {
       language: language,
     });
 
-    if (phraseResult.isLeft()) {
-      return left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.value.toString() }));
+    if (phraseResult.isLeft) {
+      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.value.toString() }));
     }
 
     const phrase = phraseResult.value;
-    return right(phrase.value);
+    return Either.right(phrase.value);
   }
 
   public static async fromMnemonicString(
@@ -57,13 +58,13 @@ export class Entropy {
     const language = options.language || new English(); // Define default language or replace with appropriate logic
 
     const phraseResult = await Phrase.validated({ words: mnemonic, language });
-    if (phraseResult.isLeft()) {
-      return left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.value.toString() }));
+    if (phraseResult.isLeft) {
+      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.value.toString() }));
     }
     const phrase = phraseResult.value;
 
     const entropy = this.unsafeFromPhrase(phrase);
-    return right(new Entropy(entropy));
+    return Either.right(new Entropy(entropy));
   }
 
   public static fromUuid(uuid: UUID): Entropy {
@@ -79,27 +80,27 @@ export class Entropy {
 
   public static fromBytes(bytes: Uint8Array): Either<EntropyFailure, Entropy> {
     const sizeResult = Entropy.sizeFromEntropyLength(bytes.length);
-    if (sizeResult.isLeft()) {
-      return left(sizeResult.value);
+    if (sizeResult.isLeft) {
+      return Either.left(sizeResult.value);
     }
     const entropy = new Entropy(bytes);
-    return right(entropy);
+    return Either.right(entropy);
   }
 
   public static sizeFromEntropyLength(entropyByteLength: number): Either<EntropyFailure, MnemonicSize> {
     switch (entropyByteLength) {
       case 16:
-        return right(MnemonicSize.words12());
+        return Either.right(MnemonicSize.words12());
       case 20:
-        return right(MnemonicSize.words15());
+        return Either.right(MnemonicSize.words15());
       case 24:
-        return right(MnemonicSize.words18());
+        return Either.right(MnemonicSize.words18());
       case 28:
-        return right(MnemonicSize.words21());
+        return Either.right(MnemonicSize.words21());
       case 32:
-        return right(MnemonicSize.words24());
+        return Either.right(MnemonicSize.words24());
       default:
-        return left(EntropyFailure.invalidByteSize());
+        return Either.left(EntropyFailure.invalidByteSize());
     }
   }
 
@@ -124,7 +125,7 @@ export class Entropy {
   }
 }
 
-class EntropyFailure implements Error {
+class EntropyFailure {
   /// A message describing the error.
   readonly message?: string | undefined;
   readonly type: EntropyFailureType;

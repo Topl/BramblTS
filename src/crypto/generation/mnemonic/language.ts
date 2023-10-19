@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Either } from "@/common/either";
-import { SHA256 } from "@/crypto/hash/sha";
+import { Either } from '@/common/functional/either';
+import { sha256 } from '@/crypto/hash/hash';
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export abstract class Language {
@@ -108,7 +108,7 @@ export class LanguageWordList {
 
   static validateChecksum(words: string[], expectedHash: string): Either<ValidationFailure, string[]> {
     const wordString = words.join('');
-    const hash = new TextEncoder().encode(wordString).then(SHA256.hash);
+    const hash = new TextEncoder().encode(wordString).then(sha256.hash);
     return hash.then((hashBytes) => {
       const hashString = LanguageWordList.toHexString(Array.from(hashBytes));
       return hashString === expectedHash ? Either.right(words) : Either.left(new InvalidChecksum());

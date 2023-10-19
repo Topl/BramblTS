@@ -1,10 +1,10 @@
-import { Either } from "@/common/either";
-import { Language, LanguageWordList } from "./language";
-import { MnemonicSize } from "./mnemonic";
-import { Entropy } from "./entropy";
-import { sha256 } from "@/crypto/hash/hash";
+import { Either } from '@/common/functional/either';
+import { sha256 } from '@/crypto/hash/hash';
+import { Entropy } from './entropy';
+import { Language, LanguageWordList } from './language';
+import { MnemonicSize } from './mnemonic';
 
-class Phrase {
+export class Phrase {
   readonly value: string[];
   readonly size: MnemonicSize;
   readonly languageWords: LanguageWordList;
