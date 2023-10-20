@@ -57,11 +57,10 @@ export class Phrase {
       const [entropyBinaryString, checksumFromPhrase] = Phrase.toBinaryString(phrase);
       const checksumFromSha256 = Phrase._calculateChecksum(entropyBinaryString, size);
 
-      return Either.conditional(
-        checksumFromPhrase === checksumFromSha256,
-        new PhraseFailure(PhraseFailureType.invalidChecksum, words),
-        phrase,
-      );
+      return Either.conditional(checksumFromPhrase === checksumFromSha256, {
+        left: new PhraseFailure(PhraseFailureType.invalidChecksum, words),
+        right: phrase,
+      });
     } catch (e) {
       return Either.left(new PhraseFailure(PhraseFailureType.wordListFailure, e));
     }
@@ -135,7 +134,7 @@ export class Phrase {
   }
 }
 
-enum PhraseFailureType {
+export enum PhraseFailureType {
   invalidWordLength,
   invalidWords,
   invalidChecksum,
@@ -143,7 +142,7 @@ enum PhraseFailureType {
   wordListFailure,
 }
 
-class PhraseFailure extends Error {
+export class PhraseFailure extends Error {
   readonly message?: string;
   readonly type: PhraseFailureType;
 

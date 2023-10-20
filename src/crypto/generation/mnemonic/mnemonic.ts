@@ -1,3 +1,6 @@
+import { Either } from "@/common/functional/either";
+import { PhraseFailure, PhraseFailureType } from "./phrase";
+
 export class Mnemonic {
   private static _byteLen: number = 8;
   private static _indexLen: number = 11;
@@ -45,17 +48,17 @@ export class MnemonicSize {
   static fromNumberOfWords(numberOfWords: number): MnemonicSize {
     switch (numberOfWords) {
       case 12:
-        return MnemonicSize.words12();
+        return Either.right(MnemonicSize.words12());
       case 15:
-        return MnemonicSize.words15();
+        return Either.right(MnemonicSize.words15());
       case 18:
-        return MnemonicSize.words18();
+        return Either.right(MnemonicSize.words18());
       case 21:
-        return MnemonicSize.words21();
+        return Either.right(MnemonicSize.words21());
       case 24:
-        return MnemonicSize.words24();
+        return Either.right(MnemonicSize.words24());
       default:
-        throw new Error('Invalid number of words');
+        return Either.left(new PhraseFailure(PhraseFailureType.invalidWordLength, 'Invalid number of words'));
     }
   }
 }
