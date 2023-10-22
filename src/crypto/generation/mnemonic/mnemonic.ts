@@ -1,5 +1,6 @@
-import { Either } from "@/common/functional/either";
-import { PhraseFailure, PhraseFailureType } from "./phrase";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Either } from '../../../common/functional/either';
+import { PhraseFailure, PhraseFailureType } from './phrase';
 
 export class Mnemonic {
   private static _byteLen: number = 8;
@@ -45,7 +46,7 @@ export class MnemonicSize {
     return new MnemonicSize(24);
   }
 
-  static fromNumberOfWords(numberOfWords: number): MnemonicSize {
+  static fromNumberOfWords(numberOfWords: number): any {
     switch (numberOfWords) {
       case 12:
         return Either.right(MnemonicSize.words12());

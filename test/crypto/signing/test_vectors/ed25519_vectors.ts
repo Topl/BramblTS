@@ -20,7 +20,7 @@ class Ed25519TestVector {
   }
 }
 
-function parseVector(vector: Record<string, any>): Ed25519TestVector {
+export function parseVector(vector: Record<string, any>): Ed25519TestVector {
   const input = vector['inputs'] as Record<string, any>;
   const output = vector['outputs'] as Record<string, any>;
 

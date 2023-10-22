@@ -1,8 +1,10 @@
-import { Either } from '@/common/functional/either';
-import { UUID, randomBytes } from 'crypto';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { Either } from '../../../common/functional/either';
+import { randomBytes } from 'crypto';
 import { English, Language } from './language';
 import { MnemonicSize } from './mnemonic';
 import { Phrase } from './phrase';
+import { v4 as uuidv4 } from 'uuid';
 
 const defaultMnemonicSize = MnemonicSize.words12();
 
@@ -11,6 +13,12 @@ enum EntropyFailureType {
   PhraseToEntropyFailure,
   WordListFailure,
   InvalidSizeMismatch,
+}
+
+class Uuid {
+  v4() {
+      return uuidv4();
+  }
 }
 
 export class Entropy {
@@ -34,8 +42,8 @@ export class Entropy {
     const language = options.language || new English();
 
     const sizeResult = this.sizeFromEntropyLength(entropy.value.length);
-    if (sizeResult.isLeft) return Either.left(sizeResult.value);
-    const size = sizeResult.value;
+    if (sizeResult.isLeft) return Either.left(sizeResult.left);
+    const size = sizeResult.right!;
 
     const phraseResult = await Phrase.fromEntropy({
       entropy: entropy,
@@ -44,10 +52,10 @@ export class Entropy {
     });
 
     if (phraseResult.isLeft) {
-      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.value.toString() }));
+      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.left.toString() }));
     }
 
-    const phrase = phraseResult.value;
+    const phrase = phraseResult.right!;
     return Either.right(phrase.value);
   }
 
@@ -59,29 +67,24 @@ export class Entropy {
 
     const phraseResult = await Phrase.validated({ words: mnemonic, language });
     if (phraseResult.isLeft) {
-      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.value.toString() }));
+      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.left.toString() }));
     }
-    const phrase = phraseResult.value;
+    const phrase = phraseResult.right!;
 
     const entropy = this.unsafeFromPhrase(phrase);
-    return Either.right(new Entropy(entropy));
+    return Either.right(entropy);
   }
 
-  public static fromUuid(uuid: UUID): Entropy {
-    const bytes = new Uint8Array(
-      uuid
-        .v4()
-        .replace(/-/g, '')
-        .split('')
-        .map((c) => parseInt(c, 16)),
-    );
-    return new Entropy(bytes);
+  public static fromUuid(uuid: Uuid): Entropy {
+    const uuidString = uuid.v4().replace(/-/g, '');
+        const bytes = uuidString.split('').map(c => parseInt(c, 16));
+        return new Entropy(new Uint8Array(bytes));
   }
 
   public static fromBytes(bytes: Uint8Array): Either<EntropyFailure, Entropy> {
     const sizeResult = Entropy.sizeFromEntropyLength(bytes.length);
     if (sizeResult.isLeft) {
-      return Either.left(sizeResult.value);
+      return Either.left(sizeResult.left);
     }
     const entropy = new Entropy(bytes);
     return Either.right(entropy);

@@ -1,5 +1,5 @@
-import { Either } from '@/common/functional/either';
 import { sha256 } from '@/crypto/hash/hash';
+import { Either } from '../../../common/functional/either';
 import { Entropy } from './entropy';
 import { Language, LanguageWordList } from './language';
 import { MnemonicSize } from './mnemonic';
@@ -144,7 +144,7 @@ export enum PhraseFailureType {
 
 export class PhraseFailure extends Error {
   readonly message?: string;
-  readonly type: PhraseFailureType;
+  readonly type?: PhraseFailureType;
 
   constructor(type: PhraseFailureType, message?: string) {
     super();

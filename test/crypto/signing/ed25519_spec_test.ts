@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// import { KeyPair } from '../../../proto/quivr/models/shared';
 import { Entropy } from '../../../src/crypto/generation/mnemonic/entropy';
 import { Ed25519 } from '../../../src/crypto/signing/ed25519/ed25519';
 import { PublicKey, SecretKey } from '../../../src/crypto/signing/ed25519/ed25519_spec';
 import { Generators } from '../helpers/generators';
-import { ed25519TestVectors } from './test_vectors/ed25519_vectors';
+import { ed25519TestVectors, parseVector } from './test_vectors/ed25519_vectors';
 
-interface TestVector {
-  description: string;
-  secretKey: string;
-  message: string;
-  verificationKey: string;
-  signature: string;
-}
+// interface TestVector {
+//   description: string;
+//   secretKey: string;
+//   message: string;
+//   verificationKey: string;
+//   signature: string;
+// }
 
 function hexConvert(
   secretKey: string,
@@ -27,15 +28,15 @@ function hexConvert(
   ];
 }
 
-function parseVector(vector: any): TestVector {
-  return {
-    description: vector.description as string,
-    secretKey: vector.secretKey as string,
-    message: vector.message as string,
-    verificationKey: vector.verificationKey as string,
-    signature: vector.signature as string,
-  };
-}
+// function parseVector(vector: any): TestVector {
+//   return {
+//     description: vector.description as string,
+//     secretKey: vector.secretKey as string,
+//     message: vector.message as string,
+//     verificationKey: vector.verificationKey as string,
+//     signature: vector.signature as string,
+//   };
+// }
 
 const ed25519 = new Ed25519();
 
