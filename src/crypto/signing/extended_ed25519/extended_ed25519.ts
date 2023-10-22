@@ -265,3 +265,5 @@ class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey>
     return new KeyPair(derivedSecretKey, derivedPublicKey);
   }
 }
+
+export { SecretKey, PublicKey };
