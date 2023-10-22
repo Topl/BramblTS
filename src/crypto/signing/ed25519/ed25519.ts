@@ -1,9 +1,9 @@
 import { Ed25519 as EdDSAEd25519 } from '../eddsa/ed25519';
 
-// import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
+import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
 import { PublicKey, SecretKey, ed25519Spec } from './ed25519_spec';
 
-abstract class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
+export class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
   private impl: EdDSAEd25519;
 
   constructor() {

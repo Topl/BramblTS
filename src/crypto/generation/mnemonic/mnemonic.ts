@@ -19,7 +19,7 @@ export class MnemonicSize {
   checksumLength: number;
   entropyLength: number;
 
-  private constructor(wordLength: number) {
+  constructor(wordLength: number) {
     this.wordLength = wordLength;
     this.checksumLength = Math.floor(wordLength / 3);
     this.entropyLength = 32 * this.checksumLength;

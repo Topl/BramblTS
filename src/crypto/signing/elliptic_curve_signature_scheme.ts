@@ -3,7 +3,9 @@
 // import { KeyPair } from './key-pair'; // Assuming KeyPair class definition
 // import { Pbkdf2Sha512 } from './entropy-to-seed'; // Assuming Pbkdf2Sha512 class definition
 
-abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {
+import { Entropy } from "../generation/mnemonic/entropy";
+
+export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {
   readonly seedLength: number;
 
   constructor(seedLength: number) {

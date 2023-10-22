@@ -33,7 +33,7 @@ function parseVector(vector: Record<string, any>): Ed25519TestVector {
   );
 }
 
-const ed25519TestVectors: Record<string, any>[] = [
+export const ed25519TestVectors: Record<string, any>[] = [
   {
     description: 'test vector 1 - empty message',
     inputs: { secretKey: '9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60', message: '' },
