@@ -22,7 +22,7 @@ function fromLittleEndian(bytes: Uint8Array): bigint {
   return result;
 }
 
-class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
+export class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
   private impl: eddsa.Ed25519;
 
   constructor() {

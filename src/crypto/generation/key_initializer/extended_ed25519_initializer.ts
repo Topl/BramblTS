@@ -7,7 +7,7 @@ import { English, Language } from '../mnemonic/language';
 import { InitializationFailure, InitializationFailureType } from './initialization_failure';
 import { KeyInitializer } from './key_initializer';
 
-class ExtendedEd25519Initializer implements KeyInitializer {
+export class ExtendedEd25519Initializer implements KeyInitializer {
   private extendedEd25519: ExtendedEd25519;
 
   constructor(extendedEd25519: ExtendedEd25519) {
