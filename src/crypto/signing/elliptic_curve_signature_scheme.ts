@@ -1,9 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-// import { Entropy } from './entropy'; // Assuming Entropy class definition
-// import { KeyPair } from './key-pair'; // Assuming KeyPair class definition
-// import { Pbkdf2Sha512 } from './entropy-to-seed'; // Assuming Pbkdf2Sha512 class definition
-
-import { Entropy } from "../generation/mnemonic/entropy";
+import { Entropy } from '../generation/mnemonic/entropy';
 
 export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {
   readonly seedLength: number;
@@ -15,7 +11,7 @@ export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK ext
   deriveKeyPairFromEntropy(
     entropy: Entropy,
     passphrase: string | null,
-    options: { entropyToSeed: EntropyToSeed } = { entropyToSeed: new Pbkdf2Sha512() }
+    options: { entropyToSeed: EntropyToSeed } = { entropyToSeed: new Pbkdf2Sha512() },
   ): KeyPair<SK, VK> {
     const seed = options.entropyToSeed.toSeed(entropy, passphrase, this.seedLength);
     return this.deriveKeyPairFromSeed(seed);
