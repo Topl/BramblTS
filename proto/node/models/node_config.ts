@@ -5,121 +5,76 @@
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.proto.node {
-    export class NodeConfigMap extends pb_1.Message {
-        #one_of_decls: number[][] = [];
-        constructor(data?: any[] | {
-            slotConfigMap?: Map<number, NodeConfig>;
-        }) {
-            super();
-            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-            if (!Array.isArray(data) && typeof data == "object") {
-                if ("slotConfigMap" in data && data.slotConfigMap != undefined) {
-                    this.slotConfigMap = data.slotConfigMap;
-                }
-            }
-            if (!this.slotConfigMap)
-                this.slotConfigMap = new Map();
-        }
-        get slotConfigMap() {
-            return pb_1.Message.getField(this, 1) as any as Map<number, NodeConfig>;
-        }
-        set slotConfigMap(value: Map<number, NodeConfig>) {
-            pb_1.Message.setField(this, 1, value as any);
-        }
-        static fromObject(data: {
-            slotConfigMap?: {
-                [key: number]: ReturnType<typeof NodeConfig.prototype.toObject>;
-            };
-        }): NodeConfigMap {
-            const message = new NodeConfigMap({});
-            if (typeof data.slotConfigMap == "object") {
-                message.slotConfigMap = new Map(Object.entries(data.slotConfigMap).map(([key, value]) => [Number(key), NodeConfig.fromObject(value)]));
-            }
-            return message;
-        }
-        toObject() {
-            const data: {
-                slotConfigMap?: {
-                    [key: number]: ReturnType<typeof NodeConfig.prototype.toObject>;
-                };
-            } = {};
-            if (this.slotConfigMap != null) {
-                data.slotConfigMap = (Object.fromEntries)((Array.from)(this.slotConfigMap).map(([key, value]) => [key, value.toObject()]));
-            }
-            return data;
-        }
-        serialize(): Uint8Array;
-        serialize(w: pb_1.BinaryWriter): void;
-        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-            const writer = w || new pb_1.BinaryWriter();
-            for (const [key, value] of this.slotConfigMap) {
-                writer.writeMessage(1, this.slotConfigMap, () => {
-                    writer.writeUint64(1, key);
-                    writer.writeMessage(2, value, () => value.serialize(writer));
-                });
-            }
-            if (!w)
-                return writer.getResultBuffer();
-        }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): NodeConfigMap {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new NodeConfigMap();
-            while (reader.nextField()) {
-                if (reader.isEndGroup())
-                    break;
-                switch (reader.getFieldNumber()) {
-                    case 1:
-                        reader.readMessage(message, () => pb_1.Map.deserializeBinary(message.slotConfigMap as any, reader, reader.readUint64, () => {
-                            let value;
-                            reader.readMessage(message, () => value = NodeConfig.deserialize(reader));
-                            return value;
-                        }));
-                        break;
-                    default: reader.skipField();
-                }
-            }
-            return message;
-        }
-        serializeBinary(): Uint8Array {
-            return this.serialize();
-        }
-        static deserializeBinary(bytes: Uint8Array): NodeConfigMap {
-            return NodeConfigMap.deserialize(bytes);
-        }
-    }
     export class NodeConfig extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
+            slot?: number;
             slotDurationMillis?: number;
+            epochLength?: number;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
+                if ("slot" in data && data.slot != undefined) {
+                    this.slot = data.slot;
+                }
                 if ("slotDurationMillis" in data && data.slotDurationMillis != undefined) {
                     this.slotDurationMillis = data.slotDurationMillis;
                 }
+                if ("epochLength" in data && data.epochLength != undefined) {
+                    this.epochLength = data.epochLength;
+                }
             }
         }
-        get slotDurationMillis() {
+        get slot() {
             return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
         }
-        set slotDurationMillis(value: number) {
+        set slot(value: number) {
             pb_1.Message.setField(this, 1, value);
         }
+        get slotDurationMillis() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set slotDurationMillis(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        get epochLength() {
+            return pb_1.Message.getFieldWithDefault(this, 3, 0) as number;
+        }
+        set epochLength(value: number) {
+            pb_1.Message.setField(this, 3, value);
+        }
         static fromObject(data: {
+            slot?: number;
             slotDurationMillis?: number;
+            epochLength?: number;
         }): NodeConfig {
             const message = new NodeConfig({});
+            if (data.slot != null) {
+                message.slot = data.slot;
+            }
             if (data.slotDurationMillis != null) {
                 message.slotDurationMillis = data.slotDurationMillis;
+            }
+            if (data.epochLength != null) {
+                message.epochLength = data.epochLength;
             }
             return message;
         }
         toObject() {
             const data: {
+                slot?: number;
                 slotDurationMillis?: number;
+                epochLength?: number;
             } = {};
+            if (this.slot != null) {
+                data.slot = this.slot;
+            }
             if (this.slotDurationMillis != null) {
                 data.slotDurationMillis = this.slotDurationMillis;
+            }
+            if (this.epochLength != null) {
+                data.epochLength = this.epochLength;
             }
             return data;
         }
@@ -127,8 +82,12 @@ export namespace co.topl.proto.node {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
+            if (this.slot != 0)
+                writer.writeUint64(1, this.slot);
             if (this.slotDurationMillis != 0)
-                writer.writeUint32(1, this.slotDurationMillis);
+                writer.writeUint64(2, this.slotDurationMillis);
+            if (this.epochLength != 0)
+                writer.writeUint64(3, this.epochLength);
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -139,7 +98,13 @@ export namespace co.topl.proto.node {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        message.slotDurationMillis = reader.readUint32();
+                        message.slot = reader.readUint64();
+                        break;
+                    case 2:
+                        message.slotDurationMillis = reader.readUint64();
+                        break;
+                    case 3:
+                        message.epochLength = reader.readUint64();
                         break;
                     default: reader.skipField();
                 }

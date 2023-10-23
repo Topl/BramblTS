@@ -5,8 +5,6 @@
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./block_id";
 import * as dependency_2 from "./../../validate/validate";
-import * as dependency_3 from "./../../scalapb/scalapb";
-import * as dependency_4 from "./../../scalapb/validate";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.consensus.models {
     export class SlotData extends pb_1.Message {

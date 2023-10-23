@@ -4,274 +4,42 @@
  * source: brambl/models/identifier.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../validate/validate";
-import * as dependency_2 from "./../../scalapb/scalapb";
-import * as dependency_3 from "./../../scalapb/validate";
-import * as dependency_4 from "./evidence";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models {
-    export class Identifier extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2, 3, 4, 5, 6, 7, 8]];
-        constructor(data?: any[] | ({} & (({
-            lock32?: Identifier.Lock32;
-            lock64?: never;
-            boxValue32?: never;
-            boxValue64?: never;
-            ioTransaction32?: never;
-            ioTransaction64?: never;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: Identifier.Lock64;
-            boxValue32?: never;
-            boxValue64?: never;
-            ioTransaction32?: never;
-            ioTransaction64?: never;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: never;
-            boxValue32?: Identifier.BoxValue32;
-            boxValue64?: never;
-            ioTransaction32?: never;
-            ioTransaction64?: never;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: never;
-            boxValue32?: never;
-            boxValue64?: Identifier.BoxValue64;
-            ioTransaction32?: never;
-            ioTransaction64?: never;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: never;
-            boxValue32?: never;
-            boxValue64?: never;
-            ioTransaction32?: Identifier.IoTransaction32;
-            ioTransaction64?: never;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: never;
-            boxValue32?: never;
-            boxValue64?: never;
-            ioTransaction32?: never;
-            ioTransaction64?: Identifier.IoTransaction64;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: never;
-            boxValue32?: never;
-            boxValue64?: never;
-            ioTransaction32?: never;
-            ioTransaction64?: never;
-            accumulatorRoot32?: Identifier.AccumulatorRoot32;
-            accumulatorRoot64?: never;
-        } | {
-            lock32?: never;
-            lock64?: never;
-            boxValue32?: never;
-            boxValue64?: never;
-            ioTransaction32?: never;
-            ioTransaction64?: never;
-            accumulatorRoot32?: never;
-            accumulatorRoot64?: Identifier.AccumulatorRoot64;
-        })))) {
+    export class TransactionId extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("lock32" in data && data.lock32 != undefined) {
-                    this.lock32 = data.lock32;
-                }
-                if ("lock64" in data && data.lock64 != undefined) {
-                    this.lock64 = data.lock64;
-                }
-                if ("boxValue32" in data && data.boxValue32 != undefined) {
-                    this.boxValue32 = data.boxValue32;
-                }
-                if ("boxValue64" in data && data.boxValue64 != undefined) {
-                    this.boxValue64 = data.boxValue64;
-                }
-                if ("ioTransaction32" in data && data.ioTransaction32 != undefined) {
-                    this.ioTransaction32 = data.ioTransaction32;
-                }
-                if ("ioTransaction64" in data && data.ioTransaction64 != undefined) {
-                    this.ioTransaction64 = data.ioTransaction64;
-                }
-                if ("accumulatorRoot32" in data && data.accumulatorRoot32 != undefined) {
-                    this.accumulatorRoot32 = data.accumulatorRoot32;
-                }
-                if ("accumulatorRoot64" in data && data.accumulatorRoot64 != undefined) {
-                    this.accumulatorRoot64 = data.accumulatorRoot64;
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
                 }
             }
-        }
-        get lock32() {
-            return pb_1.Message.getWrapperField(this, Identifier.Lock32, 1) as Identifier.Lock32;
-        }
-        set lock32(value: Identifier.Lock32) {
-            pb_1.Message.setOneofWrapperField(this, 1, this.#one_of_decls[0], value);
-        }
-        get has_lock32() {
-            return pb_1.Message.getField(this, 1) != null;
-        }
-        get lock64() {
-            return pb_1.Message.getWrapperField(this, Identifier.Lock64, 2) as Identifier.Lock64;
-        }
-        set lock64(value: Identifier.Lock64) {
-            pb_1.Message.setOneofWrapperField(this, 2, this.#one_of_decls[0], value);
-        }
-        get has_lock64() {
-            return pb_1.Message.getField(this, 2) != null;
-        }
-        get boxValue32() {
-            return pb_1.Message.getWrapperField(this, Identifier.BoxValue32, 3) as Identifier.BoxValue32;
-        }
-        set boxValue32(value: Identifier.BoxValue32) {
-            pb_1.Message.setOneofWrapperField(this, 3, this.#one_of_decls[0], value);
-        }
-        get has_boxValue32() {
-            return pb_1.Message.getField(this, 3) != null;
-        }
-        get boxValue64() {
-            return pb_1.Message.getWrapperField(this, Identifier.BoxValue64, 4) as Identifier.BoxValue64;
-        }
-        set boxValue64(value: Identifier.BoxValue64) {
-            pb_1.Message.setOneofWrapperField(this, 4, this.#one_of_decls[0], value);
-        }
-        get has_boxValue64() {
-            return pb_1.Message.getField(this, 4) != null;
-        }
-        get ioTransaction32() {
-            return pb_1.Message.getWrapperField(this, Identifier.IoTransaction32, 5) as Identifier.IoTransaction32;
-        }
-        set ioTransaction32(value: Identifier.IoTransaction32) {
-            pb_1.Message.setOneofWrapperField(this, 5, this.#one_of_decls[0], value);
-        }
-        get has_ioTransaction32() {
-            return pb_1.Message.getField(this, 5) != null;
-        }
-        get ioTransaction64() {
-            return pb_1.Message.getWrapperField(this, Identifier.IoTransaction64, 6) as Identifier.IoTransaction64;
-        }
-        set ioTransaction64(value: Identifier.IoTransaction64) {
-            pb_1.Message.setOneofWrapperField(this, 6, this.#one_of_decls[0], value);
-        }
-        get has_ioTransaction64() {
-            return pb_1.Message.getField(this, 6) != null;
-        }
-        get accumulatorRoot32() {
-            return pb_1.Message.getWrapperField(this, Identifier.AccumulatorRoot32, 7) as Identifier.AccumulatorRoot32;
-        }
-        set accumulatorRoot32(value: Identifier.AccumulatorRoot32) {
-            pb_1.Message.setOneofWrapperField(this, 7, this.#one_of_decls[0], value);
-        }
-        get has_accumulatorRoot32() {
-            return pb_1.Message.getField(this, 7) != null;
-        }
-        get accumulatorRoot64() {
-            return pb_1.Message.getWrapperField(this, Identifier.AccumulatorRoot64, 8) as Identifier.AccumulatorRoot64;
-        }
-        set accumulatorRoot64(value: Identifier.AccumulatorRoot64) {
-            pb_1.Message.setOneofWrapperField(this, 8, this.#one_of_decls[0], value);
-        }
-        get has_accumulatorRoot64() {
-            return pb_1.Message.getField(this, 8) != null;
         }
         get value() {
-            const cases: {
-                [index: number]: "none" | "lock32" | "lock64" | "boxValue32" | "boxValue64" | "ioTransaction32" | "ioTransaction64" | "accumulatorRoot32" | "accumulatorRoot64";
-            } = {
-                0: "none",
-                1: "lock32",
-                2: "lock64",
-                3: "boxValue32",
-                4: "boxValue64",
-                5: "ioTransaction32",
-                6: "ioTransaction64",
-                7: "accumulatorRoot32",
-                8: "accumulatorRoot64"
-            };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5, 6, 7, 8])];
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
         }
         static fromObject(data: {
-            lock32?: ReturnType<typeof Identifier.Lock32.prototype.toObject>;
-            lock64?: ReturnType<typeof Identifier.Lock64.prototype.toObject>;
-            boxValue32?: ReturnType<typeof Identifier.BoxValue32.prototype.toObject>;
-            boxValue64?: ReturnType<typeof Identifier.BoxValue64.prototype.toObject>;
-            ioTransaction32?: ReturnType<typeof Identifier.IoTransaction32.prototype.toObject>;
-            ioTransaction64?: ReturnType<typeof Identifier.IoTransaction64.prototype.toObject>;
-            accumulatorRoot32?: ReturnType<typeof Identifier.AccumulatorRoot32.prototype.toObject>;
-            accumulatorRoot64?: ReturnType<typeof Identifier.AccumulatorRoot64.prototype.toObject>;
-        }): Identifier {
-            const message = new Identifier({});
-            if (data.lock32 != null) {
-                message.lock32 = Identifier.Lock32.fromObject(data.lock32);
-            }
-            if (data.lock64 != null) {
-                message.lock64 = Identifier.Lock64.fromObject(data.lock64);
-            }
-            if (data.boxValue32 != null) {
-                message.boxValue32 = Identifier.BoxValue32.fromObject(data.boxValue32);
-            }
-            if (data.boxValue64 != null) {
-                message.boxValue64 = Identifier.BoxValue64.fromObject(data.boxValue64);
-            }
-            if (data.ioTransaction32 != null) {
-                message.ioTransaction32 = Identifier.IoTransaction32.fromObject(data.ioTransaction32);
-            }
-            if (data.ioTransaction64 != null) {
-                message.ioTransaction64 = Identifier.IoTransaction64.fromObject(data.ioTransaction64);
-            }
-            if (data.accumulatorRoot32 != null) {
-                message.accumulatorRoot32 = Identifier.AccumulatorRoot32.fromObject(data.accumulatorRoot32);
-            }
-            if (data.accumulatorRoot64 != null) {
-                message.accumulatorRoot64 = Identifier.AccumulatorRoot64.fromObject(data.accumulatorRoot64);
+            value?: Uint8Array;
+        }): TransactionId {
+            const message = new TransactionId({});
+            if (data.value != null) {
+                message.value = data.value;
             }
             return message;
         }
         toObject() {
             const data: {
-                lock32?: ReturnType<typeof Identifier.Lock32.prototype.toObject>;
-                lock64?: ReturnType<typeof Identifier.Lock64.prototype.toObject>;
-                boxValue32?: ReturnType<typeof Identifier.BoxValue32.prototype.toObject>;
-                boxValue64?: ReturnType<typeof Identifier.BoxValue64.prototype.toObject>;
-                ioTransaction32?: ReturnType<typeof Identifier.IoTransaction32.prototype.toObject>;
-                ioTransaction64?: ReturnType<typeof Identifier.IoTransaction64.prototype.toObject>;
-                accumulatorRoot32?: ReturnType<typeof Identifier.AccumulatorRoot32.prototype.toObject>;
-                accumulatorRoot64?: ReturnType<typeof Identifier.AccumulatorRoot64.prototype.toObject>;
+                value?: Uint8Array;
             } = {};
-            if (this.lock32 != null) {
-                data.lock32 = this.lock32.toObject();
-            }
-            if (this.lock64 != null) {
-                data.lock64 = this.lock64.toObject();
-            }
-            if (this.boxValue32 != null) {
-                data.boxValue32 = this.boxValue32.toObject();
-            }
-            if (this.boxValue64 != null) {
-                data.boxValue64 = this.boxValue64.toObject();
-            }
-            if (this.ioTransaction32 != null) {
-                data.ioTransaction32 = this.ioTransaction32.toObject();
-            }
-            if (this.ioTransaction64 != null) {
-                data.ioTransaction64 = this.ioTransaction64.toObject();
-            }
-            if (this.accumulatorRoot32 != null) {
-                data.accumulatorRoot32 = this.accumulatorRoot32.toObject();
-            }
-            if (this.accumulatorRoot64 != null) {
-                data.accumulatorRoot64 = this.accumulatorRoot64.toObject();
+            if (this.value != null) {
+                data.value = this.value;
             }
             return data;
         }
@@ -279,54 +47,19 @@ export namespace co.topl.brambl.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.has_lock32)
-                writer.writeMessage(1, this.lock32, () => this.lock32.serialize(writer));
-            if (this.has_lock64)
-                writer.writeMessage(2, this.lock64, () => this.lock64.serialize(writer));
-            if (this.has_boxValue32)
-                writer.writeMessage(3, this.boxValue32, () => this.boxValue32.serialize(writer));
-            if (this.has_boxValue64)
-                writer.writeMessage(4, this.boxValue64, () => this.boxValue64.serialize(writer));
-            if (this.has_ioTransaction32)
-                writer.writeMessage(5, this.ioTransaction32, () => this.ioTransaction32.serialize(writer));
-            if (this.has_ioTransaction64)
-                writer.writeMessage(6, this.ioTransaction64, () => this.ioTransaction64.serialize(writer));
-            if (this.has_accumulatorRoot32)
-                writer.writeMessage(7, this.accumulatorRoot32, () => this.accumulatorRoot32.serialize(writer));
-            if (this.has_accumulatorRoot64)
-                writer.writeMessage(8, this.accumulatorRoot64, () => this.accumulatorRoot64.serialize(writer));
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
             if (!w)
                 return writer.getResultBuffer();
         }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Identifier {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Identifier();
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TransactionId {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TransactionId();
             while (reader.nextField()) {
                 if (reader.isEndGroup())
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.lock32, () => message.lock32 = Identifier.Lock32.deserialize(reader));
-                        break;
-                    case 2:
-                        reader.readMessage(message.lock64, () => message.lock64 = Identifier.Lock64.deserialize(reader));
-                        break;
-                    case 3:
-                        reader.readMessage(message.boxValue32, () => message.boxValue32 = Identifier.BoxValue32.deserialize(reader));
-                        break;
-                    case 4:
-                        reader.readMessage(message.boxValue64, () => message.boxValue64 = Identifier.BoxValue64.deserialize(reader));
-                        break;
-                    case 5:
-                        reader.readMessage(message.ioTransaction32, () => message.ioTransaction32 = Identifier.IoTransaction32.deserialize(reader));
-                        break;
-                    case 6:
-                        reader.readMessage(message.ioTransaction64, () => message.ioTransaction64 = Identifier.IoTransaction64.deserialize(reader));
-                        break;
-                    case 7:
-                        reader.readMessage(message.accumulatorRoot32, () => message.accumulatorRoot32 = Identifier.AccumulatorRoot32.deserialize(reader));
-                        break;
-                    case 8:
-                        reader.readMessage(message.accumulatorRoot64, () => message.accumulatorRoot64 = Identifier.AccumulatorRoot64.deserialize(reader));
+                        message.value = reader.readBytes();
                         break;
                     default: reader.skipField();
                 }
@@ -336,570 +69,276 @@ export namespace co.topl.brambl.models {
         serializeBinary(): Uint8Array {
             return this.serialize();
         }
-        static deserializeBinary(bytes: Uint8Array): Identifier {
-            return Identifier.deserialize(bytes);
+        static deserializeBinary(bytes: Uint8Array): TransactionId {
+            return TransactionId.deserialize(bytes);
         }
     }
-    export namespace Identifier {
-        export class Lock32 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
+    export class LockId extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
                 }
-            }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized32, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized32) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-            }): Lock32 {
-                const message = new Lock32({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Lock32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Lock32();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Lock32 {
-                return Lock32.deserialize(bytes);
             }
         }
-        export class Lock64 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized64;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
+        get value() {
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        static fromObject(data: {
+            value?: Uint8Array;
+        }): LockId {
+            const message = new LockId({});
+            if (data.value != null) {
+                message.value = data.value;
             }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized64, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized64;
+            return message;
+        }
+        toObject() {
+            const data: {
+                value?: Uint8Array;
+            } = {};
+            if (this.value != null) {
+                data.value = this.value;
             }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized64) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-            }): Lock64 {
-                const message = new Lock64({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Lock64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Lock64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): LockId {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new LockId();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.value = reader.readBytes();
                         break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
+                    default: reader.skipField();
                 }
-                return message;
             }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Lock64 {
-                return Lock64.deserialize(bytes);
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): LockId {
+            return LockId.deserialize(bytes);
+        }
+    }
+    export class AccumulatorRootId extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
+                }
             }
         }
-        export class BoxValue32 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
+        get value() {
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        static fromObject(data: {
+            value?: Uint8Array;
+        }): AccumulatorRootId {
+            const message = new AccumulatorRootId({});
+            if (data.value != null) {
+                message.value = data.value;
             }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized32, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized32;
+            return message;
+        }
+        toObject() {
+            const data: {
+                value?: Uint8Array;
+            } = {};
+            if (this.value != null) {
+                data.value = this.value;
             }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized32) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-            }): BoxValue32 {
-                const message = new BoxValue32({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BoxValue32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BoxValue32();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): AccumulatorRootId {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new AccumulatorRootId();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.value = reader.readBytes();
                         break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
+                    default: reader.skipField();
                 }
-                return message;
             }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): BoxValue32 {
-                return BoxValue32.deserialize(bytes);
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): AccumulatorRootId {
+            return AccumulatorRootId.deserialize(bytes);
+        }
+    }
+    export class GroupId extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
+                }
             }
         }
-        export class BoxValue64 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized64;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
+        get value() {
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
+        }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        static fromObject(data: {
+            value?: Uint8Array;
+        }): GroupId {
+            const message = new GroupId({});
+            if (data.value != null) {
+                message.value = data.value;
             }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized64, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized64;
+            return message;
+        }
+        toObject() {
+            const data: {
+                value?: Uint8Array;
+            } = {};
+            if (this.value != null) {
+                data.value = this.value;
             }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized64) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-            }): BoxValue64 {
-                const message = new BoxValue64({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BoxValue64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BoxValue64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GroupId {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GroupId();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.value = reader.readBytes();
                         break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
+                    default: reader.skipField();
                 }
-                return message;
             }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): BoxValue64 {
-                return BoxValue64.deserialize(bytes);
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): GroupId {
+            return GroupId.deserialize(bytes);
+        }
+    }
+    export class SeriesId extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            value?: Uint8Array;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("value" in data && data.value != undefined) {
+                    this.value = data.value;
+                }
             }
         }
-        export class IoTransaction32 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
-            }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized32, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized32) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-            }): IoTransaction32 {
-                const message = new IoTransaction32({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): IoTransaction32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new IoTransaction32();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): IoTransaction32 {
-                return IoTransaction32.deserialize(bytes);
-            }
+        get value() {
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
         }
-        export class IoTransaction64 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized64;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
-            }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized64, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized64;
-            }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized64) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-            }): IoTransaction64 {
-                const message = new IoTransaction64({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): IoTransaction64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new IoTransaction64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): IoTransaction64 {
-                return IoTransaction64.deserialize(bytes);
-            }
+        set value(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
         }
-        export class AccumulatorRoot32 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
+        static fromObject(data: {
+            value?: Uint8Array;
+        }): SeriesId {
+            const message = new SeriesId({});
+            if (data.value != null) {
+                message.value = data.value;
             }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized32, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized32;
-            }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized32) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-            }): AccumulatorRoot32 {
-                const message = new AccumulatorRoot32({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized32.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): AccumulatorRoot32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new AccumulatorRoot32();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized32.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): AccumulatorRoot32 {
-                return AccumulatorRoot32.deserialize(bytes);
-            }
+            return message;
         }
-        export class AccumulatorRoot64 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                evidence?: dependency_4.co.topl.brambl.models.Evidence.Sized64;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("evidence" in data && data.evidence != undefined) {
-                        this.evidence = data.evidence;
-                    }
-                }
+        toObject() {
+            const data: {
+                value?: Uint8Array;
+            } = {};
+            if (this.value != null) {
+                data.value = this.value;
             }
-            get evidence() {
-                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Evidence.Sized64, 1) as dependency_4.co.topl.brambl.models.Evidence.Sized64;
-            }
-            set evidence(value: dependency_4.co.topl.brambl.models.Evidence.Sized64) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_evidence() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-            }): AccumulatorRoot64 {
-                const message = new AccumulatorRoot64({});
-                if (data.evidence != null) {
-                    message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.fromObject(data.evidence);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    evidence?: ReturnType<typeof dependency_4.co.topl.brambl.models.Evidence.Sized64.prototype.toObject>;
-                } = {};
-                if (this.evidence != null) {
-                    data.evidence = this.evidence.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_evidence)
-                    writer.writeMessage(1, this.evidence, () => this.evidence.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): AccumulatorRoot64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new AccumulatorRoot64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.value.length)
+                writer.writeBytes(1, this.value);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SeriesId {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SeriesId();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.value = reader.readBytes();
                         break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.evidence, () => message.evidence = dependency_4.co.topl.brambl.models.Evidence.Sized64.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
+                    default: reader.skipField();
                 }
-                return message;
             }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): AccumulatorRoot64 {
-                return AccumulatorRoot64.deserialize(bytes);
-            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): SeriesId {
+            return SeriesId.deserialize(bytes);
         }
     }
 }

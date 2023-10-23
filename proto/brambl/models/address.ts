@@ -4,17 +4,15 @@
  * source: brambl/models/address.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../validate/validate";
-import * as dependency_2 from "./../../scalapb/scalapb";
-import * as dependency_3 from "./../../scalapb/validate";
-import * as dependency_4 from "./identifier";
+import * as dependency_2 from "./identifier";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models {
-    export class Address extends pb_1.Message {
+    export class LockAddress extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
             network?: number;
             ledger?: number;
-            identifier?: dependency_4.co.topl.brambl.models.Identifier;
+            id?: dependency_2.co.topl.brambl.models.LockId;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -25,8 +23,8 @@ export namespace co.topl.brambl.models {
                 if ("ledger" in data && data.ledger != undefined) {
                     this.ledger = data.ledger;
                 }
-                if ("identifier" in data && data.identifier != undefined) {
-                    this.identifier = data.identifier;
+                if ("id" in data && data.id != undefined) {
+                    this.id = data.id;
                 }
             }
         }
@@ -42,29 +40,29 @@ export namespace co.topl.brambl.models {
         set ledger(value: number) {
             pb_1.Message.setField(this, 2, value);
         }
-        get identifier() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.Identifier, 3) as dependency_4.co.topl.brambl.models.Identifier;
+        get id() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.LockId, 3) as dependency_2.co.topl.brambl.models.LockId;
         }
-        set identifier(value: dependency_4.co.topl.brambl.models.Identifier) {
+        set id(value: dependency_2.co.topl.brambl.models.LockId) {
             pb_1.Message.setWrapperField(this, 3, value);
         }
-        get has_identifier() {
+        get has_id() {
             return pb_1.Message.getField(this, 3) != null;
         }
         static fromObject(data: {
             network?: number;
             ledger?: number;
-            identifier?: ReturnType<typeof dependency_4.co.topl.brambl.models.Identifier.prototype.toObject>;
-        }): Address {
-            const message = new Address({});
+            id?: ReturnType<typeof dependency_2.co.topl.brambl.models.LockId.prototype.toObject>;
+        }): LockAddress {
+            const message = new LockAddress({});
             if (data.network != null) {
                 message.network = data.network;
             }
             if (data.ledger != null) {
                 message.ledger = data.ledger;
             }
-            if (data.identifier != null) {
-                message.identifier = dependency_4.co.topl.brambl.models.Identifier.fromObject(data.identifier);
+            if (data.id != null) {
+                message.id = dependency_2.co.topl.brambl.models.LockId.fromObject(data.id);
             }
             return message;
         }
@@ -72,7 +70,7 @@ export namespace co.topl.brambl.models {
             const data: {
                 network?: number;
                 ledger?: number;
-                identifier?: ReturnType<typeof dependency_4.co.topl.brambl.models.Identifier.prototype.toObject>;
+                id?: ReturnType<typeof dependency_2.co.topl.brambl.models.LockId.prototype.toObject>;
             } = {};
             if (this.network != null) {
                 data.network = this.network;
@@ -80,8 +78,8 @@ export namespace co.topl.brambl.models {
             if (this.ledger != null) {
                 data.ledger = this.ledger;
             }
-            if (this.identifier != null) {
-                data.identifier = this.identifier.toObject();
+            if (this.id != null) {
+                data.id = this.id.toObject();
             }
             return data;
         }
@@ -93,13 +91,13 @@ export namespace co.topl.brambl.models {
                 writer.writeUint32(1, this.network);
             if (this.ledger != 0)
                 writer.writeUint32(2, this.ledger);
-            if (this.has_identifier)
-                writer.writeMessage(3, this.identifier, () => this.identifier.serialize(writer));
+            if (this.has_id)
+                writer.writeMessage(3, this.id, () => this.id.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Address {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Address();
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): LockAddress {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new LockAddress();
             while (reader.nextField()) {
                 if (reader.isEndGroup())
                     break;
@@ -111,7 +109,7 @@ export namespace co.topl.brambl.models {
                         message.ledger = reader.readUint32();
                         break;
                     case 3:
-                        reader.readMessage(message.identifier, () => message.identifier = dependency_4.co.topl.brambl.models.Identifier.deserialize(reader));
+                        reader.readMessage(message.id, () => message.id = dependency_2.co.topl.brambl.models.LockId.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -121,8 +119,286 @@ export namespace co.topl.brambl.models {
         serializeBinary(): Uint8Array {
             return this.serialize();
         }
-        static deserializeBinary(bytes: Uint8Array): Address {
-            return Address.deserialize(bytes);
+        static deserializeBinary(bytes: Uint8Array): LockAddress {
+            return LockAddress.deserialize(bytes);
+        }
+    }
+    export class TransactionOutputAddress extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            network?: number;
+            ledger?: number;
+            index?: number;
+            id?: dependency_2.co.topl.brambl.models.TransactionId;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("network" in data && data.network != undefined) {
+                    this.network = data.network;
+                }
+                if ("ledger" in data && data.ledger != undefined) {
+                    this.ledger = data.ledger;
+                }
+                if ("index" in data && data.index != undefined) {
+                    this.index = data.index;
+                }
+                if ("id" in data && data.id != undefined) {
+                    this.id = data.id;
+                }
+            }
+        }
+        get network() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set network(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get ledger() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set ledger(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        get index() {
+            return pb_1.Message.getFieldWithDefault(this, 3, 0) as number;
+        }
+        set index(value: number) {
+            pb_1.Message.setField(this, 3, value);
+        }
+        get id() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.TransactionId, 4) as dependency_2.co.topl.brambl.models.TransactionId;
+        }
+        set id(value: dependency_2.co.topl.brambl.models.TransactionId) {
+            pb_1.Message.setWrapperField(this, 4, value);
+        }
+        get has_id() {
+            return pb_1.Message.getField(this, 4) != null;
+        }
+        static fromObject(data: {
+            network?: number;
+            ledger?: number;
+            index?: number;
+            id?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionId.prototype.toObject>;
+        }): TransactionOutputAddress {
+            const message = new TransactionOutputAddress({});
+            if (data.network != null) {
+                message.network = data.network;
+            }
+            if (data.ledger != null) {
+                message.ledger = data.ledger;
+            }
+            if (data.index != null) {
+                message.index = data.index;
+            }
+            if (data.id != null) {
+                message.id = dependency_2.co.topl.brambl.models.TransactionId.fromObject(data.id);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                network?: number;
+                ledger?: number;
+                index?: number;
+                id?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionId.prototype.toObject>;
+            } = {};
+            if (this.network != null) {
+                data.network = this.network;
+            }
+            if (this.ledger != null) {
+                data.ledger = this.ledger;
+            }
+            if (this.index != null) {
+                data.index = this.index;
+            }
+            if (this.id != null) {
+                data.id = this.id.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.network != 0)
+                writer.writeUint32(1, this.network);
+            if (this.ledger != 0)
+                writer.writeUint32(2, this.ledger);
+            if (this.index != 0)
+                writer.writeUint32(3, this.index);
+            if (this.has_id)
+                writer.writeMessage(4, this.id, () => this.id.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TransactionOutputAddress {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TransactionOutputAddress();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.network = reader.readUint32();
+                        break;
+                    case 2:
+                        message.ledger = reader.readUint32();
+                        break;
+                    case 3:
+                        message.index = reader.readUint32();
+                        break;
+                    case 4:
+                        reader.readMessage(message.id, () => message.id = dependency_2.co.topl.brambl.models.TransactionId.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): TransactionOutputAddress {
+            return TransactionOutputAddress.deserialize(bytes);
+        }
+    }
+    export class TransactionInputAddress extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            network?: number;
+            ledger?: number;
+            index?: number;
+            id?: dependency_2.co.topl.brambl.models.TransactionId;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("network" in data && data.network != undefined) {
+                    this.network = data.network;
+                }
+                if ("ledger" in data && data.ledger != undefined) {
+                    this.ledger = data.ledger;
+                }
+                if ("index" in data && data.index != undefined) {
+                    this.index = data.index;
+                }
+                if ("id" in data && data.id != undefined) {
+                    this.id = data.id;
+                }
+            }
+        }
+        get network() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set network(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get ledger() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set ledger(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        get index() {
+            return pb_1.Message.getFieldWithDefault(this, 3, 0) as number;
+        }
+        set index(value: number) {
+            pb_1.Message.setField(this, 3, value);
+        }
+        get id() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.TransactionId, 4) as dependency_2.co.topl.brambl.models.TransactionId;
+        }
+        set id(value: dependency_2.co.topl.brambl.models.TransactionId) {
+            pb_1.Message.setWrapperField(this, 4, value);
+        }
+        get has_id() {
+            return pb_1.Message.getField(this, 4) != null;
+        }
+        static fromObject(data: {
+            network?: number;
+            ledger?: number;
+            index?: number;
+            id?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionId.prototype.toObject>;
+        }): TransactionInputAddress {
+            const message = new TransactionInputAddress({});
+            if (data.network != null) {
+                message.network = data.network;
+            }
+            if (data.ledger != null) {
+                message.ledger = data.ledger;
+            }
+            if (data.index != null) {
+                message.index = data.index;
+            }
+            if (data.id != null) {
+                message.id = dependency_2.co.topl.brambl.models.TransactionId.fromObject(data.id);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                network?: number;
+                ledger?: number;
+                index?: number;
+                id?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionId.prototype.toObject>;
+            } = {};
+            if (this.network != null) {
+                data.network = this.network;
+            }
+            if (this.ledger != null) {
+                data.ledger = this.ledger;
+            }
+            if (this.index != null) {
+                data.index = this.index;
+            }
+            if (this.id != null) {
+                data.id = this.id.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.network != 0)
+                writer.writeUint32(1, this.network);
+            if (this.ledger != 0)
+                writer.writeUint32(2, this.ledger);
+            if (this.index != 0)
+                writer.writeUint32(3, this.index);
+            if (this.has_id)
+                writer.writeMessage(4, this.id, () => this.id.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TransactionInputAddress {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TransactionInputAddress();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.network = reader.readUint32();
+                        break;
+                    case 2:
+                        message.ledger = reader.readUint32();
+                        break;
+                    case 3:
+                        message.index = reader.readUint32();
+                        break;
+                    case 4:
+                        reader.readMessage(message.id, () => message.id = dependency_2.co.topl.brambl.models.TransactionId.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): TransactionInputAddress {
+            return TransactionInputAddress.deserialize(bytes);
         }
     }
 }

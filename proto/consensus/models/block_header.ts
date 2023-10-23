@@ -6,14 +6,15 @@
 import * as dependency_1 from "./block_id";
 import * as dependency_2 from "./eligibility_certificate";
 import * as dependency_3 from "./operational_certificate";
-import * as dependency_4 from "./../../validate/validate";
-import * as dependency_5 from "./../../scalapb/scalapb";
-import * as dependency_6 from "./../../scalapb/validate";
+import * as dependency_4 from "./staking";
+import * as dependency_5 from "./protocol_version";
+import * as dependency_6 from "./../../validate/validate";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.consensus.models {
     export class BlockHeader extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
+            headerId?: dependency_1.co.topl.consensus.models.BlockId;
             parentHeaderId?: dependency_1.co.topl.consensus.models.BlockId;
             parentSlot?: number;
             txRoot?: Uint8Array;
@@ -24,11 +25,15 @@ export namespace co.topl.consensus.models {
             eligibilityCertificate?: dependency_2.co.topl.consensus.models.EligibilityCertificate;
             operationalCertificate?: dependency_3.co.topl.consensus.models.OperationalCertificate;
             metadata?: Uint8Array;
-            address?: Uint8Array;
+            address?: dependency_4.co.topl.consensus.models.StakingAddress;
+            version?: dependency_5.co.topl.consensus.models.ProtocolVersion;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
+                if ("headerId" in data && data.headerId != undefined) {
+                    this.headerId = data.headerId;
+                }
                 if ("parentHeaderId" in data && data.parentHeaderId != undefined) {
                     this.parentHeaderId = data.parentHeaderId;
                 }
@@ -62,7 +67,19 @@ export namespace co.topl.consensus.models {
                 if ("address" in data && data.address != undefined) {
                     this.address = data.address;
                 }
+                if ("version" in data && data.version != undefined) {
+                    this.version = data.version;
+                }
             }
+        }
+        get headerId() {
+            return pb_1.Message.getWrapperField(this, dependency_1.co.topl.consensus.models.BlockId, 12) as dependency_1.co.topl.consensus.models.BlockId;
+        }
+        set headerId(value: dependency_1.co.topl.consensus.models.BlockId) {
+            pb_1.Message.setWrapperField(this, 12, value);
+        }
+        get has_headerId() {
+            return pb_1.Message.getField(this, 12) != null;
         }
         get parentHeaderId() {
             return pb_1.Message.getWrapperField(this, dependency_1.co.topl.consensus.models.BlockId, 1) as dependency_1.co.topl.consensus.models.BlockId;
@@ -134,12 +151,25 @@ export namespace co.topl.consensus.models {
             pb_1.Message.setField(this, 10, value);
         }
         get address() {
-            return pb_1.Message.getFieldWithDefault(this, 11, new Uint8Array(0)) as Uint8Array;
+            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.consensus.models.StakingAddress, 11) as dependency_4.co.topl.consensus.models.StakingAddress;
         }
-        set address(value: Uint8Array) {
-            pb_1.Message.setField(this, 11, value);
+        set address(value: dependency_4.co.topl.consensus.models.StakingAddress) {
+            pb_1.Message.setWrapperField(this, 11, value);
+        }
+        get has_address() {
+            return pb_1.Message.getField(this, 11) != null;
+        }
+        get version() {
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.consensus.models.ProtocolVersion, 13) as dependency_5.co.topl.consensus.models.ProtocolVersion;
+        }
+        set version(value: dependency_5.co.topl.consensus.models.ProtocolVersion) {
+            pb_1.Message.setWrapperField(this, 13, value);
+        }
+        get has_version() {
+            return pb_1.Message.getField(this, 13) != null;
         }
         static fromObject(data: {
+            headerId?: ReturnType<typeof dependency_1.co.topl.consensus.models.BlockId.prototype.toObject>;
             parentHeaderId?: ReturnType<typeof dependency_1.co.topl.consensus.models.BlockId.prototype.toObject>;
             parentSlot?: number;
             txRoot?: Uint8Array;
@@ -150,9 +180,13 @@ export namespace co.topl.consensus.models {
             eligibilityCertificate?: ReturnType<typeof dependency_2.co.topl.consensus.models.EligibilityCertificate.prototype.toObject>;
             operationalCertificate?: ReturnType<typeof dependency_3.co.topl.consensus.models.OperationalCertificate.prototype.toObject>;
             metadata?: Uint8Array;
-            address?: Uint8Array;
+            address?: ReturnType<typeof dependency_4.co.topl.consensus.models.StakingAddress.prototype.toObject>;
+            version?: ReturnType<typeof dependency_5.co.topl.consensus.models.ProtocolVersion.prototype.toObject>;
         }): BlockHeader {
             const message = new BlockHeader({});
+            if (data.headerId != null) {
+                message.headerId = dependency_1.co.topl.consensus.models.BlockId.fromObject(data.headerId);
+            }
             if (data.parentHeaderId != null) {
                 message.parentHeaderId = dependency_1.co.topl.consensus.models.BlockId.fromObject(data.parentHeaderId);
             }
@@ -184,12 +218,16 @@ export namespace co.topl.consensus.models {
                 message.metadata = data.metadata;
             }
             if (data.address != null) {
-                message.address = data.address;
+                message.address = dependency_4.co.topl.consensus.models.StakingAddress.fromObject(data.address);
+            }
+            if (data.version != null) {
+                message.version = dependency_5.co.topl.consensus.models.ProtocolVersion.fromObject(data.version);
             }
             return message;
         }
         toObject() {
             const data: {
+                headerId?: ReturnType<typeof dependency_1.co.topl.consensus.models.BlockId.prototype.toObject>;
                 parentHeaderId?: ReturnType<typeof dependency_1.co.topl.consensus.models.BlockId.prototype.toObject>;
                 parentSlot?: number;
                 txRoot?: Uint8Array;
@@ -200,8 +238,12 @@ export namespace co.topl.consensus.models {
                 eligibilityCertificate?: ReturnType<typeof dependency_2.co.topl.consensus.models.EligibilityCertificate.prototype.toObject>;
                 operationalCertificate?: ReturnType<typeof dependency_3.co.topl.consensus.models.OperationalCertificate.prototype.toObject>;
                 metadata?: Uint8Array;
-                address?: Uint8Array;
+                address?: ReturnType<typeof dependency_4.co.topl.consensus.models.StakingAddress.prototype.toObject>;
+                version?: ReturnType<typeof dependency_5.co.topl.consensus.models.ProtocolVersion.prototype.toObject>;
             } = {};
+            if (this.headerId != null) {
+                data.headerId = this.headerId.toObject();
+            }
             if (this.parentHeaderId != null) {
                 data.parentHeaderId = this.parentHeaderId.toObject();
             }
@@ -233,7 +275,10 @@ export namespace co.topl.consensus.models {
                 data.metadata = this.metadata;
             }
             if (this.address != null) {
-                data.address = this.address;
+                data.address = this.address.toObject();
+            }
+            if (this.version != null) {
+                data.version = this.version.toObject();
             }
             return data;
         }
@@ -241,6 +286,8 @@ export namespace co.topl.consensus.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
+            if (this.has_headerId)
+                writer.writeMessage(12, this.headerId, () => this.headerId.serialize(writer));
             if (this.has_parentHeaderId)
                 writer.writeMessage(1, this.parentHeaderId, () => this.parentHeaderId.serialize(writer));
             if (this.parentSlot != 0)
@@ -261,8 +308,10 @@ export namespace co.topl.consensus.models {
                 writer.writeMessage(9, this.operationalCertificate, () => this.operationalCertificate.serialize(writer));
             if (this.metadata.length)
                 writer.writeBytes(10, this.metadata);
-            if (this.address.length)
-                writer.writeBytes(11, this.address);
+            if (this.has_address)
+                writer.writeMessage(11, this.address, () => this.address.serialize(writer));
+            if (this.has_version)
+                writer.writeMessage(13, this.version, () => this.version.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -272,6 +321,9 @@ export namespace co.topl.consensus.models {
                 if (reader.isEndGroup())
                     break;
                 switch (reader.getFieldNumber()) {
+                    case 12:
+                        reader.readMessage(message.headerId, () => message.headerId = dependency_1.co.topl.consensus.models.BlockId.deserialize(reader));
+                        break;
                     case 1:
                         reader.readMessage(message.parentHeaderId, () => message.parentHeaderId = dependency_1.co.topl.consensus.models.BlockId.deserialize(reader));
                         break;
@@ -303,7 +355,10 @@ export namespace co.topl.consensus.models {
                         message.metadata = reader.readBytes();
                         break;
                     case 11:
-                        message.address = reader.readBytes();
+                        reader.readMessage(message.address, () => message.address = dependency_4.co.topl.consensus.models.StakingAddress.deserialize(reader));
+                        break;
+                    case 13:
+                        reader.readMessage(message.version, () => message.version = dependency_5.co.topl.consensus.models.ProtocolVersion.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }

@@ -3,13 +3,17 @@
  * compiler version: 3.6.1
  * source: genus/genus_rpc.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
-import * as dependency_1 from "./../models/address";
-import * as dependency_2 from "./../models/block";
-import * as dependency_3 from "./../models/common";
-import * as dependency_4 from "./genus_models";
+import * as dependency_1 from "./../brambl/models/address";
+import * as dependency_2 from "./../brambl/models/identifier";
+import * as dependency_3 from "./../brambl/models/event";
+import * as dependency_4 from "./../consensus/models/block_id";
+import * as dependency_5 from "./genus_models";
+import * as dependency_6 from "./../google/protobuf/wrappers";
+import * as dependency_7 from "./../node/models/block";
+import * as dependency_8 from "./../validate/validate";
 import * as pb_1 from "google-protobuf";
 import * as grpc_1 from "@grpc/grpc-js";
-export namespace co.topl.proto.genus {
+export namespace co.topl.genus.services {
     export class GetExistingTransactionIndexesResponse extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
@@ -83,7 +87,7 @@ export namespace co.topl.proto.genus {
     export class BlockResponse extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            block?: dependency_2.co.topl.proto.models.FullBlock;
+            block?: dependency_7.co.topl.node.models.FullBlock;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -94,26 +98,26 @@ export namespace co.topl.proto.genus {
             }
         }
         get block() {
-            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.proto.models.FullBlock, 1) as dependency_2.co.topl.proto.models.FullBlock;
+            return pb_1.Message.getWrapperField(this, dependency_7.co.topl.node.models.FullBlock, 1) as dependency_7.co.topl.node.models.FullBlock;
         }
-        set block(value: dependency_2.co.topl.proto.models.FullBlock) {
+        set block(value: dependency_7.co.topl.node.models.FullBlock) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_block() {
             return pb_1.Message.getField(this, 1) != null;
         }
         static fromObject(data: {
-            block?: ReturnType<typeof dependency_2.co.topl.proto.models.FullBlock.prototype.toObject>;
+            block?: ReturnType<typeof dependency_7.co.topl.node.models.FullBlock.prototype.toObject>;
         }): BlockResponse {
             const message = new BlockResponse({});
             if (data.block != null) {
-                message.block = dependency_2.co.topl.proto.models.FullBlock.fromObject(data.block);
+                message.block = dependency_7.co.topl.node.models.FullBlock.fromObject(data.block);
             }
             return message;
         }
         toObject() {
             const data: {
-                block?: ReturnType<typeof dependency_2.co.topl.proto.models.FullBlock.prototype.toObject>;
+                block?: ReturnType<typeof dependency_7.co.topl.node.models.FullBlock.prototype.toObject>;
             } = {};
             if (this.block != null) {
                 data.block = this.block.toObject();
@@ -136,7 +140,7 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.block, () => message.block = dependency_2.co.topl.proto.models.FullBlock.deserialize(reader));
+                        reader.readMessage(message.block, () => message.block = dependency_7.co.topl.node.models.FullBlock.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -153,7 +157,7 @@ export namespace co.topl.proto.genus {
     export class TransactionResponse extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            transactionReceipt?: dependency_4.co.topl.proto.genus.TransactionReceipt;
+            transactionReceipt?: dependency_5.co.topl.genus.services.TransactionReceipt;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -164,26 +168,26 @@ export namespace co.topl.proto.genus {
             }
         }
         get transactionReceipt() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.TransactionReceipt, 1) as dependency_4.co.topl.proto.genus.TransactionReceipt;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.TransactionReceipt, 1) as dependency_5.co.topl.genus.services.TransactionReceipt;
         }
-        set transactionReceipt(value: dependency_4.co.topl.proto.genus.TransactionReceipt) {
+        set transactionReceipt(value: dependency_5.co.topl.genus.services.TransactionReceipt) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_transactionReceipt() {
             return pb_1.Message.getField(this, 1) != null;
         }
         static fromObject(data: {
-            transactionReceipt?: ReturnType<typeof dependency_4.co.topl.proto.genus.TransactionReceipt.prototype.toObject>;
+            transactionReceipt?: ReturnType<typeof dependency_5.co.topl.genus.services.TransactionReceipt.prototype.toObject>;
         }): TransactionResponse {
             const message = new TransactionResponse({});
             if (data.transactionReceipt != null) {
-                message.transactionReceipt = dependency_4.co.topl.proto.genus.TransactionReceipt.fromObject(data.transactionReceipt);
+                message.transactionReceipt = dependency_5.co.topl.genus.services.TransactionReceipt.fromObject(data.transactionReceipt);
             }
             return message;
         }
         toObject() {
             const data: {
-                transactionReceipt?: ReturnType<typeof dependency_4.co.topl.proto.genus.TransactionReceipt.prototype.toObject>;
+                transactionReceipt?: ReturnType<typeof dependency_5.co.topl.genus.services.TransactionReceipt.prototype.toObject>;
             } = {};
             if (this.transactionReceipt != null) {
                 data.transactionReceipt = this.transactionReceipt.toObject();
@@ -206,7 +210,7 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.transactionReceipt, () => message.transactionReceipt = dependency_4.co.topl.proto.genus.TransactionReceipt.deserialize(reader));
+                        reader.readMessage(message.transactionReceipt, () => message.transactionReceipt = dependency_5.co.topl.genus.services.TransactionReceipt.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -223,7 +227,7 @@ export namespace co.topl.proto.genus {
     export class TxoResponse extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            txo?: dependency_4.co.topl.proto.genus.Txo;
+            txo?: dependency_5.co.topl.genus.services.Txo;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -234,26 +238,26 @@ export namespace co.topl.proto.genus {
             }
         }
         get txo() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.Txo, 1) as dependency_4.co.topl.proto.genus.Txo;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.Txo, 1) as dependency_5.co.topl.genus.services.Txo;
         }
-        set txo(value: dependency_4.co.topl.proto.genus.Txo) {
+        set txo(value: dependency_5.co.topl.genus.services.Txo) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_txo() {
             return pb_1.Message.getField(this, 1) != null;
         }
         static fromObject(data: {
-            txo?: ReturnType<typeof dependency_4.co.topl.proto.genus.Txo.prototype.toObject>;
+            txo?: ReturnType<typeof dependency_5.co.topl.genus.services.Txo.prototype.toObject>;
         }): TxoResponse {
             const message = new TxoResponse({});
             if (data.txo != null) {
-                message.txo = dependency_4.co.topl.proto.genus.Txo.fromObject(data.txo);
+                message.txo = dependency_5.co.topl.genus.services.Txo.fromObject(data.txo);
             }
             return message;
         }
         toObject() {
             const data: {
-                txo?: ReturnType<typeof dependency_4.co.topl.proto.genus.Txo.prototype.toObject>;
+                txo?: ReturnType<typeof dependency_5.co.topl.genus.services.Txo.prototype.toObject>;
             } = {};
             if (this.txo != null) {
                 data.txo = this.txo.toObject();
@@ -276,7 +280,7 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.txo, () => message.txo = dependency_4.co.topl.proto.genus.Txo.deserialize(reader));
+                        reader.readMessage(message.txo, () => message.txo = dependency_5.co.topl.genus.services.Txo.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -293,8 +297,8 @@ export namespace co.topl.proto.genus {
     export class GetBlockByIdRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            blockId?: dependency_3.co.topl.proto.models.BlockId;
-            confidenceFactor?: dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            blockId?: dependency_4.co.topl.consensus.models.BlockId;
+            confidenceFactor?: dependency_5.co.topl.genus.services.ConfidenceFactor;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -308,40 +312,40 @@ export namespace co.topl.proto.genus {
             }
         }
         get blockId() {
-            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.proto.models.BlockId, 1) as dependency_3.co.topl.proto.models.BlockId;
+            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.consensus.models.BlockId, 1) as dependency_4.co.topl.consensus.models.BlockId;
         }
-        set blockId(value: dependency_3.co.topl.proto.models.BlockId) {
+        set blockId(value: dependency_4.co.topl.consensus.models.BlockId) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_blockId() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get confidenceFactor() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ConfidenceFactor, 2) as dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ConfidenceFactor, 2) as dependency_5.co.topl.genus.services.ConfidenceFactor;
         }
-        set confidenceFactor(value: dependency_4.co.topl.proto.genus.ConfidenceFactor) {
+        set confidenceFactor(value: dependency_5.co.topl.genus.services.ConfidenceFactor) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_confidenceFactor() {
             return pb_1.Message.getField(this, 2) != null;
         }
         static fromObject(data: {
-            blockId?: ReturnType<typeof dependency_3.co.topl.proto.models.BlockId.prototype.toObject>;
-            confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+            blockId?: ReturnType<typeof dependency_4.co.topl.consensus.models.BlockId.prototype.toObject>;
+            confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
         }): GetBlockByIdRequest {
             const message = new GetBlockByIdRequest({});
             if (data.blockId != null) {
-                message.blockId = dependency_3.co.topl.proto.models.BlockId.fromObject(data.blockId);
+                message.blockId = dependency_4.co.topl.consensus.models.BlockId.fromObject(data.blockId);
             }
             if (data.confidenceFactor != null) {
-                message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.fromObject(data.confidenceFactor);
+                message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.fromObject(data.confidenceFactor);
             }
             return message;
         }
         toObject() {
             const data: {
-                blockId?: ReturnType<typeof dependency_3.co.topl.proto.models.BlockId.prototype.toObject>;
-                confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+                blockId?: ReturnType<typeof dependency_4.co.topl.consensus.models.BlockId.prototype.toObject>;
+                confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
             } = {};
             if (this.blockId != null) {
                 data.blockId = this.blockId.toObject();
@@ -369,10 +373,10 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.blockId, () => message.blockId = dependency_3.co.topl.proto.models.BlockId.deserialize(reader));
+                        reader.readMessage(message.blockId, () => message.blockId = dependency_4.co.topl.consensus.models.BlockId.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.deserialize(reader));
+                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -389,8 +393,8 @@ export namespace co.topl.proto.genus {
     export class GetBlockByHeightRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            height?: dependency_4.co.topl.proto.genus.ChainDistance;
-            confidenceFactor?: dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            height?: dependency_5.co.topl.genus.services.ChainDistance;
+            confidenceFactor?: dependency_5.co.topl.genus.services.ConfidenceFactor;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -404,40 +408,40 @@ export namespace co.topl.proto.genus {
             }
         }
         get height() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ChainDistance, 1) as dependency_4.co.topl.proto.genus.ChainDistance;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ChainDistance, 1) as dependency_5.co.topl.genus.services.ChainDistance;
         }
-        set height(value: dependency_4.co.topl.proto.genus.ChainDistance) {
+        set height(value: dependency_5.co.topl.genus.services.ChainDistance) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_height() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get confidenceFactor() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ConfidenceFactor, 2) as dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ConfidenceFactor, 2) as dependency_5.co.topl.genus.services.ConfidenceFactor;
         }
-        set confidenceFactor(value: dependency_4.co.topl.proto.genus.ConfidenceFactor) {
+        set confidenceFactor(value: dependency_5.co.topl.genus.services.ConfidenceFactor) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_confidenceFactor() {
             return pb_1.Message.getField(this, 2) != null;
         }
         static fromObject(data: {
-            height?: ReturnType<typeof dependency_4.co.topl.proto.genus.ChainDistance.prototype.toObject>;
-            confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+            height?: ReturnType<typeof dependency_5.co.topl.genus.services.ChainDistance.prototype.toObject>;
+            confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
         }): GetBlockByHeightRequest {
             const message = new GetBlockByHeightRequest({});
             if (data.height != null) {
-                message.height = dependency_4.co.topl.proto.genus.ChainDistance.fromObject(data.height);
+                message.height = dependency_5.co.topl.genus.services.ChainDistance.fromObject(data.height);
             }
             if (data.confidenceFactor != null) {
-                message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.fromObject(data.confidenceFactor);
+                message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.fromObject(data.confidenceFactor);
             }
             return message;
         }
         toObject() {
             const data: {
-                height?: ReturnType<typeof dependency_4.co.topl.proto.genus.ChainDistance.prototype.toObject>;
-                confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+                height?: ReturnType<typeof dependency_5.co.topl.genus.services.ChainDistance.prototype.toObject>;
+                confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
             } = {};
             if (this.height != null) {
                 data.height = this.height.toObject();
@@ -465,10 +469,10 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.height, () => message.height = dependency_4.co.topl.proto.genus.ChainDistance.deserialize(reader));
+                        reader.readMessage(message.height, () => message.height = dependency_5.co.topl.genus.services.ChainDistance.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.deserialize(reader));
+                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -485,8 +489,8 @@ export namespace co.topl.proto.genus {
     export class GetBlockByDepthRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            depth?: dependency_4.co.topl.proto.genus.ChainDistance;
-            confidenceFactor?: dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            depth?: dependency_5.co.topl.genus.services.ChainDistance;
+            confidenceFactor?: dependency_5.co.topl.genus.services.ConfidenceFactor;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -500,40 +504,40 @@ export namespace co.topl.proto.genus {
             }
         }
         get depth() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ChainDistance, 1) as dependency_4.co.topl.proto.genus.ChainDistance;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ChainDistance, 1) as dependency_5.co.topl.genus.services.ChainDistance;
         }
-        set depth(value: dependency_4.co.topl.proto.genus.ChainDistance) {
+        set depth(value: dependency_5.co.topl.genus.services.ChainDistance) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_depth() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get confidenceFactor() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ConfidenceFactor, 2) as dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ConfidenceFactor, 2) as dependency_5.co.topl.genus.services.ConfidenceFactor;
         }
-        set confidenceFactor(value: dependency_4.co.topl.proto.genus.ConfidenceFactor) {
+        set confidenceFactor(value: dependency_5.co.topl.genus.services.ConfidenceFactor) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_confidenceFactor() {
             return pb_1.Message.getField(this, 2) != null;
         }
         static fromObject(data: {
-            depth?: ReturnType<typeof dependency_4.co.topl.proto.genus.ChainDistance.prototype.toObject>;
-            confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+            depth?: ReturnType<typeof dependency_5.co.topl.genus.services.ChainDistance.prototype.toObject>;
+            confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
         }): GetBlockByDepthRequest {
             const message = new GetBlockByDepthRequest({});
             if (data.depth != null) {
-                message.depth = dependency_4.co.topl.proto.genus.ChainDistance.fromObject(data.depth);
+                message.depth = dependency_5.co.topl.genus.services.ChainDistance.fromObject(data.depth);
             }
             if (data.confidenceFactor != null) {
-                message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.fromObject(data.confidenceFactor);
+                message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.fromObject(data.confidenceFactor);
             }
             return message;
         }
         toObject() {
             const data: {
-                depth?: ReturnType<typeof dependency_4.co.topl.proto.genus.ChainDistance.prototype.toObject>;
-                confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+                depth?: ReturnType<typeof dependency_5.co.topl.genus.services.ChainDistance.prototype.toObject>;
+                confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
             } = {};
             if (this.depth != null) {
                 data.depth = this.depth.toObject();
@@ -561,10 +565,10 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.depth, () => message.depth = dependency_4.co.topl.proto.genus.ChainDistance.deserialize(reader));
+                        reader.readMessage(message.depth, () => message.depth = dependency_5.co.topl.genus.services.ChainDistance.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.deserialize(reader));
+                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -581,8 +585,8 @@ export namespace co.topl.proto.genus {
     export class GetTransactionByIdRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            transactionId?: dependency_3.co.topl.proto.models.TransactionId;
-            confidenceFactor?: dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            transactionId?: dependency_2.co.topl.brambl.models.TransactionId;
+            confidenceFactor?: dependency_5.co.topl.genus.services.ConfidenceFactor;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -596,40 +600,40 @@ export namespace co.topl.proto.genus {
             }
         }
         get transactionId() {
-            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.proto.models.TransactionId, 1) as dependency_3.co.topl.proto.models.TransactionId;
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.TransactionId, 1) as dependency_2.co.topl.brambl.models.TransactionId;
         }
-        set transactionId(value: dependency_3.co.topl.proto.models.TransactionId) {
+        set transactionId(value: dependency_2.co.topl.brambl.models.TransactionId) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_transactionId() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get confidenceFactor() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ConfidenceFactor, 2) as dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ConfidenceFactor, 2) as dependency_5.co.topl.genus.services.ConfidenceFactor;
         }
-        set confidenceFactor(value: dependency_4.co.topl.proto.genus.ConfidenceFactor) {
+        set confidenceFactor(value: dependency_5.co.topl.genus.services.ConfidenceFactor) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_confidenceFactor() {
             return pb_1.Message.getField(this, 2) != null;
         }
         static fromObject(data: {
-            transactionId?: ReturnType<typeof dependency_3.co.topl.proto.models.TransactionId.prototype.toObject>;
-            confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+            transactionId?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionId.prototype.toObject>;
+            confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
         }): GetTransactionByIdRequest {
             const message = new GetTransactionByIdRequest({});
             if (data.transactionId != null) {
-                message.transactionId = dependency_3.co.topl.proto.models.TransactionId.fromObject(data.transactionId);
+                message.transactionId = dependency_2.co.topl.brambl.models.TransactionId.fromObject(data.transactionId);
             }
             if (data.confidenceFactor != null) {
-                message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.fromObject(data.confidenceFactor);
+                message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.fromObject(data.confidenceFactor);
             }
             return message;
         }
         toObject() {
             const data: {
-                transactionId?: ReturnType<typeof dependency_3.co.topl.proto.models.TransactionId.prototype.toObject>;
-                confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+                transactionId?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionId.prototype.toObject>;
+                confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
             } = {};
             if (this.transactionId != null) {
                 data.transactionId = this.transactionId.toObject();
@@ -657,10 +661,10 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.transactionId, () => message.transactionId = dependency_3.co.topl.proto.models.TransactionId.deserialize(reader));
+                        reader.readMessage(message.transactionId, () => message.transactionId = dependency_2.co.topl.brambl.models.TransactionId.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.deserialize(reader));
+                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -672,6 +676,336 @@ export namespace co.topl.proto.genus {
         }
         static deserializeBinary(bytes: Uint8Array): GetTransactionByIdRequest {
             return GetTransactionByIdRequest.deserialize(bytes);
+        }
+    }
+    export class GetTxoStatsReq extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {}) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") { }
+        }
+        static fromObject(data: {}): GetTxoStatsReq {
+            const message = new GetTxoStatsReq({});
+            return message;
+        }
+        toObject() {
+            const data: {} = {};
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GetTxoStatsReq {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GetTxoStatsReq();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): GetTxoStatsReq {
+            return GetTxoStatsReq.deserialize(bytes);
+        }
+    }
+    export class GetTxoStatsRes extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            txos?: TxoStats;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("txos" in data && data.txos != undefined) {
+                    this.txos = data.txos;
+                }
+            }
+        }
+        get txos() {
+            return pb_1.Message.getWrapperField(this, TxoStats, 1) as TxoStats;
+        }
+        set txos(value: TxoStats) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_txos() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            txos?: ReturnType<typeof TxoStats.prototype.toObject>;
+        }): GetTxoStatsRes {
+            const message = new GetTxoStatsRes({});
+            if (data.txos != null) {
+                message.txos = TxoStats.fromObject(data.txos);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                txos?: ReturnType<typeof TxoStats.prototype.toObject>;
+            } = {};
+            if (this.txos != null) {
+                data.txos = this.txos.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_txos)
+                writer.writeMessage(1, this.txos, () => this.txos.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GetTxoStatsRes {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GetTxoStatsRes();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.txos, () => message.txos = TxoStats.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): GetTxoStatsRes {
+            return GetTxoStatsRes.deserialize(bytes);
+        }
+    }
+    export class BlockchainSizeStatsReq extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {}) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") { }
+        }
+        static fromObject(data: {}): BlockchainSizeStatsReq {
+            const message = new BlockchainSizeStatsReq({});
+            return message;
+        }
+        toObject() {
+            const data: {} = {};
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BlockchainSizeStatsReq {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BlockchainSizeStatsReq();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): BlockchainSizeStatsReq {
+            return BlockchainSizeStatsReq.deserialize(bytes);
+        }
+    }
+    export class BlockchainSizeStatsRes extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            blockchainSize?: BlockchainSizeStats;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("blockchainSize" in data && data.blockchainSize != undefined) {
+                    this.blockchainSize = data.blockchainSize;
+                }
+            }
+        }
+        get blockchainSize() {
+            return pb_1.Message.getWrapperField(this, BlockchainSizeStats, 1) as BlockchainSizeStats;
+        }
+        set blockchainSize(value: BlockchainSizeStats) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_blockchainSize() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            blockchainSize?: ReturnType<typeof BlockchainSizeStats.prototype.toObject>;
+        }): BlockchainSizeStatsRes {
+            const message = new BlockchainSizeStatsRes({});
+            if (data.blockchainSize != null) {
+                message.blockchainSize = BlockchainSizeStats.fromObject(data.blockchainSize);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                blockchainSize?: ReturnType<typeof BlockchainSizeStats.prototype.toObject>;
+            } = {};
+            if (this.blockchainSize != null) {
+                data.blockchainSize = this.blockchainSize.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_blockchainSize)
+                writer.writeMessage(1, this.blockchainSize, () => this.blockchainSize.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BlockchainSizeStatsRes {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BlockchainSizeStatsRes();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.blockchainSize, () => message.blockchainSize = BlockchainSizeStats.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): BlockchainSizeStatsRes {
+            return BlockchainSizeStatsRes.deserialize(bytes);
+        }
+    }
+    export class BlockStatsReq extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {}) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") { }
+        }
+        static fromObject(data: {}): BlockStatsReq {
+            const message = new BlockStatsReq({});
+            return message;
+        }
+        toObject() {
+            const data: {} = {};
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BlockStatsReq {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BlockStatsReq();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): BlockStatsReq {
+            return BlockStatsReq.deserialize(bytes);
+        }
+    }
+    export class BlockStatsRes extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            blockStats?: BlockStats;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("blockStats" in data && data.blockStats != undefined) {
+                    this.blockStats = data.blockStats;
+                }
+            }
+        }
+        get blockStats() {
+            return pb_1.Message.getWrapperField(this, BlockStats, 1) as BlockStats;
+        }
+        set blockStats(value: BlockStats) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_blockStats() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            blockStats?: ReturnType<typeof BlockStats.prototype.toObject>;
+        }): BlockStatsRes {
+            const message = new BlockStatsRes({});
+            if (data.blockStats != null) {
+                message.blockStats = BlockStats.fromObject(data.blockStats);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                blockStats?: ReturnType<typeof BlockStats.prototype.toObject>;
+            } = {};
+            if (this.blockStats != null) {
+                data.blockStats = this.blockStats.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_blockStats)
+                writer.writeMessage(1, this.blockStats, () => this.blockStats.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BlockStatsRes {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BlockStatsRes();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.blockStats, () => message.blockStats = BlockStats.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): BlockStatsRes {
+            return BlockStatsRes.deserialize(bytes);
         }
     }
     export class CreateOnChainTransactionIndexResponse extends pb_1.Message {
@@ -741,61 +1075,82 @@ export namespace co.topl.proto.genus {
             return CreateOnChainTransactionIndexResponse.deserialize(bytes);
         }
     }
-    export class QueryByAddressRequest extends pb_1.Message {
+    export class QueryByLockAddressRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            addresses?: dependency_1.co.topl.proto.models.SpendingAddress[];
-            confidenceFactor?: dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            address?: dependency_1.co.topl.brambl.models.LockAddress;
+            confidenceFactor?: dependency_5.co.topl.genus.services.ConfidenceFactor;
+            state?: dependency_5.co.topl.genus.services.TxoState;
         }) {
             super();
-            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("addresses" in data && data.addresses != undefined) {
-                    this.addresses = data.addresses;
+                if ("address" in data && data.address != undefined) {
+                    this.address = data.address;
                 }
                 if ("confidenceFactor" in data && data.confidenceFactor != undefined) {
                     this.confidenceFactor = data.confidenceFactor;
                 }
+                if ("state" in data && data.state != undefined) {
+                    this.state = data.state;
+                }
             }
         }
-        get addresses() {
-            return pb_1.Message.getRepeatedWrapperField(this, dependency_1.co.topl.proto.models.SpendingAddress, 1) as dependency_1.co.topl.proto.models.SpendingAddress[];
+        get address() {
+            return pb_1.Message.getWrapperField(this, dependency_1.co.topl.brambl.models.LockAddress, 1) as dependency_1.co.topl.brambl.models.LockAddress;
         }
-        set addresses(value: dependency_1.co.topl.proto.models.SpendingAddress[]) {
-            pb_1.Message.setRepeatedWrapperField(this, 1, value);
+        set address(value: dependency_1.co.topl.brambl.models.LockAddress) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_address() {
+            return pb_1.Message.getField(this, 1) != null;
         }
         get confidenceFactor() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ConfidenceFactor, 2) as dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ConfidenceFactor, 2) as dependency_5.co.topl.genus.services.ConfidenceFactor;
         }
-        set confidenceFactor(value: dependency_4.co.topl.proto.genus.ConfidenceFactor) {
+        set confidenceFactor(value: dependency_5.co.topl.genus.services.ConfidenceFactor) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_confidenceFactor() {
             return pb_1.Message.getField(this, 2) != null;
         }
+        get state() {
+            return pb_1.Message.getFieldWithDefault(this, 3, dependency_5.co.topl.genus.services.TxoState.SPENT) as dependency_5.co.topl.genus.services.TxoState;
+        }
+        set state(value: dependency_5.co.topl.genus.services.TxoState) {
+            pb_1.Message.setField(this, 3, value);
+        }
         static fromObject(data: {
-            addresses?: ReturnType<typeof dependency_1.co.topl.proto.models.SpendingAddress.prototype.toObject>[];
-            confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
-        }): QueryByAddressRequest {
-            const message = new QueryByAddressRequest({});
-            if (data.addresses != null) {
-                message.addresses = data.addresses.map(item => dependency_1.co.topl.proto.models.SpendingAddress.fromObject(item));
+            address?: ReturnType<typeof dependency_1.co.topl.brambl.models.LockAddress.prototype.toObject>;
+            confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
+            state?: dependency_5.co.topl.genus.services.TxoState;
+        }): QueryByLockAddressRequest {
+            const message = new QueryByLockAddressRequest({});
+            if (data.address != null) {
+                message.address = dependency_1.co.topl.brambl.models.LockAddress.fromObject(data.address);
             }
             if (data.confidenceFactor != null) {
-                message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.fromObject(data.confidenceFactor);
+                message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.fromObject(data.confidenceFactor);
+            }
+            if (data.state != null) {
+                message.state = data.state;
             }
             return message;
         }
         toObject() {
             const data: {
-                addresses?: ReturnType<typeof dependency_1.co.topl.proto.models.SpendingAddress.prototype.toObject>[];
-                confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+                address?: ReturnType<typeof dependency_1.co.topl.brambl.models.LockAddress.prototype.toObject>;
+                confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
+                state?: dependency_5.co.topl.genus.services.TxoState;
             } = {};
-            if (this.addresses != null) {
-                data.addresses = this.addresses.map((item: dependency_1.co.topl.proto.models.SpendingAddress) => item.toObject());
+            if (this.address != null) {
+                data.address = this.address.toObject();
             }
             if (this.confidenceFactor != null) {
                 data.confidenceFactor = this.confidenceFactor.toObject();
+            }
+            if (this.state != null) {
+                data.state = this.state;
             }
             return data;
         }
@@ -803,24 +1158,29 @@ export namespace co.topl.proto.genus {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.addresses.length)
-                writer.writeRepeatedMessage(1, this.addresses, (item: dependency_1.co.topl.proto.models.SpendingAddress) => item.serialize(writer));
+            if (this.has_address)
+                writer.writeMessage(1, this.address, () => this.address.serialize(writer));
             if (this.has_confidenceFactor)
                 writer.writeMessage(2, this.confidenceFactor, () => this.confidenceFactor.serialize(writer));
+            if (this.state != dependency_5.co.topl.genus.services.TxoState.SPENT)
+                writer.writeEnum(3, this.state);
             if (!w)
                 return writer.getResultBuffer();
         }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): QueryByAddressRequest {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new QueryByAddressRequest();
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): QueryByLockAddressRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new QueryByLockAddressRequest();
             while (reader.nextField()) {
                 if (reader.isEndGroup())
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.addresses, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_1.co.topl.proto.models.SpendingAddress.deserialize(reader), dependency_1.co.topl.proto.models.SpendingAddress));
+                        reader.readMessage(message.address, () => message.address = dependency_1.co.topl.brambl.models.LockAddress.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.deserialize(reader));
+                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.deserialize(reader));
+                        break;
+                    case 3:
+                        message.state = reader.readEnum();
                         break;
                     default: reader.skipField();
                 }
@@ -830,15 +1190,15 @@ export namespace co.topl.proto.genus {
         serializeBinary(): Uint8Array {
             return this.serialize();
         }
-        static deserializeBinary(bytes: Uint8Array): QueryByAddressRequest {
-            return QueryByAddressRequest.deserialize(bytes);
+        static deserializeBinary(bytes: Uint8Array): QueryByLockAddressRequest {
+            return QueryByLockAddressRequest.deserialize(bytes);
         }
     }
     export class QueryByAssetLabelRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            assetLabel?: dependency_4.co.topl.proto.genus.AssetLabel;
-            confidenceFactor?: dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            assetLabel?: dependency_5.co.topl.genus.services.AssetLabel;
+            confidenceFactor?: dependency_5.co.topl.genus.services.ConfidenceFactor;
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -852,40 +1212,40 @@ export namespace co.topl.proto.genus {
             }
         }
         get assetLabel() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.AssetLabel, 1) as dependency_4.co.topl.proto.genus.AssetLabel;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.AssetLabel, 1) as dependency_5.co.topl.genus.services.AssetLabel;
         }
-        set assetLabel(value: dependency_4.co.topl.proto.genus.AssetLabel) {
+        set assetLabel(value: dependency_5.co.topl.genus.services.AssetLabel) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_assetLabel() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get confidenceFactor() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.ConfidenceFactor, 2) as dependency_4.co.topl.proto.genus.ConfidenceFactor;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.ConfidenceFactor, 2) as dependency_5.co.topl.genus.services.ConfidenceFactor;
         }
-        set confidenceFactor(value: dependency_4.co.topl.proto.genus.ConfidenceFactor) {
+        set confidenceFactor(value: dependency_5.co.topl.genus.services.ConfidenceFactor) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_confidenceFactor() {
             return pb_1.Message.getField(this, 2) != null;
         }
         static fromObject(data: {
-            assetLabel?: ReturnType<typeof dependency_4.co.topl.proto.genus.AssetLabel.prototype.toObject>;
-            confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+            assetLabel?: ReturnType<typeof dependency_5.co.topl.genus.services.AssetLabel.prototype.toObject>;
+            confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
         }): QueryByAssetLabelRequest {
             const message = new QueryByAssetLabelRequest({});
             if (data.assetLabel != null) {
-                message.assetLabel = dependency_4.co.topl.proto.genus.AssetLabel.fromObject(data.assetLabel);
+                message.assetLabel = dependency_5.co.topl.genus.services.AssetLabel.fromObject(data.assetLabel);
             }
             if (data.confidenceFactor != null) {
-                message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.fromObject(data.confidenceFactor);
+                message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.fromObject(data.confidenceFactor);
             }
             return message;
         }
         toObject() {
             const data: {
-                assetLabel?: ReturnType<typeof dependency_4.co.topl.proto.genus.AssetLabel.prototype.toObject>;
-                confidenceFactor?: ReturnType<typeof dependency_4.co.topl.proto.genus.ConfidenceFactor.prototype.toObject>;
+                assetLabel?: ReturnType<typeof dependency_5.co.topl.genus.services.AssetLabel.prototype.toObject>;
+                confidenceFactor?: ReturnType<typeof dependency_5.co.topl.genus.services.ConfidenceFactor.prototype.toObject>;
             } = {};
             if (this.assetLabel != null) {
                 data.assetLabel = this.assetLabel.toObject();
@@ -913,10 +1273,10 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.assetLabel, () => message.assetLabel = dependency_4.co.topl.proto.genus.AssetLabel.deserialize(reader));
+                        reader.readMessage(message.assetLabel, () => message.assetLabel = dependency_5.co.topl.genus.services.AssetLabel.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_4.co.topl.proto.genus.ConfidenceFactor.deserialize(reader));
+                        reader.readMessage(message.confidenceFactor, () => message.confidenceFactor = dependency_5.co.topl.genus.services.ConfidenceFactor.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -930,46 +1290,40 @@ export namespace co.topl.proto.genus {
             return QueryByAssetLabelRequest.deserialize(bytes);
         }
     }
-    export class TxoAddressResponse extends pb_1.Message {
+    export class TxoLockAddressResponse extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            addressesToTxos?: Map<string, dependency_4.co.topl.proto.genus.Txo>;
+            Txos?: dependency_5.co.topl.genus.services.Txo[];
         }) {
             super();
-            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("addressesToTxos" in data && data.addressesToTxos != undefined) {
-                    this.addressesToTxos = data.addressesToTxos;
+                if ("Txos" in data && data.Txos != undefined) {
+                    this.Txos = data.Txos;
                 }
             }
-            if (!this.addressesToTxos)
-                this.addressesToTxos = new Map();
         }
-        get addressesToTxos() {
-            return pb_1.Message.getField(this, 1) as any as Map<string, dependency_4.co.topl.proto.genus.Txo>;
+        get Txos() {
+            return pb_1.Message.getRepeatedWrapperField(this, dependency_5.co.topl.genus.services.Txo, 1) as dependency_5.co.topl.genus.services.Txo[];
         }
-        set addressesToTxos(value: Map<string, dependency_4.co.topl.proto.genus.Txo>) {
-            pb_1.Message.setField(this, 1, value as any);
+        set Txos(value: dependency_5.co.topl.genus.services.Txo[]) {
+            pb_1.Message.setRepeatedWrapperField(this, 1, value);
         }
         static fromObject(data: {
-            addressesToTxos?: {
-                [key: string]: ReturnType<typeof dependency_4.co.topl.proto.genus.Txo.prototype.toObject>;
-            };
-        }): TxoAddressResponse {
-            const message = new TxoAddressResponse({});
-            if (typeof data.addressesToTxos == "object") {
-                message.addressesToTxos = new Map(Object.entries(data.addressesToTxos).map(([key, value]) => [key, dependency_4.co.topl.proto.genus.Txo.fromObject(value)]));
+            Txos?: ReturnType<typeof dependency_5.co.topl.genus.services.Txo.prototype.toObject>[];
+        }): TxoLockAddressResponse {
+            const message = new TxoLockAddressResponse({});
+            if (data.Txos != null) {
+                message.Txos = data.Txos.map(item => dependency_5.co.topl.genus.services.Txo.fromObject(item));
             }
             return message;
         }
         toObject() {
             const data: {
-                addressesToTxos?: {
-                    [key: string]: ReturnType<typeof dependency_4.co.topl.proto.genus.Txo.prototype.toObject>;
-                };
+                Txos?: ReturnType<typeof dependency_5.co.topl.genus.services.Txo.prototype.toObject>[];
             } = {};
-            if (this.addressesToTxos != null) {
-                data.addressesToTxos = (Object.fromEntries)((Array.from)(this.addressesToTxos).map(([key, value]) => [key, value.toObject()]));
+            if (this.Txos != null) {
+                data.Txos = this.Txos.map((item: dependency_5.co.topl.genus.services.Txo) => item.toObject());
             }
             return data;
         }
@@ -977,27 +1331,19 @@ export namespace co.topl.proto.genus {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            for (const [key, value] of this.addressesToTxos) {
-                writer.writeMessage(1, this.addressesToTxos, () => {
-                    writer.writeString(1, key);
-                    writer.writeMessage(2, value, () => value.serialize(writer));
-                });
-            }
+            if (this.Txos.length)
+                writer.writeRepeatedMessage(1, this.Txos, (item: dependency_5.co.topl.genus.services.Txo) => item.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TxoAddressResponse {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TxoAddressResponse();
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TxoLockAddressResponse {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TxoLockAddressResponse();
             while (reader.nextField()) {
                 if (reader.isEndGroup())
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message, () => pb_1.Map.deserializeBinary(message.addressesToTxos as any, reader, reader.readString, () => {
-                            let value;
-                            reader.readMessage(message, () => value = dependency_4.co.topl.proto.genus.Txo.deserialize(reader));
-                            return value;
-                        }));
+                        reader.readMessage(message.Txos, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_5.co.topl.genus.services.Txo.deserialize(reader), dependency_5.co.topl.genus.services.Txo));
                         break;
                     default: reader.skipField();
                 }
@@ -1007,83 +1353,14 @@ export namespace co.topl.proto.genus {
         serializeBinary(): Uint8Array {
             return this.serialize();
         }
-        static deserializeBinary(bytes: Uint8Array): TxoAddressResponse {
-            return TxoAddressResponse.deserialize(bytes);
-        }
-    }
-    export namespace TxoAddressResponse {
-        export class Txos extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                txo?: dependency_4.co.topl.proto.genus.Txo[];
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("txo" in data && data.txo != undefined) {
-                        this.txo = data.txo;
-                    }
-                }
-            }
-            get txo() {
-                return pb_1.Message.getRepeatedWrapperField(this, dependency_4.co.topl.proto.genus.Txo, 1) as dependency_4.co.topl.proto.genus.Txo[];
-            }
-            set txo(value: dependency_4.co.topl.proto.genus.Txo[]) {
-                pb_1.Message.setRepeatedWrapperField(this, 1, value);
-            }
-            static fromObject(data: {
-                txo?: ReturnType<typeof dependency_4.co.topl.proto.genus.Txo.prototype.toObject>[];
-            }): Txos {
-                const message = new Txos({});
-                if (data.txo != null) {
-                    message.txo = data.txo.map(item => dependency_4.co.topl.proto.genus.Txo.fromObject(item));
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    txo?: ReturnType<typeof dependency_4.co.topl.proto.genus.Txo.prototype.toObject>[];
-                } = {};
-                if (this.txo != null) {
-                    data.txo = this.txo.map((item: dependency_4.co.topl.proto.genus.Txo) => item.toObject());
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.txo.length)
-                    writer.writeRepeatedMessage(1, this.txo, (item: dependency_4.co.topl.proto.genus.Txo) => item.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Txos {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Txos();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.txo, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_4.co.topl.proto.genus.Txo.deserialize(reader), dependency_4.co.topl.proto.genus.Txo));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Txos {
-                return Txos.deserialize(bytes);
-            }
+        static deserializeBinary(bytes: Uint8Array): TxoLockAddressResponse {
+            return TxoLockAddressResponse.deserialize(bytes);
         }
     }
     export class CreateOnChainTransactionIndexRequest extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            indexSpec?: dependency_4.co.topl.proto.genus.IndexSpec;
+            indexSpec?: dependency_5.co.topl.genus.services.IndexSpec;
             populate?: boolean;
         }) {
             super();
@@ -1098,9 +1375,9 @@ export namespace co.topl.proto.genus {
             }
         }
         get indexSpec() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.proto.genus.IndexSpec, 1) as dependency_4.co.topl.proto.genus.IndexSpec;
+            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.genus.services.IndexSpec, 1) as dependency_5.co.topl.genus.services.IndexSpec;
         }
-        set indexSpec(value: dependency_4.co.topl.proto.genus.IndexSpec) {
+        set indexSpec(value: dependency_5.co.topl.genus.services.IndexSpec) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_indexSpec() {
@@ -1113,12 +1390,12 @@ export namespace co.topl.proto.genus {
             pb_1.Message.setField(this, 2, value);
         }
         static fromObject(data: {
-            indexSpec?: ReturnType<typeof dependency_4.co.topl.proto.genus.IndexSpec.prototype.toObject>;
+            indexSpec?: ReturnType<typeof dependency_5.co.topl.genus.services.IndexSpec.prototype.toObject>;
             populate?: boolean;
         }): CreateOnChainTransactionIndexRequest {
             const message = new CreateOnChainTransactionIndexRequest({});
             if (data.indexSpec != null) {
-                message.indexSpec = dependency_4.co.topl.proto.genus.IndexSpec.fromObject(data.indexSpec);
+                message.indexSpec = dependency_5.co.topl.genus.services.IndexSpec.fromObject(data.indexSpec);
             }
             if (data.populate != null) {
                 message.populate = data.populate;
@@ -1127,7 +1404,7 @@ export namespace co.topl.proto.genus {
         }
         toObject() {
             const data: {
-                indexSpec?: ReturnType<typeof dependency_4.co.topl.proto.genus.IndexSpec.prototype.toObject>;
+                indexSpec?: ReturnType<typeof dependency_5.co.topl.genus.services.IndexSpec.prototype.toObject>;
                 populate?: boolean;
             } = {};
             if (this.indexSpec != null) {
@@ -1156,7 +1433,7 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.indexSpec, () => message.indexSpec = dependency_4.co.topl.proto.genus.IndexSpec.deserialize(reader));
+                        reader.readMessage(message.indexSpec, () => message.indexSpec = dependency_5.co.topl.genus.services.IndexSpec.deserialize(reader));
                         break;
                     case 2:
                         message.populate = reader.readBool();
@@ -1173,10 +1450,290 @@ export namespace co.topl.proto.genus {
             return CreateOnChainTransactionIndexRequest.deserialize(bytes);
         }
     }
+    export class QueryByGroupIdRequest extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            groupId?: dependency_2.co.topl.brambl.models.GroupId;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("groupId" in data && data.groupId != undefined) {
+                    this.groupId = data.groupId;
+                }
+            }
+        }
+        get groupId() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.GroupId, 1) as dependency_2.co.topl.brambl.models.GroupId;
+        }
+        set groupId(value: dependency_2.co.topl.brambl.models.GroupId) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_groupId() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            groupId?: ReturnType<typeof dependency_2.co.topl.brambl.models.GroupId.prototype.toObject>;
+        }): QueryByGroupIdRequest {
+            const message = new QueryByGroupIdRequest({});
+            if (data.groupId != null) {
+                message.groupId = dependency_2.co.topl.brambl.models.GroupId.fromObject(data.groupId);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                groupId?: ReturnType<typeof dependency_2.co.topl.brambl.models.GroupId.prototype.toObject>;
+            } = {};
+            if (this.groupId != null) {
+                data.groupId = this.groupId.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_groupId)
+                writer.writeMessage(1, this.groupId, () => this.groupId.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): QueryByGroupIdRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new QueryByGroupIdRequest();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.groupId, () => message.groupId = dependency_2.co.topl.brambl.models.GroupId.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): QueryByGroupIdRequest {
+            return QueryByGroupIdRequest.deserialize(bytes);
+        }
+    }
+    export class GroupPolicyResponse extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            groupPolicy?: dependency_3.co.topl.brambl.models.Event.GroupPolicy;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("groupPolicy" in data && data.groupPolicy != undefined) {
+                    this.groupPolicy = data.groupPolicy;
+                }
+            }
+        }
+        get groupPolicy() {
+            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.Event.GroupPolicy, 1) as dependency_3.co.topl.brambl.models.Event.GroupPolicy;
+        }
+        set groupPolicy(value: dependency_3.co.topl.brambl.models.Event.GroupPolicy) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_groupPolicy() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            groupPolicy?: ReturnType<typeof dependency_3.co.topl.brambl.models.Event.GroupPolicy.prototype.toObject>;
+        }): GroupPolicyResponse {
+            const message = new GroupPolicyResponse({});
+            if (data.groupPolicy != null) {
+                message.groupPolicy = dependency_3.co.topl.brambl.models.Event.GroupPolicy.fromObject(data.groupPolicy);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                groupPolicy?: ReturnType<typeof dependency_3.co.topl.brambl.models.Event.GroupPolicy.prototype.toObject>;
+            } = {};
+            if (this.groupPolicy != null) {
+                data.groupPolicy = this.groupPolicy.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_groupPolicy)
+                writer.writeMessage(1, this.groupPolicy, () => this.groupPolicy.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GroupPolicyResponse {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GroupPolicyResponse();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.groupPolicy, () => message.groupPolicy = dependency_3.co.topl.brambl.models.Event.GroupPolicy.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): GroupPolicyResponse {
+            return GroupPolicyResponse.deserialize(bytes);
+        }
+    }
+    export class QueryBySeriesIdRequest extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            seriesId?: dependency_2.co.topl.brambl.models.SeriesId;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("seriesId" in data && data.seriesId != undefined) {
+                    this.seriesId = data.seriesId;
+                }
+            }
+        }
+        get seriesId() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.SeriesId, 1) as dependency_2.co.topl.brambl.models.SeriesId;
+        }
+        set seriesId(value: dependency_2.co.topl.brambl.models.SeriesId) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_seriesId() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            seriesId?: ReturnType<typeof dependency_2.co.topl.brambl.models.SeriesId.prototype.toObject>;
+        }): QueryBySeriesIdRequest {
+            const message = new QueryBySeriesIdRequest({});
+            if (data.seriesId != null) {
+                message.seriesId = dependency_2.co.topl.brambl.models.SeriesId.fromObject(data.seriesId);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                seriesId?: ReturnType<typeof dependency_2.co.topl.brambl.models.SeriesId.prototype.toObject>;
+            } = {};
+            if (this.seriesId != null) {
+                data.seriesId = this.seriesId.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_seriesId)
+                writer.writeMessage(1, this.seriesId, () => this.seriesId.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): QueryBySeriesIdRequest {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new QueryBySeriesIdRequest();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.seriesId, () => message.seriesId = dependency_2.co.topl.brambl.models.SeriesId.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): QueryBySeriesIdRequest {
+            return QueryBySeriesIdRequest.deserialize(bytes);
+        }
+    }
+    export class SeriesPolicyResponse extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            seriesPolicy?: dependency_3.co.topl.brambl.models.Event.SeriesPolicy;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("seriesPolicy" in data && data.seriesPolicy != undefined) {
+                    this.seriesPolicy = data.seriesPolicy;
+                }
+            }
+        }
+        get seriesPolicy() {
+            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.Event.SeriesPolicy, 1) as dependency_3.co.topl.brambl.models.Event.SeriesPolicy;
+        }
+        set seriesPolicy(value: dependency_3.co.topl.brambl.models.Event.SeriesPolicy) {
+            pb_1.Message.setWrapperField(this, 1, value);
+        }
+        get has_seriesPolicy() {
+            return pb_1.Message.getField(this, 1) != null;
+        }
+        static fromObject(data: {
+            seriesPolicy?: ReturnType<typeof dependency_3.co.topl.brambl.models.Event.SeriesPolicy.prototype.toObject>;
+        }): SeriesPolicyResponse {
+            const message = new SeriesPolicyResponse({});
+            if (data.seriesPolicy != null) {
+                message.seriesPolicy = dependency_3.co.topl.brambl.models.Event.SeriesPolicy.fromObject(data.seriesPolicy);
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                seriesPolicy?: ReturnType<typeof dependency_3.co.topl.brambl.models.Event.SeriesPolicy.prototype.toObject>;
+            } = {};
+            if (this.seriesPolicy != null) {
+                data.seriesPolicy = this.seriesPolicy.toObject();
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.has_seriesPolicy)
+                writer.writeMessage(1, this.seriesPolicy, () => this.seriesPolicy.serialize(writer));
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SeriesPolicyResponse {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SeriesPolicyResponse();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        reader.readMessage(message.seriesPolicy, () => message.seriesPolicy = dependency_3.co.topl.brambl.models.Event.SeriesPolicy.deserialize(reader));
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): SeriesPolicyResponse {
+            return SeriesPolicyResponse.deserialize(bytes);
+        }
+    }
     export class IndexSpecs extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            indexSpec?: dependency_4.co.topl.proto.genus.IndexSpec[];
+            indexSpec?: dependency_5.co.topl.genus.services.IndexSpec[];
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
@@ -1187,26 +1744,26 @@ export namespace co.topl.proto.genus {
             }
         }
         get indexSpec() {
-            return pb_1.Message.getRepeatedWrapperField(this, dependency_4.co.topl.proto.genus.IndexSpec, 1) as dependency_4.co.topl.proto.genus.IndexSpec[];
+            return pb_1.Message.getRepeatedWrapperField(this, dependency_5.co.topl.genus.services.IndexSpec, 1) as dependency_5.co.topl.genus.services.IndexSpec[];
         }
-        set indexSpec(value: dependency_4.co.topl.proto.genus.IndexSpec[]) {
+        set indexSpec(value: dependency_5.co.topl.genus.services.IndexSpec[]) {
             pb_1.Message.setRepeatedWrapperField(this, 1, value);
         }
         static fromObject(data: {
-            indexSpec?: ReturnType<typeof dependency_4.co.topl.proto.genus.IndexSpec.prototype.toObject>[];
+            indexSpec?: ReturnType<typeof dependency_5.co.topl.genus.services.IndexSpec.prototype.toObject>[];
         }): IndexSpecs {
             const message = new IndexSpecs({});
             if (data.indexSpec != null) {
-                message.indexSpec = data.indexSpec.map(item => dependency_4.co.topl.proto.genus.IndexSpec.fromObject(item));
+                message.indexSpec = data.indexSpec.map(item => dependency_5.co.topl.genus.services.IndexSpec.fromObject(item));
             }
             return message;
         }
         toObject() {
             const data: {
-                indexSpec?: ReturnType<typeof dependency_4.co.topl.proto.genus.IndexSpec.prototype.toObject>[];
+                indexSpec?: ReturnType<typeof dependency_5.co.topl.genus.services.IndexSpec.prototype.toObject>[];
             } = {};
             if (this.indexSpec != null) {
-                data.indexSpec = this.indexSpec.map((item: dependency_4.co.topl.proto.genus.IndexSpec) => item.toObject());
+                data.indexSpec = this.indexSpec.map((item: dependency_5.co.topl.genus.services.IndexSpec) => item.toObject());
             }
             return data;
         }
@@ -1215,7 +1772,7 @@ export namespace co.topl.proto.genus {
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
             if (this.indexSpec.length)
-                writer.writeRepeatedMessage(1, this.indexSpec, (item: dependency_4.co.topl.proto.genus.IndexSpec) => item.serialize(writer));
+                writer.writeRepeatedMessage(1, this.indexSpec, (item: dependency_5.co.topl.genus.services.IndexSpec) => item.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -1226,7 +1783,7 @@ export namespace co.topl.proto.genus {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.indexSpec, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_4.co.topl.proto.genus.IndexSpec.deserialize(reader), dependency_4.co.topl.proto.genus.IndexSpec));
+                        reader.readMessage(message.indexSpec, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_5.co.topl.genus.services.IndexSpec.deserialize(reader), dependency_5.co.topl.genus.services.IndexSpec));
                         break;
                     default: reader.skipField();
                 }
@@ -1632,7 +2189,7 @@ export namespace co.topl.proto.genus {
     export class IndexMatchValue extends pb_1.Message {
         #one_of_decls: number[][] = [[1, 2, 3]];
         constructor(data?: any[] | ({
-            fieldName?: string;
+            fieldName?: dependency_6.google.protobuf.StringValue;
         } & (({
             stringValue?: string;
             intValue?: never;
@@ -1691,10 +2248,13 @@ export namespace co.topl.proto.genus {
             return pb_1.Message.getField(this, 3) != null;
         }
         get fieldName() {
-            return pb_1.Message.getFieldWithDefault(this, 4, "") as string;
+            return pb_1.Message.getWrapperField(this, dependency_6.google.protobuf.StringValue, 4) as dependency_6.google.protobuf.StringValue;
         }
-        set fieldName(value: string) {
-            pb_1.Message.setField(this, 4, value);
+        set fieldName(value: dependency_6.google.protobuf.StringValue) {
+            pb_1.Message.setWrapperField(this, 4, value);
+        }
+        get has_fieldName() {
+            return pb_1.Message.getField(this, 4) != null;
         }
         get value() {
             const cases: {
@@ -1711,7 +2271,7 @@ export namespace co.topl.proto.genus {
             stringValue?: string;
             intValue?: number;
             uintValue?: number;
-            fieldName?: string;
+            fieldName?: ReturnType<typeof dependency_6.google.protobuf.StringValue.prototype.toObject>;
         }): IndexMatchValue {
             const message = new IndexMatchValue({});
             if (data.stringValue != null) {
@@ -1724,7 +2284,7 @@ export namespace co.topl.proto.genus {
                 message.uintValue = data.uintValue;
             }
             if (data.fieldName != null) {
-                message.fieldName = data.fieldName;
+                message.fieldName = dependency_6.google.protobuf.StringValue.fromObject(data.fieldName);
             }
             return message;
         }
@@ -1733,7 +2293,7 @@ export namespace co.topl.proto.genus {
                 stringValue?: string;
                 intValue?: number;
                 uintValue?: number;
-                fieldName?: string;
+                fieldName?: ReturnType<typeof dependency_6.google.protobuf.StringValue.prototype.toObject>;
             } = {};
             if (this.stringValue != null) {
                 data.stringValue = this.stringValue;
@@ -1745,7 +2305,7 @@ export namespace co.topl.proto.genus {
                 data.uintValue = this.uintValue;
             }
             if (this.fieldName != null) {
-                data.fieldName = this.fieldName;
+                data.fieldName = this.fieldName.toObject();
             }
             return data;
         }
@@ -1759,8 +2319,8 @@ export namespace co.topl.proto.genus {
                 writer.writeInt64(2, this.intValue);
             if (this.has_uintValue)
                 writer.writeUint64(3, this.uintValue);
-            if (this.fieldName.length)
-                writer.writeString(4, this.fieldName);
+            if (this.has_fieldName)
+                writer.writeMessage(4, this.fieldName, () => this.fieldName.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -1780,7 +2340,7 @@ export namespace co.topl.proto.genus {
                         message.uintValue = reader.readUint64();
                         break;
                     case 4:
-                        message.fieldName = reader.readString();
+                        reader.readMessage(message.fieldName, () => message.fieldName = dependency_6.google.protobuf.StringValue.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -1792,6 +2352,322 @@ export namespace co.topl.proto.genus {
         }
         static deserializeBinary(bytes: Uint8Array): IndexMatchValue {
             return IndexMatchValue.deserialize(bytes);
+        }
+    }
+    export class TxoStats extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            spent?: number;
+            unspent?: number;
+            pending?: number;
+            total?: number;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("spent" in data && data.spent != undefined) {
+                    this.spent = data.spent;
+                }
+                if ("unspent" in data && data.unspent != undefined) {
+                    this.unspent = data.unspent;
+                }
+                if ("pending" in data && data.pending != undefined) {
+                    this.pending = data.pending;
+                }
+                if ("total" in data && data.total != undefined) {
+                    this.total = data.total;
+                }
+            }
+        }
+        get spent() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set spent(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get unspent() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set unspent(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        get pending() {
+            return pb_1.Message.getFieldWithDefault(this, 4, 0) as number;
+        }
+        set pending(value: number) {
+            pb_1.Message.setField(this, 4, value);
+        }
+        get total() {
+            return pb_1.Message.getFieldWithDefault(this, 5, 0) as number;
+        }
+        set total(value: number) {
+            pb_1.Message.setField(this, 5, value);
+        }
+        static fromObject(data: {
+            spent?: number;
+            unspent?: number;
+            pending?: number;
+            total?: number;
+        }): TxoStats {
+            const message = new TxoStats({});
+            if (data.spent != null) {
+                message.spent = data.spent;
+            }
+            if (data.unspent != null) {
+                message.unspent = data.unspent;
+            }
+            if (data.pending != null) {
+                message.pending = data.pending;
+            }
+            if (data.total != null) {
+                message.total = data.total;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                spent?: number;
+                unspent?: number;
+                pending?: number;
+                total?: number;
+            } = {};
+            if (this.spent != null) {
+                data.spent = this.spent;
+            }
+            if (this.unspent != null) {
+                data.unspent = this.unspent;
+            }
+            if (this.pending != null) {
+                data.pending = this.pending;
+            }
+            if (this.total != null) {
+                data.total = this.total;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.spent != 0)
+                writer.writeUint64(1, this.spent);
+            if (this.unspent != 0)
+                writer.writeUint64(2, this.unspent);
+            if (this.pending != 0)
+                writer.writeUint64(4, this.pending);
+            if (this.total != 0)
+                writer.writeUint64(5, this.total);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): TxoStats {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new TxoStats();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.spent = reader.readUint64();
+                        break;
+                    case 2:
+                        message.unspent = reader.readUint64();
+                        break;
+                    case 4:
+                        message.pending = reader.readUint64();
+                        break;
+                    case 5:
+                        message.total = reader.readUint64();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): TxoStats {
+            return TxoStats.deserialize(bytes);
+        }
+    }
+    export class BlockchainSizeStats extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            blockHeaderBytes?: number;
+            transactionBytes?: number;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("blockHeaderBytes" in data && data.blockHeaderBytes != undefined) {
+                    this.blockHeaderBytes = data.blockHeaderBytes;
+                }
+                if ("transactionBytes" in data && data.transactionBytes != undefined) {
+                    this.transactionBytes = data.transactionBytes;
+                }
+            }
+        }
+        get blockHeaderBytes() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set blockHeaderBytes(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get transactionBytes() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set transactionBytes(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        static fromObject(data: {
+            blockHeaderBytes?: number;
+            transactionBytes?: number;
+        }): BlockchainSizeStats {
+            const message = new BlockchainSizeStats({});
+            if (data.blockHeaderBytes != null) {
+                message.blockHeaderBytes = data.blockHeaderBytes;
+            }
+            if (data.transactionBytes != null) {
+                message.transactionBytes = data.transactionBytes;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                blockHeaderBytes?: number;
+                transactionBytes?: number;
+            } = {};
+            if (this.blockHeaderBytes != null) {
+                data.blockHeaderBytes = this.blockHeaderBytes;
+            }
+            if (this.transactionBytes != null) {
+                data.transactionBytes = this.transactionBytes;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.blockHeaderBytes != 0)
+                writer.writeUint64(1, this.blockHeaderBytes);
+            if (this.transactionBytes != 0)
+                writer.writeUint64(2, this.transactionBytes);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BlockchainSizeStats {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BlockchainSizeStats();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.blockHeaderBytes = reader.readUint64();
+                        break;
+                    case 2:
+                        message.transactionBytes = reader.readUint64();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): BlockchainSizeStats {
+            return BlockchainSizeStats.deserialize(bytes);
+        }
+    }
+    export class BlockStats extends pb_1.Message {
+        #one_of_decls: number[][] = [];
+        constructor(data?: any[] | {
+            empty?: number;
+            nonEmpty?: number;
+        }) {
+            super();
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
+            if (!Array.isArray(data) && typeof data == "object") {
+                if ("empty" in data && data.empty != undefined) {
+                    this.empty = data.empty;
+                }
+                if ("nonEmpty" in data && data.nonEmpty != undefined) {
+                    this.nonEmpty = data.nonEmpty;
+                }
+            }
+        }
+        get empty() {
+            return pb_1.Message.getFieldWithDefault(this, 1, 0) as number;
+        }
+        set empty(value: number) {
+            pb_1.Message.setField(this, 1, value);
+        }
+        get nonEmpty() {
+            return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
+        }
+        set nonEmpty(value: number) {
+            pb_1.Message.setField(this, 2, value);
+        }
+        static fromObject(data: {
+            empty?: number;
+            nonEmpty?: number;
+        }): BlockStats {
+            const message = new BlockStats({});
+            if (data.empty != null) {
+                message.empty = data.empty;
+            }
+            if (data.nonEmpty != null) {
+                message.nonEmpty = data.nonEmpty;
+            }
+            return message;
+        }
+        toObject() {
+            const data: {
+                empty?: number;
+                nonEmpty?: number;
+            } = {};
+            if (this.empty != null) {
+                data.empty = this.empty;
+            }
+            if (this.nonEmpty != null) {
+                data.nonEmpty = this.nonEmpty;
+            }
+            return data;
+        }
+        serialize(): Uint8Array;
+        serialize(w: pb_1.BinaryWriter): void;
+        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
+            const writer = w || new pb_1.BinaryWriter();
+            if (this.empty != 0)
+                writer.writeUint64(1, this.empty);
+            if (this.nonEmpty != 0)
+                writer.writeUint64(2, this.nonEmpty);
+            if (!w)
+                return writer.getResultBuffer();
+        }
+        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): BlockStats {
+            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new BlockStats();
+            while (reader.nextField()) {
+                if (reader.isEndGroup())
+                    break;
+                switch (reader.getFieldNumber()) {
+                    case 1:
+                        message.empty = reader.readUint64();
+                        break;
+                    case 2:
+                        message.nonEmpty = reader.readUint64();
+                        break;
+                    default: reader.skipField();
+                }
+            }
+            return message;
+        }
+        serializeBinary(): Uint8Array {
+            return this.serialize();
+        }
+        static deserializeBinary(bytes: Uint8Array): BlockStats {
+            return BlockStats.deserialize(bytes);
         }
     }
     interface GrpcUnaryServiceInterface<P, R> {
@@ -1818,10 +2694,10 @@ export namespace co.topl.proto.genus {
         (message: P, metadata: grpc_1.Metadata, options?: grpc_1.CallOptions): Promise<R>;
         (message: P, options?: grpc_1.CallOptions): Promise<R>;
     }
-    export abstract class UnimplementedGenusFullBlockServiceService {
+    export abstract class UnimplementedBlockServiceService {
         static definition = {
             getBlockById: {
-                path: "/co.topl.proto.genus.GenusFullBlockService/getBlockById",
+                path: "/co.topl.genus.services.BlockService/getBlockById",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: GetBlockByIdRequest) => Buffer.from(message.serialize()),
@@ -1830,7 +2706,7 @@ export namespace co.topl.proto.genus {
                 responseDeserialize: (bytes: Buffer) => BlockResponse.deserialize(new Uint8Array(bytes))
             },
             getBlockByHeight: {
-                path: "/co.topl.proto.genus.GenusFullBlockService/getBlockByHeight",
+                path: "/co.topl.genus.services.BlockService/getBlockByHeight",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: GetBlockByHeightRequest) => Buffer.from(message.serialize()),
@@ -1839,7 +2715,7 @@ export namespace co.topl.proto.genus {
                 responseDeserialize: (bytes: Buffer) => BlockResponse.deserialize(new Uint8Array(bytes))
             },
             getBlockByDepth: {
-                path: "/co.topl.proto.genus.GenusFullBlockService/getBlockByDepth",
+                path: "/co.topl.genus.services.BlockService/getBlockByDepth",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: GetBlockByDepthRequest) => Buffer.from(message.serialize()),
@@ -1853,7 +2729,7 @@ export namespace co.topl.proto.genus {
         abstract getBlockByHeight(call: grpc_1.ServerUnaryCall<GetBlockByHeightRequest, BlockResponse>, callback: grpc_1.sendUnaryData<BlockResponse>): void;
         abstract getBlockByDepth(call: grpc_1.ServerUnaryCall<GetBlockByDepthRequest, BlockResponse>, callback: grpc_1.sendUnaryData<BlockResponse>): void;
     }
-    export class GenusFullBlockServiceClient extends grpc_1.makeGenericClientConstructor(UnimplementedGenusFullBlockServiceService.definition, "GenusFullBlockService", {}) {
+    export class BlockServiceClient extends grpc_1.makeGenericClientConstructor(UnimplementedBlockServiceService.definition, "BlockService", {}) {
         constructor(address: string, credentials: grpc_1.ChannelCredentials, options?: Partial<grpc_1.ChannelOptions>) {
             super(address, credentials, options);
         }
@@ -1870,7 +2746,7 @@ export namespace co.topl.proto.genus {
     export abstract class UnimplementedTransactionServiceService {
         static definition = {
             getTransactionById: {
-                path: "/co.topl.proto.genus.TransactionService/getTransactionById",
+                path: "/co.topl.genus.services.TransactionService/getTransactionById",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: GetTransactionByIdRequest) => Buffer.from(message.serialize()),
@@ -1878,35 +2754,35 @@ export namespace co.topl.proto.genus {
                 responseSerialize: (message: TransactionResponse) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => TransactionResponse.deserialize(new Uint8Array(bytes))
             },
-            getTransactionByAddressStream: {
-                path: "/co.topl.proto.genus.TransactionService/getTransactionByAddressStream",
+            getTransactionByLockAddressStream: {
+                path: "/co.topl.genus.services.TransactionService/getTransactionByLockAddressStream",
                 requestStream: false,
                 responseStream: true,
-                requestSerialize: (message: QueryByAddressRequest) => Buffer.from(message.serialize()),
-                requestDeserialize: (bytes: Buffer) => QueryByAddressRequest.deserialize(new Uint8Array(bytes)),
+                requestSerialize: (message: QueryByLockAddressRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => QueryByLockAddressRequest.deserialize(new Uint8Array(bytes)),
                 responseSerialize: (message: TransactionResponse) => Buffer.from(message.serialize()),
                 responseDeserialize: (bytes: Buffer) => TransactionResponse.deserialize(new Uint8Array(bytes))
             },
-            getTxosByAddress: {
-                path: "/co.topl.proto.genus.TransactionService/getTxosByAddress",
+            getTxosByLockAddress: {
+                path: "/co.topl.genus.services.TransactionService/getTxosByLockAddress",
                 requestStream: false,
                 responseStream: false,
-                requestSerialize: (message: QueryByAddressRequest) => Buffer.from(message.serialize()),
-                requestDeserialize: (bytes: Buffer) => QueryByAddressRequest.deserialize(new Uint8Array(bytes)),
-                responseSerialize: (message: TxoAddressResponse) => Buffer.from(message.serialize()),
-                responseDeserialize: (bytes: Buffer) => TxoAddressResponse.deserialize(new Uint8Array(bytes))
+                requestSerialize: (message: QueryByLockAddressRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => QueryByLockAddressRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: TxoLockAddressResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => TxoLockAddressResponse.deserialize(new Uint8Array(bytes))
             },
-            getTxosByAddressStream: {
-                path: "/co.topl.proto.genus.TransactionService/getTxosByAddressStream",
+            getTxosByLockAddressStream: {
+                path: "/co.topl.genus.services.TransactionService/getTxosByLockAddressStream",
                 requestStream: false,
                 responseStream: true,
-                requestSerialize: (message: QueryByAddressRequest) => Buffer.from(message.serialize()),
-                requestDeserialize: (bytes: Buffer) => QueryByAddressRequest.deserialize(new Uint8Array(bytes)),
-                responseSerialize: (message: TxoAddressResponse) => Buffer.from(message.serialize()),
-                responseDeserialize: (bytes: Buffer) => TxoAddressResponse.deserialize(new Uint8Array(bytes))
+                requestSerialize: (message: QueryByLockAddressRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => QueryByLockAddressRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: TxoLockAddressResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => TxoLockAddressResponse.deserialize(new Uint8Array(bytes))
             },
             getTxosByAssetLabel: {
-                path: "/co.topl.proto.genus.TransactionService/getTxosByAssetLabel",
+                path: "/co.topl.genus.services.TransactionService/getTxosByAssetLabel",
                 requestStream: false,
                 responseStream: true,
                 requestSerialize: (message: QueryByAssetLabelRequest) => Buffer.from(message.serialize()),
@@ -1915,7 +2791,7 @@ export namespace co.topl.proto.genus {
                 responseDeserialize: (bytes: Buffer) => TxoResponse.deserialize(new Uint8Array(bytes))
             },
             createOnChainTransactionIndex: {
-                path: "/co.topl.proto.genus.TransactionService/createOnChainTransactionIndex",
+                path: "/co.topl.genus.services.TransactionService/createOnChainTransactionIndex",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: CreateOnChainTransactionIndexRequest) => Buffer.from(message.serialize()),
@@ -1924,7 +2800,7 @@ export namespace co.topl.proto.genus {
                 responseDeserialize: (bytes: Buffer) => CreateOnChainTransactionIndexResponse.deserialize(new Uint8Array(bytes))
             },
             getExistingTransactionIndexes: {
-                path: "/co.topl.proto.genus.TransactionService/getExistingTransactionIndexes",
+                path: "/co.topl.genus.services.TransactionService/getExistingTransactionIndexes",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: GetExistingTransactionIndexesRequest) => Buffer.from(message.serialize()),
@@ -1933,7 +2809,7 @@ export namespace co.topl.proto.genus {
                 responseDeserialize: (bytes: Buffer) => GetExistingTransactionIndexesResponse.deserialize(new Uint8Array(bytes))
             },
             getIndexedTransactions: {
-                path: "/co.topl.proto.genus.TransactionService/getIndexedTransactions",
+                path: "/co.topl.genus.services.TransactionService/getIndexedTransactions",
                 requestStream: false,
                 responseStream: true,
                 requestSerialize: (message: GetIndexedTransactionsRequest) => Buffer.from(message.serialize()),
@@ -1942,7 +2818,7 @@ export namespace co.topl.proto.genus {
                 responseDeserialize: (bytes: Buffer) => TransactionResponse.deserialize(new Uint8Array(bytes))
             },
             dropIndex: {
-                path: "/co.topl.proto.genus.TransactionService/dropIndex",
+                path: "/co.topl.genus.services.TransactionService/dropIndex",
                 requestStream: false,
                 responseStream: false,
                 requestSerialize: (message: DropIndexRequest) => Buffer.from(message.serialize()),
@@ -1953,9 +2829,9 @@ export namespace co.topl.proto.genus {
         };
         [method: string]: grpc_1.UntypedHandleCall;
         abstract getTransactionById(call: grpc_1.ServerUnaryCall<GetTransactionByIdRequest, TransactionResponse>, callback: grpc_1.sendUnaryData<TransactionResponse>): void;
-        abstract getTransactionByAddressStream(call: grpc_1.ServerWritableStream<QueryByAddressRequest, TransactionResponse>): void;
-        abstract getTxosByAddress(call: grpc_1.ServerUnaryCall<QueryByAddressRequest, TxoAddressResponse>, callback: grpc_1.sendUnaryData<TxoAddressResponse>): void;
-        abstract getTxosByAddressStream(call: grpc_1.ServerWritableStream<QueryByAddressRequest, TxoAddressResponse>): void;
+        abstract getTransactionByLockAddressStream(call: grpc_1.ServerWritableStream<QueryByLockAddressRequest, TransactionResponse>): void;
+        abstract getTxosByLockAddress(call: grpc_1.ServerUnaryCall<QueryByLockAddressRequest, TxoLockAddressResponse>, callback: grpc_1.sendUnaryData<TxoLockAddressResponse>): void;
+        abstract getTxosByLockAddressStream(call: grpc_1.ServerWritableStream<QueryByLockAddressRequest, TxoLockAddressResponse>): void;
         abstract getTxosByAssetLabel(call: grpc_1.ServerWritableStream<QueryByAssetLabelRequest, TxoResponse>): void;
         abstract createOnChainTransactionIndex(call: grpc_1.ServerUnaryCall<CreateOnChainTransactionIndexRequest, CreateOnChainTransactionIndexResponse>, callback: grpc_1.sendUnaryData<CreateOnChainTransactionIndexResponse>): void;
         abstract getExistingTransactionIndexes(call: grpc_1.ServerUnaryCall<GetExistingTransactionIndexesRequest, GetExistingTransactionIndexesResponse>, callback: grpc_1.sendUnaryData<GetExistingTransactionIndexesResponse>): void;
@@ -1969,14 +2845,14 @@ export namespace co.topl.proto.genus {
         getTransactionById: GrpcUnaryServiceInterface<GetTransactionByIdRequest, TransactionResponse> = (message: GetTransactionByIdRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<TransactionResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<TransactionResponse>, callback?: grpc_1.requestCallback<TransactionResponse>): grpc_1.ClientUnaryCall => {
             return super.getTransactionById(message, metadata, options, callback);
         };
-        getTransactionByAddressStream: GrpcStreamServiceInterface<QueryByAddressRequest, QueryByAddressRequest> = (message: QueryByAddressRequest, metadata?: grpc_1.Metadata | grpc_1.CallOptions, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<QueryByAddressRequest> => {
-            return super.getTransactionByAddressStream(message, metadata, options);
+        getTransactionByLockAddressStream: GrpcStreamServiceInterface<QueryByLockAddressRequest, QueryByLockAddressRequest> = (message: QueryByLockAddressRequest, metadata?: grpc_1.Metadata | grpc_1.CallOptions, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<QueryByLockAddressRequest> => {
+            return super.getTransactionByLockAddressStream(message, metadata, options);
         };
-        getTxosByAddress: GrpcUnaryServiceInterface<QueryByAddressRequest, TxoAddressResponse> = (message: QueryByAddressRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<TxoAddressResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<TxoAddressResponse>, callback?: grpc_1.requestCallback<TxoAddressResponse>): grpc_1.ClientUnaryCall => {
-            return super.getTxosByAddress(message, metadata, options, callback);
+        getTxosByLockAddress: GrpcUnaryServiceInterface<QueryByLockAddressRequest, TxoLockAddressResponse> = (message: QueryByLockAddressRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<TxoLockAddressResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<TxoLockAddressResponse>, callback?: grpc_1.requestCallback<TxoLockAddressResponse>): grpc_1.ClientUnaryCall => {
+            return super.getTxosByLockAddress(message, metadata, options, callback);
         };
-        getTxosByAddressStream: GrpcStreamServiceInterface<QueryByAddressRequest, QueryByAddressRequest> = (message: QueryByAddressRequest, metadata?: grpc_1.Metadata | grpc_1.CallOptions, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<QueryByAddressRequest> => {
-            return super.getTxosByAddressStream(message, metadata, options);
+        getTxosByLockAddressStream: GrpcStreamServiceInterface<QueryByLockAddressRequest, QueryByLockAddressRequest> = (message: QueryByLockAddressRequest, metadata?: grpc_1.Metadata | grpc_1.CallOptions, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<QueryByLockAddressRequest> => {
+            return super.getTxosByLockAddressStream(message, metadata, options);
         };
         getTxosByAssetLabel: GrpcStreamServiceInterface<QueryByAssetLabelRequest, QueryByAssetLabelRequest> = (message: QueryByAssetLabelRequest, metadata?: grpc_1.Metadata | grpc_1.CallOptions, options?: grpc_1.CallOptions): grpc_1.ClientReadableStream<QueryByAssetLabelRequest> => {
             return super.getTxosByAssetLabel(message, metadata, options);
@@ -1992,6 +2868,91 @@ export namespace co.topl.proto.genus {
         };
         dropIndex: GrpcUnaryServiceInterface<DropIndexRequest, DropIndexResponse> = (message: DropIndexRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<DropIndexResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<DropIndexResponse>, callback?: grpc_1.requestCallback<DropIndexResponse>): grpc_1.ClientUnaryCall => {
             return super.dropIndex(message, metadata, options, callback);
+        };
+    }
+    export abstract class UnimplementedNetworkMetricsServiceService {
+        static definition = {
+            getTxoStats: {
+                path: "/co.topl.genus.services.NetworkMetricsService/getTxoStats",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: GetTxoStatsReq) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => GetTxoStatsReq.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: GetTxoStatsRes) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => GetTxoStatsRes.deserialize(new Uint8Array(bytes))
+            },
+            getBlockchainSizeStats: {
+                path: "/co.topl.genus.services.NetworkMetricsService/getBlockchainSizeStats",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: BlockchainSizeStatsReq) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => BlockchainSizeStatsReq.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: BlockchainSizeStatsRes) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => BlockchainSizeStatsRes.deserialize(new Uint8Array(bytes))
+            },
+            getBlockStats: {
+                path: "/co.topl.genus.services.NetworkMetricsService/getBlockStats",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: BlockStatsReq) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => BlockStatsReq.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: BlockStatsRes) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => BlockStatsRes.deserialize(new Uint8Array(bytes))
+            }
+        };
+        [method: string]: grpc_1.UntypedHandleCall;
+        abstract getTxoStats(call: grpc_1.ServerUnaryCall<GetTxoStatsReq, GetTxoStatsRes>, callback: grpc_1.sendUnaryData<GetTxoStatsRes>): void;
+        abstract getBlockchainSizeStats(call: grpc_1.ServerUnaryCall<BlockchainSizeStatsReq, BlockchainSizeStatsRes>, callback: grpc_1.sendUnaryData<BlockchainSizeStatsRes>): void;
+        abstract getBlockStats(call: grpc_1.ServerUnaryCall<BlockStatsReq, BlockStatsRes>, callback: grpc_1.sendUnaryData<BlockStatsRes>): void;
+    }
+    export class NetworkMetricsServiceClient extends grpc_1.makeGenericClientConstructor(UnimplementedNetworkMetricsServiceService.definition, "NetworkMetricsService", {}) {
+        constructor(address: string, credentials: grpc_1.ChannelCredentials, options?: Partial<grpc_1.ChannelOptions>) {
+            super(address, credentials, options);
+        }
+        getTxoStats: GrpcUnaryServiceInterface<GetTxoStatsReq, GetTxoStatsRes> = (message: GetTxoStatsReq, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<GetTxoStatsRes>, options?: grpc_1.CallOptions | grpc_1.requestCallback<GetTxoStatsRes>, callback?: grpc_1.requestCallback<GetTxoStatsRes>): grpc_1.ClientUnaryCall => {
+            return super.getTxoStats(message, metadata, options, callback);
+        };
+        getBlockchainSizeStats: GrpcUnaryServiceInterface<BlockchainSizeStatsReq, BlockchainSizeStatsRes> = (message: BlockchainSizeStatsReq, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<BlockchainSizeStatsRes>, options?: grpc_1.CallOptions | grpc_1.requestCallback<BlockchainSizeStatsRes>, callback?: grpc_1.requestCallback<BlockchainSizeStatsRes>): grpc_1.ClientUnaryCall => {
+            return super.getBlockchainSizeStats(message, metadata, options, callback);
+        };
+        getBlockStats: GrpcUnaryServiceInterface<BlockStatsReq, BlockStatsRes> = (message: BlockStatsReq, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<BlockStatsRes>, options?: grpc_1.CallOptions | grpc_1.requestCallback<BlockStatsRes>, callback?: grpc_1.requestCallback<BlockStatsRes>): grpc_1.ClientUnaryCall => {
+            return super.getBlockStats(message, metadata, options, callback);
+        };
+    }
+    export abstract class UnimplementedTokenServiceService {
+        static definition = {
+            getGroupPolicy: {
+                path: "/co.topl.genus.services.TokenService/getGroupPolicy",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: QueryByGroupIdRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => QueryByGroupIdRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: GroupPolicyResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => GroupPolicyResponse.deserialize(new Uint8Array(bytes))
+            },
+            getSeriesPolicy: {
+                path: "/co.topl.genus.services.TokenService/getSeriesPolicy",
+                requestStream: false,
+                responseStream: false,
+                requestSerialize: (message: QueryBySeriesIdRequest) => Buffer.from(message.serialize()),
+                requestDeserialize: (bytes: Buffer) => QueryBySeriesIdRequest.deserialize(new Uint8Array(bytes)),
+                responseSerialize: (message: SeriesPolicyResponse) => Buffer.from(message.serialize()),
+                responseDeserialize: (bytes: Buffer) => SeriesPolicyResponse.deserialize(new Uint8Array(bytes))
+            }
+        };
+        [method: string]: grpc_1.UntypedHandleCall;
+        abstract getGroupPolicy(call: grpc_1.ServerUnaryCall<QueryByGroupIdRequest, GroupPolicyResponse>, callback: grpc_1.sendUnaryData<GroupPolicyResponse>): void;
+        abstract getSeriesPolicy(call: grpc_1.ServerUnaryCall<QueryBySeriesIdRequest, SeriesPolicyResponse>, callback: grpc_1.sendUnaryData<SeriesPolicyResponse>): void;
+    }
+    export class TokenServiceClient extends grpc_1.makeGenericClientConstructor(UnimplementedTokenServiceService.definition, "TokenService", {}) {
+        constructor(address: string, credentials: grpc_1.ChannelCredentials, options?: Partial<grpc_1.ChannelOptions>) {
+            super(address, credentials, options);
+        }
+        getGroupPolicy: GrpcUnaryServiceInterface<QueryByGroupIdRequest, GroupPolicyResponse> = (message: QueryByGroupIdRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<GroupPolicyResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<GroupPolicyResponse>, callback?: grpc_1.requestCallback<GroupPolicyResponse>): grpc_1.ClientUnaryCall => {
+            return super.getGroupPolicy(message, metadata, options, callback);
+        };
+        getSeriesPolicy: GrpcUnaryServiceInterface<QueryBySeriesIdRequest, SeriesPolicyResponse> = (message: QueryBySeriesIdRequest, metadata: grpc_1.Metadata | grpc_1.CallOptions | grpc_1.requestCallback<SeriesPolicyResponse>, options?: grpc_1.CallOptions | grpc_1.requestCallback<SeriesPolicyResponse>, callback?: grpc_1.requestCallback<SeriesPolicyResponse>): grpc_1.ClientUnaryCall => {
+            return super.getSeriesPolicy(message, metadata, options, callback);
         };
     }
 }

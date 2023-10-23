@@ -4,29 +4,23 @@
  * source: brambl/models/transaction/spent_transaction_output.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../../validate/validate";
-import * as dependency_2 from "./../../../scalapb/scalapb";
-import * as dependency_3 from "./../../../scalapb/validate";
-import * as dependency_4 from "./../known_identifier";
-import * as dependency_5 from "./../datum";
-import * as dependency_6 from "./../box/value";
-import * as dependency_7 from "./../box/lock";
-import * as dependency_8 from "./attestation";
+import * as dependency_2 from "./../address";
+import * as dependency_3 from "./../box/value";
+import * as dependency_4 from "./../box/attestation";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models.transaction {
     export class SpentTransactionOutput extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            KnownIdentifier?: dependency_4.co.topl.brambl.models.KnownIdentifier;
-            attestation?: dependency_8.co.topl.brambl.models.transaction.Attestation;
-            value?: dependency_6.co.topl.brambl.models.box.Value;
-            datum?: dependency_5.co.topl.brambl.models.Datum.SpentOutput;
-            opts?: dependency_7.co.topl.brambl.models.box.Lock[];
+            address?: dependency_2.co.topl.brambl.models.TransactionOutputAddress;
+            attestation?: dependency_4.co.topl.brambl.models.box.Attestation;
+            value?: dependency_3.co.topl.brambl.models.box.Value;
         }) {
             super();
-            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [5], this.#one_of_decls);
+            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
             if (!Array.isArray(data) && typeof data == "object") {
-                if ("KnownIdentifier" in data && data.KnownIdentifier != undefined) {
-                    this.KnownIdentifier = data.KnownIdentifier;
+                if ("address" in data && data.address != undefined) {
+                    this.address = data.address;
                 }
                 if ("attestation" in data && data.attestation != undefined) {
                     this.attestation = data.attestation;
@@ -34,91 +28,60 @@ export namespace co.topl.brambl.models.transaction {
                 if ("value" in data && data.value != undefined) {
                     this.value = data.value;
                 }
-                if ("datum" in data && data.datum != undefined) {
-                    this.datum = data.datum;
-                }
-                if ("opts" in data && data.opts != undefined) {
-                    this.opts = data.opts;
-                }
             }
         }
-        get KnownIdentifier() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.KnownIdentifier, 1) as dependency_4.co.topl.brambl.models.KnownIdentifier;
+        get address() {
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.TransactionOutputAddress, 1) as dependency_2.co.topl.brambl.models.TransactionOutputAddress;
         }
-        set KnownIdentifier(value: dependency_4.co.topl.brambl.models.KnownIdentifier) {
+        set address(value: dependency_2.co.topl.brambl.models.TransactionOutputAddress) {
             pb_1.Message.setWrapperField(this, 1, value);
         }
-        get has_KnownIdentifier() {
+        get has_address() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get attestation() {
-            return pb_1.Message.getWrapperField(this, dependency_8.co.topl.brambl.models.transaction.Attestation, 2) as dependency_8.co.topl.brambl.models.transaction.Attestation;
+            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.box.Attestation, 2) as dependency_4.co.topl.brambl.models.box.Attestation;
         }
-        set attestation(value: dependency_8.co.topl.brambl.models.transaction.Attestation) {
+        set attestation(value: dependency_4.co.topl.brambl.models.box.Attestation) {
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_attestation() {
             return pb_1.Message.getField(this, 2) != null;
         }
         get value() {
-            return pb_1.Message.getWrapperField(this, dependency_6.co.topl.brambl.models.box.Value, 3) as dependency_6.co.topl.brambl.models.box.Value;
+            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.box.Value, 3) as dependency_3.co.topl.brambl.models.box.Value;
         }
-        set value(value: dependency_6.co.topl.brambl.models.box.Value) {
+        set value(value: dependency_3.co.topl.brambl.models.box.Value) {
             pb_1.Message.setWrapperField(this, 3, value);
         }
         get has_value() {
             return pb_1.Message.getField(this, 3) != null;
         }
-        get datum() {
-            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.Datum.SpentOutput, 4) as dependency_5.co.topl.brambl.models.Datum.SpentOutput;
-        }
-        set datum(value: dependency_5.co.topl.brambl.models.Datum.SpentOutput) {
-            pb_1.Message.setWrapperField(this, 4, value);
-        }
-        get has_datum() {
-            return pb_1.Message.getField(this, 4) != null;
-        }
-        get opts() {
-            return pb_1.Message.getRepeatedWrapperField(this, dependency_7.co.topl.brambl.models.box.Lock, 5) as dependency_7.co.topl.brambl.models.box.Lock[];
-        }
-        set opts(value: dependency_7.co.topl.brambl.models.box.Lock[]) {
-            pb_1.Message.setRepeatedWrapperField(this, 5, value);
-        }
         static fromObject(data: {
-            KnownIdentifier?: ReturnType<typeof dependency_4.co.topl.brambl.models.KnownIdentifier.prototype.toObject>;
-            attestation?: ReturnType<typeof dependency_8.co.topl.brambl.models.transaction.Attestation.prototype.toObject>;
-            value?: ReturnType<typeof dependency_6.co.topl.brambl.models.box.Value.prototype.toObject>;
-            datum?: ReturnType<typeof dependency_5.co.topl.brambl.models.Datum.SpentOutput.prototype.toObject>;
-            opts?: ReturnType<typeof dependency_7.co.topl.brambl.models.box.Lock.prototype.toObject>[];
+            address?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionOutputAddress.prototype.toObject>;
+            attestation?: ReturnType<typeof dependency_4.co.topl.brambl.models.box.Attestation.prototype.toObject>;
+            value?: ReturnType<typeof dependency_3.co.topl.brambl.models.box.Value.prototype.toObject>;
         }): SpentTransactionOutput {
             const message = new SpentTransactionOutput({});
-            if (data.KnownIdentifier != null) {
-                message.KnownIdentifier = dependency_4.co.topl.brambl.models.KnownIdentifier.fromObject(data.KnownIdentifier);
+            if (data.address != null) {
+                message.address = dependency_2.co.topl.brambl.models.TransactionOutputAddress.fromObject(data.address);
             }
             if (data.attestation != null) {
-                message.attestation = dependency_8.co.topl.brambl.models.transaction.Attestation.fromObject(data.attestation);
+                message.attestation = dependency_4.co.topl.brambl.models.box.Attestation.fromObject(data.attestation);
             }
             if (data.value != null) {
-                message.value = dependency_6.co.topl.brambl.models.box.Value.fromObject(data.value);
-            }
-            if (data.datum != null) {
-                message.datum = dependency_5.co.topl.brambl.models.Datum.SpentOutput.fromObject(data.datum);
-            }
-            if (data.opts != null) {
-                message.opts = data.opts.map(item => dependency_7.co.topl.brambl.models.box.Lock.fromObject(item));
+                message.value = dependency_3.co.topl.brambl.models.box.Value.fromObject(data.value);
             }
             return message;
         }
         toObject() {
             const data: {
-                KnownIdentifier?: ReturnType<typeof dependency_4.co.topl.brambl.models.KnownIdentifier.prototype.toObject>;
-                attestation?: ReturnType<typeof dependency_8.co.topl.brambl.models.transaction.Attestation.prototype.toObject>;
-                value?: ReturnType<typeof dependency_6.co.topl.brambl.models.box.Value.prototype.toObject>;
-                datum?: ReturnType<typeof dependency_5.co.topl.brambl.models.Datum.SpentOutput.prototype.toObject>;
-                opts?: ReturnType<typeof dependency_7.co.topl.brambl.models.box.Lock.prototype.toObject>[];
+                address?: ReturnType<typeof dependency_2.co.topl.brambl.models.TransactionOutputAddress.prototype.toObject>;
+                attestation?: ReturnType<typeof dependency_4.co.topl.brambl.models.box.Attestation.prototype.toObject>;
+                value?: ReturnType<typeof dependency_3.co.topl.brambl.models.box.Value.prototype.toObject>;
             } = {};
-            if (this.KnownIdentifier != null) {
-                data.KnownIdentifier = this.KnownIdentifier.toObject();
+            if (this.address != null) {
+                data.address = this.address.toObject();
             }
             if (this.attestation != null) {
                 data.attestation = this.attestation.toObject();
@@ -126,28 +89,18 @@ export namespace co.topl.brambl.models.transaction {
             if (this.value != null) {
                 data.value = this.value.toObject();
             }
-            if (this.datum != null) {
-                data.datum = this.datum.toObject();
-            }
-            if (this.opts != null) {
-                data.opts = this.opts.map((item: dependency_7.co.topl.brambl.models.box.Lock) => item.toObject());
-            }
             return data;
         }
         serialize(): Uint8Array;
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.has_KnownIdentifier)
-                writer.writeMessage(1, this.KnownIdentifier, () => this.KnownIdentifier.serialize(writer));
+            if (this.has_address)
+                writer.writeMessage(1, this.address, () => this.address.serialize(writer));
             if (this.has_attestation)
                 writer.writeMessage(2, this.attestation, () => this.attestation.serialize(writer));
             if (this.has_value)
                 writer.writeMessage(3, this.value, () => this.value.serialize(writer));
-            if (this.has_datum)
-                writer.writeMessage(4, this.datum, () => this.datum.serialize(writer));
-            if (this.opts.length)
-                writer.writeRepeatedMessage(5, this.opts, (item: dependency_7.co.topl.brambl.models.box.Lock) => item.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -158,19 +111,13 @@ export namespace co.topl.brambl.models.transaction {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.KnownIdentifier, () => message.KnownIdentifier = dependency_4.co.topl.brambl.models.KnownIdentifier.deserialize(reader));
+                        reader.readMessage(message.address, () => message.address = dependency_2.co.topl.brambl.models.TransactionOutputAddress.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.attestation, () => message.attestation = dependency_8.co.topl.brambl.models.transaction.Attestation.deserialize(reader));
+                        reader.readMessage(message.attestation, () => message.attestation = dependency_4.co.topl.brambl.models.box.Attestation.deserialize(reader));
                         break;
                     case 3:
-                        reader.readMessage(message.value, () => message.value = dependency_6.co.topl.brambl.models.box.Value.deserialize(reader));
-                        break;
-                    case 4:
-                        reader.readMessage(message.datum, () => message.datum = dependency_5.co.topl.brambl.models.Datum.SpentOutput.deserialize(reader));
-                        break;
-                    case 5:
-                        reader.readMessage(message.opts, () => pb_1.Message.addToRepeatedWrapperField(message, 5, dependency_7.co.topl.brambl.models.box.Lock.deserialize(reader), dependency_7.co.topl.brambl.models.box.Lock));
+                        reader.readMessage(message.value, () => message.value = dependency_3.co.topl.brambl.models.box.Value.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }

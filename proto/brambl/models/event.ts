@@ -4,87 +4,73 @@
  * source: brambl/models/event.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../validate/validate";
-import * as dependency_2 from "./../../scalapb/scalapb";
-import * as dependency_3 from "./../../scalapb/validate";
-import * as dependency_4 from "./../../quivr/models/shared";
-import * as dependency_5 from "./known_identifier";
-import * as dependency_6 from "./transaction/schedule";
+import * as dependency_2 from "./../../quivr/models/shared";
+import * as dependency_3 from "./transaction/schedule";
+import * as dependency_4 from "./address";
+import * as dependency_5 from "./box/asset";
+import * as dependency_6 from "./identifier";
+import * as dependency_7 from "./../../google/protobuf/wrappers";
+import * as dependency_8 from "./../../google/protobuf/struct";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models {
     export class Event extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2, 3, 4, 5, 6, 7, 8]];
+        #one_of_decls: number[][] = [[1, 2, 3, 4, 5, 6, 7]];
         constructor(data?: any[] | ({} & (({
             eon?: Event.Eon;
             era?: never;
             epoch?: never;
             header?: never;
             ioTransaction?: never;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: never;
-            root?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: Event.Era;
             epoch?: never;
             header?: never;
             ioTransaction?: never;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: never;
-            root?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: Event.Epoch;
             header?: never;
             ioTransaction?: never;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: never;
-            root?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: Event.Header;
             ioTransaction?: never;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: never;
-            root?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: never;
             ioTransaction?: Event.IoTransaction;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: never;
-            root?: never;
+            groupPolicy?: never;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: never;
             ioTransaction?: never;
-            spentTransactionOutput?: Event.SpentTransactionOutput;
-            unspentTransactionOutput?: never;
-            root?: never;
+            groupPolicy?: Event.GroupPolicy;
+            seriesPolicy?: never;
         } | {
             eon?: never;
             era?: never;
             epoch?: never;
             header?: never;
             ioTransaction?: never;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: Event.UnspentTransactionOutput;
-            root?: never;
-        } | {
-            eon?: never;
-            era?: never;
-            epoch?: never;
-            header?: never;
-            ioTransaction?: never;
-            spentTransactionOutput?: never;
-            unspentTransactionOutput?: never;
-            root?: Event.Root;
+            groupPolicy?: never;
+            seriesPolicy?: Event.SeriesPolicy;
         })))) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -104,14 +90,11 @@ export namespace co.topl.brambl.models {
                 if ("ioTransaction" in data && data.ioTransaction != undefined) {
                     this.ioTransaction = data.ioTransaction;
                 }
-                if ("spentTransactionOutput" in data && data.spentTransactionOutput != undefined) {
-                    this.spentTransactionOutput = data.spentTransactionOutput;
+                if ("groupPolicy" in data && data.groupPolicy != undefined) {
+                    this.groupPolicy = data.groupPolicy;
                 }
-                if ("unspentTransactionOutput" in data && data.unspentTransactionOutput != undefined) {
-                    this.unspentTransactionOutput = data.unspentTransactionOutput;
-                }
-                if ("root" in data && data.root != undefined) {
-                    this.root = data.root;
+                if ("seriesPolicy" in data && data.seriesPolicy != undefined) {
+                    this.seriesPolicy = data.seriesPolicy;
                 }
             }
         }
@@ -160,36 +143,27 @@ export namespace co.topl.brambl.models {
         get has_ioTransaction() {
             return pb_1.Message.getField(this, 5) != null;
         }
-        get spentTransactionOutput() {
-            return pb_1.Message.getWrapperField(this, Event.SpentTransactionOutput, 6) as Event.SpentTransactionOutput;
+        get groupPolicy() {
+            return pb_1.Message.getWrapperField(this, Event.GroupPolicy, 6) as Event.GroupPolicy;
         }
-        set spentTransactionOutput(value: Event.SpentTransactionOutput) {
+        set groupPolicy(value: Event.GroupPolicy) {
             pb_1.Message.setOneofWrapperField(this, 6, this.#one_of_decls[0], value);
         }
-        get has_spentTransactionOutput() {
+        get has_groupPolicy() {
             return pb_1.Message.getField(this, 6) != null;
         }
-        get unspentTransactionOutput() {
-            return pb_1.Message.getWrapperField(this, Event.UnspentTransactionOutput, 7) as Event.UnspentTransactionOutput;
+        get seriesPolicy() {
+            return pb_1.Message.getWrapperField(this, Event.SeriesPolicy, 7) as Event.SeriesPolicy;
         }
-        set unspentTransactionOutput(value: Event.UnspentTransactionOutput) {
+        set seriesPolicy(value: Event.SeriesPolicy) {
             pb_1.Message.setOneofWrapperField(this, 7, this.#one_of_decls[0], value);
         }
-        get has_unspentTransactionOutput() {
+        get has_seriesPolicy() {
             return pb_1.Message.getField(this, 7) != null;
-        }
-        get root() {
-            return pb_1.Message.getWrapperField(this, Event.Root, 8) as Event.Root;
-        }
-        set root(value: Event.Root) {
-            pb_1.Message.setOneofWrapperField(this, 8, this.#one_of_decls[0], value);
-        }
-        get has_root() {
-            return pb_1.Message.getField(this, 8) != null;
         }
         get value() {
             const cases: {
-                [index: number]: "none" | "eon" | "era" | "epoch" | "header" | "ioTransaction" | "spentTransactionOutput" | "unspentTransactionOutput" | "root";
+                [index: number]: "none" | "eon" | "era" | "epoch" | "header" | "ioTransaction" | "groupPolicy" | "seriesPolicy";
             } = {
                 0: "none",
                 1: "eon",
@@ -197,11 +171,10 @@ export namespace co.topl.brambl.models {
                 3: "epoch",
                 4: "header",
                 5: "ioTransaction",
-                6: "spentTransactionOutput",
-                7: "unspentTransactionOutput",
-                8: "root"
+                6: "groupPolicy",
+                7: "seriesPolicy"
             };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5, 6, 7, 8])];
+            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5, 6, 7])];
         }
         static fromObject(data: {
             eon?: ReturnType<typeof Event.Eon.prototype.toObject>;
@@ -209,9 +182,8 @@ export namespace co.topl.brambl.models {
             epoch?: ReturnType<typeof Event.Epoch.prototype.toObject>;
             header?: ReturnType<typeof Event.Header.prototype.toObject>;
             ioTransaction?: ReturnType<typeof Event.IoTransaction.prototype.toObject>;
-            spentTransactionOutput?: ReturnType<typeof Event.SpentTransactionOutput.prototype.toObject>;
-            unspentTransactionOutput?: ReturnType<typeof Event.UnspentTransactionOutput.prototype.toObject>;
-            root?: ReturnType<typeof Event.Root.prototype.toObject>;
+            groupPolicy?: ReturnType<typeof Event.GroupPolicy.prototype.toObject>;
+            seriesPolicy?: ReturnType<typeof Event.SeriesPolicy.prototype.toObject>;
         }): Event {
             const message = new Event({});
             if (data.eon != null) {
@@ -229,14 +201,11 @@ export namespace co.topl.brambl.models {
             if (data.ioTransaction != null) {
                 message.ioTransaction = Event.IoTransaction.fromObject(data.ioTransaction);
             }
-            if (data.spentTransactionOutput != null) {
-                message.spentTransactionOutput = Event.SpentTransactionOutput.fromObject(data.spentTransactionOutput);
+            if (data.groupPolicy != null) {
+                message.groupPolicy = Event.GroupPolicy.fromObject(data.groupPolicy);
             }
-            if (data.unspentTransactionOutput != null) {
-                message.unspentTransactionOutput = Event.UnspentTransactionOutput.fromObject(data.unspentTransactionOutput);
-            }
-            if (data.root != null) {
-                message.root = Event.Root.fromObject(data.root);
+            if (data.seriesPolicy != null) {
+                message.seriesPolicy = Event.SeriesPolicy.fromObject(data.seriesPolicy);
             }
             return message;
         }
@@ -247,9 +216,8 @@ export namespace co.topl.brambl.models {
                 epoch?: ReturnType<typeof Event.Epoch.prototype.toObject>;
                 header?: ReturnType<typeof Event.Header.prototype.toObject>;
                 ioTransaction?: ReturnType<typeof Event.IoTransaction.prototype.toObject>;
-                spentTransactionOutput?: ReturnType<typeof Event.SpentTransactionOutput.prototype.toObject>;
-                unspentTransactionOutput?: ReturnType<typeof Event.UnspentTransactionOutput.prototype.toObject>;
-                root?: ReturnType<typeof Event.Root.prototype.toObject>;
+                groupPolicy?: ReturnType<typeof Event.GroupPolicy.prototype.toObject>;
+                seriesPolicy?: ReturnType<typeof Event.SeriesPolicy.prototype.toObject>;
             } = {};
             if (this.eon != null) {
                 data.eon = this.eon.toObject();
@@ -266,14 +234,11 @@ export namespace co.topl.brambl.models {
             if (this.ioTransaction != null) {
                 data.ioTransaction = this.ioTransaction.toObject();
             }
-            if (this.spentTransactionOutput != null) {
-                data.spentTransactionOutput = this.spentTransactionOutput.toObject();
+            if (this.groupPolicy != null) {
+                data.groupPolicy = this.groupPolicy.toObject();
             }
-            if (this.unspentTransactionOutput != null) {
-                data.unspentTransactionOutput = this.unspentTransactionOutput.toObject();
-            }
-            if (this.root != null) {
-                data.root = this.root.toObject();
+            if (this.seriesPolicy != null) {
+                data.seriesPolicy = this.seriesPolicy.toObject();
             }
             return data;
         }
@@ -291,12 +256,10 @@ export namespace co.topl.brambl.models {
                 writer.writeMessage(4, this.header, () => this.header.serialize(writer));
             if (this.has_ioTransaction)
                 writer.writeMessage(5, this.ioTransaction, () => this.ioTransaction.serialize(writer));
-            if (this.has_spentTransactionOutput)
-                writer.writeMessage(6, this.spentTransactionOutput, () => this.spentTransactionOutput.serialize(writer));
-            if (this.has_unspentTransactionOutput)
-                writer.writeMessage(7, this.unspentTransactionOutput, () => this.unspentTransactionOutput.serialize(writer));
-            if (this.has_root)
-                writer.writeMessage(8, this.root, () => this.root.serialize(writer));
+            if (this.has_groupPolicy)
+                writer.writeMessage(6, this.groupPolicy, () => this.groupPolicy.serialize(writer));
+            if (this.has_seriesPolicy)
+                writer.writeMessage(7, this.seriesPolicy, () => this.seriesPolicy.serialize(writer));
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -322,13 +285,10 @@ export namespace co.topl.brambl.models {
                         reader.readMessage(message.ioTransaction, () => message.ioTransaction = Event.IoTransaction.deserialize(reader));
                         break;
                     case 6:
-                        reader.readMessage(message.spentTransactionOutput, () => message.spentTransactionOutput = Event.SpentTransactionOutput.deserialize(reader));
+                        reader.readMessage(message.groupPolicy, () => message.groupPolicy = Event.GroupPolicy.deserialize(reader));
                         break;
                     case 7:
-                        reader.readMessage(message.unspentTransactionOutput, () => message.unspentTransactionOutput = Event.UnspentTransactionOutput.deserialize(reader));
-                        break;
-                    case 8:
-                        reader.readMessage(message.root, () => message.root = Event.Root.deserialize(reader));
+                        reader.readMessage(message.seriesPolicy, () => message.seriesPolicy = Event.SeriesPolicy.deserialize(reader));
                         break;
                     default: reader.skipField();
                 }
@@ -683,22 +643,14 @@ export namespace co.topl.brambl.models {
         export class IoTransaction extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                schedule?: dependency_6.co.topl.brambl.models.transaction.Schedule;
-                references32?: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32[];
-                references64?: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64[];
-                metadata?: dependency_4.quivr.models.SmallData;
+                schedule?: dependency_3.co.topl.brambl.models.transaction.Schedule;
+                metadata?: dependency_2.quivr.models.SmallData;
             }) {
                 super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [2, 3], this.#one_of_decls);
+                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
                 if (!Array.isArray(data) && typeof data == "object") {
                     if ("schedule" in data && data.schedule != undefined) {
                         this.schedule = data.schedule;
-                    }
-                    if ("references32" in data && data.references32 != undefined) {
-                        this.references32 = data.references32;
-                    }
-                    if ("references64" in data && data.references64 != undefined) {
-                        this.references64 = data.references64;
                     }
                     if ("metadata" in data && data.metadata != undefined) {
                         this.metadata = data.metadata;
@@ -706,71 +658,43 @@ export namespace co.topl.brambl.models {
                 }
             }
             get schedule() {
-                return pb_1.Message.getWrapperField(this, dependency_6.co.topl.brambl.models.transaction.Schedule, 1) as dependency_6.co.topl.brambl.models.transaction.Schedule;
+                return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.transaction.Schedule, 1) as dependency_3.co.topl.brambl.models.transaction.Schedule;
             }
-            set schedule(value: dependency_6.co.topl.brambl.models.transaction.Schedule) {
+            set schedule(value: dependency_3.co.topl.brambl.models.transaction.Schedule) {
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_schedule() {
                 return pb_1.Message.getField(this, 1) != null;
             }
-            get references32() {
-                return pb_1.Message.getRepeatedWrapperField(this, dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32, 2) as dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32[];
-            }
-            set references32(value: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32[]) {
-                pb_1.Message.setRepeatedWrapperField(this, 2, value);
-            }
-            get references64() {
-                return pb_1.Message.getRepeatedWrapperField(this, dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64, 3) as dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64[];
-            }
-            set references64(value: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64[]) {
-                pb_1.Message.setRepeatedWrapperField(this, 3, value);
-            }
             get metadata() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.SmallData, 4) as dependency_4.quivr.models.SmallData;
+                return pb_1.Message.getWrapperField(this, dependency_2.quivr.models.SmallData, 4) as dependency_2.quivr.models.SmallData;
             }
-            set metadata(value: dependency_4.quivr.models.SmallData) {
+            set metadata(value: dependency_2.quivr.models.SmallData) {
                 pb_1.Message.setWrapperField(this, 4, value);
             }
             get has_metadata() {
                 return pb_1.Message.getField(this, 4) != null;
             }
             static fromObject(data: {
-                schedule?: ReturnType<typeof dependency_6.co.topl.brambl.models.transaction.Schedule.prototype.toObject>;
-                references32?: ReturnType<typeof dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32.prototype.toObject>[];
-                references64?: ReturnType<typeof dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64.prototype.toObject>[];
-                metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
+                schedule?: ReturnType<typeof dependency_3.co.topl.brambl.models.transaction.Schedule.prototype.toObject>;
+                metadata?: ReturnType<typeof dependency_2.quivr.models.SmallData.prototype.toObject>;
             }): IoTransaction {
                 const message = new IoTransaction({});
                 if (data.schedule != null) {
-                    message.schedule = dependency_6.co.topl.brambl.models.transaction.Schedule.fromObject(data.schedule);
-                }
-                if (data.references32 != null) {
-                    message.references32 = data.references32.map(item => dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32.fromObject(item));
-                }
-                if (data.references64 != null) {
-                    message.references64 = data.references64.map(item => dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64.fromObject(item));
+                    message.schedule = dependency_3.co.topl.brambl.models.transaction.Schedule.fromObject(data.schedule);
                 }
                 if (data.metadata != null) {
-                    message.metadata = dependency_4.quivr.models.SmallData.fromObject(data.metadata);
+                    message.metadata = dependency_2.quivr.models.SmallData.fromObject(data.metadata);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    schedule?: ReturnType<typeof dependency_6.co.topl.brambl.models.transaction.Schedule.prototype.toObject>;
-                    references32?: ReturnType<typeof dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32.prototype.toObject>[];
-                    references64?: ReturnType<typeof dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64.prototype.toObject>[];
-                    metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
+                    schedule?: ReturnType<typeof dependency_3.co.topl.brambl.models.transaction.Schedule.prototype.toObject>;
+                    metadata?: ReturnType<typeof dependency_2.quivr.models.SmallData.prototype.toObject>;
                 } = {};
                 if (this.schedule != null) {
                     data.schedule = this.schedule.toObject();
-                }
-                if (this.references32 != null) {
-                    data.references32 = this.references32.map((item: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32) => item.toObject());
-                }
-                if (this.references64 != null) {
-                    data.references64 = this.references64.map((item: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64) => item.toObject());
                 }
                 if (this.metadata != null) {
                     data.metadata = this.metadata.toObject();
@@ -783,10 +707,6 @@ export namespace co.topl.brambl.models {
                 const writer = w || new pb_1.BinaryWriter();
                 if (this.has_schedule)
                     writer.writeMessage(1, this.schedule, () => this.schedule.serialize(writer));
-                if (this.references32.length)
-                    writer.writeRepeatedMessage(2, this.references32, (item: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32) => item.serialize(writer));
-                if (this.references64.length)
-                    writer.writeRepeatedMessage(3, this.references64, (item: dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64) => item.serialize(writer));
                 if (this.has_metadata)
                     writer.writeMessage(4, this.metadata, () => this.metadata.serialize(writer));
                 if (!w)
@@ -799,16 +719,10 @@ export namespace co.topl.brambl.models {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.schedule, () => message.schedule = dependency_6.co.topl.brambl.models.transaction.Schedule.deserialize(reader));
-                            break;
-                        case 2:
-                            reader.readMessage(message.references32, () => pb_1.Message.addToRepeatedWrapperField(message, 2, dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32.deserialize(reader), dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput32));
-                            break;
-                        case 3:
-                            reader.readMessage(message.references64, () => pb_1.Message.addToRepeatedWrapperField(message, 3, dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64.deserialize(reader), dependency_5.co.topl.brambl.models.KnownIdentifier.TransactionOutput64));
+                            reader.readMessage(message.schedule, () => message.schedule = dependency_3.co.topl.brambl.models.transaction.Schedule.deserialize(reader));
                             break;
                         case 4:
-                            reader.readMessage(message.metadata, () => message.metadata = dependency_4.quivr.models.SmallData.deserialize(reader));
+                            reader.readMessage(message.metadata, () => message.metadata = dependency_2.quivr.models.SmallData.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -822,43 +736,82 @@ export namespace co.topl.brambl.models {
                 return IoTransaction.deserialize(bytes);
             }
         }
-        export class SpentTransactionOutput extends pb_1.Message {
+        export class GroupPolicy extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                metadata?: dependency_4.quivr.models.SmallData;
+                label?: string;
+                registrationUtxo?: dependency_4.co.topl.brambl.models.TransactionOutputAddress;
+                fixedSeries?: dependency_6.co.topl.brambl.models.SeriesId;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
                 if (!Array.isArray(data) && typeof data == "object") {
-                    if ("metadata" in data && data.metadata != undefined) {
-                        this.metadata = data.metadata;
+                    if ("label" in data && data.label != undefined) {
+                        this.label = data.label;
+                    }
+                    if ("registrationUtxo" in data && data.registrationUtxo != undefined) {
+                        this.registrationUtxo = data.registrationUtxo;
+                    }
+                    if ("fixedSeries" in data && data.fixedSeries != undefined) {
+                        this.fixedSeries = data.fixedSeries;
                     }
                 }
             }
-            get metadata() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.SmallData, 1) as dependency_4.quivr.models.SmallData;
+            get label() {
+                return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
             }
-            set metadata(value: dependency_4.quivr.models.SmallData) {
-                pb_1.Message.setWrapperField(this, 1, value);
+            set label(value: string) {
+                pb_1.Message.setField(this, 1, value);
             }
-            get has_metadata() {
-                return pb_1.Message.getField(this, 1) != null;
+            get registrationUtxo() {
+                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.TransactionOutputAddress, 2) as dependency_4.co.topl.brambl.models.TransactionOutputAddress;
+            }
+            set registrationUtxo(value: dependency_4.co.topl.brambl.models.TransactionOutputAddress) {
+                pb_1.Message.setWrapperField(this, 2, value);
+            }
+            get has_registrationUtxo() {
+                return pb_1.Message.getField(this, 2) != null;
+            }
+            get fixedSeries() {
+                return pb_1.Message.getWrapperField(this, dependency_6.co.topl.brambl.models.SeriesId, 3) as dependency_6.co.topl.brambl.models.SeriesId;
+            }
+            set fixedSeries(value: dependency_6.co.topl.brambl.models.SeriesId) {
+                pb_1.Message.setWrapperField(this, 3, value);
+            }
+            get has_fixedSeries() {
+                return pb_1.Message.getField(this, 3) != null;
             }
             static fromObject(data: {
-                metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
-            }): SpentTransactionOutput {
-                const message = new SpentTransactionOutput({});
-                if (data.metadata != null) {
-                    message.metadata = dependency_4.quivr.models.SmallData.fromObject(data.metadata);
+                label?: string;
+                registrationUtxo?: ReturnType<typeof dependency_4.co.topl.brambl.models.TransactionOutputAddress.prototype.toObject>;
+                fixedSeries?: ReturnType<typeof dependency_6.co.topl.brambl.models.SeriesId.prototype.toObject>;
+            }): GroupPolicy {
+                const message = new GroupPolicy({});
+                if (data.label != null) {
+                    message.label = data.label;
+                }
+                if (data.registrationUtxo != null) {
+                    message.registrationUtxo = dependency_4.co.topl.brambl.models.TransactionOutputAddress.fromObject(data.registrationUtxo);
+                }
+                if (data.fixedSeries != null) {
+                    message.fixedSeries = dependency_6.co.topl.brambl.models.SeriesId.fromObject(data.fixedSeries);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
+                    label?: string;
+                    registrationUtxo?: ReturnType<typeof dependency_4.co.topl.brambl.models.TransactionOutputAddress.prototype.toObject>;
+                    fixedSeries?: ReturnType<typeof dependency_6.co.topl.brambl.models.SeriesId.prototype.toObject>;
                 } = {};
-                if (this.metadata != null) {
-                    data.metadata = this.metadata.toObject();
+                if (this.label != null) {
+                    data.label = this.label;
+                }
+                if (this.registrationUtxo != null) {
+                    data.registrationUtxo = this.registrationUtxo.toObject();
+                }
+                if (this.fixedSeries != null) {
+                    data.fixedSeries = this.fixedSeries.toObject();
                 }
                 return data;
             }
@@ -866,19 +819,29 @@ export namespace co.topl.brambl.models {
             serialize(w: pb_1.BinaryWriter): void;
             serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
                 const writer = w || new pb_1.BinaryWriter();
-                if (this.has_metadata)
-                    writer.writeMessage(1, this.metadata, () => this.metadata.serialize(writer));
+                if (this.label.length)
+                    writer.writeString(1, this.label);
+                if (this.has_registrationUtxo)
+                    writer.writeMessage(2, this.registrationUtxo, () => this.registrationUtxo.serialize(writer));
+                if (this.has_fixedSeries)
+                    writer.writeMessage(3, this.fixedSeries, () => this.fixedSeries.serialize(writer));
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SpentTransactionOutput {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SpentTransactionOutput();
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): GroupPolicy {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new GroupPolicy();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.metadata, () => message.metadata = dependency_4.quivr.models.SmallData.deserialize(reader));
+                            message.label = reader.readString();
+                            break;
+                        case 2:
+                            reader.readMessage(message.registrationUtxo, () => message.registrationUtxo = dependency_4.co.topl.brambl.models.TransactionOutputAddress.deserialize(reader));
+                            break;
+                        case 3:
+                            reader.readMessage(message.fixedSeries, () => message.fixedSeries = dependency_6.co.topl.brambl.models.SeriesId.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -888,47 +851,164 @@ export namespace co.topl.brambl.models {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): SpentTransactionOutput {
-                return SpentTransactionOutput.deserialize(bytes);
+            static deserializeBinary(bytes: Uint8Array): GroupPolicy {
+                return GroupPolicy.deserialize(bytes);
             }
         }
-        export class UnspentTransactionOutput extends pb_1.Message {
+        export class SeriesPolicy extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                metadata?: dependency_4.quivr.models.SmallData;
+                label?: string;
+                tokenSupply?: dependency_7.google.protobuf.UInt32Value;
+                registrationUtxo?: dependency_4.co.topl.brambl.models.TransactionOutputAddress;
+                quantityDescriptor?: dependency_5.co.topl.brambl.models.box.QuantityDescriptorType;
+                fungibility?: dependency_5.co.topl.brambl.models.box.FungibilityType;
+                ephemeralMetadataScheme?: dependency_8.google.protobuf.Struct;
+                permanentMetadataScheme?: dependency_8.google.protobuf.Struct;
             }) {
                 super();
                 pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
                 if (!Array.isArray(data) && typeof data == "object") {
-                    if ("metadata" in data && data.metadata != undefined) {
-                        this.metadata = data.metadata;
+                    if ("label" in data && data.label != undefined) {
+                        this.label = data.label;
+                    }
+                    if ("tokenSupply" in data && data.tokenSupply != undefined) {
+                        this.tokenSupply = data.tokenSupply;
+                    }
+                    if ("registrationUtxo" in data && data.registrationUtxo != undefined) {
+                        this.registrationUtxo = data.registrationUtxo;
+                    }
+                    if ("quantityDescriptor" in data && data.quantityDescriptor != undefined) {
+                        this.quantityDescriptor = data.quantityDescriptor;
+                    }
+                    if ("fungibility" in data && data.fungibility != undefined) {
+                        this.fungibility = data.fungibility;
+                    }
+                    if ("ephemeralMetadataScheme" in data && data.ephemeralMetadataScheme != undefined) {
+                        this.ephemeralMetadataScheme = data.ephemeralMetadataScheme;
+                    }
+                    if ("permanentMetadataScheme" in data && data.permanentMetadataScheme != undefined) {
+                        this.permanentMetadataScheme = data.permanentMetadataScheme;
                     }
                 }
             }
-            get metadata() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.SmallData, 1) as dependency_4.quivr.models.SmallData;
+            get label() {
+                return pb_1.Message.getFieldWithDefault(this, 1, "") as string;
             }
-            set metadata(value: dependency_4.quivr.models.SmallData) {
-                pb_1.Message.setWrapperField(this, 1, value);
+            set label(value: string) {
+                pb_1.Message.setField(this, 1, value);
             }
-            get has_metadata() {
-                return pb_1.Message.getField(this, 1) != null;
+            get tokenSupply() {
+                return pb_1.Message.getWrapperField(this, dependency_7.google.protobuf.UInt32Value, 2) as dependency_7.google.protobuf.UInt32Value;
+            }
+            set tokenSupply(value: dependency_7.google.protobuf.UInt32Value) {
+                pb_1.Message.setWrapperField(this, 2, value);
+            }
+            get has_tokenSupply() {
+                return pb_1.Message.getField(this, 2) != null;
+            }
+            get registrationUtxo() {
+                return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.TransactionOutputAddress, 3) as dependency_4.co.topl.brambl.models.TransactionOutputAddress;
+            }
+            set registrationUtxo(value: dependency_4.co.topl.brambl.models.TransactionOutputAddress) {
+                pb_1.Message.setWrapperField(this, 3, value);
+            }
+            get has_registrationUtxo() {
+                return pb_1.Message.getField(this, 3) != null;
+            }
+            get quantityDescriptor() {
+                return pb_1.Message.getFieldWithDefault(this, 4, dependency_5.co.topl.brambl.models.box.QuantityDescriptorType.LIQUID) as dependency_5.co.topl.brambl.models.box.QuantityDescriptorType;
+            }
+            set quantityDescriptor(value: dependency_5.co.topl.brambl.models.box.QuantityDescriptorType) {
+                pb_1.Message.setField(this, 4, value);
+            }
+            get fungibility() {
+                return pb_1.Message.getFieldWithDefault(this, 5, dependency_5.co.topl.brambl.models.box.FungibilityType.GROUP_AND_SERIES) as dependency_5.co.topl.brambl.models.box.FungibilityType;
+            }
+            set fungibility(value: dependency_5.co.topl.brambl.models.box.FungibilityType) {
+                pb_1.Message.setField(this, 5, value);
+            }
+            get ephemeralMetadataScheme() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.Struct, 6) as dependency_8.google.protobuf.Struct;
+            }
+            set ephemeralMetadataScheme(value: dependency_8.google.protobuf.Struct) {
+                pb_1.Message.setWrapperField(this, 6, value);
+            }
+            get has_ephemeralMetadataScheme() {
+                return pb_1.Message.getField(this, 6) != null;
+            }
+            get permanentMetadataScheme() {
+                return pb_1.Message.getWrapperField(this, dependency_8.google.protobuf.Struct, 7) as dependency_8.google.protobuf.Struct;
+            }
+            set permanentMetadataScheme(value: dependency_8.google.protobuf.Struct) {
+                pb_1.Message.setWrapperField(this, 7, value);
+            }
+            get has_permanentMetadataScheme() {
+                return pb_1.Message.getField(this, 7) != null;
             }
             static fromObject(data: {
-                metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
-            }): UnspentTransactionOutput {
-                const message = new UnspentTransactionOutput({});
-                if (data.metadata != null) {
-                    message.metadata = dependency_4.quivr.models.SmallData.fromObject(data.metadata);
+                label?: string;
+                tokenSupply?: ReturnType<typeof dependency_7.google.protobuf.UInt32Value.prototype.toObject>;
+                registrationUtxo?: ReturnType<typeof dependency_4.co.topl.brambl.models.TransactionOutputAddress.prototype.toObject>;
+                quantityDescriptor?: dependency_5.co.topl.brambl.models.box.QuantityDescriptorType;
+                fungibility?: dependency_5.co.topl.brambl.models.box.FungibilityType;
+                ephemeralMetadataScheme?: ReturnType<typeof dependency_8.google.protobuf.Struct.prototype.toObject>;
+                permanentMetadataScheme?: ReturnType<typeof dependency_8.google.protobuf.Struct.prototype.toObject>;
+            }): SeriesPolicy {
+                const message = new SeriesPolicy({});
+                if (data.label != null) {
+                    message.label = data.label;
+                }
+                if (data.tokenSupply != null) {
+                    message.tokenSupply = dependency_7.google.protobuf.UInt32Value.fromObject(data.tokenSupply);
+                }
+                if (data.registrationUtxo != null) {
+                    message.registrationUtxo = dependency_4.co.topl.brambl.models.TransactionOutputAddress.fromObject(data.registrationUtxo);
+                }
+                if (data.quantityDescriptor != null) {
+                    message.quantityDescriptor = data.quantityDescriptor;
+                }
+                if (data.fungibility != null) {
+                    message.fungibility = data.fungibility;
+                }
+                if (data.ephemeralMetadataScheme != null) {
+                    message.ephemeralMetadataScheme = dependency_8.google.protobuf.Struct.fromObject(data.ephemeralMetadataScheme);
+                }
+                if (data.permanentMetadataScheme != null) {
+                    message.permanentMetadataScheme = dependency_8.google.protobuf.Struct.fromObject(data.permanentMetadataScheme);
                 }
                 return message;
             }
             toObject() {
                 const data: {
-                    metadata?: ReturnType<typeof dependency_4.quivr.models.SmallData.prototype.toObject>;
+                    label?: string;
+                    tokenSupply?: ReturnType<typeof dependency_7.google.protobuf.UInt32Value.prototype.toObject>;
+                    registrationUtxo?: ReturnType<typeof dependency_4.co.topl.brambl.models.TransactionOutputAddress.prototype.toObject>;
+                    quantityDescriptor?: dependency_5.co.topl.brambl.models.box.QuantityDescriptorType;
+                    fungibility?: dependency_5.co.topl.brambl.models.box.FungibilityType;
+                    ephemeralMetadataScheme?: ReturnType<typeof dependency_8.google.protobuf.Struct.prototype.toObject>;
+                    permanentMetadataScheme?: ReturnType<typeof dependency_8.google.protobuf.Struct.prototype.toObject>;
                 } = {};
-                if (this.metadata != null) {
-                    data.metadata = this.metadata.toObject();
+                if (this.label != null) {
+                    data.label = this.label;
+                }
+                if (this.tokenSupply != null) {
+                    data.tokenSupply = this.tokenSupply.toObject();
+                }
+                if (this.registrationUtxo != null) {
+                    data.registrationUtxo = this.registrationUtxo.toObject();
+                }
+                if (this.quantityDescriptor != null) {
+                    data.quantityDescriptor = this.quantityDescriptor;
+                }
+                if (this.fungibility != null) {
+                    data.fungibility = this.fungibility;
+                }
+                if (this.ephemeralMetadataScheme != null) {
+                    data.ephemeralMetadataScheme = this.ephemeralMetadataScheme.toObject();
+                }
+                if (this.permanentMetadataScheme != null) {
+                    data.permanentMetadataScheme = this.permanentMetadataScheme.toObject();
                 }
                 return data;
             }
@@ -936,19 +1016,49 @@ export namespace co.topl.brambl.models {
             serialize(w: pb_1.BinaryWriter): void;
             serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
                 const writer = w || new pb_1.BinaryWriter();
-                if (this.has_metadata)
-                    writer.writeMessage(1, this.metadata, () => this.metadata.serialize(writer));
+                if (this.label.length)
+                    writer.writeString(1, this.label);
+                if (this.has_tokenSupply)
+                    writer.writeMessage(2, this.tokenSupply, () => this.tokenSupply.serialize(writer));
+                if (this.has_registrationUtxo)
+                    writer.writeMessage(3, this.registrationUtxo, () => this.registrationUtxo.serialize(writer));
+                if (this.quantityDescriptor != dependency_5.co.topl.brambl.models.box.QuantityDescriptorType.LIQUID)
+                    writer.writeEnum(4, this.quantityDescriptor);
+                if (this.fungibility != dependency_5.co.topl.brambl.models.box.FungibilityType.GROUP_AND_SERIES)
+                    writer.writeEnum(5, this.fungibility);
+                if (this.has_ephemeralMetadataScheme)
+                    writer.writeMessage(6, this.ephemeralMetadataScheme, () => this.ephemeralMetadataScheme.serialize(writer));
+                if (this.has_permanentMetadataScheme)
+                    writer.writeMessage(7, this.permanentMetadataScheme, () => this.permanentMetadataScheme.serialize(writer));
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): UnspentTransactionOutput {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new UnspentTransactionOutput();
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SeriesPolicy {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SeriesPolicy();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.metadata, () => message.metadata = dependency_4.quivr.models.SmallData.deserialize(reader));
+                            message.label = reader.readString();
+                            break;
+                        case 2:
+                            reader.readMessage(message.tokenSupply, () => message.tokenSupply = dependency_7.google.protobuf.UInt32Value.deserialize(reader));
+                            break;
+                        case 3:
+                            reader.readMessage(message.registrationUtxo, () => message.registrationUtxo = dependency_4.co.topl.brambl.models.TransactionOutputAddress.deserialize(reader));
+                            break;
+                        case 4:
+                            message.quantityDescriptor = reader.readEnum();
+                            break;
+                        case 5:
+                            message.fungibility = reader.readEnum();
+                            break;
+                        case 6:
+                            reader.readMessage(message.ephemeralMetadataScheme, () => message.ephemeralMetadataScheme = dependency_8.google.protobuf.Struct.deserialize(reader));
+                            break;
+                        case 7:
+                            reader.readMessage(message.permanentMetadataScheme, () => message.permanentMetadataScheme = dependency_8.google.protobuf.Struct.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }
@@ -958,78 +1068,8 @@ export namespace co.topl.brambl.models {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): UnspentTransactionOutput {
-                return UnspentTransactionOutput.deserialize(bytes);
-            }
-        }
-        export class Root extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                value?: dependency_4.quivr.models.Root;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("value" in data && data.value != undefined) {
-                        this.value = data.value;
-                    }
-                }
-            }
-            get value() {
-                return pb_1.Message.getWrapperField(this, dependency_4.quivr.models.Root, 1) as dependency_4.quivr.models.Root;
-            }
-            set value(value: dependency_4.quivr.models.Root) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_value() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            static fromObject(data: {
-                value?: ReturnType<typeof dependency_4.quivr.models.Root.prototype.toObject>;
-            }): Root {
-                const message = new Root({});
-                if (data.value != null) {
-                    message.value = dependency_4.quivr.models.Root.fromObject(data.value);
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    value?: ReturnType<typeof dependency_4.quivr.models.Root.prototype.toObject>;
-                } = {};
-                if (this.value != null) {
-                    data.value = this.value.toObject();
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_value)
-                    writer.writeMessage(1, this.value, () => this.value.serialize(writer));
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Root {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Root();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.value, () => message.value = dependency_4.quivr.models.Root.deserialize(reader));
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Root {
-                return Root.deserialize(bytes);
+            static deserializeBinary(bytes: Uint8Array): SeriesPolicy {
+                return SeriesPolicy.deserialize(bytes);
             }
         }
     }

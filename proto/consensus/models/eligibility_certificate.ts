@@ -4,15 +4,13 @@
  * source: consensus/models/eligibility_certificate.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../validate/validate";
-import * as dependency_2 from "./../../scalapb/scalapb";
-import * as dependency_3 from "./../../scalapb/validate";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.consensus.models {
     export class EligibilityCertificate extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            vrfSig?: SignatureVrfEd25519;
-            vrfVK?: VerificationKeyVrfEd25519;
+            vrfSig?: Uint8Array;
+            vrfVK?: Uint8Array;
             thresholdEvidence?: Uint8Array;
             eta?: Uint8Array;
         }) {
@@ -34,22 +32,16 @@ export namespace co.topl.consensus.models {
             }
         }
         get vrfSig() {
-            return pb_1.Message.getWrapperField(this, SignatureVrfEd25519, 1) as SignatureVrfEd25519;
+            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
         }
-        set vrfSig(value: SignatureVrfEd25519) {
-            pb_1.Message.setWrapperField(this, 1, value);
-        }
-        get has_vrfSig() {
-            return pb_1.Message.getField(this, 1) != null;
+        set vrfSig(value: Uint8Array) {
+            pb_1.Message.setField(this, 1, value);
         }
         get vrfVK() {
-            return pb_1.Message.getWrapperField(this, VerificationKeyVrfEd25519, 2) as VerificationKeyVrfEd25519;
+            return pb_1.Message.getFieldWithDefault(this, 2, new Uint8Array(0)) as Uint8Array;
         }
-        set vrfVK(value: VerificationKeyVrfEd25519) {
-            pb_1.Message.setWrapperField(this, 2, value);
-        }
-        get has_vrfVK() {
-            return pb_1.Message.getField(this, 2) != null;
+        set vrfVK(value: Uint8Array) {
+            pb_1.Message.setField(this, 2, value);
         }
         get thresholdEvidence() {
             return pb_1.Message.getFieldWithDefault(this, 3, new Uint8Array(0)) as Uint8Array;
@@ -64,17 +56,17 @@ export namespace co.topl.consensus.models {
             pb_1.Message.setField(this, 4, value);
         }
         static fromObject(data: {
-            vrfSig?: ReturnType<typeof SignatureVrfEd25519.prototype.toObject>;
-            vrfVK?: ReturnType<typeof VerificationKeyVrfEd25519.prototype.toObject>;
+            vrfSig?: Uint8Array;
+            vrfVK?: Uint8Array;
             thresholdEvidence?: Uint8Array;
             eta?: Uint8Array;
         }): EligibilityCertificate {
             const message = new EligibilityCertificate({});
             if (data.vrfSig != null) {
-                message.vrfSig = SignatureVrfEd25519.fromObject(data.vrfSig);
+                message.vrfSig = data.vrfSig;
             }
             if (data.vrfVK != null) {
-                message.vrfVK = VerificationKeyVrfEd25519.fromObject(data.vrfVK);
+                message.vrfVK = data.vrfVK;
             }
             if (data.thresholdEvidence != null) {
                 message.thresholdEvidence = data.thresholdEvidence;
@@ -86,16 +78,16 @@ export namespace co.topl.consensus.models {
         }
         toObject() {
             const data: {
-                vrfSig?: ReturnType<typeof SignatureVrfEd25519.prototype.toObject>;
-                vrfVK?: ReturnType<typeof VerificationKeyVrfEd25519.prototype.toObject>;
+                vrfSig?: Uint8Array;
+                vrfVK?: Uint8Array;
                 thresholdEvidence?: Uint8Array;
                 eta?: Uint8Array;
             } = {};
             if (this.vrfSig != null) {
-                data.vrfSig = this.vrfSig.toObject();
+                data.vrfSig = this.vrfSig;
             }
             if (this.vrfVK != null) {
-                data.vrfVK = this.vrfVK.toObject();
+                data.vrfVK = this.vrfVK;
             }
             if (this.thresholdEvidence != null) {
                 data.thresholdEvidence = this.thresholdEvidence;
@@ -109,10 +101,10 @@ export namespace co.topl.consensus.models {
         serialize(w: pb_1.BinaryWriter): void;
         serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
             const writer = w || new pb_1.BinaryWriter();
-            if (this.has_vrfSig)
-                writer.writeMessage(1, this.vrfSig, () => this.vrfSig.serialize(writer));
-            if (this.has_vrfVK)
-                writer.writeMessage(2, this.vrfVK, () => this.vrfVK.serialize(writer));
+            if (this.vrfSig.length)
+                writer.writeBytes(1, this.vrfSig);
+            if (this.vrfVK.length)
+                writer.writeBytes(2, this.vrfVK);
             if (this.thresholdEvidence.length)
                 writer.writeBytes(3, this.thresholdEvidence);
             if (this.eta.length)
@@ -127,10 +119,10 @@ export namespace co.topl.consensus.models {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.vrfSig, () => message.vrfSig = SignatureVrfEd25519.deserialize(reader));
+                        message.vrfSig = reader.readBytes();
                         break;
                     case 2:
-                        reader.readMessage(message.vrfVK, () => message.vrfVK = VerificationKeyVrfEd25519.deserialize(reader));
+                        message.vrfVK = reader.readBytes();
                         break;
                     case 3:
                         message.thresholdEvidence = reader.readBytes();
@@ -148,140 +140,6 @@ export namespace co.topl.consensus.models {
         }
         static deserializeBinary(bytes: Uint8Array): EligibilityCertificate {
             return EligibilityCertificate.deserialize(bytes);
-        }
-    }
-    export class VerificationKeyVrfEd25519 extends pb_1.Message {
-        #one_of_decls: number[][] = [];
-        constructor(data?: any[] | {
-            value?: Uint8Array;
-        }) {
-            super();
-            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-            if (!Array.isArray(data) && typeof data == "object") {
-                if ("value" in data && data.value != undefined) {
-                    this.value = data.value;
-                }
-            }
-        }
-        get value() {
-            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
-        }
-        set value(value: Uint8Array) {
-            pb_1.Message.setField(this, 1, value);
-        }
-        static fromObject(data: {
-            value?: Uint8Array;
-        }): VerificationKeyVrfEd25519 {
-            const message = new VerificationKeyVrfEd25519({});
-            if (data.value != null) {
-                message.value = data.value;
-            }
-            return message;
-        }
-        toObject() {
-            const data: {
-                value?: Uint8Array;
-            } = {};
-            if (this.value != null) {
-                data.value = this.value;
-            }
-            return data;
-        }
-        serialize(): Uint8Array;
-        serialize(w: pb_1.BinaryWriter): void;
-        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-            const writer = w || new pb_1.BinaryWriter();
-            if (this.value.length)
-                writer.writeBytes(1, this.value);
-            if (!w)
-                return writer.getResultBuffer();
-        }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): VerificationKeyVrfEd25519 {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new VerificationKeyVrfEd25519();
-            while (reader.nextField()) {
-                if (reader.isEndGroup())
-                    break;
-                switch (reader.getFieldNumber()) {
-                    case 1:
-                        message.value = reader.readBytes();
-                        break;
-                    default: reader.skipField();
-                }
-            }
-            return message;
-        }
-        serializeBinary(): Uint8Array {
-            return this.serialize();
-        }
-        static deserializeBinary(bytes: Uint8Array): VerificationKeyVrfEd25519 {
-            return VerificationKeyVrfEd25519.deserialize(bytes);
-        }
-    }
-    export class SignatureVrfEd25519 extends pb_1.Message {
-        #one_of_decls: number[][] = [];
-        constructor(data?: any[] | {
-            value?: Uint8Array;
-        }) {
-            super();
-            pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-            if (!Array.isArray(data) && typeof data == "object") {
-                if ("value" in data && data.value != undefined) {
-                    this.value = data.value;
-                }
-            }
-        }
-        get value() {
-            return pb_1.Message.getFieldWithDefault(this, 1, new Uint8Array(0)) as Uint8Array;
-        }
-        set value(value: Uint8Array) {
-            pb_1.Message.setField(this, 1, value);
-        }
-        static fromObject(data: {
-            value?: Uint8Array;
-        }): SignatureVrfEd25519 {
-            const message = new SignatureVrfEd25519({});
-            if (data.value != null) {
-                message.value = data.value;
-            }
-            return message;
-        }
-        toObject() {
-            const data: {
-                value?: Uint8Array;
-            } = {};
-            if (this.value != null) {
-                data.value = this.value;
-            }
-            return data;
-        }
-        serialize(): Uint8Array;
-        serialize(w: pb_1.BinaryWriter): void;
-        serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-            const writer = w || new pb_1.BinaryWriter();
-            if (this.value.length)
-                writer.writeBytes(1, this.value);
-            if (!w)
-                return writer.getResultBuffer();
-        }
-        static deserialize(bytes: Uint8Array | pb_1.BinaryReader): SignatureVrfEd25519 {
-            const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new SignatureVrfEd25519();
-            while (reader.nextField()) {
-                if (reader.isEndGroup())
-                    break;
-                switch (reader.getFieldNumber()) {
-                    case 1:
-                        message.value = reader.readBytes();
-                        break;
-                    default: reader.skipField();
-                }
-            }
-            return message;
-        }
-        serializeBinary(): Uint8Array {
-            return this.serialize();
-        }
-        static deserializeBinary(bytes: Uint8Array): SignatureVrfEd25519 {
-            return SignatureVrfEd25519.deserialize(bytes);
         }
     }
 }
