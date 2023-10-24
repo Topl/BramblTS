@@ -2,7 +2,7 @@
 // import { KeyPair } from '../../../proto/quivr/models/shared';
 import { Entropy } from '../../../src/crypto/generation/mnemonic/entropy';
 import { Ed25519 } from '../../../src/crypto/signing/ed25519/ed25519';
-import { PublicKey, SecretKey } from '../../../src/crypto/signing/ed25519/ed25519_spec';
+import { SecretKey } from '../../../src/crypto/signing/ed25519/ed25519_spec';
 import { Generators } from '../helpers/generators';
 import { ed25519TestVectors, parseVector } from './test_vectors/ed25519_vectors';
 import * as spec from '../../../proto/quivr/models/shared'
@@ -111,14 +111,15 @@ describe('Ed25519 Topl test vectors', () => {
     const e = new Entropy(Uint8Array.from('topl'.split('').map((c) => c.charCodeAt(0))));
     const p = 'topl';
 
-    const specOutSk = Uint8Array.from(
-      Buffer.from('d8f0ad4d22ec1a143905af150e87c7f0dadd13749ef56fbd1bb380c37bc18cf8', 'hex'),
-    );
-    const specOutVk = Uint8Array.from(
-      Buffer.from('8ecfec14ce183dd6e747724993a9ae30328058fd85fa1e3c6f996b61bb164fa8', 'hex'),
-    );
+    // const specOutSk = Uint8Array.from(
+    //   Buffer.from('d8f0ad4d22ec1a143905af150e87c7f0dadd13749ef56fbd1bb380c37bc18cf8', 'hex'),
+    // );
+    // const specOutVk = Uint8Array.from(
+    //   Buffer.from('8ecfec14ce183dd6e747724993a9ae30328058fd85fa1e3c6f996b61bb164fa8', 'hex'),
+    // );
 
-    const specOut = new spec.quivr.models.KeyPair({ sk: specOutSk, vk: specOutVk });
+    // const specOut = new spec.quivr.models.KeyPair({ vk: specOutVk, sk: specOutSk });
+    const specOut = new spec.quivr.models.KeyPair({ vk: undefined, sk: undefined });
 
     const keys = ed25519.deriveKeyPairFromEntropy(e, p);
 

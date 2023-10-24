@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-class Pbkdf2Sha512TestVector {
+export class Pbkdf2Sha512TestVector {
   password: string;
   salt: string;
   keySize: number;
@@ -15,7 +15,7 @@ class Pbkdf2Sha512TestVector {
   }
 }
 
-const pbkdf2Sha512TestVectors = [
+export const pbkdf2Sha512TestVectors = [
   new Pbkdf2Sha512TestVector(
     'password',
     'salt',

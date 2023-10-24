@@ -90,7 +90,7 @@ export const ed25519TestVectors: Record<string, any>[] = [
   },
 ];
 
-const extendedEd25519TestVectors = [
+export const extendedEd25519TestVectors = [
   {
     description: 'test vector 1 - empty message',
     inputs: {
