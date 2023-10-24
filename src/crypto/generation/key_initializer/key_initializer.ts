@@ -1,4 +1,4 @@
-import { Either } from '@/common/functional/either';
+import { Either } from '../../../common/functional/either';
 import { Entropy } from '../mnemonic/entropy';
 import { Language } from '../mnemonic/language';
 import { InitializationFailure } from './initialization_failure';

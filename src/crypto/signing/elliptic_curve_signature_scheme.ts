@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { EntropyToSeed, Pbkdf2Sha512 } from '../generation/entropy_to_seed';
 import { Entropy } from '../generation/mnemonic/entropy';
 
 export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {

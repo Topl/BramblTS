@@ -1005,9 +1005,9 @@ class PointPrecomp {
   }
 }
 
-function toByte(n: number): number {
-  const buffer = new ArrayBuffer(1);
-  const view = new DataView(buffer);
-  view.setInt8(0, n);
-  return view.getUint8(0);
-}
+// function toByte(n: number): number {
+//   const buffer = new ArrayBuffer(1);
+//   const view = new DataView(buffer);
+//   view.setInt8(0, n);
+//   return view.getUint8(0);
+// }

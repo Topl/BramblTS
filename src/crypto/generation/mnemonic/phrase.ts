@@ -6,8 +6,8 @@
 // import { Language, LanguageWordList } from './language';
 // import { MnemonicSize } from './mnemonic';
 
-import { Either } from '@/common/functional/either';
-import { SHA256 } from '@/crypto/hash/sha';
+import { Either } from '../../../common/functional/either';
+import { SHA256 } from '../../../crypto/hash/sha';
 import { Entropy } from './entropy';
 import { Language, LanguageWordList } from './language';
 import { MnemonicSize } from './mnemonic';
@@ -336,7 +336,7 @@ export class Phrase {
 
 export class PhraseFailure implements Error {
   readonly name: string = 'PhraseFailure';
-  readonly message?: string;
+  readonly message: string;
   readonly type: PhraseFailureType;
 
   constructor(type: PhraseFailureType, message?: string) {

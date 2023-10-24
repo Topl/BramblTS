@@ -6,13 +6,14 @@
 // import { PointAccum, PointExt } from '../eddsa/ec';
 // import { extendedEd25519Spec } from './extended_ed25519_spec';
 
-import { SHA512 } from "@/crypto/hash/sha";
+import { SHA512 } from "../../../crypto/hash/sha";
 // import * as ed25519_spec from "../ed25519/ed25519_spec";
 import * as eddsa from "../eddsa/ed25519";
 import * as spec from "./extended_ed25519_spec";
 import { Bip32Index, SoftIndex } from "@/crypto/generation/bip32_index";
 import { PointAccum, PointExt } from "../eddsa/ec";
 import { PublicKey, SecretKey, ed25519Spec } from "../ed25519/ed25519_spec";
+import { EllipticCurveSignatureScheme } from "../elliptic_curve_signature_scheme";
 
 function fromLittleEndian(bytes: Uint8Array): bigint {
   let result = BigInt(0);

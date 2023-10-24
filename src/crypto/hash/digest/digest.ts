@@ -1,4 +1,5 @@
-import { Either, EitherException } from '../../../common/functional/either';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { EitherException } from '../../../common/functional/either';
 
 export class Digest {
   constructor(public readonly bytes: Uint8Array) {}
@@ -21,7 +22,7 @@ export class Digest32 {
 
   private constructor() {}
 
-  static from(bytes: Uint8Array): Either<InvalidDigestFailure, Digest> {
+  static from(bytes: Uint8Array): any {
     if (bytes.length !== this.size) {
       return { kind: 'Left', value: new InvalidDigestFailure(`Invalid digest size: ${bytes.length}`) };
     }
@@ -34,7 +35,7 @@ export class Digest64 {
 
   private constructor() {}
 
-  static from(bytes: Uint8Array): Either<InvalidDigestFailure, Digest> {
+  static from(bytes: Uint8Array): any {
     if (bytes.length !== this.size) {
       return { kind: 'Left', value: new InvalidDigestFailure(`Invalid digest size: ${bytes.length}`) };
     }

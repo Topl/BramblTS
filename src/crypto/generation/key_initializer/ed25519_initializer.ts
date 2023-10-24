@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Either } from '@/common/functional/either';
+import { Either } from '../../../common/functional/either';
 import Ed25519 from '@/crypto/signing/ed25519/ed25519';
 import { Entropy } from '../mnemonic/entropy';
 import { English, Language } from '../mnemonic/language';

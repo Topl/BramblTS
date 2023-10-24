@@ -1,9 +1,26 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Ed25519 as EdDSAEd25519 } from '../eddsa/ed25519';
 
 import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
-import { PublicKey, SecretKey, ed25519Spec } from './ed25519_spec';
+import { Ed25519Spec, PublicKey, SecretKey } from './ed25519_spec';
+
+const ed25519Spec: Ed25519Spec = {
+  signatureLength: 64,
+  keyLength: 32,
+  publicKeyLength: 32,
+  seedLength: 32
+}
 
 export class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
+  // deriveKeyPairFromSeed(seed: Uint8Array): KeyPair<SecretKey, PublicKey> {
+  //   throw new Error('Method not implemented.');
+  // }
+  // deriveKeyPairFromSeed(seed: Uint8Array): KeyPair<SK, VK> {
+  deriveKeyPairFromSeed(seed: Uint8Array): any {
+  const secretKey = this.deriveSecretKeyFromSeed(seed);
+    const publicKey = this.getVerificationKey(secretKey);
+    return { secretKey, publicKey };
+  }
   private impl: EdDSAEd25519;
 
   constructor() {

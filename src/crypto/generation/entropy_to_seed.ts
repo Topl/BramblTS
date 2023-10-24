@@ -1,20 +1,21 @@
 import { KeyParameter } from "../signing/kdf/cipherParameters";
+import { Entropy } from "./mnemonic/entropy";
 
-class EntropyToSeed {
+export class EntropyToSeed {
   constructor() {}
 
-  toSeed(entropy: Uint8Array, password: string | null, seedLength: number): Uint8Array {
+  toSeed(entropy: Entropy, password: string | null, seedLength: number): Uint8Array {
     const kdf = new Pbkdf2Sha512();
     return kdf.generateKey(password ?? '', entropy, seedLength, 4096);
   }
 }
 
-class Pbkdf2Sha512 extends EntropyToSeed {
+export class Pbkdf2Sha512 extends EntropyToSeed {
   constructor() {
     super();
   }
 
-  generateKey(password: string, salt: Uint8Array, keySizeBytes: number, iterations: number): Uint8Array {
+  generateKey(password: string, salt: Entropy, keySizeBytes: number, iterations: number): Uint8Array {
     const generator = new PKCS5S2ParametersGenerator(new SHA512Digest());
     generator.init(this.stringToUint8Array(password), salt, iterations);
     const param = generator.generateDerivedParameters(keySizeBytes * 8) as KeyParameter;

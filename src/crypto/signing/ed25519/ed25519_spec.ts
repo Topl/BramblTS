@@ -81,7 +81,7 @@
 // export { PublicKey, SecretKey, ed25519Spec };
 
 
-interface Ed25519Spec {
+export interface Ed25519Spec {
   signatureLength: number;
   keyLength: number;
   publicKeyLength: number;

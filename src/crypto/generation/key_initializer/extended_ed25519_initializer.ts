@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Either } from '@/common/functional/either';
+import { Either } from '../../../common/functional/either';
 import { randomUUID } from 'crypto';
 import * as spec from '../../signing/extended_ed25519/extended_ed25519_spec';
 import { Entropy } from '../mnemonic/entropy';
