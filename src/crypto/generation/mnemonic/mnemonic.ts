@@ -59,7 +59,7 @@ export class MnemonicSize {
       case 24:
         return Either.right(MnemonicSize.words24());
       default:
-        return Either.left(new PhraseFailure(PhraseFailureType.invalidWordLength, 'Invalid number of words'));
+        return Either.left(new PhraseFailure(PhraseFailureType.InvalidWordLength, 'Invalid number of words'));
     }
   }
 }

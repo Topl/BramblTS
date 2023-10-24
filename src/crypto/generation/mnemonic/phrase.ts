@@ -183,7 +183,7 @@ import { MnemonicSize } from './mnemonic';
 //   }
 // }
 
-enum PhraseFailureType {
+export enum PhraseFailureType {
   InvalidWordLength,
   InvalidWords,
   InvalidChecksum,
@@ -199,7 +199,7 @@ function _intTo11BitString(value: number): string {
   return value.toString(2).padStart(11, '0');
 }
 
-class Phrase {
+export class Phrase {
   value: string[];
   size: MnemonicSize;
   languageWords: LanguageWordList;
@@ -210,7 +210,7 @@ class Phrase {
     this.languageWords = props.languageWords;
   }
 
-  async validated({ words, language }: { words: string; language: Language }): Promise<Either<PhraseFailure, Phrase>> {
+  static async validated({ words, language }: { words: string; language: Language }): Promise<Either<PhraseFailure, Phrase>> {
     const wordListResult = await LanguageWordList.validated(language);
 
     if (wordListResult.isLeft) {
@@ -278,7 +278,7 @@ class Phrase {
     return checksumBinaryString;
   }
 
-  async fromEntropy({
+  static async fromEntropy({
     entropy,
     size,
     language,
@@ -291,7 +291,7 @@ class Phrase {
       return Either.left(PhraseFailure.invalidEntropyLength());
     }
 
-    const wordListResult = (await LanguageWordList.validated(language)).flatMapLeft((p0) =>
+    const wordListResult = (await LanguageWordList.validated(language)).flatMapLeft(() =>
       Either.left(PhraseFailure.wordListFailure()),
     );
 
@@ -319,7 +319,7 @@ class Phrase {
     });
   }
 
-  toBinaryString(phrase: Phrase): [string, string] {
+  static toBinaryString(phrase: Phrase): [string, string] {
     const wordList = phrase.languageWords.value;
     const binaryString = phrase.value
       .map((word) => wordList.indexOf(word))
@@ -331,7 +331,7 @@ class Phrase {
   }
 }
 
-class PhraseFailure implements Error {
+export class PhraseFailure implements Error {
   readonly name: string = 'PhraseFailure';
   readonly message?: string;
   readonly type: PhraseFailureType;
