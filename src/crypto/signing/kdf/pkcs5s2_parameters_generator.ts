@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Digest } from '@/quivr4s/common/types';
 import * as crypto from 'crypto';
 import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters';
@@ -7,7 +8,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
   private _hmac: Mac;
   private _state: Uint8Array;
 
-  constructor(digest: Digest) {
+  constructor(digest: any) {
     super();
     this._hmac = new HMac(digest);
     this._state = new Uint8Array(this._hmac.macSize);

@@ -3,7 +3,7 @@ export interface CipherParameters {
 }
 
 export class KeyParameter implements CipherParameters {
-  private key: Uint8Array;
+  public key: Uint8Array;
 
   constructor(key: Uint8Array) {
     this.key = key;
