@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Digest } from '@/quivr4s/common/types';
 import * as crypto from 'crypto';
 import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters';
 import * as brambl from './pbe_parameters_generator';
