@@ -1,39 +1,45 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { CipherParameters } from './cipherParameters';
 
-abstract class PBEParametersGenerator {
+export class PBEParametersGenerator {
   protected password: Uint8Array;
   protected salt: Uint8Array;
   protected iterationCount: number;
 
-  public init(password: Uint8Array, salt: Uint8Array, iterationCount: number): void {
+  init(password: Uint8Array, salt: Uint8Array, iterationCount: number): void {
     this.password = password;
     this.salt = salt;
     this.iterationCount = iterationCount;
   }
 
-  public abstract generateDerivedParameters(keySize: number): CipherParameters;
+  generateDerivedParameters(keySize: number): CipherParameters {
+    throw new Error('Method not implemented.');
+  }
 
-  public abstract generateDerivedParametersWithIV(keySize: number, ivSize: number): CipherParameters;
+  generateDerivedParametersWithIV(keySize: number, ivSize: number): CipherParameters {
+    throw new Error('Method not implemented.');
+  }
 
-  public abstract generateDerivedMacParameters(keySize: number): CipherParameters;
+  generateDerivedMacParameters(keySize: number): CipherParameters;
 
-  public static pkcs5PasswordToBytes(password: string | null): Uint8Array {
-    if (password !== null && password !== '') {
-      const pw = password.split('').map((char) => char.charCodeAt(0));
-      const bytes = new Uint8Array(pw.length);
+  static pkcs5PasswordToBytes(password: string | null): Uint8Array {
+    if (password && password.length > 0) {
+      const pw = password.split('').map((char) => char.charCodeAt(0) & 0xff);
+      // const bytes = new Uint8Array(pw.length);
 
-      for (let i = 0; i < bytes.length; i++) {
-        bytes[i] = pw[i] & 0xff;
-      }
+      // for (let i = 0; i < bytes.length; i++) {
+      //   bytes[i] = pw[i] & 0xff;
+      // }
 
-      return bytes;
+      // return bytes;
+      return new Uint8Array(pw);
     } else {
       return new Uint8Array(0);
     }
   }
 
-  public static pkcs5PasswordToUTF8Bytes(password: string): Uint8Array {
-    if (password !== '') {
+  static pkcs5PasswordToUTF8Bytes(password: string): Uint8Array {
+    if (password.length > 0) {
       const encoder = new TextEncoder();
       return encoder.encode(password);
     } else {
@@ -41,8 +47,8 @@ abstract class PBEParametersGenerator {
     }
   }
 
-  public static pkcs12PasswordToBytes(password: string | null): Uint8Array {
-    if (password !== null && password !== '') {
+  static pkcs12PasswordToBytes(password: string | null): Uint8Array {
+    if (password && password.length > 0) {
       const pw = password.split('').map((char) => char.charCodeAt(0));
       const bytes = new Uint8Array((pw.length + 1) * 2);
 
