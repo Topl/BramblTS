@@ -3,6 +3,13 @@ import * as crypto from 'crypto';
 import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters';
 import * as brambl from './pbe_parameters_generator';
 
+interface Mac {
+  update(input: Uint8Array, offset: number, length: number): void;
+  doFinal(output: Uint8Array, outOffset: number): void;
+  getMacSize(): number;
+  reset(): void;
+}
+
 export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
   private _hmac: Mac;
   private _state: Uint8Array;
