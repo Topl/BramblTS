@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Digest } from '@/quivr4s/common/types';
 import * as crypto from 'crypto';
 import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters';
 import * as brambl from './pbe_parameters_generator';
@@ -17,7 +18,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
   constructor(digest: any) {
     super();
     this._hmac = new HMac(digest);
-    this._state = new Uint8Array(this._hmac.macSize);
+    this._state = new Uint8Array(this._hmac.getMacSize());
   }
 
   private _process(S: Uint8Array | null, c: number, iBuf: Uint8Array, out: Uint8Array, outOff: number) {
@@ -43,7 +44,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
   }
 
   private _generateDerivedKey(dkLen: number): Uint8Array {
-    const hLen = this._hmac.macSize;
+    const hLen = this._hmac.getMacSize();
     const l = ((dkLen + hLen - 1) / hLen) | 0;
     const iBuf = new Uint8Array(4);
     const outBytes = new Uint8Array(l * hLen);
@@ -88,9 +89,22 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
   }
 }
 
-export class HMac {
+export class HMac implements Mac {
   protected key: Uint8Array;
+  private digest: Digest;
   hmac;
+
+  constructor(digest: Digest) {
+    this.digest = digest;
+  }
+
+  getMacSize(): number {
+    console.log(this.digest);
+    return 20;
+  }
+  reset(): void {
+    throw new Error('Method not implemented.');
+  }
 
   init(key: Uint8Array) {
     this.key = key;
@@ -105,7 +119,7 @@ export class HMac {
     this.hmac.digest().copy(output, offset);
   }
 
-  get macSize(): number {
-    return 20;
-  }
+  // get macSize(): number {
+  //   return 20;
+  // }
 }
