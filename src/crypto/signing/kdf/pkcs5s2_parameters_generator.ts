@@ -5,6 +5,7 @@ import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParame
 import * as brambl from './pbe_parameters_generator';
 
 interface Mac {
+  init(key: Uint8Array): void;
   update(input: Uint8Array, offset: number, length: number): void;
   doFinal(output: Uint8Array, outOffset: number): void;
   getMacSize(): number;
@@ -52,7 +53,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
 
     const param = new KeyParameter(this.password);
 
-    this._hmac.init(param);
+    this._hmac.init(param.getKey());
 
     for (let i = 1; i <= l; i++) {
       let pos = 3;
@@ -99,14 +100,14 @@ export class HMac implements Mac {
   }
 
   getMacSize(): number {
-    console.log(this.digest);
+    // console.log(this.digest);
     return 20;
   }
   reset(): void {
     throw new Error('Method not implemented.');
   }
 
-  init(key: Uint8Array) {
+  init(key: Uint8Array): void {
     this.key = key;
     this.hmac = crypto.createHmac('sha1', this.key);
   }
