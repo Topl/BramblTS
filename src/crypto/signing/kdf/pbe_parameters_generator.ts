@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CipherParameters } from './cipherParameters';
 
-export class PBEParametersGenerator {
+abstract class PBEParametersGenerator {
   protected password: Uint8Array;
   protected salt: Uint8Array;
   protected iterationCount: number;
@@ -20,19 +20,20 @@ export class PBEParametersGenerator {
     throw new Error('Method not implemented.');
   }
 
-  generateDerivedMacParameters(keySize: number): CipherParameters;
+  generateDerivedMacParameters(keySize: number): CipherParameters {
+    throw new Error('Method not implemented.');
+  }
 
   static pkcs5PasswordToBytes(password: string | null): Uint8Array {
     if (password && password.length > 0) {
       const pw = password.split('').map((char) => char.charCodeAt(0) & 0xff);
-      // const bytes = new Uint8Array(pw.length);
+      const bytes = new Uint8Array(pw.length);
 
-      // for (let i = 0; i < bytes.length; i++) {
-      //   bytes[i] = pw[i] & 0xff;
-      // }
+      for (let i = 0; i < bytes.length; i++) {
+        bytes[i] = pw[i] & 0xff;
+      }
 
-      // return bytes;
-      return new Uint8Array(pw);
+      return bytes;
     } else {
       return new Uint8Array(0);
     }
