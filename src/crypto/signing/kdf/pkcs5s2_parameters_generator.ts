@@ -58,7 +58,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
     for (let i = 1; i <= l; i++) {
       let pos = 3;
       while (++iBuf[pos] === 0) {
-        pos--;
+        --pos;
       }
 
       this._process(this.salt, this.iterationCount, iBuf, outBytes, outPos);
@@ -93,14 +93,13 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
 export class HMac implements Mac {
   protected key: Uint8Array;
   private digest: Digest;
-  hmac;
+  private hmac;
 
   constructor(digest: Digest) {
     this.digest = digest;
   }
 
   getMacSize(): number {
-    // console.log(this.digest);
     return 20;
   }
   reset(): void {
@@ -119,8 +118,4 @@ export class HMac implements Mac {
   doFinal(output: Uint8Array, offset: number): void {
     this.hmac.digest().copy(output, offset);
   }
-
-  // get macSize(): number {
-  //   return 20;
-  // }
 }
