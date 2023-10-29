@@ -28,6 +28,8 @@
 Table 1: Parameters of Ed25519
  */
 
+import * as x25519_field from './x25519_field';
+
 /// AMS 2021: Supporting curve point operations for all EC crypto primitives in eddsa package
 /// Directly ported from BouncyCastle implementation of Ed25519 RFC8032 https://tools.ietf.org/html/rfc8032
 /// Licensing: https://www.bouncycastle.org/licence.html
@@ -192,7 +194,7 @@ export class EC {
     this.mulAddTo256(u, v, t);
     const result = new Uint8Array(SCALAR_BYTES * 2);
     for (let i = 0; i < t.length; i++) {
-      encode32(t[i], result, i * 4);
+      this.encode32(t[i], result, i * 4);
     }
     return this.reduceScalar(result);
   }
@@ -547,15 +549,17 @@ export class EC {
 
   _precompute(): [PointExt[], Int32List] {
     // Precomputed table for the base point in verification ladder
-    const b = this.pointExtendXY(this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: create(), t: create() }));
+    const b = this.pointExtendXY(
+      this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: x25519_field.create(), t: x25519_field.create() }),
+    );
     const precompBaseTable = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
 
     const p: PointAccum = {
       x: B_x.slice(),
       y: B_y.slice(),
-      z: create(),
-      u: create(),
-      v: create(),
+      z: x25519_field.create(),
+      u: x25519_field.create(),
+      v: x25519_field.create(),
     };
     this.pointExtendXYAccum(p);
 
@@ -564,7 +568,12 @@ export class EC {
 
     for (let b = 0; b < PRECOMP_BLOCKS; b++) {
       const ds: PointExt[] = [];
-      const sum = this.pointSetNeutralExt({ x: create(), y: create(), z: create(), t: create() });
+      const sum = this.pointSetNeutralExt({
+        x: x25519_field.create(),
+        y: x25519_field.create(),
+        z: x25519_field.create(),
+        t: x25519_field.create(),
+      });
 
       for (let t = 0; t < PRECOMP_TEETH; t++) {
         const q = this.pointCopyAccum(p);
@@ -597,17 +606,17 @@ export class EC {
 
       for (let i = 0; i < PRECOMP_POINTS; i++) {
         const q = points[i]!;
-        const x = create();
-        const y = create();
+        const x = x25519_field.create();
+        const y = x25519_field.create();
         x25519_field.add(q.z, q.z, x);
         x25519_field.inv(x, y);
         x25519_field.mul2(q.x, y, x);
         x25519_field.mul2(q.y, y, y);
 
         const r = {
-          ypxH: create(),
-          ymxH: create(),
-          xyd: create(),
+          ypxH: x25519_field.create(),
+          ymxH: x25519_field.create(),
+          xyd: x25519_field.create(),
         };
 
         x25519_field.apm(y, x, r.ypxH, r.ymxH);

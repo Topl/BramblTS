@@ -1,5 +1,6 @@
 // /* eslint-disable @typescript-eslint/no-unused-vars */
 // /* eslint-disable @typescript-eslint/no-explicit-any */
+import * as spec from '../../../../proto/quivr/models/shared';
 // interface Ed25519Spec {
 //   signatureLength: number;
 //   keyLength: number;
@@ -80,7 +81,6 @@
 
 // export { PublicKey, SecretKey, ed25519Spec };
 
-
 export interface Ed25519Spec {
   signatureLength: number;
   keyLength: number;
@@ -88,7 +88,7 @@ export interface Ed25519Spec {
   seedLength: number;
 }
 
-export class SecretKey extends SigningKey implements Ed25519Spec {
+export class SecretKey extends spec.quivr.models.SigningKey implements Ed25519Spec {
   bytes: Uint8Array;
 
   constructor(bytes: Uint8Array) {
@@ -96,9 +96,7 @@ export class SecretKey extends SigningKey implements Ed25519Spec {
     this.bytes = bytes;
 
     if (bytes.length !== this.keyLength) {
-      throw new Error(
-        `Invalid left key length. Expected: ${this.keyLength}, Received: ${bytes.length}`
-      );
+      throw new Error(`Invalid left key length. Expected: ${this.keyLength}, Received: ${bytes.length}`);
     }
   }
   signatureLength: number;
@@ -113,9 +111,7 @@ export class SecretKey extends SigningKey implements Ed25519Spec {
 
   equals(other: SecretKey): boolean {
     return (
-      this === other ||
-      (other instanceof SecretKey &&
-        this.bytes.every((byte, index) => byte === other.bytes[index]))
+      this === other || (other instanceof SecretKey && this.bytes.every((byte, index) => byte === other.bytes[index]))
     );
   }
 
@@ -124,7 +120,7 @@ export class SecretKey extends SigningKey implements Ed25519Spec {
   }
 }
 
-export class PublicKey extends VerificationKey implements Ed25519Spec {
+export class PublicKey extends spec.quivr.models.VerificationKey implements Ed25519Spec {
   bytes: Uint8Array;
 
   constructor(bytes: Uint8Array) {
@@ -132,9 +128,7 @@ export class PublicKey extends VerificationKey implements Ed25519Spec {
     this.bytes = bytes;
 
     if (bytes.length !== this.publicKeyLength) {
-      throw new Error(
-        `Invalid right key length. Expected: ${this.publicKeyLength}, Received: ${bytes.length}`
-      );
+      throw new Error(`Invalid right key length. Expected: ${this.publicKeyLength}, Received: ${bytes.length}`);
     }
   }
   signatureLength: number;
@@ -149,9 +143,7 @@ export class PublicKey extends VerificationKey implements Ed25519Spec {
 
   equals(other: PublicKey): boolean {
     return (
-      this === other ||
-      (other instanceof PublicKey &&
-        this.bytes.every((byte, index) => byte === other.bytes[index]))
+      this === other || (other instanceof PublicKey && this.bytes.every((byte, index) => byte === other.bytes[index]))
     );
   }
 

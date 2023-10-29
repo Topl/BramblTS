@@ -1,28 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-const SIZE = 10;
-const M24 = 0x00ffffff;
-const M25 = 0x01ffffff;
-const M26 = 0x03ffffff;
-const ROOT_NEG_ONE: number[] = [
+export const SIZE = 10;
+export const M24 = 0x00ffffff;
+export const M25 = 0x01ffffff;
+export const M26 = 0x03ffffff;
+export const ROOT_NEG_ONE: number[] = [
   0x020ea0b0, 0x0386c9d2, 0x00478c4e, 0x0035697f, 0x005e8630, 0x01fbd7a7, 0x0340264f, 0x01f0b2b4, 0x00027e0e,
   0x00570649,
 ];
 
-function add(x: Int32List, y: Int32List, z: Int32List): void {
+export function add(x: Int32List, y: Int32List, z: Int32List): void {
   for (let i = 0; i < SIZE; i++) {
     z[i] = x[i] + y[i];
   }
 }
 
-function addOne1(z: Int32Array): void {
+export function addOne1(z: Int32Array): void {
   z[0] += 1;
 }
 
-function addOne2(z: Int32Array, zOff: number): void {
+export function addOne2(z: Int32Array, zOff: number): void {
   z[zOff] += 1;
 }
 
-function apm(x: Int32List, y: Int32List, zp: Int32Array, zm: Int32Array): void {
+export function apm(x: Int32List, y: Int32List, zp: Int32Array, zm: Int32Array): void {
   for (let i = 0; i < SIZE; i++) {
     const xi = x[i];
     const yi = y[i];
@@ -31,7 +31,7 @@ function apm(x: Int32List, y: Int32List, zp: Int32Array, zm: Int32Array): void {
   }
 }
 
-function carry(z: Int32Array) {
+export function carry(z: Int32Array) {
   let z0 = z[0],
     z1 = z[1],
     z2 = z[2],
@@ -76,7 +76,7 @@ function carry(z: Int32Array) {
   z[9] = z9;
 }
 
-function cmov(cond: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
+export function cmov(cond: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
   for (let i = 0; i < SIZE; i++) {
     let z_i = z[zOff + i];
     const diff = z_i ^ x[xOff + i];
@@ -85,7 +85,7 @@ function cmov(cond: number, x: Int32Array, xOff: number, z: Int32Array, zOff: nu
   }
 }
 
-function cnegate(negate: number, z: Int32Array) {
+export function cnegate(negate: number, z: Int32Array) {
   const mask = -negate | 0;
 
   for (let i = 0; i < SIZE; i++) {
@@ -93,13 +93,13 @@ function cnegate(negate: number, z: Int32Array) {
   }
 }
 
-function copy(x: Int32List, xOff: number, z: Int32List, zOff: number) {
+export function copy(x: Int32List, xOff: number, z: Int32List, zOff: number) {
   for (let i = 0; i < SIZE; i++) {
     z[zOff + i] = x[xOff + i];
   }
 }
 
-function cswap(swap: number, a: Int32Array, b: Int32Array) {
+export function cswap(swap: number, a: Int32Array, b: Int32Array) {
   const mask = -swap;
 
   for (let i = 0; i < SIZE; i++) {
@@ -111,17 +111,17 @@ function cswap(swap: number, a: Int32Array, b: Int32Array) {
   }
 }
 
-function create(): Int32Array {
+export function create(): Int32Array {
   return new Int32Array(SIZE);
 }
 
-function decode(x: Uint8Array, xOff: number, z: Int32List): void {
+export function decode(x: Uint8Array, xOff: number, z: Int32List): void {
   decode128(x, xOff, z, 0);
   decode128(x, xOff + 16, z, 5);
   z[9] = z[9] & M24;
 }
 
-function decode128(bs: Uint8Array, off: number, z: Int32List, zOff: number): void {
+export function decode128(bs: Uint8Array, off: number, z: Int32List, zOff: number): void {
   const t0 = decode32(bs, off + 0);
   const t1 = decode32(bs, off + 4);
   const t2 = decode32(bs, off + 8);
@@ -134,18 +134,18 @@ function decode128(bs: Uint8Array, off: number, z: Int32List, zOff: number): voi
   z[zOff + 4] = t3 >>> 7;
 }
 
-function decode32(bs: Uint8Array, off: number): number {
+export function decode32(bs: Uint8Array, off: number): number {
   const n =
     (bs[off] & 0xff) | ((bs[off + 1] & 0xff) << 8) | ((bs[off + 2] & 0xff) << 16) | ((bs[off + 3] & 0xff) << 24);
   return n;
 }
 
-function encode(x: Int32Array, z: Uint8Array, zOff: number): void {
+export function encode(x: Int32Array, z: Uint8Array, zOff: number): void {
   encode128(x, 0, z, zOff);
   encode128(x, 5, z, zOff + 16);
 }
 
-function encode128(x: Int32Array, xOff: number, bs: Uint8Array, off: number): void {
+export function encode128(x: Int32Array, xOff: number, bs: Uint8Array, off: number): void {
   const x0 = x[xOff + 0];
   const x1 = x[xOff + 1];
   const x2 = x[xOff + 2];
@@ -165,14 +165,14 @@ function encode128(x: Int32Array, xOff: number, bs: Uint8Array, off: number): vo
   encode32(t3, bs, off + 12);
 }
 
-function encode32(n: number, bs: Uint8Array, off: number): void {
+export function encode32(n: number, bs: Uint8Array, off: number): void {
   bs[off + 0] = n & 0xff;
   bs[off + 1] = (n >>> 8) & 0xff;
   bs[off + 2] = (n >>> 16) & 0xff;
   bs[off + 3] = (n >>> 24) & 0xff;
 }
 
-function inv(x: Int32Array, z: Int32Array): void {
+export function inv(x: Int32Array, z: Int32Array): void {
   const x2 = create();
   const t = create();
 
@@ -181,7 +181,7 @@ function inv(x: Int32Array, z: Int32Array): void {
   mul2(t, x2, z);
 }
 
-function isZero(x: Int32List): number {
+export function isZero(x: Int32List): number {
   let d = 0;
 
   for (let i = 0; i < SIZE; i++) {
@@ -193,11 +193,11 @@ function isZero(x: Int32List): number {
   return ((d - 1) >> 31) | 0;
 }
 
-function isZeroVar(x: Int32List): boolean {
+export function isZeroVar(x: Int32List): boolean {
   return isZero(x) !== 0;
 }
 
-function mul1(x: Int32List, y: number, z: Int32List) {
+export function mul1(x: Int32List, y: number, z: Int32List) {
   const x0 = x[0];
   const x1 = x[1];
   let x2 = x[2];
@@ -261,7 +261,7 @@ function mul1(x: Int32List, y: number, z: Int32List) {
   z[9] = x9 + Number(c2);
 }
 
-function mul2(x: Int32List, y: Int32List, z: Int32List) {
+export function mul2(x: Int32List, y: Int32List, z: Int32List) {
   let x0 = x[0];
   let y0 = y[0];
   let x1 = x[1];
@@ -433,19 +433,19 @@ function mul2(x: Int32List, y: Int32List, z: Int32List) {
   z[9] = z9 + Number(t);
 }
 
-function negate(x: Int32List, z: Int32List): void {
+export function negate(x: Int32List, z: Int32List): void {
   for (let i = 0; i < SIZE; i++) {
     z[i] = -x[i];
   }
 }
 
-function normalize(z: Int32List): void {
+export function normalize(z: Int32List): void {
   const x = (z[9] >>> 23) & 1;
   reduce(z, x);
   reduce(z, -x);
 }
 
-function one(z: Int32List): void {
+export function one(z: Int32List): void {
   z[0] = 1;
 
   for (let i = 1; i < SIZE; i++) {
@@ -453,7 +453,7 @@ function one(z: Int32List): void {
   }
 }
 
-function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
+export function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
   const x2 = rx2;
   sqr(x, x2);
   mul2(x, x2, x2);
@@ -499,7 +499,7 @@ function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
   mul2(t, x, rz);
 }
 
-function reduce(z: Int32List, c: number): void {
+export function reduce(z: Int32List, c: number): void {
   let z9 = z[9] | 0;
   let t = z9;
 
@@ -538,7 +538,7 @@ function reduce(z: Int32List, c: number): void {
   z[9] = t;
 }
 
-function sqr(x: Int32List, z: Int32List): void {
+export function sqr(x: Int32List, z: Int32List): void {
   let x0 = x[0];
   let x1 = x[1];
   let x2 = x[2];
@@ -662,7 +662,7 @@ function sqr(x: Int32List, z: Int32List): void {
   z[9] = z9 + Number(t);
 }
 
-function sqr2(x: Int32List, n: number, z: Int32List): void {
+export function sqr2(x: Int32List, n: number, z: Int32List): void {
   let nv = n;
 
   sqr(x, z);
@@ -672,7 +672,7 @@ function sqr2(x: Int32List, n: number, z: Int32List): void {
   }
 }
 
-function sqrtRatioVar(u: Int32List, v: Int32List, z: Int32List): boolean {
+export function sqrtRatioVar(u: Int32List, v: Int32List, z: Int32List): boolean {
   const uv3 = create();
   const uv7 = create();
 
@@ -711,43 +711,18 @@ function sqrtRatioVar(u: Int32List, v: Int32List, z: Int32List): boolean {
   return false;
 }
 
-function sub(x: Int32List, y: Int32List, z: Int32List) {
+export function sub(x: Int32List, y: Int32List, z: Int32List) {
   for (let i = 0; i < SIZE; i++) {
     z[i] = x[i] - y[i];
   }
 }
 
-function subOne(z: Int32List) {
+export function subOne(z: Int32List) {
   z[0] -= 1;
 }
 
-function zero(z: Int32List) {
+export function zero(z: Int32List) {
   for (let i = 0; i < SIZE; i++) {
     z[i] = 0;
   }
-}
-
-const x25519_field = {
-  decode,
-  create,
-  sqr,
-  mul2,
-  subOne,
-  addOne1,
-  sqrtRatioVar,
-  normalize,
-  negate,
-  isZeroVar,
-  inv,
-  encode,
-  copy,
-  add,
-  apm,
-  carry,
-  sub,
-  one,
-  SIZE,
-  zero,
-  cswap,
-  cnegate,
 }
