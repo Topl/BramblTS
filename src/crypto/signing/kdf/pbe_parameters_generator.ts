@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { CipherParameters } from './cipherParameters';
 
-abstract class PBEParametersGenerator {
+export abstract class PBEParametersGenerator {
   protected password: Uint8Array;
   protected salt: Uint8Array;
   protected iterationCount: number;
