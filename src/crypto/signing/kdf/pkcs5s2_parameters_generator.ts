@@ -108,14 +108,17 @@ export class HMac implements Mac {
     }
     if (this.digest == 'sha512') {
       return 64;
-    }
-    else {
+    } else {
       throw new Error('Unknown digest ' + this.digest);
     }
   }
-  
+
   reset(): void {
-    throw new Error('Method not implemented.');
+    if (this.key) {
+      this.hmac = crypto.createHmac(this.digest, this.key);
+    } else {
+      throw new Error('Key not set. Call init method first.');
+    }
   }
 
   init(key: Uint8Array): void {
