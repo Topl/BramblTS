@@ -16,7 +16,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
   private _hmac: Mac;
   private _state: Uint8Array;
 
-  constructor(digest: any) {
+  constructor(digest: string) {
     super();
     this._hmac = new HMac(digest);
     this._state = new Uint8Array(this._hmac.getMacSize());
@@ -100,7 +100,7 @@ export class HMac implements Mac {
   }
 
   getMacSize(): number {
-    return this.hmac.blockSize;
+    return this.hmac.blockSize * 4;
   }
   reset(): void {
     throw new Error('Method not implemented.');
