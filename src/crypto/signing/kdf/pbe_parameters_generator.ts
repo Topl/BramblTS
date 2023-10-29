@@ -12,17 +12,11 @@ export abstract class PBEParametersGenerator {
     this.iterationCount = iterationCount;
   }
 
-  generateDerivedParameters(keySize: number): CipherParameters {
-    throw new Error('Method not implemented.');
-  }
+  abstract generateDerivedParameters(keySize: number): CipherParameters;
 
-  generateDerivedParametersWithIV(keySize: number, ivSize: number): CipherParameters {
-    throw new Error('Method not implemented.');
-  }
+  abstract generateDerivedParametersWithIV(keySize: number, ivSize: number): CipherParameters;
 
-  generateDerivedMacParameters(keySize: number): CipherParameters {
-    throw new Error('Method not implemented.');
-  }
+  abstract generateDerivedMacParameters(keySize: number): CipherParameters;
 
   static pkcs5PasswordToBytes(password: string | null): Uint8Array {
     if (password && password.length > 0) {
