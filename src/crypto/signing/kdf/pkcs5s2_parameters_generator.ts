@@ -100,8 +100,20 @@ export class HMac implements Mac {
   }
 
   getMacSize(): number {
-    return this.hmac.blockSize * 4;
+    if (this.digest == 'sha1') {
+      return 20;
+    }
+    if (this.digest == 'sha256') {
+      return 32;
+    }
+    if (this.digest == 'sha512') {
+      return 64;
+    }
+    else {
+      throw new Error('Unknown digest ' + this.digest);
+    }
   }
+  
   reset(): void {
     throw new Error('Method not implemented.');
   }
