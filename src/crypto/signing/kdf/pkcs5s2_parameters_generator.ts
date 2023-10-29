@@ -92,15 +92,15 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
 
 export class HMac implements Mac {
   protected key: Uint8Array;
-  private digest: Digest;
+  private digest: string;
   private hmac;
 
-  constructor(digest: Digest) {
+  constructor(digest: string) {
     this.digest = digest;
   }
 
   getMacSize(): number {
-    return 20;
+    return this.hmac.blockSize;
   }
   reset(): void {
     throw new Error('Method not implemented.');
@@ -108,7 +108,7 @@ export class HMac implements Mac {
 
   init(key: Uint8Array): void {
     this.key = key;
-    this.hmac = crypto.createHmac('sha1', this.key);
+    this.hmac = crypto.createHmac(this.digest, this.key);
   }
 
   update(input: Uint8Array, offset: number, length: number): void {
@@ -116,6 +116,6 @@ export class HMac implements Mac {
   }
 
   doFinal(output: Uint8Array, offset: number): void {
-    this.hmac.digest().copy(output, offset);
+    this.hmac.finalize().copy(output, offset);
   }
 }
