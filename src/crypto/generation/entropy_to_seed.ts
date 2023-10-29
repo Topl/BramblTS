@@ -1,4 +1,4 @@
-import { SHA512 } from '../hash/sha';
+// import { SHA512 } from '../hash/sha';
 import { KeyParameter } from '../signing/kdf/cipherParameters';
 import { PKCS5S2ParametersGenerator } from '../signing/kdf/pkcs5s2_parameters_generator';
 import { Entropy } from './mnemonic/entropy';
