@@ -131,6 +131,6 @@ export class HMac implements Mac {
   }
 
   doFinal(output: Uint8Array, offset: number): void {
-    this.hmac.finalize().copy(output, offset);
+    this.hmac.digest().copy(output, offset);
   }
 }
