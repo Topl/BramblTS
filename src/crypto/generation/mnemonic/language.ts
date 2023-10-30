@@ -96,7 +96,7 @@ export class LanguageWordList {
 
   static async validated(language: Language): Promise<Either<ValidationFailure, LanguageWordList>> {
     try {
-      const file = `lib/assets/${language.wordlistDirectory}/${language.filePath}`;
+      const file = `assets/${language.wordlistDirectory}/${language.filePath}`;
       const words = (await fs.readFile(file, 'utf-8')).split('\n');
 
       const hash = LanguageWordList.validateChecksum(words, language.hash);
