@@ -88,8 +88,19 @@ export interface Ed25519Spec {
   seedLength: number;
 }
 
+export const ed25519Spec: Ed25519Spec = {
+  signatureLength: 64,
+  keyLength: 32,
+  publicKeyLength: 32,
+  seedLength: 32,
+};
+
 export class SecretKey extends spec.quivr.models.SigningKey implements Ed25519Spec {
   bytes: Uint8Array;
+  signatureLength = 64;
+  keyLength = 32;
+  publicKeyLength = 32;
+  seedLength = 32;
 
   constructor(bytes: Uint8Array) {
     super();
@@ -99,15 +110,6 @@ export class SecretKey extends spec.quivr.models.SigningKey implements Ed25519Sp
       throw new Error(`Invalid left key length. Expected: ${this.keyLength}, Received: ${bytes.length}`);
     }
   }
-  signatureLength: number;
-  keyLength: number;
-  publicKeyLength: number;
-  seedLength: number;
-
-  static signatureLength = 64;
-  static keyLength = 32;
-  static publicKeyLength = 32;
-  static seedLength = 32;
 
   equals(other: SecretKey): boolean {
     return (
@@ -122,6 +124,10 @@ export class SecretKey extends spec.quivr.models.SigningKey implements Ed25519Sp
 
 export class PublicKey extends spec.quivr.models.VerificationKey implements Ed25519Spec {
   bytes: Uint8Array;
+  signatureLength = 64;
+  keyLength = 32;
+  publicKeyLength = 32;
+  seedLength = 32;
 
   constructor(bytes: Uint8Array) {
     super();
@@ -131,15 +137,15 @@ export class PublicKey extends spec.quivr.models.VerificationKey implements Ed25
       throw new Error(`Invalid right key length. Expected: ${this.publicKeyLength}, Received: ${bytes.length}`);
     }
   }
-  signatureLength: number;
-  keyLength: number;
-  publicKeyLength: number;
-  seedLength: number;
+  // signatureLength: number;
+  // keyLength: number;
+  // publicKeyLength: number;
+  // seedLength: number;
 
-  static signatureLength = 64;
-  static keyLength = 32;
-  static publicKeyLength = 32;
-  static seedLength = 32;
+  // static signatureLength = 64;
+  // static keyLength = 32;
+  // static publicKeyLength = 32;
+  // static seedLength = 32;
 
   equals(other: PublicKey): boolean {
     return (
