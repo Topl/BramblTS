@@ -2,9 +2,9 @@
 import { CipherParameters } from './cipherParameters';
 
 export abstract class PBEParametersGenerator {
-  protected password: Uint8Array;
-  protected salt: Uint8Array;
-  protected iterationCount: number;
+  protected password!: Uint8Array;
+  protected salt!: Uint8Array;
+  protected iterationCount!: number;
 
   init(password: Uint8Array, salt: Uint8Array, iterationCount: number): void {
     this.password = password;

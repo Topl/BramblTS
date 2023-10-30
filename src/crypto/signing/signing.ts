@@ -2,7 +2,7 @@ abstract class SigningKey {}
 
 abstract class VerificationKey {}
 
-class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
+export class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
   signingKey: SK;
   verificationKey: VK;
 

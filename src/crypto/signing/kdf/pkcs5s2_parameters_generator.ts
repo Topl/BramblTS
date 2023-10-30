@@ -91,9 +91,9 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
 }
 
 export class HMac implements Mac {
-  protected key: Uint8Array;
+  protected key!: Uint8Array;
   private digest: string;
-  private hmac;
+  private hmac!: crypto.Hmac;
 
   constructor(digest: string) {
     this.digest = digest;

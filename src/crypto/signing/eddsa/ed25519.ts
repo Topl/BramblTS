@@ -316,7 +316,7 @@ export class Ed25519 extends EC {
     const phf = phflag ?? 0x00; // facilitate Prehash Functionality
     const ctx = context || new Uint8Array(0);
   
-    if (pk !== null && pkOffset !== null) {
+    if (pk != null && pkOffset != null) {
       // do signing with pk and context
       this.implSignWithPrivateKeyAndPublicKey(
         sk,

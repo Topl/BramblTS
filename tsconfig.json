@@ -1,18 +1,29 @@
+// {
+//   "compilerOptions": {
+//     "module": "commonjs",
+//     "moduleResolution": "node",
+//     "target": "ES2020",
+//     "sourceMap": true,
+//     "outDir": "dist",
+//     "noUnusedLocals": true,
+//     "esModuleInterop": true,
+//     "noUnusedParameters": true,
+//     "resolveJsonModule": true,
+//     "baseUrl": "./src",
+//     "paths": {
+//       "@/*": ["*"]
+//     }
+//   },
+//   "include": ["src/**/*"]
+// }
+
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
     "target": "ES2020",
-    "sourceMap": true,
-    "outDir": "dist",
-    "noUnusedLocals": true,
-    "esModuleInterop": true,
-    "noUnusedParameters": true,
-    "resolveJsonModule": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    }
+    "module": "CommonJS",
+    "strict": true,
+    "outDir": "./dist"
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules"]
 }
