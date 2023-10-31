@@ -131,6 +131,8 @@ export class HMac implements Mac {
   }
 
   doFinal(output: Uint8Array, offset: number): void {
-    this.hmac.digest().copy(output, offset);
+    const hmacBuffer = this.hmac.digest();
+    hmacBuffer.copy(output, offset);
+    this.hmac = crypto.createHmac(this.digest, this.key);
   }
 }
