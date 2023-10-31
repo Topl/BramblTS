@@ -3,6 +3,8 @@ import { Digest, Digest32, Digest64 } from './digest/digest';
 import { Hash, Message } from './baseHash';
 
 abstract class SHA extends Hash {
+  abstract algorithmName(): string;
+  abstract digestSize(): number;
   abstract hash(bytes: Uint8Array): Uint8Array;
   abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
   abstract updateByte(inp: Uint8Array): void;
@@ -14,12 +16,20 @@ export class SHA256 extends SHA {
   digest = crypto.createHash('sha256');
   hashDigest: Uint8Array;
 
+  algorithmName(): string {
+    return 'SHA-256';
+  }
+
+  digestSize(): number {
+    return 32;
+  }
+
   doFinal(out: Uint8Array, inp: number): number {
     const hashBuffer = this.digest.digest();
 
     hashBuffer.copy(out, inp);
     // Reset the hash object for future use
-    this.digest = crypto.createHash('sha256'); 
+    this.digest = crypto.createHash('sha256');
     return out.length;
   }
 
@@ -32,7 +42,7 @@ export class SHA256 extends SHA {
   }
 
   hash(bytes: Uint8Array): Uint8Array {
-    let out = new Uint8Array(32);
+    let out = new Uint8Array(this.digestSize());
     this.update(bytes, 0, bytes.length);
     this.doFinal(out, 0);
     return out;
@@ -66,17 +76,25 @@ export class SHA512 extends SHA {
   digest = crypto.createHash('sha512');
   hashDigest: Uint8Array;
 
+  algorithmName(): string {
+    return 'SHA-512';
+  }
+
+  digestSize(): number {
+    return 64;
+  }
+
   doFinal(out: Uint8Array, inp: number): number {
     const hashBuffer = this.digest.digest();
 
     hashBuffer.copy(out, inp);
     // Reset the hash object for future use
-    this.digest = crypto.createHash('sha256'); 
+    this.digest = crypto.createHash('sha256');
     return out.length;
   }
 
   updateByte(inp: Uint8Array): void {
-   this.digest.update(inp);
+    this.digest.update(inp);
   }
 
   update(inp: Uint8Array, inpOff: number, len: number): void {
@@ -84,7 +102,7 @@ export class SHA512 extends SHA {
   }
 
   hash(bytes: Uint8Array): Uint8Array {
-    let out = new Uint8Array(64);
+    let out = new Uint8Array(this.digestSize());
     this.update(bytes, 0, bytes.length);
     this.doFinal(out, 0);
     return out;
