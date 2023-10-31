@@ -5,50 +5,37 @@ import { Hash, Message } from './baseHash';
 abstract class SHA extends Hash {
   abstract hash(bytes: Uint8Array): Uint8Array;
   abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
-  // Flag to track finalization
-  protected finalized: boolean = false;
-
   abstract updateByte(inp: Uint8Array): void;
   abstract update(inp: Uint8Array, inpOff: number, len: number): void;
-  abstract doFinal(): Uint8Array;
+  abstract doFinal(out: Uint8Array, inp: number): number;
 }
 
 export class SHA256 extends SHA {
   digest = crypto.createHash('sha256');
   hashDigest: Uint8Array;
 
-  doFinal(): Uint8Array {
-    if (this.finalized) {
-      throw new Error('Instance has already been finalized.');
-    }
-    this.finalized = true;
-    return this.digest.digest();
-  }
+  doFinal(out: Uint8Array, inp: number): number {
+    const hashBuffer = this.digest.digest();
 
-  isFinalized(): boolean {
-    return this.finalized;
+    hashBuffer.copy(out, inp);
+    // Reset the hash object for future use
+    this.digest = crypto.createHash('sha256'); 
+    return out.length;
   }
 
   updateByte(inp: Uint8Array): void {
-    if (this.finalized) {
-      throw new Error('Instance has been finalized and cannot be updated.');
-    }
     this.digest.update(inp);
   }
 
   update(inp: Uint8Array, inpOff: number, len: number): void {
-    if (this.finalized) {
-      throw new Error('Instance has been finalized and cannot be updated.');
-    }
     this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
   hash(bytes: Uint8Array): Uint8Array {
-    if (this.finalized) {
-      throw new Error('Instance has been finalized and cannot be used for hashing.');
-    }
+    let out = new Uint8Array(32);
     this.update(bytes, 0, bytes.length);
-    return this.doFinal();
+    this.doFinal(out, 0);
+    return out;
   }
 
   hashComplex(options: { prefix?: number; messages: Message[] }): Digest {
@@ -79,38 +66,28 @@ export class SHA512 extends SHA {
   digest = crypto.createHash('sha512');
   hashDigest: Uint8Array;
 
-  doFinal(): Uint8Array {
-    if (this.finalized) {
-      throw new Error('Instance has already been finalized.');
-    }
-    this.finalized = true;
-    return this.digest.digest();
-  }
+  doFinal(out: Uint8Array, inp: number): number {
+    const hashBuffer = this.digest.digest();
 
-  isFinalized(): boolean {
-    return this.finalized;
+    hashBuffer.copy(out, inp);
+    // Reset the hash object for future use
+    this.digest = crypto.createHash('sha256'); 
+    return out.length;
   }
 
   updateByte(inp: Uint8Array): void {
-    if (this.finalized) {
-      throw new Error('Instance has been finalized and cannot be updated.');
-    }
-    this.digest.update(inp);
+   this.digest.update(inp);
   }
 
   update(inp: Uint8Array, inpOff: number, len: number): void {
-    if (this.finalized) {
-      throw new Error('Instance has been finalized and cannot be updated.');
-    }
     this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
   hash(bytes: Uint8Array): Uint8Array {
-    if (this.finalized) {
-      throw new Error('Instance has been finalized and cannot be used for hashing.');
-    }
+    let out = new Uint8Array(64);
     this.update(bytes, 0, bytes.length);
-    return this.doFinal();
+    this.doFinal(out, 0);
+    return out;
   }
 
   hashComplex(options: { prefix?: number; messages: Message[] }): Digest {
