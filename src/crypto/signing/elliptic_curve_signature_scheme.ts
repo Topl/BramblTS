@@ -2,7 +2,7 @@
 import * as spec from '../../../proto/quivr/models/shared';
 import { EntropyToSeed, Pbkdf2Sha512 } from '../generation/entropy_to_seed';
 import { Entropy } from '../generation/mnemonic/entropy';
-import {KeyPair, SigningKey, VerificationKey} from './signing';
+import {KeyPair} from './signing';
 
 export abstract class EllipticCurveSignatureScheme<SK extends spec.quivr.models.SigningKey, VK extends spec.quivr.models.VerificationKey> {
   readonly seedLength: number;
