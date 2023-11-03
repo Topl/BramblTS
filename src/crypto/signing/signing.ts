@@ -1,10 +1,10 @@
-abstract class SigningKey {}
+export abstract class SigningKey {}
 
-abstract class VerificationKey {}
+export abstract class VerificationKey {}
 
-class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
-  signingKey: SK;
-  verificationKey: VK;
+export class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
+  readonly signingKey: SK;
+  readonly verificationKey: VK;
 
   constructor(signingKey: SK, verificationKey: VK) {
     this.signingKey = signingKey;
@@ -12,13 +12,13 @@ class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
   }
 
   equals(other: KeyPair<SK, VK>): boolean {
-    return (
-      this.signingKey === other.signingKey &&
-      this.verificationKey === other.verificationKey
-    );
+    return this === other ||
+      (other instanceof KeyPair &&
+       this.signingKey === other.signingKey &&
+       this.verificationKey === other.verificationKey);
   }
 
-  hashCode(): number {
-    return this.signingKey.hashCode() ^ this.verificationKey.hashCode();
-  }
+  // get hashCode(): number {
+  //   return this.signingKey.hashCode() ^ this.verificationKey.hashCode();
+  // }
 }
