@@ -14,7 +14,7 @@ abstract class SHA extends Hash {
 
 export class SHA256 extends SHA {
   digest = crypto.createHash('sha256');
-  hashDigest: Uint8Array;
+  hashDigest!: Uint8Array;
 
   algorithmName(): string {
     return 'SHA-256';
@@ -74,7 +74,7 @@ export class SHA256 extends SHA {
 
 export class SHA512 extends SHA {
   digest = crypto.createHash('sha512');
-  hashDigest: Uint8Array;
+  hashDigest!: Uint8Array;
 
   algorithmName(): string {
     return 'SHA-512';

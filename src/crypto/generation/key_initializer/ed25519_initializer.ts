@@ -6,6 +6,7 @@ import { English, Language } from '../mnemonic/language';
 import { InitializationFailure, InitializationFailureType } from './initialization_failure';
 import { KeyInitializer } from './key_initializer';
 import { randomUUID } from 'crypto';
+import * as spec from '../../../../proto/quivr/models/shared'
 
 class Ed25519Initializer implements KeyInitializer {
   private readonly ed25519: Ed25519;

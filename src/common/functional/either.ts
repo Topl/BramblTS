@@ -53,19 +53,19 @@ export class Either<L, R> {
     return this._right!;
   }
 
-  map<T>(f: (value: R) => T): Either<L, T> {
+  map<T>(f: (value: R) => T): Either<L, null> | Either<null, T> {
     return this.isRight ? Either.right(f(this.right)) : Either.left(this.left);
   }
 
-  flatMap<T>(f: (value: R) => Either<L, T>): Either<L, T> {
+  flatMap<T>(f: (value: R) => Either<L, T>): Either<L, T> | Either<L, null> {
     return this.isRight ? f(this.right) : Either.left(this.left);
   }
 
-  mapLeft<T>(f: (value: L) => T): Either<T, R> {
+  mapLeft<T>(f: (value: L) => T): Either<T, null> | Either<null, R> {
     return this.isLeft ? Either.left(f(this.left)) : Either.right(this.right);
   }
 
-  flatMapLeft<T>(f: (value: L) => Either<T, R>): Either<T, R> {
+  flatMapLeft<T>(f: (value: L) => Either<T, R>): Either<null, R> | Either<T, R> {
     return this.isLeft ? f(this.left) : Either.right(this.right);
   }
 
@@ -104,7 +104,7 @@ export class Either<L, R> {
     }
   }
 
-  mapLeftVoid<T>(f: (value: L) => T): Either<T, R> {
+  mapLeftVoid<T>(f: (value: L) => T): Either<T, null> {
     return Either.left(f(this.left));
   }
 
@@ -116,7 +116,7 @@ export class Either<L, R> {
     return this.isLeft ? new Some(this.left) : new None();
   }
 
-  static conditional<L, R>(condition: boolean, { left, right }: { left: L; right: R }): Either<L, R> {
+  static conditional<L, R>(condition: boolean, { left, right }: { left: L; right: R }): Either<null, R> | Either<L, null> {
     return condition ? Either.right(right) : Either.left(left);
   }
 
