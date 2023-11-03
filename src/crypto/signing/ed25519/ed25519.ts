@@ -2,34 +2,18 @@
 import { Ed25519 as EdDSAEd25519 } from '../eddsa/ed25519';
 
 import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
-import { Ed25519Spec, PublicKey, SecretKey } from './ed25519_spec';
+import * as spec from './ed25519_spec';
 
-const ed25519Spec: Ed25519Spec = {
-  signatureLength: 64,
-  keyLength: 32,
-  publicKeyLength: 32,
-  seedLength: 32
-}
-
-export class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> {
-  // deriveKeyPairFromSeed(seed: Uint8Array): KeyPair<SecretKey, PublicKey> {
-  //   throw new Error('Method not implemented.');
-  // }
-  // deriveKeyPairFromSeed(seed: Uint8Array): KeyPair<SK, VK> {
-  deriveKeyPairFromSeed(seed: Uint8Array): any {
-  const secretKey = this.deriveSecretKeyFromSeed(seed);
-    const publicKey = this.getVerificationKey(secretKey);
-    return { secretKey, publicKey };
-  }
+export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
   private impl: EdDSAEd25519;
 
   constructor() {
-    super(ed25519Spec.seedLength);
+    super(spec.Ed25519Spec.seedLength);
     this.impl = new EdDSAEd25519();
   }
 
-  sign(privateKey: SecretKey, message: Uint8Array): Uint8Array {
-    const sig = new Uint8Array(ed25519Spec.signatureLength);
+  sign(privateKey: spec.SecretKey, message: Uint8Array): Uint8Array {
+    const sig = new Uint8Array(spec.Ed25519Spec.signatureLength);
     this.impl.sign({
       sk: privateKey.bytes,
       skOffset: 0,
@@ -42,14 +26,14 @@ export class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> 
     return sig;
   }
 
-  verify(signature: Uint8Array, message: Uint8Array, publicKey: PublicKey): boolean {
+  verify(signature: Uint8Array, message: Uint8Array, publicKey: spec.PublicKey): boolean {
     const sigByteArray = signature;
     const vkByteArray = publicKey.bytes;
     const msgByteArray = message;
 
     return (
-      sigByteArray.length === ed25519Spec.signatureLength &&
-      vkByteArray.length === ed25519Spec.publicKeyLength &&
+      sigByteArray.length === spec.Ed25519Spec.signatureLength &&
+      vkByteArray.length === spec.Ed25519Spec.publicKeyLength &&
       this.impl.verify({
         signature: sigByteArray,
         signatureOffset: 0,
@@ -62,17 +46,17 @@ export class Ed25519 extends EllipticCurveSignatureScheme<SecretKey, PublicKey> 
     );
   }
 
-  getVerificationKey(secretKey: SecretKey): PublicKey {
-    const pkBytes = new Uint8Array(ed25519Spec.publicKeyLength);
+  getVerificationKey(secretKey: spec.SecretKey): spec.PublicKey {
+    const pkBytes = new Uint8Array(spec.Ed25519Spec.publicKeyLength);
     this.impl.generatePublicKey(secretKey.bytes, 0, pkBytes, 0);
-    return new PublicKey(pkBytes);
+    return new spec.PublicKey(pkBytes);
   }
 
-  deriveSecretKeyFromSeed(seed: Uint8Array): SecretKey {
-    if (seed.length < ed25519Spec.seedLength) {
-      throw new Error(`Invalid seed length. Expected: ${ed25519Spec.seedLength}, Received: ${seed.length}`);
+  deriveSecretKeyFromSeed(seed: Uint8Array): spec.SecretKey {
+    if (seed.length < spec.Ed25519Spec.seedLength) {
+      throw new Error(`Invalid seed length. Expected: ${spec.Ed25519Spec.seedLength}, Received: ${seed.length}`);
     }
-    return new SecretKey(seed.slice(0, 32));
+    return new spec.SecretKey(seed.slice(0, 32));
   }
 }
 
