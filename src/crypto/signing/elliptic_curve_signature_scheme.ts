@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { EntropyToSeed, Pbkdf2Sha512 } from '../generation/entropy_to_seed';
 import { Entropy } from '../generation/mnemonic/entropy';
+import {KeyPair, SigningKey, VerificationKey} from './signing';
 
 export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK extends VerificationKey> {
   readonly seedLength: number;
@@ -18,8 +19,12 @@ export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK ext
     return this.deriveKeyPairFromSeed(seed);
   }
 
-  abstract deriveKeyPairFromSeed(seed: Uint8Array): KeyPair<SK, VK>;
-
+  deriveKeyPairFromSeed(seed: Uint8Array): KeyPair<SK, VK> {
+    const secretKey = this.deriveSecretKeyFromSeed(seed);
+    const verificationKey = this.getVerificationKey(secretKey);
+    return new KeyPair(secretKey, verificationKey);
+  }
+  
   abstract deriveSecretKeyFromSeed(seed: Uint8Array): SK;
 
   abstract sign(privateKey: SK, message: Uint8Array): Uint8Array;
