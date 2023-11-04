@@ -34,12 +34,15 @@ export class Ed25519 extends EC {
   }
 
   generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
-    const d = digest || this.defaultDigest;
+    const d = digest ?? this.defaultDigest;
+    console.log('d from generatePublicKey ... ', d);
 
-    let h = new Uint8Array(d.digestSize());
-    d.update(sk, skOff, skOff + SECRET_KEY_SIZE);
+    const h = new Uint8Array(d.digestSize());
+    console.log('h from generatePublicKey ... ', h);
+    d.update(sk, skOff, SECRET_KEY_SIZE);
+    // console.log('d.update from generatePublicKey ... ', d.update(sk, skOff, skOff + SECRET_KEY_SIZE));
     d.doFinal(h, 0);
-    console.log('h', h);
+    // console.log('d.doFinal from generatePublicKey', d.doFinal(h, 0));
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
     this.scalarMultBaseEncoded(s, pk, pkOff);
@@ -129,7 +132,7 @@ export class Ed25519 extends EC {
     }
 
     // Compute the SHA-512 hash of the private key.
-    let h = new Uint8Array(this.defaultDigest.digestSize());
+    const h = new Uint8Array(this.defaultDigest.digestSize());
     this.defaultDigest.update(sk, skOffset, SECRET_KEY_SIZE);
     this.defaultDigest.doFinal(h, 0);
 
@@ -184,7 +187,7 @@ export class Ed25519 extends EC {
     }
 
     // Compute the SHA-512 hash of the private key.
-    let h = new Uint8Array(this.defaultDigest.digestSize());
+    const h = new Uint8Array(this.defaultDigest.digestSize());
     this.defaultDigest.update(sk, skOffset, SECRET_KEY_SIZE);
     this.defaultDigest.doFinal(h, 0);
 
@@ -238,7 +241,7 @@ export class Ed25519 extends EC {
     if (!this.decodePointVar(pk, pkOffset, { negate: true, r: pA })) return false;
 
     // Compute the SHA-512 hash of the message and the other parameters.
-    let h = new Uint8Array(this.defaultDigest.digestSize());
+    const h = new Uint8Array(this.defaultDigest.digestSize());
     this._dom2(this.defaultDigest, phflag, context);
     this.defaultDigest.update(R, 0, POINT_BYTES);
     this.defaultDigest.update(pk, pkOffset, POINT_BYTES);
@@ -409,7 +412,7 @@ export class Ed25519 extends EC {
         signatureOffset,
       });
     } else if (phSha && !ph) {
-      let m = new Uint8Array(PREHASH_SIZE);
+      const m = new Uint8Array(PREHASH_SIZE);
       if (PREHASH_SIZE !== phSha.doFinal(m, 0)) {
         throw new Error('Prehash Invalid');
       }
@@ -504,7 +507,7 @@ export class Ed25519 extends EC {
     if (!phSha && ph) {
       return this._implVerify(signature, signatureOffset, pk, pkOffset, context, phflag, ph, phOff, PREHASH_SIZE);
     } else if (phSha && !ph) {
-      let m = new Uint8Array(PREHASH_SIZE);
+      const m = new Uint8Array(PREHASH_SIZE);
       if (PREHASH_SIZE !== phSha.doFinal(m, 0)) {
         throw new Error('Prehash as Sha Invalid');
       }
