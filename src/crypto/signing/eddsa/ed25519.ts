@@ -36,12 +36,12 @@ export class Ed25519 extends EC {
   generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
     const d = digest || this.defaultDigest;
 
-    let h = Buffer.alloc(d.digestSize());
+    let h = new Uint8Array(d.digestSize());
     d.update(sk, skOff, skOff + SECRET_KEY_SIZE);
     d.doFinal(h, 0);
+    console.log('h', h);
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
-
     this.scalarMultBaseEncoded(s, pk, pkOff);
   }
 

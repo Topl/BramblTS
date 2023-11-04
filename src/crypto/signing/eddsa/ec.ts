@@ -642,8 +642,10 @@ export class EC {
     for (let i = 0; i < SCALAR_BYTES; i++) {
       r[i] = n[nOff + i];
     }
-    r[0] = (r[0] & 0xf8) | 0;
-    r[SCALAR_BYTES - 1] = (r[SCALAR_BYTES - 1] & 0x7f) | 0x40;
+    r[0] = (r[0] & 0xf8);
+    r[SCALAR_BYTES - 1] = (r[SCALAR_BYTES - 1] & 0x7f);
+    r[SCALAR_BYTES - 1] = (r[SCALAR_BYTES - 1] | 0x40);
+    console.log('r', r);
   }
 
   reduceScalar(n: Uint8Array): Uint8Array {
