@@ -89,7 +89,7 @@ export class SHA512 extends SHA {
 
     hashBuffer.copy(out, inp);
     // Reset the hash object for future use
-    this.digest = crypto.createHash('sha256');
+    this.digest = crypto.createHash('sha512');
     return out.length;
   }
 
