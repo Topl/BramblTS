@@ -42,7 +42,7 @@ export class SHA256 extends SHA {
   }
 
   hash(bytes: Uint8Array): Uint8Array {
-    let out = new Uint8Array(this.digestSize());
+    const out = new Uint8Array(this.digestSize());
     this.update(bytes, 0, bytes.length);
     this.doFinal(out, 0);
     return out;
@@ -95,6 +95,8 @@ export class SHA512 extends SHA {
 
   updateByte(inp: Uint8Array): void {
     this.digest.update(inp);
+    console.log('inp from updateByte', inp);
+    console.log('digest from updateByte', this.digest.update(inp));
   }
 
   update(inp: Uint8Array, inpOff: number, len: number): void {
@@ -102,7 +104,7 @@ export class SHA512 extends SHA {
   }
 
   hash(bytes: Uint8Array): Uint8Array {
-    let out = new Uint8Array(this.digestSize());
+    const out = new Uint8Array(this.digestSize());
     this.update(bytes, 0, bytes.length);
     this.doFinal(out, 0);
     return out;
