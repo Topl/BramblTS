@@ -5,7 +5,7 @@ import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme
 import * as spec from './ed25519_spec';
 
 export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
-  private impl: EdDSAEd25519;
+  public impl: EdDSAEd25519;
 
   constructor() {
     super(spec.Ed25519Spec.seedLength);
@@ -48,8 +48,10 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
 
   getVerificationKey(secretKey: spec.SecretKey): spec.PublicKey {
     const pkBytes = new Uint8Array(spec.Ed25519Spec.publicKeyLength);
+    console.log('pkBytes', pkBytes);
     console.log('secret key', secretKey.bytes);
     this.impl.generatePublicKey(secretKey.bytes, 0, pkBytes, 0);
+    console.log('publicKey', new spec.PublicKey(pkBytes));
     return new spec.PublicKey(pkBytes);
   }
 

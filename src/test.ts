@@ -1,3 +1,4 @@
+import { SHA512 } from './crypto/hash/sha';
 import Ed25519 from './crypto/signing/ed25519/ed25519';
 import { SecretKey } from './crypto/signing/ed25519/ed25519_spec';
 import { SHA512 } from './crypto/hash/sha';
