@@ -42,7 +42,7 @@ export class Ed25519 extends EC {
     d.update(sk, skOff, SECRET_KEY_SIZE);
     // console.log('d.update from generatePublicKey ... ', d.update(sk, skOff, skOff + SECRET_KEY_SIZE));
     d.doFinal(h, 0);
-    // console.log('d.doFinal from generatePublicKey', d.doFinal(h, 0));
+    console.log('h from generatePublicKey', h);
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
     this.scalarMultBaseEncoded(s, pk, pkOff);

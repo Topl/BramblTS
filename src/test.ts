@@ -1,7 +1,6 @@
 import { SHA512 } from './crypto/hash/sha';
 import Ed25519 from './crypto/signing/ed25519/ed25519';
 import { SecretKey } from './crypto/signing/ed25519/ed25519_spec';
-import { SHA512 } from './crypto/hash/sha';
 
 function stringToUint8Array(str: string): Uint8Array {
   const length = str.length / 2;
@@ -23,17 +22,19 @@ function stringToUint8Array(str: string): Uint8Array {
 // console.log('checking signature', checkSign);
 console.log('string', stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
-const publicKey = new Ed25519().getVerificationKey(new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')));
+const publicKey = new Ed25519().getVerificationKey(
+  new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
+);
 console.log('public key', publicKey.bytes);
 // const buffer = Buffer.from(publicKey.bytes);
 // console.log('public key', buffer.toString('hex'));
 
 const sha512 = new SHA512();
 const array = new Uint8Array(64);
-let hash = sha512.hash(array);
+const hash = sha512.hash(array);
 console.log('hash1', hash);
 
 // sha512.update(new Uint8Array([6, 7, 8, 9, 10]), 1, 3);
-let hash2 = new Uint8Array(64);
+const hash2 = new Uint8Array(64);
 sha512.doFinal(hash2, 0);
 console.log('hash2', hash2);

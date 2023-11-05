@@ -119,27 +119,35 @@ export class EC {
 
   cmov(len: number, mask: number, x: Int32List, xOff: number, z: Int32List, zOff: number): void {
     let maskv = mask;
-    maskv = -(maskv & 1);
+    maskv = (maskv & 1) ? -(maskv & 1) : (maskv & 1);
+    // console.log('maskv from ec ... ', maskv);
 
     for (let i = 0; i < len; i++) {
       let zi = z[zOff + i];
-      const diff = zi ^ x[xOff + i];
+      const diff = zi ^ (x[xOff + i]);
+      // console.log('zi ...', zi);
+      // console.log('diff ...', diff);
       zi ^= diff & maskv;
       z[zOff + i] = zi;
     }
   }
 
   cadd(len: number, mask: number, x: Int32List, y: Int32List, z: Int32List): number {
-    const m = -(mask & 1) & Number(M);
-    let c = 0;
+    const m = -BigInt(mask & 1) & M;
+    // const mNew = Number(M)
+    console.log('m from cadd ... ', m);
+    let c = BigInt(0);
 
     for (let i = 0; i < len; i++) {
-      c += (x[i] & Number(M)) + (y[i] & m);
-      z[i] = c & Number(M);
-      c >>>= 32;
+      c += (BigInt(x[i]) & BigInt(M)) + (BigInt(y[i]) & BigInt(m));
+      // z[i] = c & Number(M);
+      // c >>>= 32;
+      // c += (BigInt(x[i]) & BigInt(M)) + (BigInt(y[i]) & BigInt(m));
+      z[i] = Number(c & BigInt(M));
+      c >>= BigInt(32);
     }
 
-    return c;
+    return Number(c);
   }
 
   shiftDownBit(len: number, z: Int32List, c: number): number {
@@ -260,7 +268,9 @@ export class EC {
   }
 
   decodeScalar(k: Uint8Array, kOff: number, n: Int32Array): void {
+    // console.log(`k -> ${k}, kOff -> ${kOff} and n -> ${n}`);
     this.decode32(k, kOff, n, 0, SCALAR_INTS);
+    // console.log(`k -> ${k}, kOff -> ${kOff} and n -> ${n}`);
   }
 
   encode24(n: number, bs: Uint8Array, off: number): void {
@@ -508,8 +518,10 @@ export class EC {
 
   pointLookup(block: number, index: number, p: PointPrecomp) {
     let off = block * PRECOMP_POINTS * 3 * x25519_field.SIZE;
+    // console.log('off form ec ... ', off);
     for (let i = 0; i < PRECOMP_POINTS; i++) {
       const mask = ((i ^ index) - 1) >> 31;
+      // console.log('mask from ec ... ', mask);
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ypxH, 0);
       off += x25519_field.SIZE;
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ymxH, 0);
@@ -517,6 +529,8 @@ export class EC {
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.xyd, 0);
       off += x25519_field.SIZE;
     }
+
+    // console.log('p form ec ... ', p[0]?.ypxH);
   }
 
   pointPrecompVar(p: PointExt, count: number): PointExt[] {
@@ -639,12 +653,13 @@ export class EC {
   }
 
   pruneScalar(n: Uint8Array, nOff: number, r: Uint8Array): void {
+    // console.log(`pruning scalar n -> ${n} and nOff -> ${nOff} and r -> ${r}`)
     for (let i = 0; i < SCALAR_BYTES; i++) {
       r[i] = n[nOff + i];
     }
-    r[0] = (r[0] & 0xf8);
-    r[SCALAR_BYTES - 1] = (r[SCALAR_BYTES - 1] & 0x7f);
-    r[SCALAR_BYTES - 1] = (r[SCALAR_BYTES - 1] | 0x40);
+    r[0] = r[0] & 0xf8;
+    r[SCALAR_BYTES - 1] = r[SCALAR_BYTES - 1] & 0x7f;
+    r[SCALAR_BYTES - 1] = r[SCALAR_BYTES - 1] | 0x40;
     console.log('r', r);
   }
 
@@ -802,21 +817,29 @@ export class EC {
   }
 
   scalarMultBase(k: Uint8Array, r: PointAccum): void {
+    // console.log(`k -> ${k}, and r -> ${r}`);
     this.pointSetNeutralAccum(r);
+
+    console.log('r from scalarmult -> ', r);
 
     const n = new Int32Array(SCALAR_INTS);
     this.decodeScalar(k, 0, n);
 
     // Recode the scalar into signed-digit form, then group comb bits in each block
     this.cadd(SCALAR_INTS, ~n[0] & 1, n, L, n);
+    // console.log('cadd from ec ... ', value);
+    // console.log(' ... ', ~n[0] & 1)
     this.shiftDownBit(SCALAR_INTS, n, 1);
+    // console.log('value form ec ... ', value);
 
     for (let i = 0; i < SCALAR_INTS; i++) {
       n[i] = this.shuffle2(n[i]) >>> 0;
     }
 
     const p = PointPrecomp.create();
+    // console.log('n from ec ...', p);
     let cOff = (PRECOMP_SPACING - 1) * PRECOMP_TEETH;
+    // console.log('cOff from ec ...', cOff);
 
     while (true) {
       for (let b = 0; b < PRECOMP_BLOCKS; b++) {
@@ -825,6 +848,10 @@ export class EC {
         const abs = (w ^ -sign) & PRECOMP_MASK;
 
         this.pointLookup(b, abs, p);
+
+        // console.log('b from loop ... ', b);
+        // console.log('abs from loop ... ', abs);
+        // console.log('p from loop ... ', p);
 
         x25519_field.cswap(sign, p.ypxH, p.ymxH);
         x25519_field.cnegate(sign, p.xyd);
@@ -849,8 +876,11 @@ export class EC {
   }
 
   scalarMultBaseEncoded(k: Uint8Array, r: Uint8Array, rOff: number): void {
+    // console.log(`k -> ${k}, r -> ${r} and rOff -> ${rOff}`);
     const p = PointAccum.create();
+    // console.log(`p -> ${p}`);
     this.scalarMultBase(k, p);
+    // console.log(`k -> ${k} and p -> ${p}`);
     this.encodePoint(p, r, rOff);
   }
 
