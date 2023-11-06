@@ -48,7 +48,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
 
   getVerificationKey(secretKey: spec.SecretKey): spec.PublicKey {
     const pkBytes = new Uint8Array(spec.Ed25519Spec.publicKeyLength);
-    console.log('secret key', secretKey.bytes);
+    // console.log('secret key', secretKey.bytes);
     this.impl.generatePublicKey(secretKey.bytes, 0, pkBytes, 0);
     console.log('pkBytes', pkBytes);
     console.log('publicKey', new spec.PublicKey(pkBytes));

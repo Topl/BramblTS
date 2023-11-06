@@ -41,7 +41,7 @@ import * as x25519_field from './x25519_field';
 
 export class EC {
   private _precompBaseTable: PointExt[];
-  private _precompBase: Int32List;
+  private _precompBase: Int32Array;
 
   constructor() {
     const precompute = this._precompute();
@@ -118,16 +118,13 @@ export class EC {
     return true;
   }
 
-  cmov(len: number, mask: number, x: Int32List, xOff: number, z: Int32List, zOff: number): void {
+  cmov(len: number, mask: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number): void {
     let maskv = mask;
     maskv = (maskv & 1) ? -(maskv & 1) : (maskv & 1);
-    // console.log('maskv from ec ... ', maskv);
-
     for (let i = 0; i < len; i++) {
       let zi = z[zOff + i];
-      const diff = zi ^ (x[xOff + i]);
-      // console.log('zi ...', zi);
-      // console.log('diff ...', diff);
+      const diff = zi ^ x[xOff + i];
+      // console.log('zi from cmov ... ', zi);
       zi ^= diff & maskv;
       z[zOff + i] = zi;
     }
@@ -136,7 +133,7 @@ export class EC {
   cadd(len: number, mask: number, x: Int32List, y: Int32List, z: Int32List): number {
     const m = -BigInt(mask & 1) & M;
     // const mNew = Number(M)
-    console.log('m from cadd ... ', m);
+    // console.log('m from cadd ... ', m);
     let c = BigInt(0);
 
     for (let i = 0; i < len; i++) {
@@ -519,14 +516,10 @@ export class EC {
 
   pointLookup(block: number, index: number, p: PointPrecomp) {
     let off = block * PRECOMP_POINTS * 3 * x25519_field.SIZE;
-    console.log('off form ec ... ', p.ypxH);
+    // console.log('off form ec ... ', p.ypxH);
     for (let i = 0; i < 1; i++) {
       const mask = ((i ^ index) - 1) >> 31;
-      console.log('first param ... ', x25519_field.SIZE);
-      console.log('second param ... ', mask);
-      console.log('third param ... ', this._precompBase);
-      console.log('fourth param ... ', off);
-      console.log('fifth param ... ', p.ypxH);
+      // console.log('first  ram ... ', p.ypxH);
 
       // let thirdParamJson = JSON.stringify(this._precompBase);
       // fs.writeFile('new.json', thirdParamJson, (err) => {
@@ -579,7 +572,7 @@ export class EC {
     return p;
   }
 
-  _precompute(): [PointExt[], Int32List] {
+  _precompute(): [PointExt[], Int32Array] {
     // Precomputed table for the base point in verification ladder
     const b = this.pointExtendXY(
       this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: x25519_field.create(), t: x25519_field.create() }),
