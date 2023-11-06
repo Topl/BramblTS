@@ -28,6 +28,7 @@
 Table 1: Parameters of Ed25519
  */
 
+// import fs from 'fs';
 import * as x25519_field from './x25519_field';
 
 /// AMS 2021: Supporting curve point operations for all EC crypto primitives in eddsa package
@@ -518,10 +519,25 @@ export class EC {
 
   pointLookup(block: number, index: number, p: PointPrecomp) {
     let off = block * PRECOMP_POINTS * 3 * x25519_field.SIZE;
-    // console.log('off form ec ... ', off);
-    for (let i = 0; i < PRECOMP_POINTS; i++) {
+    console.log('off form ec ... ', p.ypxH);
+    for (let i = 0; i < 1; i++) {
       const mask = ((i ^ index) - 1) >> 31;
-      // console.log('mask from ec ... ', mask);
+      console.log('first param ... ', x25519_field.SIZE);
+      console.log('second param ... ', mask);
+      console.log('third param ... ', this._precompBase);
+      console.log('fourth param ... ', off);
+      console.log('fifth param ... ', p.ypxH);
+
+      // let thirdParamJson = JSON.stringify(this._precompBase);
+      // fs.writeFile('new.json', thirdParamJson, (err) => {
+      //   if(err){
+      //     console.log('error writing file ... ', err);
+      //   } else{
+      //     console.log('file written successfully ... ');
+      //   }
+      // });
+      
+
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ypxH, 0);
       off += x25519_field.SIZE;
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ymxH, 0);
@@ -529,6 +545,8 @@ export class EC {
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.xyd, 0);
       off += x25519_field.SIZE;
     }
+
+    // console.log('p from point lookup ... ', p);
 
     // console.log('p form ec ... ', p[0]?.ypxH);
   }
@@ -842,10 +860,14 @@ export class EC {
     // console.log('cOff from ec ...', cOff);
 
     while (true) {
-      for (let b = 0; b < PRECOMP_BLOCKS; b++) {
-        const w = n[b] >>> cOff;
-        const sign = (w >>> (PRECOMP_TEETH - 1)) & 1;
-        const abs = (w ^ -sign) & PRECOMP_MASK;
+      for (let b = 0; b < 1; b++) {
+        const w = BigInt(n[b]) >> BigInt(cOff);
+        const sign = Number((w >> BigInt(PRECOMP_TEETH - 1)) & BigInt(1));
+        const abs = Number((w ^ BigInt(-sign)) & BigInt(PRECOMP_MASK));
+
+        // console.log('b from loop ... ', b);
+        // console.log('abs from loop ... ', abs);
+        console.log('p from loop ... ', p.ypxH);
 
         this.pointLookup(b, abs, p);
 
@@ -867,6 +889,7 @@ export class EC {
 
       this.pointDouble(r);
     }
+    console.log('p from ec ... ', p);
   }
 
   createScalarMultBaseEncoded(s: Uint8Array): Uint8Array {

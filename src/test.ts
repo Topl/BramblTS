@@ -1,6 +1,8 @@
 import { SHA512 } from './crypto/hash/sha';
 import Ed25519 from './crypto/signing/ed25519/ed25519';
 import { SecretKey } from './crypto/signing/ed25519/ed25519_spec';
+import { EC } from './crypto/signing/eddsa/ec';
+// import fs from 'fs';
 
 function stringToUint8Array(str: string): Uint8Array {
   const length = str.length / 2;
@@ -38,3 +40,12 @@ console.log('hash1', hash);
 const hash2 = new Uint8Array(64);
 sha512.doFinal(hash2, 0);
 console.log('hash2', hash2);
+
+// const thirdParam = fs.readFileSync('new.json', 'utf8');
+// const thirdParamParse = JSON.parse(thirdParam);
+
+// console.log('third...', thirdParamParse);
+
+
+const newCmov = new EC();
+console.log('new log', newCmov.cmov(10, 0, [], 0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0))
