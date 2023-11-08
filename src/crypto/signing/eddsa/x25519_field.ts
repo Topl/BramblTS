@@ -3,12 +3,20 @@ export const SIZE = 10;
 export const M24 = 0x00ffffff;
 export const M25 = 0x01ffffff;
 export const M26 = 0x03ffffff;
-export const ROOT_NEG_ONE: number[] = [
-  0x020ea0b0, 0x0386c9d2, 0x00478c4e, 0x0035697f, 0x005e8630, 0x01fbd7a7, 0x0340264f, 0x01f0b2b4, 0x00027e0e,
-  0x00570649,
-];
+export const ROOT_NEG_ONE = Int32Array.from([
+  0x020ea0b0,
+  0x0386c9d2,
+  0x00478c4e,
+  0x0035697f,
+  0x005e8630,
+  0x01fbd7a7,
+  0x0340264f,
+  0x01f0b2b4,
+  0x00027e0e,
+  0x00570649
+]);
 
-export function add(x: Int32List, y: Int32List, z: Int32List): void {
+export function add(x: Int32Array, y: Int32Array, z: Int32Array): void {
   for (let i = 0; i < SIZE; i++) {
     z[i] = x[i] + y[i];
   }
@@ -22,12 +30,12 @@ export function addOne2(z: Int32Array, zOff: number): void {
   z[zOff] += 1;
 }
 
-export function apm(x: Int32List, y: Int32List, zp: Int32Array, zm: Int32Array): void {
+export function apm(x: Int32Array, y: Int32Array, zp: Int32Array, zm: Int32Array): void {
   for (let i = 0; i < SIZE; i++) {
     const xi = x[i];
     const yi = y[i];
-    zp[i] = (xi + yi) | 0;
-    zm[i] = (xi - yi) | 0;
+    zp[i] = Number(xi + yi);
+    zm[i] = Number(xi - yi);
   }
 }
 
@@ -93,7 +101,7 @@ export function cnegate(negate: number, z: Int32Array) {
   }
 }
 
-export function copy(x: Int32List, xOff: number, z: Int32List, zOff: number) {
+export function copy(x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
   // console.log('x -> ', x);
   // console.log('xOff -> ', xOff);
   // console.log('z -> ', z);
@@ -119,13 +127,13 @@ export function create(): Int32Array {
   return new Int32Array(SIZE);
 }
 
-export function decode(x: Uint8Array, xOff: number, z: Int32List): void {
+export function decode(x: Uint8Array, xOff: number, z: Int32Array): void {
   decode128(x, xOff, z, 0);
   decode128(x, xOff + 16, z, 5);
   z[9] = z[9] & M24;
 }
 
-export function decode128(bs: Uint8Array, off: number, z: Int32List, zOff: number): void {
+export function decode128(bs: Uint8Array, off: number, z: Int32Array, zOff: number): void {
   const t0 = decode32(bs, off + 0);
   const t1 = decode32(bs, off + 4);
   const t2 = decode32(bs, off + 8);
@@ -185,7 +193,7 @@ export function inv(x: Int32Array, z: Int32Array): void {
   mul2(t, x2, z);
 }
 
-export function isZero(x: Int32List): number {
+export function isZero(x: Int32Array): number {
   let d = 0;
 
   for (let i = 0; i < SIZE; i++) {
@@ -197,11 +205,11 @@ export function isZero(x: Int32List): number {
   return ((d - 1) >> 31) | 0;
 }
 
-export function isZeroVar(x: Int32List): boolean {
+export function isZeroVar(x: Int32Array): boolean {
   return isZero(x) !== 0;
 }
 
-export function mul1(x: Int32List, y: number, z: Int32List) {
+export function mul1(x: Int32Array, y: number, z: Int32Array) {
   const x0 = x[0];
   const x1 = x[1];
   let x2 = x[2];
@@ -265,7 +273,7 @@ export function mul1(x: Int32List, y: number, z: Int32List) {
   z[9] = x9 + Number(c2);
 }
 
-export function mul2(x: Int32List, y: Int32List, z: Int32List) {
+export function mul2(x: Int32Array, y: Int32Array, z: Int32Array) {
   let x0 = x[0];
   let y0 = y[0];
   let x1 = x[1];
@@ -435,19 +443,19 @@ export function mul2(x: Int32List, y: Int32List, z: Int32List) {
   z[9] = Number(z9 + Number(t));
 }
 
-export function negate(x: Int32List, z: Int32List): void {
+export function negate(x: Int32Array, z: Int32Array): void {
   for (let i = 0; i < SIZE; i++) {
     z[i] = -x[i];
   }
 }
 
-export function normalize(z: Int32List): void {
+export function normalize(z: Int32Array): void {
   const x = (z[9] >>> 23) & 1;
   reduce(z, x);
   reduce(z, -x);
 }
 
-export function one(z: Int32List): void {
+export function one(z: Int32Array): void {
   z[0] = 1;
 
   for (let i = 1; i < SIZE; i++) {
@@ -455,7 +463,7 @@ export function one(z: Int32List): void {
   }
 }
 
-export function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
+export function powPm5d8(x: Int32Array, rx2: Int32Array, rz: Int32Array) {
   const x2 = rx2;
   sqr(x, x2);
   mul2(x, x2, x2);
@@ -501,7 +509,7 @@ export function powPm5d8(x: Int32List, rx2: Int32List, rz: Int32List) {
   mul2(t, x, rz);
 }
 
-export function reduce(z: Int32List, c: number): void {
+export function reduce(z: Int32Array, c: number): void {
   let z9 = z[9] | 0;
   let t = z9;
 
@@ -540,7 +548,7 @@ export function reduce(z: Int32List, c: number): void {
   z[9] = t;
 }
 
-export function sqr(x: Int32List, z: Int32List): void {
+export function sqr(x: Int32Array, z: Int32Array): void {
   let x0 = x[0];
   let x1 = x[1];
   let x2 = x[2];
@@ -664,7 +672,7 @@ export function sqr(x: Int32List, z: Int32List): void {
   z[9] = z9 + Number(t);
 }
 
-export function sqr2(x: Int32List, n: number, z: Int32List): void {
+export function sqr2(x: Int32Array, n: number, z: Int32Array): void {
   let nv = n;
 
   sqr(x, z);
@@ -674,7 +682,7 @@ export function sqr2(x: Int32List, n: number, z: Int32List): void {
   }
 }
 
-export function sqrtRatioVar(u: Int32List, v: Int32List, z: Int32List): boolean {
+export function sqrtRatioVar(u: Int32Array, v: Int32Array, z: Int32Array): boolean {
   const uv3 = create();
   const uv7 = create();
 
@@ -713,17 +721,17 @@ export function sqrtRatioVar(u: Int32List, v: Int32List, z: Int32List): boolean 
   return false;
 }
 
-export function sub(x: Int32List, y: Int32List, z: Int32List) {
+export function sub(x: Int32Array, y: Int32Array, z: Int32Array) {
   for (let i = 0; i < SIZE; i++) {
     z[i] = x[i] - y[i];
   }
 }
 
-export function subOne(z: Int32List) {
+export function subOne(z: Int32Array) {
   z[0] -= 1;
 }
 
-export function zero(z: Int32List) {
+export function zero(z: Int32Array) {
   for (let i = 0; i < SIZE; i++) {
     z[i] = 0;
   }
