@@ -16,20 +16,20 @@ function stringToUint8Array(str: string): Uint8Array {
   return uint8Array;
 }
 
-// const checkSign = new Ed25519().sign(
-//   new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
-//   stringToUint8Array(''),
-// );
+const checkSign = new Ed25519().sign(
+  new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
+  stringToUint8Array(''),
+);
 
-// console.log('checking signature', checkSign);
+console.log('checking signature', checkSign);
 // console.log('string', stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
 
 const publicKey = new Ed25519().getVerificationKey(
   new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
 );
-console.log('public key', publicKey.bytes);
-// const buffer = Buffer.from(publicKey.bytes);
-// console.log('public key', buffer.toString('hex'));
+// console.log('public key', publicKey.bytes);
+const buffer = Buffer.from(publicKey.bytes);
+console.log('public key in bytes', buffer.toString('hex'));
 
 const sha512 = new SHA512();
 const array = new Uint8Array(64);
@@ -44,7 +44,7 @@ console.log('hash2', hash2);
 // const thirdParam = fs.readFileSync('new.json', 'utf8');
 // const thirdParamParse = JSON.parse(thirdParam);
 
-// console.log('third...', thirdParamParse);
+console.log('third...', checkSign);
 
 
 // const newCmov = new EC();

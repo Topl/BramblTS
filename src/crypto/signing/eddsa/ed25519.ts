@@ -35,14 +35,14 @@ export class Ed25519 extends EC {
 
   generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
     const d = digest ?? this.defaultDigest;
-    console.log('d from generatePublicKey ... ', d);
+    // console.log('d from generatePublicKey ... ', d);
 
     const h = new Uint8Array(d.digestSize());
-    console.log('h from generatePublicKey ... ', h);
+    // console.log('h from generatePublicKey ... ', h);
     d.update(sk, skOff, SECRET_KEY_SIZE);
     // console.log('d.update from generatePublicKey ... ', d.update(sk, skOff, skOff + SECRET_KEY_SIZE));
     d.doFinal(h, 0);
-    console.log('h from generatePublicKey', h);
+    // console.log('h from generatePublicKey', h);
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
     this.scalarMultBaseEncoded(s, pk, pkOff);
@@ -301,6 +301,18 @@ export class Ed25519 extends EC {
     context?: Uint8Array | null;
     phflag?: number | null;
   }): void {
+    console.log('sk -> ', sk);
+    console.log('skOffset -> ', skOffset);
+    console.log('message -> ', message);
+    console.log('messageOffset -> ', messageOffset);
+    console.log('messageLength -> ', messageLength);
+    console.log('signature -> ', signature);
+    console.log('signatureOffset -> ', signatureOffset);
+    console.log('pk -> ', pk);
+    console.log('pkOffset -> ', pkOffset);
+    console.log('context -> ', context);
+    console.log('phflag -> ', phflag);
+    
     if (!sk.length) {
       throw new Error('Secret key must not be empty');
     }

@@ -94,6 +94,10 @@ export function cnegate(negate: number, z: Int32Array) {
 }
 
 export function copy(x: Int32List, xOff: number, z: Int32List, zOff: number) {
+  // console.log('x -> ', x);
+  // console.log('xOff -> ', xOff);
+  // console.log('z -> ', z);
+  // console.log('zOff -> ', zOff);
   for (let i = 0; i < SIZE; i++) {
     z[zOff + i] = x[xOff + i];
   }
@@ -289,56 +293,54 @@ export function mul2(x: Int32List, y: Int32List, z: Int32List) {
   let a2 = BigInt(x0) * BigInt(y2) + BigInt(x1) * BigInt(y1) + BigInt(x2) * BigInt(y0);
   let a3 = BigInt(x1) * BigInt(y2) + BigInt(x2) * BigInt(y1);
 
-  a3 <<= 1n;
+  a3 <<= BigInt(1);
   a3 += BigInt(x0) * BigInt(y3) + BigInt(x3) * BigInt(y0);
 
   let a4 = BigInt(x2) * BigInt(y2);
 
-  a4 <<= 1n;
+  a4 <<= BigInt(1);
   a4 += BigInt(x0) * BigInt(y4) + BigInt(x1) * BigInt(y3) + BigInt(x3) * BigInt(y1) + BigInt(x4) * BigInt(y0);
 
   let a5 = BigInt(x1) * BigInt(y4) + BigInt(x2) * BigInt(y3) + BigInt(x3) * BigInt(y2) + BigInt(x4) * BigInt(y1);
 
-  a5 <<= 1n;
+  a5 <<= BigInt(1);
 
   let a6 = BigInt(x2) * BigInt(y4) + BigInt(x4) * BigInt(y2);
 
-  a6 <<= 1n;
+  a6 <<= BigInt(1);
   a6 += BigInt(x3) * BigInt(y3);
 
   let a7 = BigInt(x3) * BigInt(y4) + BigInt(x4) * BigInt(y3);
   let a8 = BigInt(x4) * BigInt(y4);
 
-  a8 <<= 1n;
+  a8 <<= BigInt(1);
 
   const b0 = BigInt(u0) * BigInt(v0);
   const b1 = BigInt(u0) * BigInt(v1) + BigInt(u1) * BigInt(v0);
   const b2 = BigInt(u0) * BigInt(v2) + BigInt(u1) * BigInt(v1) + BigInt(u2) * BigInt(v0);
   let b3 = BigInt(u1) * BigInt(v2) + BigInt(u2) * BigInt(v1);
 
-  b3 <<= 1n;
+  b3 <<= BigInt(1);
   b3 += BigInt(u0) * BigInt(v3) + BigInt(u3) * BigInt(v0);
 
   let b4 = BigInt(u2) * BigInt(v2);
 
-  b4 <<= 1n;
+  b4 <<= BigInt(1);
   b4 += BigInt(u0) * BigInt(v4) + BigInt(u1) * BigInt(v3) + BigInt(u3) * BigInt(v1) + BigInt(u4) * BigInt(v0);
 
   const b5 = BigInt(u1) * BigInt(v4) + BigInt(u2) * BigInt(v3) + BigInt(u3) * BigInt(v2) + BigInt(u4) * BigInt(v1);
   let b6 = BigInt(u2) * BigInt(v4) + BigInt(u4) * BigInt(v2);
 
-  b6 <<= 1n;
+  b6 <<= BigInt(1);
   b6 += BigInt(u3) * BigInt(v3);
 
   const b7 = BigInt(u3) * BigInt(v4) + BigInt(u4) * BigInt(v3);
-  let b8 = BigInt(u4) * BigInt(v4);
+  const b8 = BigInt(u4) * BigInt(v4);
 
-  b8 <<= 1n;
-
-  a0 -= b5 * 76n;
-  a1 -= b6 * 38n;
-  a2 -= b7 * 38n;
-  a3 -= b8 * 76n;
+  a0 -= b5 * BigInt(76);
+  a1 -= b6 * BigInt(38);
+  a2 -= b7 * BigInt(38);
+  a3 -= b8 * BigInt(76);
   a5 -= b0;
   a6 -= b1;
   a7 -= b2;
@@ -360,77 +362,77 @@ export function mul2(x: Int32List, y: Int32List, z: Int32List) {
   const c2 = BigInt(x0) * BigInt(y2) + BigInt(x1) * BigInt(y1) + BigInt(x2) * BigInt(y0);
   let c3 = BigInt(x1) * BigInt(y2) + BigInt(x2) * BigInt(y1);
 
-  c3 <<= 1n;
+  c3 <<= BigInt(1);
   c3 += BigInt(x0) * BigInt(y3) + BigInt(x3) * BigInt(y0);
 
   let c4 = BigInt(x2) * BigInt(y2);
 
-  c4 <<= 1n;
+  c4 <<= BigInt(1);
   c4 += BigInt(x0) * BigInt(y4) + BigInt(x1) * BigInt(y3) + BigInt(x3) * BigInt(y1) + BigInt(x4) * BigInt(y0);
 
   let c5 = BigInt(x1) * BigInt(y4) + BigInt(x2) * BigInt(y3) + BigInt(x3) * BigInt(y2) + BigInt(x4) * BigInt(y1);
 
-  c5 <<= 1n;
+  c5 <<= BigInt(1);
 
   let c6 = BigInt(x2) * BigInt(y4) + BigInt(x4) * BigInt(y2);
 
-  c6 <<= 1n;
+  c6 <<= BigInt(1);
   c6 += BigInt(x3) * BigInt(y3);
 
   const c7 = BigInt(x3) * BigInt(y4) + BigInt(x4) * BigInt(y3);
   let c8 = BigInt(x4) * BigInt(y4);
 
-  c8 <<= 1n;
+  c8 <<= BigInt(1);
 
   let z8 = 0;
   let z9 = 0;
   let t = BigInt(0);
 
   t = a8 + (c3 - a3);
-  z8 = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  z8 = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += c4 - a4 - b4;
-  z9 = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += (c4 - a4) - b4;
+  z9 = Number(t) & M25;
+  t >>= BigInt(25);
 
-  t = a0 + (t + c5 - a5) * 38n;
-  z[0] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t = a0 + (t + c5 - a5) * BigInt(38);
+  z[0] = Number(Number(t) & M26);
+  t >>= BigInt(26);
 
-  t += a1 + (c6 - a6) * 38n;
-  z[1] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a1 + (c6 - a6) * BigInt(38);
+  z[1] = Number(Number(t) & M26);
+  t >>= BigInt(26);
 
-  t += a2 + (c7 - a7) * 38n;
-  z[2] = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += a2 + (c7 - a7) * BigInt(38);
+  z[2] = Number(Number(t) & M25);
+  t >>= BigInt(25);
 
-  t += a3 + (c8 - a8) * 38n;
-  z[3] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a3 + (c8 - a8) * BigInt(38);
+  z[3] = Number(Number(t) & M26);
+  t >>= BigInt(26);
 
-  t += a4 + b4 * 38n;
-  z[4] = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += a4 + b4 * BigInt(38);
+  z[4] = Number(Number(t) & M25);
+  t >>= BigInt(25);
 
   t += a5 + (c0 - a0);
-  z[5] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  z[5] = Number(Number(t) & M26);
+  t >>= BigInt(26);
 
   t += a6 + (c1 - a1);
-  z[6] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  z[6] = Number(Number(t) & M26);
+  t >>= BigInt(26);
 
   t += a7 + (c2 - a2);
-  z[7] = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  z[7] = Number(Number(t) & M25);
+  t >>= BigInt(25);
 
-  t = BigInt(t + BigInt(z8));
-  z[8] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += BigInt(z8)
+  z[8] = Number(Number(t) & M26);
+  t >>= BigInt(26);
 
-  z[9] = z9 + Number(t);
+  z[9] = Number(z9 + Number(t));
 }
 
 export function negate(x: Int32List, z: Int32List): void {

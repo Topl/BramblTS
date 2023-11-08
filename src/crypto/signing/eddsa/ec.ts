@@ -44,12 +44,18 @@ export class EC {
   private _precompBase: Int32Array;
 
   constructor() {
+    // const precompute = this._precompute();
+    // this._precompBaseTable = precompute[0];
+    // this._precompBase = precompute[1];
+
     const precompute = this._precompute();
     this._precompBaseTable = precompute[0];
     this._precompBase = precompute[1];
+    // console.log('precompBaseTable ... ', this._precompBase);
   }
 
-  mulAddTo256(x: Int32List, y: Int32List, zz: Int32List): number {
+
+  mulAddTo256(x: Int32Array, y: Int32Array, zz: Int32Array): number {
     const y_0 = BigInt(y[0]) & M;
     const y_1 = BigInt(y[1]) & M;
     const y_2 = BigInt(y[2]) & M;
@@ -66,8 +72,8 @@ export class EC {
       const xi = BigInt(x[i]) & M;
 
       c += (xi * y_0 + BigInt(zz[i + 0])) & M;
-      zz[i + 0] = Number(c & M);
-      c >>= 32n;
+      zz[i + 0] = Number(c & BigInt(M));
+      c >>= BigInt(32);
 
       c += (xi * y_1 + BigInt(zz[i + 1])) & M;
       zz[i + 1] = Number(c & M);
@@ -118,16 +124,34 @@ export class EC {
     return true;
   }
 
+  // cmov(len: number, mask: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number): void {
+  //   let maskv = mask;
+  //   console.log('zoff ... ', zOff, xOff)
+  //   console.log('maskv ...', maskv)
+
+  //   maskv = maskv & 1 ? -(maskv & 1) : maskv & 1;
+  //   let zi: number;
+  //   for (let i = 0; i < len; i++) {
+  //     zi = z[0 + 3];
+  //     const diff = zi ^ x[30 + 3];
+  //     // console.log('zi from cmov ... ', diff);
+  //     zi ^= diff & -1;
+  //     z[0 + 3] = zi;
+  //   }
+  //   // console.log('maskv after ... ', maskv)
+  // }
+
   cmov(len: number, mask: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number): void {
-    let maskv = mask;
-    maskv = (maskv & 1) ? -(maskv & 1) : (maskv & 1);
+    let maskv: number = mask;
+    maskv = -(maskv & 1);
     for (let i = 0; i < len; i++) {
-      let zi = z[zOff + i];
-      const diff = zi ^ x[xOff + i];
-      // console.log('zi from cmov ... ', zi);
-      zi ^= diff & maskv;
-      z[zOff + i] = zi;
+      let z_i: number = z[zOff + i];
+      const diff: number = z_i ^ x[xOff + i];
+      z_i ^= diff & maskv;
+      z[zOff + i] = z_i;
     }
+
+    // console.log('z from cmov ... ', z);
   }
 
   cadd(len: number, mask: number, x: Int32List, y: Int32List, z: Int32List): number {
@@ -346,6 +370,8 @@ export class EC {
     this.pruneScalar(k, kOff, n);
     const p = PointAccum.create();
     this.scalarMultBase(n, p);
+    console.log('y -> ', y)
+    console.log('z -> ', z)
     x25519_field.copy(p.y, 0, y, 0);
     x25519_field.copy(p.z, 0, z, 0);
   }
@@ -471,6 +497,7 @@ export class EC {
 
   pointCopyExt(p: PointExt): PointExt {
     const r = PointExt.create();
+    console.log('p -> ', p)
     x25519_field.copy(p.x, 0, r.x, 0);
     x25519_field.copy(p.y, 0, r.y, 0);
     x25519_field.copy(p.z, 0, r.z, 0);
@@ -508,28 +535,17 @@ export class EC {
     x25519_field.copy(p.y, 0, p.v, 0);
   }
 
-  pointExtendXY(p: PointExt): PointExt {
+  pointExtendXY(p: PointExt): void {
     x25519_field.one(p.z);
     x25519_field.mul2(p.x, p.y, p.t);
-    return p;
   }
 
   pointLookup(block: number, index: number, p: PointPrecomp) {
     let off = block * PRECOMP_POINTS * 3 * x25519_field.SIZE;
-    // console.log('off form ec ... ', p.ypxH);
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < PRECOMP_POINTS; i++) {
       const mask = ((i ^ index) - 1) >> 31;
-      // console.log('first  ram ... ', p.ypxH);
 
-      // let thirdParamJson = JSON.stringify(this._precompBase);
-      // fs.writeFile('new.json', thirdParamJson, (err) => {
-      //   if(err){
-      //     console.log('error writing file ... ', err);
-      //   } else{
-      //     console.log('file written successfully ... ');
-      //   }
-      // });
-      
+      // console.log('precompBase ... ', this._precompBase);
 
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ypxH, 0);
       off += x25519_field.SIZE;
@@ -545,11 +561,12 @@ export class EC {
   }
 
   pointPrecompVar(p: PointExt, count: number): PointExt[] {
-    const d = this.pointCopyExt(p);
+    const d: PointExt = PointExt.create();
     this.pointAddVar2(false, p, p, d);
+
     const table: PointExt[] = [this.pointCopyExt(p)];
     for (let i = 1; i < count; i++) {
-      table.push(this.pointCopyExt(PointExt.create()));
+      table.push(PointExt.create());
       this.pointAddVar2(false, table[i - 1], d, table[i]);
     }
     return table;
@@ -574,34 +591,58 @@ export class EC {
 
   _precompute(): [PointExt[], Int32Array] {
     // Precomputed table for the base point in verification ladder
-    const b = this.pointExtendXY(
-      this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: x25519_field.create(), t: x25519_field.create() }),
-    );
-    const precompBaseTable = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
+    // const b: PointExt = {
+    //   x: x25519_field.create(),
+    //   y: x25519_field.create(),
+    //   z: x25519_field.create(),
+    //   t: x25519_field.create()
+    // }
+    const b: PointExt = PointExt.create();
+    // const b = this.pointExtendXY(
+    //   this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: x25519_field.create(), t: x25519_field.create() }),
+    // );
 
-    const p: PointAccum = {
-      x: B_x.slice(),
-      y: B_y.slice(),
-      z: x25519_field.create(),
-      u: x25519_field.create(),
-      v: x25519_field.create(),
-    };
+    // console.log('b from precompute ... ', B_y);
+
+    x25519_field.copy(B_x, 0, b.x, 0);
+    x25519_field.copy(B_y, 0, b.y, 0);
+
+    this.pointExtendXY(b);
+
+    const precompBaseTable: PointExt[] = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
+
+    const p: PointAccum = PointAccum.create();
+
+    // console.log('B_x -> ', B_x);
+    // console.log('B_y -> ', B_y);
+
+    // const p: PointAccum = {
+    //   x: B_x.slice(),
+    //   y: B_y.slice(),
+    //   z: x25519_field.create(),
+    //   u: x25519_field.create(),
+    //   v: x25519_field.create(),
+    // };
+
+    x25519_field.copy(B_x, 0, p.x, 0);
+    x25519_field.copy(B_y, 0, p.y, 0);
+
+    // console.log('p -> ', p);
+
     this.pointExtendXYAccum(p);
 
-    const precompBase = new Int32Array(PRECOMP_BLOCKS * PRECOMP_POINTS * 3 * x25519_field.SIZE);
+    console.log('p after -> ', p);
+
+    const precompBase: Int32Array = new Int32Array(PRECOMP_BLOCKS * PRECOMP_POINTS * 3 * x25519_field.SIZE);
     let off = 0;
 
     for (let b = 0; b < PRECOMP_BLOCKS; b++) {
       const ds: PointExt[] = [];
-      const sum = this.pointSetNeutralExt({
-        x: x25519_field.create(),
-        y: x25519_field.create(),
-        z: x25519_field.create(),
-        t: x25519_field.create(),
-      });
+      const sum: PointExt = PointExt.create();
+      this.pointSetNeutralExt(sum);
 
       for (let t = 0; t < PRECOMP_TEETH; t++) {
-        const q = this.pointCopyAccum(p);
+        const q: PointExt = this.pointCopyAccum(p);
         this.pointAddVar2(true, sum, q, sum);
         this.pointDouble(p);
         ds.push(this.pointCopyAccum(p));
@@ -613,7 +654,7 @@ export class EC {
         }
       }
 
-      const points: (PointExt | null)[] = Array.from({ length: PRECOMP_POINTS }, () => null);
+      const points: (PointExt | null)[] = Array(PRECOMP_POINTS).fill(null);
       let k = 1;
       points[0] = sum;
 
@@ -622,7 +663,7 @@ export class EC {
         let j = 0;
 
         while (j < size) {
-          points[k] = this.pointCopyExt(points[k - size]!);
+          points[k] = PointExt.create();
           this.pointAddVar2(false, points[k - size]!, ds[t], points[k]!);
           j++;
           k++;
@@ -638,11 +679,7 @@ export class EC {
         x25519_field.mul2(q.x, y, x);
         x25519_field.mul2(q.y, y, y);
 
-        const r = {
-          ypxH: x25519_field.create(),
-          ymxH: x25519_field.create(),
-          xyd: x25519_field.create(),
-        };
+        const r: PointPrecomp = PointPrecomp.create();
 
         x25519_field.apm(y, x, r.ypxH, r.ymxH);
         x25519_field.mul2(x, y, r.xyd);
@@ -651,11 +688,11 @@ export class EC {
         x25519_field.normalize(r.ypxH);
         x25519_field.normalize(r.ymxH);
 
-        precompBase.set(r.ypxH, off);
+        x25519_field.copy(r.ypxH, 0, precompBase, off);
         off += x25519_field.SIZE;
-        precompBase.set(r.ymxH, off);
+        x25519_field.copy(r.ymxH, 0, precompBase, off);
         off += x25519_field.SIZE;
-        precompBase.set(r.xyd, off);
+        x25519_field.copy(r.xyd, 0, precompBase, off);
         off += x25519_field.SIZE;
       }
     }
@@ -671,7 +708,7 @@ export class EC {
     r[0] = r[0] & 0xf8;
     r[SCALAR_BYTES - 1] = r[SCALAR_BYTES - 1] & 0x7f;
     r[SCALAR_BYTES - 1] = r[SCALAR_BYTES - 1] | 0x40;
-    console.log('r', r);
+    // console.log('r from pruneScalar ... ', r);
   }
 
   reduceScalar(n: Uint8Array): Uint8Array {
@@ -831,10 +868,12 @@ export class EC {
     // console.log(`k -> ${k}, and r -> ${r}`);
     this.pointSetNeutralAccum(r);
 
-    console.log('r from scalarmult -> ', r);
+    // console.log('r from scalarmult -> ', r);
 
     const n = new Int32Array(SCALAR_INTS);
     this.decodeScalar(k, 0, n);
+    // console.log('k -> ', k);
+    // console.log('n -> ', n);
 
     // Recode the scalar into signed-digit form, then group comb bits in each block
     this.cadd(SCALAR_INTS, ~n[0] & 1, n, L, n);
@@ -844,8 +883,10 @@ export class EC {
     // console.log('value form ec ... ', value);
 
     for (let i = 0; i < SCALAR_INTS; i++) {
-      n[i] = this.shuffle2(n[i]) >>> 0;
+      n[i] = this.shuffle2(n[i]);
     }
+
+    // console.log('n after loop -> ', n);
 
     const p = PointPrecomp.create();
     // console.log('n from ec ...', p);
@@ -857,10 +898,6 @@ export class EC {
         const w = BigInt(n[b]) >> BigInt(cOff);
         const sign = Number((w >> BigInt(PRECOMP_TEETH - 1)) & BigInt(1));
         const abs = Number((w ^ BigInt(-sign)) & BigInt(PRECOMP_MASK));
-
-        // console.log('b from loop ... ', b);
-        // console.log('abs from loop ... ', abs);
-        console.log('p from loop ... ', p.ypxH);
 
         this.pointLookup(b, abs, p);
 
@@ -876,13 +913,16 @@ export class EC {
 
       cOff -= PRECOMP_TEETH;
 
-      if (cOff < 0) {
-        break;
-      }
+      this.pointDouble(r);
+
+      // if (cOff < 0) {
+      break;
+      // }
 
       this.pointDouble(r);
     }
-    console.log('p from ec ... ', p);
+    // console.log('p from ec ... ', p);
+    // console.log('r from ec ... ', r);
   }
 
   createScalarMultBaseEncoded(s: Uint8Array): Uint8Array {
@@ -895,6 +935,7 @@ export class EC {
     // console.log(`k -> ${k}, r -> ${r} and rOff -> ${rOff}`);
     const p = PointAccum.create();
     // console.log(`p -> ${p}`);
+    // console.log(`k -> ${k}`);
     this.scalarMultBase(k, p);
     // console.log(`k -> ${k} and p -> ${p}`);
     this.encodePoint(p, r, rOff);
@@ -960,15 +1001,31 @@ export const SIGNATURE_SIZE = POINT_BYTES + SCALAR_BYTES;
 export const DOM2_PREFIX = 'SigEd25519 no Ed25519 collisions';
 const P = [0xffffffed, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff, 0x7fffffff];
 const L = [0x5cf5d3ed, 0x5812631a, 0xa2f79cd6, 0x14def9de, 0x00000000, 0x00000000, 0x00000000, 0x10000000];
-const B_x = [
-  0x0325d51a, 0x018b5823, 0x007b2c95, 0x0304a92d, 0x00d2598e, 0x01d6dc5c, 0x01388c7f, 0x013fec0a, 0x029e6b72,
-  0x0042d26d,
-];
+const B_x = Int32Array.from([
+  0x0325d51a,
+  0x018b5823,
+  0x007b2c95,
+  0x0304a92d,
+  0x00d2598e,
+  0x01d6dc5c,
+  0x01388c7f,
+  0x013fec0a,
+  0x029e6b72,
+  0x0042d26d
+]);
 
-const B_y = [
-  0x02666658, 0x01999999, 0x00666666, 0x03333333, 0x00cccccc, 0x02666666, 0x01999999, 0x00666666, 0x03333333,
+const B_y = Int32Array.from([
+  0x02666658,
+  0x01999999,
+  0x00666666,
+  0x03333333,
   0x00cccccc,
-];
+  0x02666666,
+  0x01999999,
+  0x00666666,
+  0x03333333,
+  0x00cccccc
+]);
 
 const C_d = [
   0x035978a3, 0x02d37284, 0x018ab75e, 0x026a0a0e, 0x0000e014, 0x0379e898, 0x01d01e5d, 0x01e738cc, 0x03715b7f,
