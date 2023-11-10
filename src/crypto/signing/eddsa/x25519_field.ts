@@ -31,6 +31,10 @@ export function addOne2(z: Int32Array, zOff: number): void {
 }
 
 export function apm(x: Int32Array, y: Int32Array, zp: Int32Array, zm: Int32Array): void {
+  // console.log('x -> ', x);
+  // console.log('y -> ', y);
+  // console.log('zp -> ', zp);
+  // console.log('zm -> ', zm);
   for (let i = 0; i < SIZE; i++) {
     const xi = x[i];
     const yi = y[i];
@@ -40,6 +44,7 @@ export function apm(x: Int32Array, y: Int32Array, zp: Int32Array, zm: Int32Array
 }
 
 export function carry(z: Int32Array) {
+  // console.log("carry -> z", z);
   let z0 = z[0],
     z1 = z[1],
     z2 = z[2],
@@ -576,10 +581,10 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   let a7 = BigInt(x3) * BigInt(x4_2);
   let a8 = BigInt(x4) * BigInt(x4_2);
 
-  const u1_2 = BigInt(u1) * 2n;
-  const u2_2 = BigInt(u2) * 2n;
-  const u3_2 = BigInt(u3) * 2n;
-  const u4_2 = BigInt(u4) * 2n;
+  const u1_2 = u1 * 2;
+  const u2_2 = u2 * 2;
+  const u3_2 = u3 * 2;
+  const u4_2 = u4 * 2;
 
   const b0 = BigInt(u0) * BigInt(u0);
   const b1 = BigInt(u0) * BigInt(u1_2);
@@ -626,48 +631,48 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   let t = 0n;
 
   t = a8 + (c3 - a3);
-  z8 = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  z8 = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += BigInt(c4 - a4) - b4;
-  z9 = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += (c4 - a4) - b4;
+  z9 = Number(t) & M25;
+  t >>= BigInt(25);
 
-  t += BigInt(a0 + (t + c5 - a5) * 38n);
-  z[0] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a0 + (t + c5 - a5) * 38n;
+  z[0] = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += BigInt(a1 + (c6 - a6) * 38n);
-  z[1] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a1 + (c6 - a6) * 38n;
+  z[1] = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += BigInt(a2 + (c7 - a7) * 38n);
-  z[2] = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += a2 + (c7 - a7) * 38n;
+  z[2] = Number(t) & M25;
+  t >>= BigInt(25);
 
-  t += BigInt(a3 + (c8 - a8) * 38n);
-  z[3] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a3 + (c8 - a8) * 38n;
+  z[3] = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += BigInt(a4 + b4 * 38n);
-  z[4] = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += a4 + b4 * 38n;
+  z[4] = Number(t) & M25;
+  t >>= BigInt(25);
 
-  t += BigInt(a5 + (c0 - a0));
-  z[5] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a5 + (c0 - a0);
+  z[5] = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += BigInt(a6 + (c1 - a1));
-  z[6] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += a6 + (c1 - a1);
+  z[6] = Number(t) & M26;
+  t >>= BigInt(26);
 
-  t += BigInt(a7 + (c2 - a2));
-  z[7] = Number(t & 0x1ffffffn);
-  t >>= 25n;
+  t += a7 + (c2 - a2);
+  z[7] = Number(t) & M25;
+  t >>= BigInt(25);
 
-  t = BigInt(t + BigInt(z8));
-  z[8] = Number(t & 0x3ffffffn);
-  t >>= 26n;
+  t += BigInt(z8);
+  z[8] = Number(t) & M26;
+  t >>= BigInt(26);
 
   z[9] = z9 + Number(t);
 }

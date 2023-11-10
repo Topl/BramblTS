@@ -45,6 +45,9 @@ export class Ed25519 extends EC {
     // console.log('h from generatePublicKey', h);
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
+    // console.log('s -> ', s);
+    // console.log('pk -> ', pk);
+    // console.log('pkOff -> ', pkOff);
     this.scalarMultBaseEncoded(s, pk, pkOff);
   }
 

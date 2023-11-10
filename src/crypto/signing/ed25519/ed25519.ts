@@ -52,7 +52,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
     // console.log('secret key', secretKey.bytes);
     // console.log('pkBytes', pkBytes);
     this.impl.generatePublicKey(secretKey.bytes, 0, pkBytes, 0);
-    // console.log('pkBytes after generatePublicKey ->', pkBytes);
+    console.log('pkBytes after generatePublicKey ->', pkBytes);
     return new spec.PublicKey(pkBytes);
   }
 

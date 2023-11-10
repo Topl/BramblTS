@@ -1,6 +1,7 @@
 import { SHA512 } from './crypto/hash/sha';
 import Ed25519 from './crypto/signing/ed25519/ed25519';
 import { SecretKey } from './crypto/signing/ed25519/ed25519_spec';
+import { EC } from './crypto/signing/eddsa/ec';
 // import { EC } from './crypto/signing/eddsa/ec';
 // import fs from 'fs';
 
@@ -27,7 +28,7 @@ console.log('checking signature', checkSign);
 const publicKey = new Ed25519().getVerificationKey(
   new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
 );
-// console.log('public key', publicKey.bytes);
+console.log('public key', publicKey);
 const buffer = Buffer.from(publicKey.bytes);
 console.log('public key in bytes', buffer.toString('hex'));
 
@@ -45,6 +46,9 @@ console.log('hash2', hash2);
 // const thirdParamParse = JSON.parse(thirdParam);
 
 console.log('third...', checkSign);
+
+const newShuffle = new EC();
+newShuffle.shuffle2(2);
 
 
 // const newCmov = new EC();
