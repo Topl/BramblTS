@@ -11,11 +11,10 @@ import {
   SECRET_KEY_SIZE,
   SIGNATURE_SIZE,
 } from './ec';
-import { randomBytes } from 'crypto';
 
 export class Ed25519 extends EC {
-  private readonly defaultDigest = new SHA512();
-  private readonly random = randomBytes;
+  private defaultDigest = new SHA512();
+  // private random = randomBytes;
 
   private _dom2(d: SHA512, phflag: number, ctx: Uint8Array): void {
     if (ctx.length > 0) {
@@ -28,7 +27,8 @@ export class Ed25519 extends EC {
 
   generatePrivateKey(k: Uint8Array): void {
     for (let i = 0; i < k.length; i++) {
-      k[i] = this.random(1)[0];
+      k[i] = Math.floor(Math.random() * 256);
+      // k[i] = this.random(1)[0];
     }
     throw new Error('Not checked');
   }
@@ -255,10 +255,10 @@ export class Ed25519 extends EC {
     const k = this.reduceScalar(h);
 
     // Decode the S component of the signature and the scalar value k.
-    const nS = new Int32Array(SCALAR_INTS);
+    const nS = new Int32Array(SCALAR_INTS).fill(0);
     this.decodeScalar(S, 0, nS);
 
-    const nA = new Int32Array(SCALAR_INTS);
+    const nA = new Int32Array(SCALAR_INTS).fill(0);
     this.decodeScalar(k, 0, nA);
 
     // Compute the point R' = nS * B + nA * A, where B is the standard base point and A is the public key.
@@ -268,7 +268,8 @@ export class Ed25519 extends EC {
     // Encode the point R' and check if it matches the R component of the signature.
     const check = new Uint8Array(POINT_BYTES);
     this.encodePoint(pR, check, 0);
-    return check.join() === R.join();
+    const isEqual = check.length == R.length && check.every((value, index) => value == R[index]);
+    return isEqual;
   }
 
   /// Signs a message using the Ed25519 digital signature algorithm.
@@ -304,18 +305,6 @@ export class Ed25519 extends EC {
     context?: Uint8Array | null;
     phflag?: number | null;
   }): void {
-    console.log('sk -> ', sk);
-    console.log('skOffset -> ', skOffset);
-    console.log('message -> ', message);
-    console.log('messageOffset -> ', messageOffset);
-    console.log('messageLength -> ', messageLength);
-    console.log('signature -> ', signature);
-    console.log('signatureOffset -> ', signatureOffset);
-    console.log('pk -> ', pk);
-    console.log('pkOffset -> ', pkOffset);
-    console.log('context -> ', context);
-    console.log('phflag -> ', phflag);
-    
     if (!sk.length) {
       throw new Error('Secret key must not be empty');
     }
@@ -345,8 +334,8 @@ export class Ed25519 extends EC {
     }
 
     const phf = phflag ?? 0x00; // facilitate Prehash Functionality
-    const ctx = context || new Uint8Array(0);
-  
+    const ctx = context ?? new Uint8Array(0);
+
     if (pk != null && pkOffset != null) {
       // do signing with pk and context
       this.implSignWithPrivateKeyAndPublicKey(
@@ -406,13 +395,13 @@ export class Ed25519 extends EC {
     signatureOffset: number;
   }): void {
     const phflag = 0x01; // facilitate Prehash Functionality
-    const phOff = phOffset || 0;
+    const phOff = phOffset ?? 0;
 
-    if (!phSha && !ph) {
+    if (phSha == null && ph == null) {
       throw new Error('Prehash is null');
     }
 
-    if (!phSha && ph) {
+    if (phSha == null && ph != null) {
       this.sign({
         sk,
         skOffset,
@@ -426,9 +415,9 @@ export class Ed25519 extends EC {
         signature,
         signatureOffset,
       });
-    } else if (phSha && !ph) {
+    } else if (phSha != null && ph == null) {
       const m = new Uint8Array(PREHASH_SIZE);
-      if (PREHASH_SIZE !== phSha.doFinal(m, 0)) {
+      if (PREHASH_SIZE != phSha.doFinal(m, 0)) {
         throw new Error('Prehash Invalid');
       }
       this.sign({
@@ -471,7 +460,7 @@ export class Ed25519 extends EC {
     messageLength: number;
   }): boolean {
     const phflag = 0x00;
-    const ctx = context || new Uint8Array(0);
+    const ctx = context ?? new Uint8Array(0);
 
     return this._implVerify(
       signature,
@@ -515,15 +504,15 @@ export class Ed25519 extends EC {
   }): boolean {
     const phflag = 0x01;
 
-    if (!phSha && !ph) {
+    if (phSha == null && ph == null) {
       throw new Error('Prehash is null');
     }
 
-    if (!phSha && ph) {
+    if (phSha == null && ph != null) {
       return this._implVerify(signature, signatureOffset, pk, pkOffset, context, phflag, ph, phOff, PREHASH_SIZE);
-    } else if (phSha && !ph) {
+    } else if (phSha != null && ph == null) {
       const m = new Uint8Array(PREHASH_SIZE);
-      if (PREHASH_SIZE !== phSha.doFinal(m, 0)) {
+      if (PREHASH_SIZE != phSha.doFinal(m, 0)) {
         throw new Error('Prehash as Sha Invalid');
       }
       return this._implVerify(signature, signatureOffset, pk, pkOffset, context, phflag, m, 0, m.length);

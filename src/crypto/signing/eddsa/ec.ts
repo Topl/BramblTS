@@ -451,6 +451,10 @@ export class EC {
     // console.log('p -> ', p.x);
     // console.log('A -> ', p.y);
     x25519_field.apm(p.y, p.x, B, A);
+    console.log('p.y -> ', p.y);
+    console.log('p.x -> ', p.x);
+    console.log('B -> ', B);
+    console.log('A -> ', A);
     x25519_field.apm(q.y, q.x, d, c);
     x25519_field.mul2(A, C, A);
     x25519_field.mul2(B, D, B);
@@ -549,7 +553,7 @@ export class EC {
     for (let i = 0; i < PRECOMP_POINTS; i++) {
       const mask = ((i ^ index) - 1) >> 31;
 
-      // console.log('precompBase ... ', this._precompBase);
+      // console.log('precompBase ... ', this._precompBase[1919]);
 
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ypxH, 0);
       off += x25519_field.SIZE;
@@ -650,8 +654,9 @@ export class EC {
 
       for (let t = 0; t < PRECOMP_TEETH; t++) {
         const q = this.pointCopyAccum(p);
-        // console.log('q -> ', q);
         this.pointAddVar2(true, sum, q, sum);
+        // console.log('q -> ', q);
+        // console.log('sum -> ', sum);
         this.pointDouble(p);
         // console.log('new -> ', p.x);
         ds.push(this.pointCopyAccum(p));
@@ -911,6 +916,8 @@ export class EC {
     // console.log('r from scalarmult -> ', r);
 
     const n = new Int32Array(SCALAR_INTS);
+    // console.log('k from scalarmult -> ', k);
+    // console.log('n from scalarmult -> ', n);
     this.decodeScalar(k, 0, n);
     // console.log('k -> ', k);
     // console.log('n -> ', n);
@@ -935,10 +942,13 @@ export class EC {
 
     while (true) {
       for (let b = 0; b < PRECOMP_BLOCKS; b++) {
-        const w = n[b] >> cOff;
-        const sign = (w >> (PRECOMP_TEETH - 1)) & 1;
+        const w = n[b] >>> cOff;
+        const sign = (w >>> (PRECOMP_TEETH - 1)) & 1;
         const abs = (w ^ -sign) & PRECOMP_MASK;
-
+        
+        // console.log('b from ec ... ', b);
+        // console.log('abs from ec ...', abs);
+        // console.log('p from ec ...', p.ypxH);
         this.pointLookup(b, abs, p);
 
         x25519_field.cswap(sign, p.ypxH, p.ymxH);
@@ -951,6 +961,7 @@ export class EC {
 
       if (cOff < 0) break;
 
+      // console.log('r before pointDouble call -> ', r);
       this.pointDouble(r);
     }
   }
@@ -964,9 +975,9 @@ export class EC {
   scalarMultBaseEncoded(k: Uint8Array, r: Uint8Array, rOff: number): void {
     // console.log(`k -> ${k}, r -> ${r} and rOff -> ${rOff}`);
     const p = PointAccum.create();
-    // console.log(`p -> ${p}`);
-    // console.log(`k -> ${k}`);
     this.scalarMultBase(k, p);
+    // console.log(`p -> `, p);
+    // console.log(`k -> `, k);
     // console.log('p -> ', p.x);
     this.encodePoint(p, r, rOff);
   }
@@ -1136,7 +1147,7 @@ class PointPrecomp {
   }
 }
 
-function toByte(n: number): number {
+export function toByte(n: number): number {
   const buffer = new ArrayBuffer(1);
   new Int8Array(buffer)[0] = n;
   return new Uint8Array(buffer)[0];

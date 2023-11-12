@@ -1,19 +1,13 @@
+import { toByte } from './ec';
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const SIZE = 10;
 export const M24 = 0x00ffffff;
 export const M25 = 0x01ffffff;
 export const M26 = 0x03ffffff;
 export const ROOT_NEG_ONE = Int32Array.from([
-  0x020ea0b0,
-  0x0386c9d2,
-  0x00478c4e,
-  0x0035697f,
-  0x005e8630,
-  0x01fbd7a7,
-  0x0340264f,
-  0x01f0b2b4,
-  0x00027e0e,
-  0x00570649
+  0x020ea0b0, 0x0386c9d2, 0x00478c4e, 0x0035697f, 0x005e8630, 0x01fbd7a7, 0x0340264f, 0x01f0b2b4, 0x00027e0e,
+  0x00570649,
 ]);
 
 export function add(x: Int32Array, y: Int32Array, z: Int32Array): void {
@@ -99,32 +93,28 @@ export function cmov(cond: number, x: Int32Array, xOff: number, z: Int32Array, z
 }
 
 export function cnegate(negate: number, z: Int32Array) {
-  const mask = -negate | 0;
+  const mask = Number(0 - negate);
 
   for (let i = 0; i < SIZE; i++) {
-    z[i] = ((z[i] ^ mask) - mask) | 0;
+    z[i] = Number((z[i] ^ mask) - mask);
   }
 }
 
 export function copy(x: Int32Array, xOff: number, z: Int32Array, zOff: number) {
-  // console.log('x -> ', x);
-  // console.log('xOff -> ', xOff);
-  // console.log('z -> ', z);
-  // console.log('zOff -> ', zOff);
   for (let i = 0; i < SIZE; i++) {
     z[zOff + i] = x[xOff + i];
   }
 }
 
 export function cswap(swap: number, a: Int32Array, b: Int32Array) {
-  const mask = -swap;
+  const mask = 0 - swap;
 
   for (let i = 0; i < SIZE; i++) {
     const ai = a[i];
     const bi = b[i];
     const dummy = mask & (ai ^ bi);
-    a[i] = ai ^ dummy;
-    b[i] = bi ^ dummy;
+    a[i] = Number(ai ^ dummy);
+    b[i] = Number(bi ^ dummy);
   }
 }
 
@@ -135,7 +125,7 @@ export function create(): Int32Array {
 export function decode(x: Uint8Array, xOff: number, z: Int32Array): void {
   decode128(x, xOff, z, 0);
   decode128(x, xOff + 16, z, 5);
-  z[9] = z[9] & M24;
+  z[9] = Number(z[9] & M24);
 }
 
 export function decode128(bs: Uint8Array, off: number, z: Int32Array, zOff: number): void {
@@ -144,16 +134,18 @@ export function decode128(bs: Uint8Array, off: number, z: Int32Array, zOff: numb
   const t2 = decode32(bs, off + 8);
   const t3 = decode32(bs, off + 12);
 
-  z[zOff + 0] = t0 & M26;
-  z[zOff + 1] = ((t1 << 6) | (t0 >>> 26)) & M26;
-  z[zOff + 2] = ((t2 << 12) | (t1 >>> 20)) & M25;
-  z[zOff + 3] = ((t3 << 19) | (t2 >>> 13)) & M26;
-  z[zOff + 4] = t3 >>> 7;
+  z[zOff + 0] = Number(t0 & M26);
+  z[zOff + 1] = Number(((t1 << 6) | (t0 >>> 26)) & M26);
+  z[zOff + 2] = Number(((t2 << 12) | (t1 >>> 20)) & M25);
+  z[zOff + 3] = Number(((t3 << 19) | (t2 >>> 13)) & M26);
+  z[zOff + 4] = Number(t3 >>> 7);
 }
 
 export function decode32(bs: Uint8Array, off: number): number {
-  const n =
-    (bs[off] & 0xff) | ((bs[off + 1] & 0xff) << 8) | ((bs[off + 2] & 0xff) << 16) | ((bs[off + 3] & 0xff) << 24);
+  let n = bs[off] & 0xff;
+  n |= (bs[off + 1] & 0xff) << 8;
+  n |= (bs[off + 2] & 0xff) << 16;
+  n |= (bs[off + 3] & 0xff) << 24;
   return n;
 }
 
@@ -184,9 +176,9 @@ export function encode128(x: Int32Array, xOff: number, bs: Uint8Array, off: numb
 
 export function encode32(n: number, bs: Uint8Array, off: number): void {
   bs[off + 0] = n & 0xff;
-  bs[off + 1] = (n >>> 8) & 0xff;
-  bs[off + 2] = (n >>> 16) & 0xff;
-  bs[off + 3] = (n >>> 24) & 0xff;
+  bs[off + 1] = toByte(n >>> 8);
+  bs[off + 2] = toByte(n >>> 16);
+  bs[off + 3] = toByte(n >>> 24);
 }
 
 export function inv(x: Int32Array, z: Int32Array): void {
@@ -207,7 +199,7 @@ export function isZero(x: Int32Array): number {
 
   d = (d >>> 1) | (d & 1);
 
-  return ((d - 1) >> 31) | 0;
+  return (d - 1) >> 31;
 }
 
 export function isZeroVar(x: Int32Array): boolean {
@@ -226,51 +218,51 @@ export function mul1(x: Int32Array, y: number, z: Int32Array) {
   const x8 = x[8];
   let x9 = x[9];
 
-  let c0 = 0n;
-  let c1 = 0n;
-  let c2 = 0n;
-  let c3 = 0n;
+  let c0 = BigInt(0);
+  let c1 = BigInt(0);
+  let c2 = BigInt(0);
+  let c3 = BigInt(0);
 
   c0 = BigInt(x2) * BigInt(y);
-  x2 = Number(c0 & 0x1ffffffn);
-  c0 >>= 25n;
+  x2 = Number(c0) & M25;
+  c0 >>= BigInt(25);
 
   c1 = BigInt(x4) * BigInt(y);
-  x4 = Number(c1 & 0x1ffffffn);
-  c1 >>= 25n;
+  x4 = Number(c1) & M25;
+  c1 >>= BigInt(25);
 
   c2 = BigInt(x7) * BigInt(y);
-  x7 = Number(c2 & 0x1ffffffn);
-  c2 >>= 25n;
+  x7 = Number(c2) & M25;
+  c2 >>= BigInt(25);
 
   c3 = BigInt(x9) * BigInt(y);
-  x9 = Number(c3 & 0x1ffffffn);
-  c3 >>= 25n;
+  x9 = Number(c3) & M25;
+  c3 >>= BigInt(25);
 
-  c3 *= 38n;
+  c3 *= BigInt(38);
   c3 += BigInt(x0) * BigInt(y);
-  z[0] = Number(c3 & 0x3ffffffn);
-  c3 >>= 26n;
+  z[0] = Number(c3) & M26;
+  c3 >>= BigInt(26);
 
   c1 += BigInt(x5) * BigInt(y);
-  z[5] = Number(c1 & 0x3ffffffn);
-  c1 >>= 26n;
+  z[5] = Number(c1) & M26;
+  c1 >>= BigInt(26);
 
   c3 += BigInt(x1) * BigInt(y);
-  z[1] = Number(c3 & 0x3ffffffn);
-  c3 >>= 26n;
+  z[1] = Number(c3) & M26;
+  c3 >>= BigInt(26);
 
   c0 += BigInt(x3) * BigInt(y);
-  z[3] = Number(c0 & 0x3ffffffn);
-  c0 >>= 26n;
+  z[3] = Number(c0) & M26;
+  c0 >>= BigInt(26);
 
   c1 += BigInt(x6) * BigInt(y);
-  z[6] = Number(c1 & 0x3ffffffn);
-  c1 >>= 26n;
+  z[6] = Number(c1) & M26;
+  c1 >>= BigInt(26);
 
   c2 += BigInt(x8) * BigInt(y);
-  z[8] = Number(c2 & 0x3ffffffn);
-  c2 >>= 26n;
+  z[8] = Number(c2) & M26;
+  c2 >>= BigInt(26);
 
   z[2] = x2 + Number(c3);
   z[4] = x4 + Number(c0);
@@ -405,7 +397,7 @@ export function mul2(x: Int32Array, y: Int32Array, z: Int32Array) {
   z8 = Number(t) & M26;
   t >>= BigInt(26);
 
-  t += (c4 - a4) - b4;
+  t += c4 - a4 - b4;
   z9 = Number(t) & M25;
   t >>= BigInt(25);
 
@@ -441,7 +433,7 @@ export function mul2(x: Int32Array, y: Int32Array, z: Int32Array) {
   z[7] = Number(Number(t) & M25);
   t >>= BigInt(25);
 
-  t += BigInt(z8)
+  t += BigInt(z8);
   z[8] = Number(Number(t) & M26);
   t >>= BigInt(26);
 
@@ -515,42 +507,42 @@ export function powPm5d8(x: Int32Array, rx2: Int32Array, rz: Int32Array) {
 }
 
 export function reduce(z: Int32Array, c: number): void {
-  let z9 = z[9] | 0;
+  let z9 = z[9];
   let t = z9;
 
-  z9 = (t & M24) | 0;
+  z9 = t & M24;
   t >>= 24;
-  t = (t + c) | 0;
-  t = (t * 19) | 0;
-  t = (t + z[0]) | 0;
-  z[0] = t & M26;
+  t = t + c;
+  t = t * 19;
+  t = t + z[0];
+  z[0] = Number(t & M26);
   t >>= 26;
-  t = (t + z[1]) | 0;
-  z[1] = t & M26;
+  t = t + z[1];
+  z[1] = Number(t & M26);
   t >>= 26;
-  t = (t + z[2]) | 0;
-  z[2] = t & M25;
+  t = t + z[2];
+  z[2] = Number(t & M25);
   t >>= 25;
-  t = (t + z[3]) | 0;
-  z[3] = t & M26;
+  t = t + z[3];
+  z[3] = Number(t & M26);
   t >>= 26;
-  t = (t + z[4]) | 0;
-  z[4] = t & M25;
+  t = t + z[4];
+  z[4] = Number(t & M25);
   t >>= 25;
-  t = (t + z[5]) | 0;
-  z[5] = t & M26;
+  t = t + z[5];
+  z[5] = Number(t & M26);
   t >>= 26;
-  t = (t + z[6]) | 0;
-  z[6] = t & M26;
+  t = t + z[6];
+  z[6] = Number(t & M26);
   t >>= 26;
-  t = (t + z[7]) | 0;
-  z[7] = t & M25;
+  t = t + z[7];
+  z[7] = Number(t & M25);
   t >>= 25;
-  t = (t + z[8]) | 0;
-  z[8] = t & M26;
+  t = t + z[8];
+  z[8] = Number(t & M26);
   t >>= 26;
-  t = (t + z9) | 0;
-  z[9] = t;
+  t = t + z9;
+  z[9] = Number(t);
 }
 
 export function sqr(x: Int32Array, z: Int32Array): void {
@@ -596,10 +588,10 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   const b7 = BigInt(u3) * BigInt(u4_2);
   const b8 = BigInt(u4) * BigInt(u4_2);
 
-  a0 -= b5 * 38n;
-  a1 -= b6 * 38n;
-  a2 -= b7 * 38n;
-  a3 -= b8 * 38n;
+  a0 -= b5 * BigInt(38);
+  a1 -= b6 * BigInt(38);
+  a2 -= b7 * BigInt(38);
+  a3 -= b8 * BigInt(38);
   a5 -= b0;
   a6 -= b1;
   a7 -= b2;
@@ -628,7 +620,7 @@ export function sqr(x: Int32Array, z: Int32Array): void {
 
   let z8 = 0;
   let z9 = 0;
-  let t = 0n;
+  let t = BigInt(0);
 
   t = a8 + (c3 - a3);
   z8 = Number(t) & M26;
@@ -638,23 +630,23 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   z9 = Number(t) & M25;
   t >>= BigInt(25);
 
-  t += a0 + (t + c5 - a5) * 38n;
+  t += a0 + (t + c5 - a5) * BigInt(38);
   z[0] = Number(t) & M26;
   t >>= BigInt(26);
 
-  t += a1 + (c6 - a6) * 38n;
+  t += a1 + (c6 - a6) * BigInt(38);
   z[1] = Number(t) & M26;
   t >>= BigInt(26);
 
-  t += a2 + (c7 - a7) * 38n;
+  t += a2 + (c7 - a7) * BigInt(38);
   z[2] = Number(t) & M25;
   t >>= BigInt(25);
 
-  t += a3 + (c8 - a8) * 38n;
+  t += a3 + (c8 - a8) * BigInt(38);
   z[3] = Number(t) & M26;
   t >>= BigInt(26);
 
-  t += a4 + b4 * 38n;
+  t += a4 + b4 * BigInt(38);
   z[4] = Number(t) & M25;
   t >>= BigInt(25);
 
