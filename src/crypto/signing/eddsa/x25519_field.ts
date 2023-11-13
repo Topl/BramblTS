@@ -271,6 +271,9 @@ export function mul1(x: Int32Array, y: number, z: Int32Array) {
 }
 
 export function mul2(x: Int32Array, y: Int32Array, z: Int32Array) {
+  const M25 = BigInt(0x01ffffff);
+  const M26 = BigInt(0x03ffffff);
+
   let x0 = x[0];
   let y0 = y[0];
   let x1 = x[1];
@@ -394,47 +397,47 @@ export function mul2(x: Int32Array, y: Int32Array, z: Int32Array) {
   let t = BigInt(0);
 
   t = a8 + (c3 - a3);
-  z8 = Number(t) & M26;
+  z8 = Number(t & M26);
   t >>= BigInt(26);
 
   t += c4 - a4 - b4;
-  z9 = Number(t) & M25;
+  z9 = Number(t & M25);
   t >>= BigInt(25);
 
   t = a0 + (t + c5 - a5) * BigInt(38);
-  z[0] = Number(Number(t) & M26);
+  z[0] = Number(t & M26);
   t >>= BigInt(26);
 
   t += a1 + (c6 - a6) * BigInt(38);
-  z[1] = Number(Number(t) & M26);
+  z[1] = Number(t & M26);
   t >>= BigInt(26);
 
   t += a2 + (c7 - a7) * BigInt(38);
-  z[2] = Number(Number(t) & M25);
+  z[2] = Number(t& M25);
   t >>= BigInt(25);
 
   t += a3 + (c8 - a8) * BigInt(38);
-  z[3] = Number(Number(t) & M26);
+  z[3] = Number(t & M26);
   t >>= BigInt(26);
 
   t += a4 + b4 * BigInt(38);
-  z[4] = Number(Number(t) & M25);
+  z[4] = Number(t & M25);
   t >>= BigInt(25);
 
   t += a5 + (c0 - a0);
-  z[5] = Number(Number(t) & M26);
+  z[5] = Number(t & M26);
   t >>= BigInt(26);
 
   t += a6 + (c1 - a1);
-  z[6] = Number(Number(t) & M26);
+  z[6] = Number(t & M26);
   t >>= BigInt(26);
 
   t += a7 + (c2 - a2);
-  z[7] = Number(Number(t) & M25);
+  z[7] = Number(t & M25);
   t >>= BigInt(25);
 
   t += BigInt(z8);
-  z[8] = Number(Number(t) & M26);
+  z[8] = Number(t & M26);
   t >>= BigInt(26);
 
   z[9] = Number(z9 + Number(t));
