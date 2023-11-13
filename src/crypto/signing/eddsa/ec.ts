@@ -30,6 +30,7 @@ Table 1: Parameters of Ed25519
 
 // import fs from 'fs';
 import * as x25519_field from './x25519_field';
+import Long from 'long';
 
 /// AMS 2021: Supporting curve point operations for all EC crypto primitives in eddsa package
 /// Directly ported from BouncyCastle implementation of Ed25519 RFC8032 https://tools.ietf.org/html/rfc8032
@@ -55,59 +56,28 @@ export class EC {
   }
 
   mulAddTo256(x: Int32Array, y: Int32Array, zz: Int32Array): number {
-    const y_0 = BigInt(y[0]) & M;
-    const y_1 = BigInt(y[1]) & M;
-    const y_2 = BigInt(y[2]) & M;
-    const y_3 = BigInt(y[3]) & M;
-    const y_4 = BigInt(y[4]) & M;
-    const y_5 = BigInt(y[5]) & M;
-    const y_6 = BigInt(y[6]) & M;
-    const y_7 = BigInt(y[7]) & M;
+    const M = new Long(0xffffffff);
 
-    let zc = BigInt(0);
+    // Convert each y element to Long and mask it with M
+    const yLongs = Array.from(y, (value) => new Long(value).and(M));
+    let zc = Long.ZERO;
 
     for (let i = 0; i < 8; i++) {
-      let c = BigInt(0);
-      const xi = BigInt(x[i]) & M;
+      let c = Long.ZERO;
+      const xi = new Long(x[i]).and(M);
 
-      c += xi * y_0 + (BigInt(zz[i + 0]) & M);
-      zz[i + 0] = Number(c);
-      c >>= BigInt(32);
+      for (let j = 0; j <= 7; j++) {
+        c = c.add(xi.multiply(yLongs[j]).add(new Long(zz[i + j]).and(M)));
+        zz[i + j] = c.getLowBits();
+        c = c.shiftRightUnsigned(32);
+      }
 
-      c += xi * y_1 + (BigInt(zz[i + 1]) & M);
-      zz[i + 1] = Number(c);
-      c >>= BigInt(32);
-
-      c += xi * y_2 + (BigInt(zz[i + 2]) & M);
-      zz[i + 2] = Number(c);
-      c >>= BigInt(32);
-
-      c += xi * y_3 + (BigInt(zz[i + 3]) & M);
-      zz[i + 3] = Number(c);
-      c >>= BigInt(32);
-
-      c += xi * y_4 + (BigInt(zz[i + 4]) & M);
-      zz[i + 4] = Number(c);
-      c >>= BigInt(32);
-
-      c += xi * y_5 + (BigInt(zz[i + 5]) & M);
-      zz[i + 5] = Number(c);
-      c >>= BigInt(32);
-
-      c += xi * y_6 + (BigInt(zz[i + 6]) & M);
-      zz[i + 6] = Number(c);
-      c >>= BigInt(32);
-
-      c += xi * y_7 + (BigInt(zz[i + 7]) & M);
-      zz[i + 7] = Number(c);
-      c >>= BigInt(32);
-
-      zc += (c + BigInt(zz[i + 8])) & M;
-      zz[i + 8] = Number(zc);
-      zc >>= BigInt(32);
+      zc = zc.add(c.add(zz[i + 8]).and(M));
+      zz[i + 8] = zc.getLowBits();
+      zc = zc.shiftRightUnsigned(32);
     }
 
-    return Number(zc);
+    return zc.getLowBits();
   }
 
   gte256(x: Int32Array, y: Int32Array): boolean {
