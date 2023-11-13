@@ -712,15 +712,45 @@ export class EC {
   }
 
   reduceScalar(n: Uint8Array): Uint8Array {
-    const L0 = 0xfcf5d3ed;
-    const L1 = 0x012631a6;
-    const L2 = 0x079cd658;
-    const L3 = 0xff9dea2f;
-    const L4 = 0x000014df;
+    const L0 = BigInt('0xfcf5d3ed');
+    const L1 = BigInt('0x012631a6');
+    const L2 = BigInt('0x079cd658');
+    const L3 = BigInt('0xff9dea2f');
+    const L4 = BigInt('0x000014df');
+
+    const maxInt32 = BigInt(2 ** 31);
+    const maxUint32 = BigInt(2 ** 32);
+
+    let signedL0 = L0;
+    if (L0 >= maxInt32) {
+      signedL0 -= maxUint32;
+    }
+    let signedL1 = L1;
+    if (L1 >= maxInt32) {
+      signedL1 -= maxUint32;
+    }
+    let signedL2 = L2;
+    if (L2 >= maxInt32) {
+      signedL2 -= maxUint32;
+    }
+    let signedL3 = L3;
+    if (L3 >= maxInt32) {
+      signedL3 -= maxUint32;
+    }
+    let signedL4 = L4;
+    if (L4 >= maxInt32) {
+      signedL3 -= maxUint32;
+    }
+
+    console.log(signedL0);
+    console.log('L0 ... ', L0);
+    console.log('L1 ... ', L1);
+    console.log('L2 ... ', L2);
+    console.log('L3 ... ', L3);
+    console.log('L4 ... ', L4);
 
     const M28L = BigInt('0x0fffffff');
     const M32L = BigInt('0xffffffff');
-
     let x00 = BigInt(this.decode32v(n, 0)) & M32L;
     let x01 = BigInt(this.decode24(n, 4) << 4) & M32L;
     let x02 = BigInt(this.decode32v(n, 7)) & M32L;
@@ -739,81 +769,81 @@ export class EC {
     let x15 = BigInt(this.decode24(n, 53) << 4) & M32L;
     let x16 = BigInt(this.decode32v(n, 56)) & M32L;
     let x17 = BigInt(this.decode24(n, 60) << 4) & M32L;
-    const x18 = BigInt(n[63]) & BigInt(0xff);
-
+    const x18 = BigInt(n[63]) & BigInt('0xff');
     let t = BigInt(0);
 
-    x09 -= x18 * BigInt(L0);
-    x10 -= x18 * BigInt(L1);
-    x11 -= x18 * BigInt(L2);
-    x12 -= x18 * BigInt(L3);
-    x13 -= x18 * BigInt(L4);
+    x09 -= x18 * signedL0;
+
+    x10 -= x18 * signedL1;
+    x11 -= x18 * signedL2;
+    x12 -= x18 * signedL3;
+    x13 -= x18 * signedL4;
 
     x17 += x16 >> BigInt(28);
     x16 &= M28L;
 
-    x08 -= x17 * BigInt(L0);
-    x09 -= x17 * BigInt(L1);
-    x10 -= x17 * BigInt(L2);
-    x11 -= x17 * BigInt(L3);
-    x12 -= x17 * BigInt(L4);
+    x08 -= x17 * signedL0;
+    x09 -= x17 * signedL1;
+    x10 -= x17 * signedL2;
+    x11 -= x17 * signedL3;
+    x12 -= x17 * signedL4;
 
-    x07 -= x16 * BigInt(L0);
-    x08 -= x16 * BigInt(L1);
-    x09 -= x16 * BigInt(L2);
-    x10 -= x16 * BigInt(L3);
-    x11 -= x16 * BigInt(L4);
+    x07 -= x16 * signedL0;
+    x08 -= x16 * signedL1;
+    x09 -= x16 * signedL2;
+    x10 -= x16 * signedL3;
+    x11 -= x16 * signedL4;
 
     x15 += x14 >> BigInt(28);
     x14 &= M28L;
 
-    x06 -= x15 * BigInt(L0);
-    x07 -= x15 * BigInt(L1);
-    x08 -= x15 * BigInt(L2);
-    x09 -= x15 * BigInt(L3);
-    x10 -= x15 * BigInt(L4);
+    x06 -= x15 * signedL0;
+    x07 -= x15 * signedL1;
+    x08 -= x15 * signedL2;
+    x09 -= x15 * signedL3;
+    x10 -= x15 * signedL4;
 
-    x05 -= x14 * BigInt(L0);
-    x06 -= x14 * BigInt(L1);
-    x07 -= x14 * BigInt(L2);
-    x08 -= x14 * BigInt(L3);
-    x09 -= x14 * BigInt(L4);
+    x05 -= x14 * signedL0;
+    x06 -= x14 * signedL1;
+    x07 -= x14 * signedL2;
+    x08 -= x14 * signedL3;
+    x09 -= x14 * signedL4;
 
     x13 += x12 >> BigInt(28);
     x12 &= M28L;
 
-    x04 -= x13 * BigInt(L0);
-    x05 -= x13 * BigInt(L1);
-    x06 -= x13 * BigInt(L2);
-    x07 -= x13 * BigInt(L3);
-    x08 -= x13 * BigInt(L4);
+    x04 -= x13 * signedL0;
+    x05 -= x13 * signedL1;
+    x06 -= x13 * signedL2;
+    x07 -= x13 * signedL3;
+    x08 -= x13 * signedL4;
 
     x12 += x11 >> BigInt(28);
     x11 &= M28L;
 
-    x03 -= x12 * BigInt(L0);
-    x04 -= x12 * BigInt(L1);
-    x05 -= x12 * BigInt(L2);
-    x06 -= x12 * BigInt(L3);
-    x07 -= x12 * BigInt(L4);
+    x03 -= x12 * signedL0;
+    x04 -= x12 * signedL1;
+    x05 -= x12 * signedL2;
+    x06 -= x12 * signedL3;
+    x07 -= x12 * signedL4;
 
     x11 += x10 >> BigInt(28);
     x10 &= M28L;
 
-    x02 -= x11 * BigInt(L0);
-    x03 -= x11 * BigInt(L1);
-    x04 -= x11 * BigInt(L2);
-    x05 -= x11 * BigInt(L3);
-    x06 -= x11 * BigInt(L4);
+    x02 -= x11 * signedL0;
+    x03 -= x11 * signedL1;
+    x04 -= x11 * signedL2;
+    x05 -= x11 * signedL3;
+    x06 -= x11 * signedL4;
 
     x10 += x09 >> BigInt(28);
     x09 &= M28L;
 
-    x01 -= x10 * BigInt(L0);
-    x02 -= x10 * BigInt(L1);
-    x03 -= x10 * BigInt(L2);
-    x04 -= x10 * BigInt(L3);
-    x05 -= x10 * BigInt(L4);
+    x01 -= x10 * signedL0;
+    x02 -= x10 * signedL1;
+    x03 -= x10 * signedL2;
+    x04 -= x10 * signedL3;
+    x05 -= x10 * signedL4;
 
     x08 += x07 >> BigInt(28);
     x07 &= M28L;
@@ -824,11 +854,11 @@ export class EC {
     t = x08 >> BigInt(27);
     x09 += BigInt(t);
 
-    x00 -= x09 * BigInt(L0);
-    x01 -= x09 * BigInt(L1);
-    x02 -= x09 * BigInt(L2);
-    x03 -= x09 * BigInt(L3);
-    x04 -= x09 * BigInt(L4);
+    x00 -= x09 * signedL0;
+    x01 -= x09 * signedL1;
+    x02 -= x09 * signedL2;
+    x03 -= x09 * signedL3;
+    x04 -= x09 * signedL4;
 
     x01 += x00 >> BigInt(28);
     x00 &= M28L;
@@ -887,7 +917,6 @@ export class EC {
     this.encode56(x04 | (x05 << BigInt(28)), r, 14);
     this.encode56(x06 | (x07 << BigInt(28)), r, 21);
     this.encode32(Number(x08), r, 28);
-
     return r;
   }
 
@@ -927,7 +956,7 @@ export class EC {
         const w = n[b] >>> cOff;
         const sign = (w >>> (PRECOMP_TEETH - 1)) & 1;
         const abs = (w ^ -sign) & PRECOMP_MASK;
-        
+
         // console.log('b from ec ... ', b);
         // console.log('abs from ec ...', abs);
         // console.log('p from ec ...', p.ypxH);
