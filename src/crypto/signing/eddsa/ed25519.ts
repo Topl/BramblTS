@@ -35,19 +35,13 @@ export class Ed25519 extends EC {
 
   generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
     const d = digest ?? this.defaultDigest;
-    // console.log('d from generatePublicKey ... ', d);
 
     const h = new Uint8Array(d.digestSize());
-    // console.log('h from generatePublicKey ... ', h);
     d.update(sk, skOff, SECRET_KEY_SIZE);
-    // console.log('d.update from generatePublicKey ... ', d.update(sk, skOff, skOff + SECRET_KEY_SIZE));
     d.doFinal(h, 0);
-    // console.log('h from generatePublicKey', h);
     const s = new Uint8Array(SCALAR_BYTES);
     this.pruneScalar(h, 0, s);
-    // console.log('s -> ', s);
-    // console.log('pk -> ', pk);
-    // console.log('pkOff -> ', pkOff);
+
     this.scalarMultBaseEncoded(s, pk, pkOff);
   }
 
@@ -85,7 +79,6 @@ export class Ed25519 extends EC {
 
     // h = Buffer.alloc(digest.digestSize());
     digest.doFinal(h, 0);
-
     // Compute random scalar r and corresponding point R
     const r = this.reduceScalar(h);
     const R = new Uint8Array(POINT_BYTES);
