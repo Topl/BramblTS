@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-constant-condition */
 /*
-  Ed25519 is EdDSA instantiated with:
+ Ed25519 is EdDSA instantiated with:
 +-----------+-------------------------------------------------------+
 | Parameter |                                                 Value |
 +-----------+-------------------------------------------------------+
@@ -26,7 +26,7 @@
 |    PH(x)  |                       x (i.e., the identity function) |
 +-----------+-------------------------------------------------------+
 Table 1: Parameters of Ed25519
- */
+*/
 
 // import fs from 'fs';
 import * as x25519_field from './x25519_field';
@@ -256,11 +256,11 @@ export class EC {
 
   /// Decodes a 32-bit integer from the given byte array starting at the specified offset.
   decode32v(bs: Uint8Array, off: number): number {
-    let n = toByte(bs[off]) & 0xff;
-    n |= (toByte(bs[off + 1]) & 0xff) << 8;
-    n |= (toByte(bs[off + 2]) & 0xff) << 16;
-    n |= toByte(bs[off + 3]) << 24;
-    return n;
+    let n = bs[off] & 0xff;
+    n |= (bs[off + 1] & 0xff) << 8;
+    n |= (bs[off + 2] & 0xff) << 16;
+    n |= bs[off + 3] << 24;
+    return n >>> 0;
   }
 
   decode32(bs: Uint8Array, bsOff: number, n: Int32Array, nOff: number, nLen: number): void {
@@ -295,21 +295,22 @@ export class EC {
   }
 
   encode24(n: number, bs: Uint8Array, off: number): void {
-    bs[off] = toByte(n);
-    bs[off + 1] = toByte(n >>> 8);
-    bs[off + 2] = toByte(n >>> 16);
+    bs[off] = n & 0xff;
+    bs[off + 1] = (n >>> 8) & 0xff;
+    bs[off + 2] = (n >>> 16) & 0xff;
+    // console.log('bs from encode24', bs);
   }
 
   encode32(n: number, bs: Uint8Array, off: number): void {
-    bs[off] = toByte(n);
-    bs[off + 1] = toByte(n >>> 8);
-    bs[off + 2] = toByte(n >>> 16);
-    bs[off + 3] = toByte(n >>> 24);
+    bs[off] = n & 0xff;
+    bs[off + 1] = (n >>> 8) & 0xff;
+    bs[off + 2] = (n >>> 16) & 0xff;
+    bs[off + 3] = (n >>> 24) & 0xff;
   }
 
   encode56(n: bigint, bs: Uint8Array, off: number): void {
-    this.encode32(Number(n), bs, off);
-    this.encode24(Number(n >> BigInt(32)), bs, off + 4);
+    this.encode32(Number(n & BigInt(0xffffffff)), bs, off);
+    this.encode24(Number((n >> BigInt(32)) & BigInt(0xffffff)), bs, off + 4);
   }
 
   encodePoint(p: PointAccum, r: Uint8Array, rOff: number): void {
@@ -402,6 +403,7 @@ export class EC {
     }
 
     x25519_field.apm(r.y, r.x, B, A);
+    // console.log('P -> ', p);
     x25519_field.apm(p.y, p.x, d, c);
     x25519_field.mul2(A, C, A);
     x25519_field.mul2(B, D, B);
@@ -623,16 +625,10 @@ export class EC {
     x25519_field.copy(B_x, 0, p.x, 0);
     x25519_field.copy(B_y, 0, p.y, 0);
 
-    // console.log('p -> ', p);
-
     this.pointExtendXYAccum(p);
 
-    // console.log('p after -> ', p);
-
     const precompBase: Int32Array = new Int32Array(PRECOMP_BLOCKS * PRECOMP_POINTS * 3 * x25519_field.SIZE);
-    // console.log('multiply value ... ', PRECOMP_BLOCKS * PRECOMP_POINTS * 3 * x25519_field.SIZE);
     let off = 0;
-    // console.log('precompBase ... ', precompBase);
 
     for (let b = 0; b < PRECOMP_BLOCKS; b++) {
       const ds: PointExt[] = [];
@@ -678,9 +674,6 @@ export class EC {
 
         const r: PointPrecomp = PointPrecomp.create();
 
-        // console.log('x -> ', x);
-        // console.log('y -> ', y);
-
         x25519_field.apm(y, x, r.ypxH, r.ymxH);
         x25519_field.mul2(x, y, r.xyd);
         x25519_field.mul2(r.xyd, C_d4, r.xyd);
@@ -701,14 +694,12 @@ export class EC {
   }
 
   pruneScalar(n: Uint8Array, nOff: number, r: Uint8Array): void {
-    // console.log(`pruning scalar n -> ${n} and nOff -> ${nOff} and r -> ${r}`)
     for (let i = 0; i < SCALAR_BYTES; i++) {
       r[i] = toByte(n[nOff + i]);
     }
     r[0] = toByte(r[0] & 0xf8);
     r[SCALAR_BYTES - 1] = toByte(r[SCALAR_BYTES - 1] & 0x7f);
     r[SCALAR_BYTES - 1] = toByte(r[SCALAR_BYTES - 1] | 0x40);
-    // console.log('r from pruneScalar ... ', r);
   }
 
   reduceScalar(n: Uint8Array): Uint8Array {
@@ -921,35 +912,20 @@ export class EC {
   }
 
   scalarMultBase(k: Uint8Array, r: PointAccum): void {
-    // console.log(`k -> ${k}, and r -> ${r}`);
     this.pointSetNeutralAccum(r);
-
-    // console.log('r from scalarmult -> ', r);
-
     const n = new Int32Array(SCALAR_INTS);
-    // console.log('k from scalarmult -> ', k);
-    // console.log('n from scalarmult -> ', n);
     this.decodeScalar(k, 0, n);
-    // console.log('k -> ', k);
-    // console.log('n -> ', n);
 
     // Recode the scalar into signed-digit form, then group comb bits in each block
     this.cadd(SCALAR_INTS, ~n[0] & 1, n, L, n);
-    // console.log('cadd from ec ... ', value);
-    // console.log(' ... ', ~n[0] & 1)
     this.shiftDownBit(SCALAR_INTS, n, 1);
-    // console.log('value form ec ... ', value);
 
     for (let i = 0; i < SCALAR_INTS; i++) {
       n[i] = Number(this.shuffle2(n[i]));
     }
 
-    // console.log('n after loop -> ', n);
-
     const p = PointPrecomp.create();
-    // console.log('n from ec ...', p);
     let cOff = (PRECOMP_SPACING - 1) * PRECOMP_TEETH;
-    // console.log('cOff from ec ...', cOff);
 
     while (true) {
       for (let b = 0; b < PRECOMP_BLOCKS; b++) {
@@ -957,9 +933,6 @@ export class EC {
         const sign = (w >>> (PRECOMP_TEETH - 1)) & 1;
         const abs = (w ^ -sign) & PRECOMP_MASK;
 
-        // console.log('b from ec ... ', b);
-        // console.log('abs from ec ...', abs);
-        // console.log('p from ec ...', p.ypxH);
         this.pointLookup(b, abs, p);
 
         x25519_field.cswap(sign, p.ypxH, p.ymxH);
@@ -971,8 +944,6 @@ export class EC {
       cOff -= PRECOMP_TEETH;
 
       if (cOff < 0) break;
-
-      // console.log('r before pointDouble call -> ', r);
       this.pointDouble(r);
     }
   }
@@ -984,12 +955,8 @@ export class EC {
   }
 
   scalarMultBaseEncoded(k: Uint8Array, r: Uint8Array, rOff: number): void {
-    // console.log(`k -> ${k}, r -> ${r} and rOff -> ${rOff}`);
     const p = PointAccum.create();
     this.scalarMultBase(k, p);
-    // console.log(`p -> `, p);
-    // console.log(`k -> `, k);
-    // console.log('p -> ', p.x);
     this.encodePoint(p, r, rOff);
   }
 
