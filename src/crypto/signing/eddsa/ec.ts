@@ -291,9 +291,7 @@ export class EC {
   }
 
   decodeScalar(k: Uint8Array, kOff: number, n: Int32Array): void {
-    // console.log(`k -> ${k}, kOff -> ${kOff} and n -> ${n}`);
     this.decode32(k, kOff, n, 0, SCALAR_INTS);
-    // console.log(`k -> ${k}, kOff -> ${kOff} and n -> ${n}`);
   }
 
   encode24(n: number, bs: Uint8Array, off: number): void {
@@ -371,8 +369,7 @@ export class EC {
     this.pruneScalar(k, kOff, n);
     const p = PointAccum.create();
     this.scalarMultBase(n, p);
-    // console.log('y -> ', y)
-    // console.log('z -> ', z)
+
     x25519_field.copy(p.y, 0, y, 0);
     x25519_field.copy(p.z, 0, z, 0);
   }
@@ -448,13 +445,7 @@ export class EC {
       g = G;
     }
 
-    // console.log('p -> ', p.x);
-    // console.log('A -> ', p.y);
     x25519_field.apm(p.y, p.x, B, A);
-    console.log('p.y -> ', p.y);
-    console.log('p.x -> ', p.x);
-    console.log('B -> ', B);
-    console.log('A -> ', A);
     x25519_field.apm(q.y, q.x, d, c);
     x25519_field.mul2(A, C, A);
     x25519_field.mul2(B, D, B);
@@ -504,7 +495,6 @@ export class EC {
 
   pointCopyExt(p: PointExt): PointExt {
     const r = PointExt.create();
-    // console.log('p -> ', p)
     x25519_field.copy(p.x, 0, r.x, 0);
     x25519_field.copy(p.y, 0, r.y, 0);
     x25519_field.copy(p.z, 0, r.z, 0);
@@ -513,7 +503,6 @@ export class EC {
   }
 
   pointDouble(r: PointAccum) {
-    // console.log('r -> ', r.x);
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -521,7 +510,6 @@ export class EC {
     const F = x25519_field.create();
     const G = x25519_field.create();
     const H = r.v;
-
     x25519_field.sqr(r.x, A);
     x25519_field.sqr(r.y, B);
     x25519_field.sqr(r.z, C);
@@ -650,15 +638,10 @@ export class EC {
       const ds: PointExt[] = [];
       const sum: PointExt = PointExt.create();
       this.pointSetNeutralExt(sum);
-      // console.log('sum -> ', sum);
-
       for (let t = 0; t < PRECOMP_TEETH; t++) {
         const q = this.pointCopyAccum(p);
         this.pointAddVar2(true, sum, q, sum);
-        // console.log('q -> ', q);
-        // console.log('sum -> ', sum);
         this.pointDouble(p);
-        // console.log('new -> ', p.x);
         ds.push(this.pointCopyAccum(p));
 
         if (b + t != PRECOMP_BLOCKS + PRECOMP_TEETH - 2) {
@@ -670,7 +653,6 @@ export class EC {
 
       const points: (PointExt | null)[] = new Array(PRECOMP_POINTS).fill(null);
       let k = 1;
-      // console.log('sum -> ', sum);
       points[0] = sum;
 
       for (let t = 0; t < PRECOMP_TEETH - 1; t++) {
