@@ -546,48 +546,57 @@ export function reduce(z: Int32Array, c: number): void {
 }
 
 export function sqr(x: Int32Array, z: Int32Array): void {
-  let x0 = x[0];
-  let x1 = x[1];
-  let x2 = x[2];
-  let x3 = x[3];
-  let x4 = x[4];
+  // const M24 = BigInt(0x00ffffff);
+  const M25 = BigInt(0x01ffffff);
+  const M26 = BigInt(0x03ffffff);
 
-  const u0 = x[5];
-  const u1 = x[6];
-  const u2 = x[7];
-  const u3 = x[8];
-  const u4 = x[9];
+  // Convert all values to BigInt to handle 64-bit operations
+  let x0 = BigInt(x[0]);
+  let x1 = BigInt(x[1]);
+  let x2 = BigInt(x[2]);
+  let x3 = BigInt(x[3]);
+  let x4 = BigInt(x[4]);
+  const u0 = BigInt(x[5]);
+  const u1 = BigInt(x[6]);
+  const u2 = BigInt(x[7]);
+  const u3 = BigInt(x[8]);
+  const u4 = BigInt(x[9]);
 
-  let x1_2 = x1 * 2;
-  let x2_2 = x2 * 2;
-  let x3_2 = x3 * 2;
-  let x4_2 = x4 * 2;
+  // Double certain values
+  let x1_2 = x1 * BigInt(2);
+  let x2_2 = x2 * BigInt(2);
+  let x3_2 = x3 * BigInt(2);
+  let x4_2 = x4 * BigInt(2);
 
-  let a0 = BigInt(x0) * BigInt(x0);
-  let a1 = BigInt(x0) * BigInt(x1_2);
-  let a2 = BigInt(x0) * BigInt(x2_2) + BigInt(x1) * BigInt(x1);
-  let a3 = BigInt(x1_2) * BigInt(x2_2) + BigInt(x0) * BigInt(x3_2);
-  const a4 = BigInt(x2) * BigInt(x2_2) + BigInt(x0) * BigInt(x4_2) + BigInt(x1) * BigInt(x3_2);
-  let a5 = BigInt(x1_2) * BigInt(x4_2) + BigInt(x2_2) * BigInt(x3_2);
-  let a6 = BigInt(x2_2) * BigInt(x4_2) + BigInt(x3) * BigInt(x3);
-  let a7 = BigInt(x3) * BigInt(x4_2);
-  let a8 = BigInt(x4) * BigInt(x4_2);
+  // Compute 'a' values
+  let a0 = x0 * x0;
+  let a1 = x0 * x1_2;
+  let a2 = x0 * x2_2 + x1 * x1;
+  let a3 = x1_2 * x2_2 + x0 * x3_2;
+  let a4 = x2 * x2_2 + x0 * x4_2 + x1 * x3_2;
+  let a5 = x1_2 * x4_2 + x2_2 * x3_2;
+  let a6 = x2_2 * x4_2 + x3 * x3;
+  let a7 = x3 * x4_2;
+  let a8 = x4 * x4_2;
 
-  const u1_2 = u1 * 2;
-  const u2_2 = u2 * 2;
-  const u3_2 = u3 * 2;
-  const u4_2 = u4 * 2;
+  // Double 'u' values
+  const u1_2 = u1 * BigInt(2);
+  const u2_2 = u2 * BigInt(2);
+  const u3_2 = u3 * BigInt(2);
+  const u4_2 = u4 * BigInt(2);
 
-  const b0 = BigInt(u0) * BigInt(u0);
-  const b1 = BigInt(u0) * BigInt(u1_2);
-  const b2 = BigInt(u0) * BigInt(u2_2) + BigInt(u1) * BigInt(u1);
-  const b3 = BigInt(u1_2) * BigInt(u2_2) + BigInt(u0) * BigInt(u3_2);
-  const b4 = BigInt(u2) * BigInt(u2_2) + BigInt(u0) * BigInt(u4_2) + BigInt(u1) * BigInt(u3_2);
-  const b5 = BigInt(u1_2) * BigInt(u4_2) + BigInt(u2_2) * BigInt(u3_2);
-  const b6 = BigInt(u2_2) * BigInt(u4_2) + BigInt(u3) * BigInt(u3);
-  const b7 = BigInt(u3) * BigInt(u4_2);
-  const b8 = BigInt(u4) * BigInt(u4_2);
+  // Compute 'b' values
+  const b0 = u0 * u0;
+  const b1 = u0 * u1_2;
+  const b2 = u0 * u2_2 + u1 * u1;
+  const b3 = u1_2 * u2_2 + u0 * u3_2;
+  const b4 = u2 * u2_2 + u0 * u4_2 + u1 * u3_2;
+  const b5 = u1_2 * u4_2 + u2_2 * u3_2;
+  const b6 = u2_2 * u4_2 + u3 * u3;
+  const b7 = u3 * u4_2;
+  const b8 = u4 * u4_2;
 
+  // Adjust 'a' values
   a0 -= b5 * BigInt(38);
   a1 -= b6 * BigInt(38);
   a2 -= b7 * BigInt(38);
@@ -597,76 +606,66 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   a7 -= b2;
   a8 -= b3;
 
+  // Update 'x' values
   x0 += u0;
   x1 += u1;
   x2 += u2;
   x3 += u3;
   x4 += u4;
+  x1_2 = x1 * BigInt(2);
+  x2_2 = x2 * BigInt(2);
+  x3_2 = x3 * BigInt(2);
+  x4_2 = x4 * BigInt(2);
 
-  x1_2 = x1 * 2;
-  x2_2 = x2 * 2;
-  x3_2 = x3 * 2;
-  x4_2 = x4 * 2;
+  // Compute 'c' values
+  const c0 = x0 * x0;
+  const c1 = x0 * x1_2;
+  const c2 = x0 * x2_2 + x1 * x1;
+  const c3 = x1_2 * x2_2 + x0 * x3_2;
+  const c4 = x2 * x2_2 + x0 * x4_2 + x1 * x3_2;
+  const c5 = x1_2 * x4_2 + x2_2 * x3_2;
+  const c6 = x2_2 * x4_2 + x3 * x3;
+  const c7 = x3 * x4_2;
+  const c8 = x4 * x4_2;
 
-  const c0 = BigInt(x0) * BigInt(x0);
-  const c1 = BigInt(x0) * BigInt(x1_2);
-  const c2 = BigInt(x0) * BigInt(x2_2) + BigInt(x1) * BigInt(x1);
-  const c3 = BigInt(x1_2) * BigInt(x2_2) + BigInt(x0) * BigInt(x3_2);
-  const c4 = BigInt(x2) * BigInt(x2_2) + BigInt(x0) * BigInt(x4_2) + BigInt(x1) * BigInt(x3_2);
-  const c5 = BigInt(x1_2) * BigInt(x4_2) + BigInt(x2_2) * BigInt(x3_2);
-  const c6 = BigInt(x2_2) * BigInt(x4_2) + BigInt(x3) * BigInt(x3);
-  const c7 = BigInt(x3) * BigInt(x4_2);
-  const c8 = BigInt(x4) * BigInt(x4_2);
-
-  let z8 = 0;
-  let z9 = 0;
+  let z8 = BigInt(0);
+  let z9 = BigInt(0);
   let t = BigInt(0);
 
   t = a8 + (c3 - a3);
-  z8 = Number(t) & M26;
+  z8 = t & M26;
   t >>= BigInt(26);
-
   t += (c4 - a4) - b4;
-  z9 = Number(t) & M25;
+  z9 = t & M25;
   t >>= BigInt(25);
-
-  t += a0 + (t + c5 - a5) * BigInt(38);
-  z[0] = Number(t) & M26;
+  t = a0 + (t + c5 - a5) * BigInt(38);
+  z[0] = Number(t & M26);
   t >>= BigInt(26);
-
   t += a1 + (c6 - a6) * BigInt(38);
-  z[1] = Number(t) & M26;
+  z[1] = Number(t & M26);
   t >>= BigInt(26);
-
   t += a2 + (c7 - a7) * BigInt(38);
-  z[2] = Number(t) & M25;
+  z[2] = Number(t & M25);
   t >>= BigInt(25);
-
   t += a3 + (c8 - a8) * BigInt(38);
-  z[3] = Number(t) & M26;
+  z[3] = Number(t & M26);
   t >>= BigInt(26);
-
   t += a4 + b4 * BigInt(38);
-  z[4] = Number(t) & M25;
+  z[4] = Number(t & M25);
   t >>= BigInt(25);
-
   t += a5 + (c0 - a0);
-  z[5] = Number(t) & M26;
+  z[5] = Number(t & M26);
   t >>= BigInt(26);
-
   t += a6 + (c1 - a1);
-  z[6] = Number(t) & M26;
+  z[6] = Number(t & M26);
   t >>= BigInt(26);
-
   t += a7 + (c2 - a2);
-  z[7] = Number(t) & M25;
+  z[7] = Number(t & M25);
   t >>= BigInt(25);
-
-  t += BigInt(z8);
-  z[8] = Number(t) & M26;
+  t += z8;
+  z[8] = Number(t & M26);
   t >>= BigInt(26);
-
-  z[9] = z9 + Number(t);
+  z[9] = Number(z9 + t);
 }
 
 export function sqr2(x: Int32Array, n: number, z: Int32Array): void {
