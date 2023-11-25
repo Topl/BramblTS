@@ -1,9 +1,5 @@
-import { SHA512 } from './crypto/hash/sha';
 import Ed25519 from './crypto/signing/ed25519/ed25519';
 import { SecretKey } from './crypto/signing/ed25519/ed25519_spec';
-import { EC } from './crypto/signing/eddsa/ec';
-// import { EC } from './crypto/signing/eddsa/ec';
-// import fs from 'fs';
 
 function stringToUint8Array(str: string): Uint8Array {
   const length = str.length / 2;
@@ -19,11 +15,12 @@ function stringToUint8Array(str: string): Uint8Array {
 
 const checkSign = new Ed25519().sign(
   new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
-  stringToUint8Array(''),
+  stringToUint8Array('hello')
 );
 
-console.log('checking signature', checkSign);
-// console.log('string', stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60'));
+console.log('Signature', checkSign);
+const sign = Buffer.from(checkSign);
+console.log('hexSig', sign.toString('hex'));
 
 const publicKey = new Ed25519().getVerificationKey(
   new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
@@ -32,24 +29,5 @@ console.log('public key', publicKey);
 const buffer = Buffer.from(publicKey.bytes);
 console.log('public key in bytes', buffer.toString('hex'));
 
-const sha512 = new SHA512();
-const array = new Uint8Array(64);
-const hash = sha512.hash(array);
-console.log('hash1', hash);
-
-// sha512.update(new Uint8Array([6, 7, 8, 9, 10]), 1, 3);
-const hash2 = new Uint8Array(64);
-sha512.doFinal(hash2, 0);
-console.log('hash2', hash2);
-
-// const thirdParam = fs.readFileSync('new.json', 'utf8');
-// const thirdParamParse = JSON.parse(thirdParam);
-
-console.log('third...', checkSign);
-
-const newShuffle = new EC();
-newShuffle.shuffle2(2);
-
-
-// const newCmov = new EC();
-// console.log('new log', newCmov.cmov(1, 0, [1, 2, 3, 4, 5], 0, [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 0))
+const verified = new Ed25519().verify(Uint8Array.from(Buffer.from('E5564300C360AC729086E2CC806E828A84877F1EB8E5D974D873E065224901555FB8821590A33BACC61E39701CF9B46BD25BF5F0595BBE24655141438E7A100B', 'hex')), Uint8Array.from(Buffer.from('', 'hex')), publicKey);
+console.log('verified', verified);

@@ -268,7 +268,6 @@ export class EC {
     bs[off] = n & 0xff;
     bs[off + 1] = (n >>> 8) & 0xff;
     bs[off + 2] = (n >>> 16) & 0xff;
-    // console.log('bs from encode24', bs);
   }
 
   encode32(n: number, bs: Uint8Array, off: number): void {
