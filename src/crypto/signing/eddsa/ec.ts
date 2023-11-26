@@ -52,7 +52,6 @@ export class EC {
     const precompute = this._precompute();
     this._precompBaseTable = precompute[0];
     this._precompBase = precompute[1];
-    // console.log('precompBaseTable ... ', this._precompBaseTable);
   }
 
   mulAddTo256(x: Int32Array, y: Int32Array, zz: Int32Array): number {
@@ -96,19 +95,15 @@ export class EC {
 
   cmov(len: number, mask: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number): void {
     let maskv = mask;
-    // console.log('zoff ... ', zOff, xOff)
-    // console.log('maskv ...', maskv)
 
     maskv = maskv & 1 ? -(maskv & 1) : maskv & 1;
     let zi: number;
     for (let i = 0; i < len; i++) {
       zi = z[zOff + i];
       const diff = zi ^ x[xOff + i];
-      // console.log('zi from cmov ... ', diff);
       zi ^= diff & maskv;
       z[zOff + i] = Number(zi);
     }
-    // console.log('maskv after ... ', maskv)
   }
 
   // cmov(len: number, mask: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number): void {
@@ -120,14 +115,11 @@ export class EC {
   //     z_i ^= diff & maskv;
   //     z[zOff + i] = z_i;
   //   }
-
-  //   // console.log('z from cmov ... ', z);
   // }
 
   cadd(len: number, mask: number, x: Int32Array, y: Int32Array, z: Int32Array): number {
     const m = -BigInt(mask & 1) & M;
     // const mNew = Number(M)
-    // console.log('m from cadd ... ', m);
     let c = BigInt(0);
 
     for (let i = 0; i < len; i++) {
@@ -372,7 +364,6 @@ export class EC {
     }
 
     x25519_field.apm(r.y, r.x, B, A);
-    // console.log('P -> ', p);
     x25519_field.apm(p.y, p.x, d, c);
     x25519_field.mul2(A, C, A);
     x25519_field.mul2(B, D, B);
@@ -512,8 +503,6 @@ export class EC {
     for (let i = 0; i < PRECOMP_POINTS; i++) {
       const mask = ((i ^ index) - 1) >> 31;
 
-      // console.log('precompBase ... ', this._precompBase[1919]);
-
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ypxH, 0);
       off += x25519_field.SIZE;
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.ymxH, 0);
@@ -521,10 +510,6 @@ export class EC {
       this.cmov(x25519_field.SIZE, mask, this._precompBase, off, p.xyd, 0);
       off += x25519_field.SIZE;
     }
-
-    // console.log('p from point lookup ... ', p);
-
-    // console.log('p form ec ... ', p[0]?.ypxH);
   }
 
   pointPrecompVar(p: PointExt, count: number): PointExt[] {
@@ -553,7 +538,6 @@ export class EC {
     x25519_field.one(p.y);
     x25519_field.one(p.z);
     x25519_field.zero(p.t);
-    // console.log('p -> ', p);
   }
 
   _precompute(): [PointExt[], Int32Array] {
@@ -569,8 +553,6 @@ export class EC {
     //   this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: x25519_field.create(), t: x25519_field.create() }),
     // );
 
-    // console.log('b from precompute ... ', B_y);
-
     x25519_field.copy(B_x, 0, b.x, 0);
     x25519_field.copy(B_y, 0, b.y, 0);
 
@@ -579,9 +561,6 @@ export class EC {
     const precompBaseTable: PointExt[] = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
 
     const p: PointAccum = PointAccum.create();
-
-    // console.log('B_x -> ', B_x);
-    // console.log('B_y -> ', B_y);
 
     // const p: PointAccum = {
     //   x: B_x.slice(),
@@ -701,13 +680,6 @@ export class EC {
     if (L4 >= maxInt32) {
       signedL3 -= maxUint32;
     }
-
-    console.log(signedL0);
-    console.log('L0 ... ', L0);
-    console.log('L1 ... ', L1);
-    console.log('L2 ... ', L2);
-    console.log('L3 ... ', L3);
-    console.log('L4 ... ', L4);
 
     const M28L = BigInt('0x0fffffff');
     const M32L = BigInt('0xffffffff');
