@@ -15,7 +15,7 @@ function stringToUint8Array(str: string): Uint8Array {
 
 const checkSign = new Ed25519().sign(
   new SecretKey(stringToUint8Array('9d61b19deffd5a60ba844af492ec2cc44449c5697b326919703bac031cae7f60')),
-  stringToUint8Array('hello')
+  stringToUint8Array('')
 );
 
 console.log('Signature', checkSign);

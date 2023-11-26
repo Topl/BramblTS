@@ -794,13 +794,13 @@ export class EC {
 
     x01 += x00 >> BigInt(28);
     x00 &= M28L;
-
+    
     x02 += x01 >> BigInt(28);
     x01 &= M28L;
-
+    
     x03 += x02 >> BigInt(28);
     x02 &= M28L;
-
+    
     x04 += x03 >> BigInt(28);
     x03 &= M28L;
 
@@ -809,23 +809,23 @@ export class EC {
 
     x06 += x05 >> BigInt(28);
     x05 &= M28L;
-
+    
     x07 += x06 >> BigInt(28);
     x06 &= M28L;
-
+    
     x08 += x07 >> BigInt(28);
     x07 &= M28L;
-
+    
     x09 = x08 >> BigInt(28);
     x08 &= M28L;
     x09 -= t;
-
-    x00 += x09 & BigInt(L0);
-    x01 += x09 & BigInt(L1);
-    x02 += x09 & BigInt(L2);
-    x03 += x09 & BigInt(L3);
-    x04 += x09 & BigInt(L4);
-
+    
+    x00 += x09 & signedL0;
+    x01 += x09 & signedL1;
+    x02 += x09 & signedL2;
+    x03 += x09 & signedL3;
+    x04 += x09 & signedL4;
+    
     x01 += x00 >> BigInt(28);
     x00 &= M28L;
     x02 += x01 >> BigInt(28);
