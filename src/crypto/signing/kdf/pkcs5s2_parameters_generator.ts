@@ -26,19 +26,23 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
     if (c === 0) {
       throw new Error('iteration count must be at least 1.');
     }
-
+    
     if (S !== null) {
       this._hmac.update(S, 0, S.length);
     }
-
+    
     this._hmac.update(iBuf, 0, iBuf.length);
     this._hmac.doFinal(this._state, 0);
-
+    
+    out.set(this._state, outOff);
+    console.log('out -> ', this._state);
     for (let count = 0; count < c; count++) {
       this._hmac.update(this._state, 0, this._state.length);
       this._hmac.doFinal(this._state, 0);
 
-      for (let j = 0; j < this._state.length; j++) {
+      console.log(`count ${count} -> `,  this._state);
+
+      for (let j = 0; j != this._state.length; j++) {
         out[outOff + j] ^= this._state[j];
       }
     }
@@ -50,28 +54,30 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
     const iBuf = new Uint8Array(4);
     const outBytes = new Uint8Array(l * hLen);
     let outPos = 0;
-
+    
     const param = new KeyParameter(this.password);
-
+    
     this._hmac.init(param.getKey());
-
+    
     for (let i = 1; i <= l; i++) {
       let pos = 3;
       while (++iBuf[pos] === 0) {
         --pos;
       }
-
+      
       this._process(this.salt, this.iterationCount, iBuf, outBytes, outPos);
       outPos += hLen;
     }
-
+    
+    console.log('dkLen -> ', outBytes);
     return outBytes;
   }
 
   generateDerivedParameters(keySizeBits: number): CipherParameters {
     keySizeBits = (keySizeBits / 8) | 0;
-
+    
     const dKey = this._generateDerivedKey(keySizeBits);
+    // console.log('key size -> ', dKey);
 
     return new KeyParameter(dKey.slice(0, keySizeBits));
   }

@@ -16,6 +16,7 @@ export abstract class EllipticCurveSignatureScheme<SK extends spec.quivr.models.
     passphrase: string | null,
     options: { entropyToSeed: EntropyToSeed } = { entropyToSeed: new Pbkdf2Sha512() },
   ): KeyPair<SK, VK> {
+    // console.log('entropy -> ', entropy);
     const seed = options.entropyToSeed.toSeed(entropy, passphrase, this.seedLength);
     return this.deriveKeyPairFromSeed(seed);
   }
