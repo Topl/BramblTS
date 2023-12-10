@@ -168,7 +168,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<SecretKey, Pub
   ///
   /// Returns:
   /// A new `PublicKey` object representing the derived child public key.
-  deriveChildVerificationKey(verificationKey: PublicKey, index: SoftIndex): PublicKey {
+  deriveChildVerificationKey(verificationKey: spec.PublicKey, index: SoftIndex): PublicKey {
     // Compute the HMAC-SHA-512 of the parent chain code
     const z = spec.ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,

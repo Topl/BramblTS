@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createHmac } from 'crypto';
+import * as pb from '../../../../proto/quivr/models/shared';
 import * as spec from '../ed25519/ed25519_spec';
 
 interface Either<L, R> {
@@ -85,7 +86,7 @@ export class SecretKey {
     }
   }
 
-  static proto(sk: pb.SigningKey_ExtendedEd25519Sk): SecretKey {
+  static proto(sk: pb.quivr.models.SigningKey_ExtendedEd25519Sk): SecretKey {
     return new SecretKey(sk.leftKey, sk.rightKey, sk.chainCode);
   }
 
@@ -121,8 +122,8 @@ export class PublicKey {
     }
   }
 
-  static proto(vk: pb.VerificationKey_ExtendedEd25519Vk): PublicKey {
-    return new PublicKey(new spec.PublicKey(vk.vk.value), vk.chainCode);
+  static proto(vk: pb.quivr.models.VerificationKey_ExtendedEd25519Vk): PublicKey {
+    return new PublicKey(new spec.PublicKey(vk.value), vk.chainCode);
   }
 
   equals(other: PublicKey): boolean {

@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Either } from '../../../common/functional/either';
 import Ed25519 from '@/crypto/signing/ed25519/ed25519';
+import { SigningKey } from '@/crypto/signing/signing';
+import { Uuid, v4 as uuidv4 } from 'uuid';
+import { Either } from '../../../common/functional/either';
 import { Entropy } from '../mnemonic/entropy';
 import { English, Language } from '../mnemonic/language';
-import { InitializationFailure, InitializationFailureType } from './initialization_failure';
+import * as ed25519_spec from './../../signing/ed25519/ed25519_spec';
+import { InitializationFailure } from './initialization_failure';
 import { KeyInitializer } from './key_initializer';
-import { randomUUID } from 'crypto';
-import * as spec from '../../../../proto/quivr/models/shared'
 
-class Ed25519Initializer implements KeyInitializer {
+export class Ed25519Initializer implements KeyInitializer<SigningKey> {
   private readonly ed25519: Ed25519;
 
   constructor(ed25519: Ed25519) {
@@ -16,8 +17,9 @@ class Ed25519Initializer implements KeyInitializer {
   }
 
   random(): SigningKey {
-    const entropy = Entropy.fromUuid(randomUUID());
-    return this.fromEntropy(entropy);
+    const randomUuidString: string = uuidv4();
+    const uuid: Uuid = new Uuid(randomUuidString);
+    return this.fromEntropy(Entropy.fromUuid(uuid));
   }
 
   fromEntropy(entropy: Entropy, password?: string | undefined): SigningKey {
@@ -25,37 +27,21 @@ class Ed25519Initializer implements KeyInitializer {
   }
 
   fromBytes(bytes: Uint8Array): SigningKey {
-    return new this.ed25519.SecretKey(bytes); // Assuming SecretKey constructor takes a Uint8Array
+    return new ed25519_spec.SecretKey(bytes); // Assuming SecretKey constructor takes a Uint8Array
   }
 
   async fromMnemonicString(
     mnemonicString: string,
-    options: {
-      language?: Language;
-      password?: string | null;
-    } = {},
+    { language = new English(), password }: { language?: Language; password?: string } = {},
   ): Promise<Either<InitializationFailure, SigningKey>> {
-    const { language = new English(), password } = options;
+    const entropyResult = await Entropy.fromMnemonicString(mnemonicString, { language });
 
-    try {
-      const entropyResult = await Entropy.fromMnemonicString(mnemonicString, { language });
-
-      if (entropyResult.isLeft) {
-        return Either.left(
-          new InitializationFailure(InitializationFailureType.FailedToCreateEntropy, {
-            context: entropyResult.getLeft().toString(),
-          }),
-        );
-      }
-
-      const entropy = entropyResult.getRight()!;
-      const keyResult = this.fromEntropy(entropy, password);
-      return Either.right(keyResult);
-    } catch (error) {
-      // Handle any exceptions here
-      return Either.left(
-        new InitializationFailure(InitializationFailureType.FailedToCreateEntropy, { context: error.message }),
-      );
+    if (entropyResult.isLeft) {
+      return Either.left(InitializationFailure.failedToCreateEntropy(entropyResult.left.toString()));
     }
+
+    const entropy = entropyResult.right;
+    const keyResult = this.fromEntropy(entropy, password);
+    return Either.right(keyResult);
   }
 }

@@ -1,13 +1,13 @@
+import { SigningKey } from '@/crypto/signing/signing';
 import { Either } from '../../../common/functional/either';
 import { Entropy } from '../mnemonic/entropy';
 import { Language } from '../mnemonic/language';
 import { InitializationFailure } from './initialization_failure';
-import * as spec from '../../../../proto/quivr/models/shared';
 
-interface KeyInitializer<SK extends spec.quivr.models.SigningKey> {
+export interface KeyInitializer<SK extends SigningKey> {
   random(): SK;
 
-  fromEntropy(entropy: Entropy, options?: { password?: string }): SK;
+  fromEntropy(entropy: Entropy, password?: string): SK;
 
   fromBytes(bytes: Uint8Array): SK;
 
@@ -19,5 +19,3 @@ interface KeyInitializer<SK extends spec.quivr.models.SigningKey> {
     },
   ): Promise<Either<InitializationFailure, SK>>;
 }
-
-export { KeyInitializer };

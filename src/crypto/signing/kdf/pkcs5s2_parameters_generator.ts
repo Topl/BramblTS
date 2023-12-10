@@ -35,12 +35,12 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
     this._hmac.doFinal(this._state, 0);
     
     out.set(this._state, outOff);
-    console.log('out -> ', this._state);
+    // console.log('out -> ', this._state);
     for (let count = 0; count < c; count++) {
       this._hmac.update(this._state, 0, this._state.length);
       this._hmac.doFinal(this._state, 0);
 
-      console.log(`count ${count} -> `,  this._state);
+      // console.log(`count ${count} -> `,  this._state);
 
       for (let j = 0; j != this._state.length; j++) {
         out[outOff + j] ^= this._state[j];
@@ -69,7 +69,7 @@ export class PKCS5S2ParametersGenerator extends brambl.PBEParametersGenerator {
       outPos += hLen;
     }
     
-    console.log('dkLen -> ', outBytes);
+    // console.log('dkLen -> ', outBytes);
     return outBytes;
   }
 

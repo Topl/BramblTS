@@ -240,7 +240,7 @@ describe('Ed25519 Topl test vectors', () => {
     );
 
     const keys = ed25519.deriveKeyPairFromEntropy(e, p);
-    console.log('keys ...', specOut);
+    // console.log('keys ...', specOut);
     expect(keys).toEqual(specOut);
   });
 });
