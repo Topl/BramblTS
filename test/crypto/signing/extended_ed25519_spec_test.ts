@@ -52,13 +52,13 @@ describe('Extended Ed2519 Topl test vectors', () => {
       test(`Extended Ed25519: ${vector.description}`, () => {
         const [sk, m, vk, sig] = hexConvert(vector.secretKey, vector.message, vector.verificationKey, vector.signature);
 
-        const resultVk = xEd25519.getVerificationKey(new spec.SecretKey(sk));
-        const resultSig = xEd25519.sign(new spec.SecretKey(sk), m);
+        const resultVk = xEd25519.getVerificationKey(sk);
+        const resultSig = xEd25519.sign(sk, m);
 
         expect(xEd25519.verify(resultSig, m, resultVk)).toBe(true);
-        expect(xEd25519.verify(resultSig, m, new spec.PublicKey(vk))).toBe(true);
+        expect(xEd25519.verify(resultSig, m, vk)).toBe(true);
         expect(xEd25519.verify(sig, m, resultVk)).toBe(true);
-        expect(xEd25519.verify(sig, m, new spec.PublicKey(vk))).toBe(true);
+        expect(xEd25519.verify(sig, m, vk)).toBe(true);
       });
     }
   });

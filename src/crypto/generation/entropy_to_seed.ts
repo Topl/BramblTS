@@ -19,11 +19,7 @@ export class Pbkdf2Sha512 extends EntropyToSeed {
 
   generateKey(password: string, salt: Uint8Array, keySizeBytes: number, iterations: number): Uint8Array {
     const generator = new PKCS5S2ParametersGenerator('sha512');
-    // console.log('pass -> ', password);
-    // console.log('salt -> ', salt);
-    // console.log('keySizeBytes -> ', keySizeBytes);
-    // console.log('iterations -> ', iterations);
-
+    
     generator.init(this.stringToUint8Array(password), salt, iterations);
     const param = generator.generateDerivedParameters(keySizeBytes * 8) as KeyParameter;
     return param.key;

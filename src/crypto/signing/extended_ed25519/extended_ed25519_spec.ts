@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createHmac } from 'crypto';
-import * as pb from '../../../../proto/quivr/models/shared';
 import * as spec from '../ed25519/ed25519_spec';
+import { SigningKey } from '../signing';
 
 interface Either<L, R> {
   isLeft: boolean;
@@ -57,12 +57,13 @@ export class ExtendedEd25519Spec {
   }
 }
 
-export class SecretKey {
+export class SecretKey extends SigningKey implements ExtendedEd25519Spec {
   leftKey: Uint8Array;
   rightKey: Uint8Array;
   chainCode: Uint8Array;
 
   constructor(leftKey: Uint8Array, rightKey: Uint8Array, chainCode: Uint8Array) {
+    super();
     this.leftKey = leftKey;
     this.rightKey = rightKey;
     this.chainCode = chainCode;
@@ -86,9 +87,9 @@ export class SecretKey {
     }
   }
 
-  static proto(sk: pb.quivr.models.SigningKey_ExtendedEd25519Sk): SecretKey {
-    return new SecretKey(sk.leftKey, sk.rightKey, sk.chainCode);
-  }
+  // static proto(sk: pb.quivr.models.SigningKey): SecretKey {
+  //   return new SecretKey(sk.leftKey, sk.rightKey, sk.chainCode);
+  // }
 
   equals(other: SecretKey): boolean {
     return (
@@ -122,9 +123,9 @@ export class PublicKey {
     }
   }
 
-  static proto(vk: pb.quivr.models.VerificationKey_ExtendedEd25519Vk): PublicKey {
-    return new PublicKey(new spec.PublicKey(vk.value), vk.chainCode);
-  }
+  // static proto(vk: pb.quivr.models.VerificationKey): PublicKey {
+  //   return new PublicKey(new spec.PublicKey(vk.value), vk.chainCode);
+  // }
 
   equals(other: PublicKey): boolean {
     return this.vk.equals(other.vk) && Buffer.from(this.chainCode).equals(Buffer.from(other.chainCode));
