@@ -116,7 +116,7 @@ export const extendedEd25519TestVectors = [
       verificationKey:
         'a2886648ddd536f2bfc3f766ba0944c4aa06bfea5ba9aae073b31e7d7c15e551bb8c3ca396a73fceb5111d1b12d8049ac8b1789be308c063b2e5a9b6e5a8c764',
       signature:
-        'fbbbca775152d6edc69e35f34da1751f6f0f4ec74384a4dd21493c1e3c6f346d1976a76a936a01cb313425970290e9c7bac33b52449e04f66d667e16d181ef0c',
+        'c',
     },
   },
   {

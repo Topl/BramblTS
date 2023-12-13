@@ -1,4 +1,5 @@
 import { SoftIndex } from '../../../src/crypto/generation/bip32_index';
+import { ExtendedEd25519Initializer } from '../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
 import { Entropy } from '../../../src/crypto/generation/mnemonic/entropy';
 import { KeyPair } from '../../../src/crypto/signing/signing';
 import { hexToUint8Array } from '../generation/test_vectors/key_initializer_vectors';
@@ -37,11 +38,13 @@ describe('Extended Ed2519 Topl test vectors', () => {
       message: string,
       verificationKey: string,
       signature: string,
-    ): [Uint8Array, Uint8Array, Uint8Array, Uint8Array] => {
+    ): [x_spec.SecretKey, Uint8Array, x_spec.PublicKey, Uint8Array] => {
+      const sk = Uint8Array.from(Buffer.from(secretKey, 'hex'));
+      const vk = Uint8Array.from(Buffer.from(verificationKey, 'hex'));
       return [
-        Uint8Array.from(Buffer.from(secretKey, 'hex')),
+        new ExtendedEd25519Initializer(xEd25519).fromBytes(sk) as x_spec.SecretKey,
         Uint8Array.from(Buffer.from(message, 'hex')),
-        Uint8Array.from(Buffer.from(verificationKey, 'hex')),
+        new x_spec.PublicKey(new spec.PublicKey(vk.slice(0, 32)), vk.slice(32, 64)),
         Uint8Array.from(Buffer.from(signature, 'hex')),
       ];
     };

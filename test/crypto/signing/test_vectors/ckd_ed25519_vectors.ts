@@ -1,15 +1,12 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Option } from 'fp-ts/lib/Option';
+import { None, Option, Some } from '../../../../src/common/functional/either';
 import { Bip32Index, HardenedIndex, SoftIndex } from '../../../../src/crypto/generation/bip32_index';
 import { ExtendedEd25519Initializer } from '../../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
 import * as spec from '../../../../src/crypto/signing/ed25519/ed25519_spec';
-import {
-  ExtendedEd25519,
-  PublicKey,
-  SecretKey,
-} from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
-import { None, Some } from '../../../../src/common/functional/either';
+import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
+import { PublicKey, SecretKey } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
 
 function hexToUint8List(hex: string): Uint8Array {
   const bytes = new Uint8Array(hex.length / 2);
@@ -22,19 +19,26 @@ function hexToUint8List(hex: string): Uint8Array {
 export class CkdEd25519TestVector {
   description: string;
   rootSecretKey: SecretKey;
-  rootVerificationKey: None<any>;
+  rootVerificationKey: Option<PublicKey>;
   path: Bip32Index[];
   childSecretKey: SecretKey;
   childVerificationKey: PublicKey;
 
-  constructor(
-    description: string,
-    rootSecretKey: SecretKey,
-    rootVerificationKey: Option<PublicKey>,
-    path: Bip32Index[],
-    childSecretKey: SecretKey,
-    childVerificationKey: PublicKey,
-  ) {
+  constructor({
+    description,
+    rootSecretKey,
+    rootVerificationKey,
+    path,
+    childSecretKey,
+    childVerificationKey,
+  }: {
+    description: string;
+    rootSecretKey: SecretKey;
+    rootVerificationKey: Option<PublicKey>;
+    path: Bip32Index[];
+    childSecretKey: SecretKey;
+    childVerificationKey: PublicKey;
+  }) {
     this.description = description;
     this.rootSecretKey = rootSecretKey;
     this.rootVerificationKey = rootVerificationKey;
@@ -44,13 +48,12 @@ export class CkdEd25519TestVector {
   }
 
   // testing
-  static fromJson(vector: { [key: string]: any }): CkdEd25519TestVector {
+  // static fromJson(vector: { [key: string]: any }): CkdEd25519TestVector {
+  static fromJson(vector: any): CkdEd25519TestVector {
     const input = vector['inputs'] as { [key: string]: any };
     const output = vector['outputs'] as { [key: string]: any };
 
-    const path = (input['path'] as [string, number][]).map((x) => {
-      const type = x[0];
-      const index = x[1];
+    const path = (input['path'] as Array<[string, number]>).map(([type, index]) => {
       if (type === 'soft') {
         return new SoftIndex(index);
       } else if (type === 'hard') {
@@ -63,12 +66,14 @@ export class CkdEd25519TestVector {
     // input
     const rSkString = input['rootSecretKey'] as string;
 
-    let rootVerificationKey = new None();
+    let rootVerificationKey: Option<PublicKey> = new None();
 
-    if ('rootVerificationKey' in input) {
-      const rVkString = input['rootVerificationKey'] as string;
+    if (input.hasOwnProperty('rootVerificationKey')) {
+      // const rVkString = input['rootVerificationKey'] as string;
       const rootVkBytes = hexToUint8List(rSkString);
-      rootVerificationKey = new Some(new PublicKey(new spec.PublicKey(rootVkBytes.slice(0, 32)), rootVkBytes.slice(32, 64)));
+      rootVerificationKey = new Some(
+        new PublicKey(new spec.PublicKey(rootVkBytes.slice(0, 32)), rootVkBytes.slice(32, 64)),
+      );
     }
 
     const rootSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(hexToUint8List(rSkString));
@@ -81,14 +86,14 @@ export class CkdEd25519TestVector {
     const childVkBytes = hexToUint8List(cVkString);
     const childVk = new PublicKey(new spec.PublicKey(childVkBytes.slice(0, 32)), childVkBytes.slice(32, 64));
 
-    return new CkdEd25519TestVector(
-      vector['description'],
-      rootSK as SecretKey,
+    return new CkdEd25519TestVector({
+      description: vector['description'] as string,
+      rootSecretKey: rootSK as SecretKey,
       rootVerificationKey,
+      childSecretKey: childSK as SecretKey,
+      childVerificationKey: childVk,
       path,
-      childSK as SecretKey,
-      childVk,
-    );
+    });
   }
 }
 

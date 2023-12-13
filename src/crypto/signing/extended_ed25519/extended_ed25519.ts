@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Bip32Index, SoftIndex } from '../../../crypto/generation/bip32_index';
 import { SHA512 } from '../../../crypto/hash/sha';
-import { Bip32Index, SoftIndex } from '@/crypto/generation/bip32_index';
 import { Ed25519Spec, PublicKey } from '../ed25519/ed25519_spec';
 import { PointAccum, PointExt } from '../eddsa/ec';
 import * as eddsa from '../eddsa/ed25519';
@@ -17,7 +17,7 @@ function fromLittleEndian(bytes: Uint8Array): bigint {
 }
 
 export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
-  private impl: eddsa.Ed25519;
+  public impl = new eddsa.Ed25519();
 
   constructor() {
     super(spec.ExtendedEd25519Spec.seedLength);
@@ -43,7 +43,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     this.impl.scalarMultBaseEncoded(privateKey.leftKey, pk, 0);
     this.impl.implSignWithDigestAndPublicKey(new SHA512(), h, s, pk, 0, ctx, phflag, m, 0, m.length, resultSig, 0);
-
+    
     return resultSig;
   }
 
