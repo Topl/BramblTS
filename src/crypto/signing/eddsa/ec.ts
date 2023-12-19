@@ -29,8 +29,8 @@ Table 1: Parameters of Ed25519
 */
 
 // import fs from 'fs';
-import * as x25519_field from './x25519_field';
 import Long from 'long';
+import * as x25519_field from './x25519_field';
 
 /// AMS 2021: Supporting curve point operations for all EC crypto primitives in eddsa package
 /// Directly ported from BouncyCastle implementation of Ed25519 RFC8032 https://tools.ietf.org/html/rfc8032
@@ -337,6 +337,7 @@ export class EC {
   }
 
   pointAddVar1(negate: boolean, p: PointExt, r: PointAccum): void {
+    // console.log('p -> ', p);
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -364,6 +365,7 @@ export class EC {
     }
 
     x25519_field.apm(r.y, r.x, B, A);
+    // console.log('p -> ', p);
     x25519_field.apm(p.y, p.x, d, c);
     x25519_field.mul2(A, C, A);
     x25519_field.mul2(B, D, B);
@@ -559,6 +561,7 @@ export class EC {
     this.pointExtendXY(b);
 
     const precompBaseTable: PointExt[] = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
+    // console.log('precompBaseTable -> ', precompBaseTable);
 
     const p: PointAccum = PointAccum.create();
 
@@ -676,7 +679,7 @@ export class EC {
     if (L3 >= maxInt32) {
       signedL3 -= maxUint32;
     }
-    let signedL4 = L4;
+    const signedL4 = L4;
     if (L4 >= maxInt32) {
       signedL3 -= maxUint32;
     }
@@ -794,13 +797,13 @@ export class EC {
 
     x01 += x00 >> BigInt(28);
     x00 &= M28L;
-    
+
     x02 += x01 >> BigInt(28);
     x01 &= M28L;
-    
+
     x03 += x02 >> BigInt(28);
     x02 &= M28L;
-    
+
     x04 += x03 >> BigInt(28);
     x03 &= M28L;
 
@@ -809,23 +812,23 @@ export class EC {
 
     x06 += x05 >> BigInt(28);
     x05 &= M28L;
-    
+
     x07 += x06 >> BigInt(28);
     x06 &= M28L;
-    
+
     x08 += x07 >> BigInt(28);
     x07 &= M28L;
-    
+
     x09 = x08 >> BigInt(28);
     x08 &= M28L;
     x09 -= t;
-    
+
     x00 += x09 & signedL0;
     x01 += x09 & signedL1;
     x02 += x09 & signedL2;
     x03 += x09 & signedL3;
     x04 += x09 & signedL4;
-    
+
     x01 += x00 >> BigInt(28);
     x00 &= M28L;
     x02 += x01 >> BigInt(28);
@@ -907,11 +910,16 @@ export class EC {
     const width = 5;
 
     // Compute the WNAF of the scalar values nb and np.
-    const wsB = this.getWNAF(nb, WNAF_WIDTH_BASE);
-    const wsP = this.getWNAF(np, width);
+    const wsB2 = this.getWNAF(nb, WNAF_WIDTH_BASE);
+    const wsP2 = this.getWNAF(np, width);
+    const wsB = Array.from(wsB2, (value) => (value > 127 ? value - 256 : value));
+    const wsP = Array.from(wsP2, (value) => (value > 127 ? value - 256 : value));
+
+    // console.log('wsB -> ', wsB);
 
     // Compute a precomputed table of points based on the input point p.
     const tp = this.pointPrecompVar(p, 1 << (width - 2));
+    // console.log('tp -> ', tp);
 
     // Initialize the result to the neutral element of the elliptic curve.
     this.pointSetNeutralAccum(r);
@@ -922,9 +930,13 @@ export class EC {
       bit -= 1;
     }
 
+    // console.log('bit -> ', this._precompBaseTable);
+
     while (true) {
       // Get the current bit of the scalar value nb.
       const wb = wsB[bit];
+
+      // console.log('wb -> ', wb);
 
       // If the bit is non-zero,
       // perform a point addition operation using the corresponding point from the precomputed table.
@@ -937,8 +949,11 @@ export class EC {
       // Get the current bit of the scalar value np.
       const wp = wsP[bit];
 
+      // console.log('wp -> ', wp);
+
       // If the bit is non-zero,
       // perform a point addition operation using the corresponding point from the precomputed table.
+
       if (wp != 0) {
         const sign = wp >> 31;
         const index = (wp ^ sign) >>> 1;

@@ -2,7 +2,7 @@ import { SoftIndex } from '../../../src/crypto/generation/bip32_index';
 import { ExtendedEd25519Initializer } from '../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
 import { Entropy } from '../../../src/crypto/generation/mnemonic/entropy';
 import { KeyPair } from '../../../src/crypto/signing/signing';
-import { hexToUint8Array } from '../generation/test_vectors/key_initializer_vectors';
+import { hexToUint8Array, hexToUint8ArrayFor32 } from '../generation/test_vectors/key_initializer_vectors';
 import { Generators } from '../helpers/generators';
 import * as spec from './../../../src/crypto/signing/ed25519/ed25519_spec';
 import { ExtendedEd25519 } from './../../../src/crypto/signing/extended_ed25519/extended_ed25519';
@@ -112,7 +112,7 @@ describe('Extended Ed2519 Topl test vectors', () => {
   it('With ExtendedEd25519, keyPairs generated with the same seed should be the same', () => {
     const xEd25519 = new ExtendedEd25519();
 
-    const e = new Entropy(hexToUint8Array('topl'));
+    const e = new Entropy(hexToUint8ArrayFor32('topl'));
     const p = 'topl';
 
     const specOutSk = new x_spec.SecretKey(
@@ -177,7 +177,7 @@ describe('Extended Ed2519 Topl test vectors', () => {
   it('Topl specific seed generation mechanism should generate a fixed secret key given an entropy and password', () => {
     const xEd25519 = new ExtendedEd25519();
 
-    const e = new Entropy(hexToUint8Array('topl'));
+    const e = new Entropy(hexToUint8ArrayFor32('topl'));
     const p = 'topl';
 
     const specOutSk = new x_spec.SecretKey(

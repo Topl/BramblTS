@@ -43,6 +43,11 @@ export function hexToUint8Array(hex: string): Uint8Array {
   return bytes;
 }
 
+export function hexToUint8ArrayFor32(hex: string): Uint8Array {
+  const encoder = new TextEncoder();
+  return encoder.encode(hex);
+}
+
 export const keyInitializerTestVectors = [
   {
     inputs: {

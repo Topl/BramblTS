@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { v4 as uuidv4 } from 'uuid';
 import { Either } from '../../../common/functional/either';
-import { randomBytes } from 'crypto';
 import { English, Language } from './language';
 import { MnemonicSize } from './mnemonic';
 import { Phrase } from './phrase';
-import { v4 as uuidv4 } from 'uuid';
+import { getRandomValues } from 'crypto';
 
 const defaultMnemonicSize = MnemonicSize.words12();
 
@@ -17,7 +17,7 @@ enum EntropyFailureType {
 
 class Uuid {
   v4() {
-      return uuidv4();
+    return uuidv4();
   }
 }
 
@@ -28,11 +28,13 @@ export class Entropy {
     this.value = value;
   }
 
-  public static generate(size: MnemonicSize = defaultMnemonicSize): Entropy {
+  public static generate(size = defaultMnemonicSize): Entropy {
     const numBytes = size.entropyLength / 8;
 
-    const r = randomBytes(numBytes);
-    return new Entropy(r);
+    const r = new Uint8Array(numBytes);
+    const secureRandom = getRandomValues(r);
+    // console.log('secureRandom -> ', Number(Buffer.from(secureRandom).toString('hex')));
+    return new Entropy(secureRandom);
   }
 
   public static async toMnemonicString(
@@ -77,8 +79,8 @@ export class Entropy {
 
   public static fromUuid(uuid: Uuid): Entropy {
     const uuidString = uuid.v4().replace(/-/g, '');
-        const bytes = uuidString.split('').map(c => parseInt(c, 16));
-        return new Entropy(new Uint8Array(bytes));
+    const bytes = uuidString.split('').map((c) => parseInt(c, 16));
+    return new Entropy(new Uint8Array(bytes));
   }
 
   public static fromBytes(bytes: Uint8Array): Either<EntropyFailure, Entropy> {

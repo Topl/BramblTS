@@ -223,19 +223,19 @@ export class Ed25519 extends EC {
     if (!this.checkContextVar(context, phflag)) {
       throw new Error('Invalid context');
     }
-
+    
     // Extract the R and S components from the signature.
     const R = signature.slice(signatureOffset, signatureOffset + POINT_BYTES);
     const S = signature.slice(signatureOffset + POINT_BYTES, signatureOffset + SIGNATURE_SIZE);
-
+    
     // Check if the R and S components are valid.
     if (!this.checkPointVar(R)) return false;
     if (!this.checkScalarVar(S)) return false;
-
+    
     // Decode the public key.
     const pA = PointExt.create();
     if (!this.decodePointVar(pk, pkOffset, { negate: true, r: pA })) return false;
-
+    
     // Compute the SHA-512 hash of the message and the other parameters.
     const h = new Uint8Array(this.defaultDigest.digestSize());
     this._dom2(this.defaultDigest, phflag, context);
@@ -243,20 +243,21 @@ export class Ed25519 extends EC {
     this.defaultDigest.update(pk, pkOffset, POINT_BYTES);
     this.defaultDigest.update(message, messageOffset, messageLength);
     this.defaultDigest.doFinal(h, 0);
-
+    
     // Reduce the hash to obtain a scalar value.
     const k = this.reduceScalar(h);
-
+    
     // Decode the S component of the signature and the scalar value k.
     const nS = new Int32Array(SCALAR_INTS).fill(0);
     this.decodeScalar(S, 0, nS);
-
+    
     const nA = new Int32Array(SCALAR_INTS).fill(0);
     this.decodeScalar(k, 0, nA);
-
+    
     // Compute the point R' = nS * B + nA * A, where B is the standard base point and A is the public key.
     const pR = PointAccum.create();
     this.scalarMultStraussVar(nS, nA, pA, pR);
+    // console.log('working -> ');
 
     // Encode the point R' and check if it matches the R component of the signature.
     const check = new Uint8Array(POINT_BYTES);
