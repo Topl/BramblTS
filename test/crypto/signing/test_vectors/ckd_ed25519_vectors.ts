@@ -9,11 +9,14 @@ import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519
 import { PublicKey, SecretKey } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
 
 function hexToUint8List(hex: string): Uint8Array {
-  const bytes = new Uint8Array(hex.length / 2);
+  const hexString = hex.trim();
+  const result = new Uint8Array(hexString.length / 2);
+
   for (let i = 0; i < hex.length; i += 2) {
-    bytes[i / 2] = parseInt(hex.substring(i, 2), 16);
+    result[i / 2] = parseInt(hex.slice(i, i + 2), 16);
   }
-  return bytes;
+
+  return result;
 }
 
 export class CkdEd25519TestVector {
@@ -48,8 +51,8 @@ export class CkdEd25519TestVector {
   }
 
   // testing
-  // static fromJson(vector: { [key: string]: any }): CkdEd25519TestVector {
-  static fromJson(vector: any): CkdEd25519TestVector {
+  static fromJson(vector: { [key: string]: any }): CkdEd25519TestVector {
+    // static fromJson(vector: any): CkdEd25519TestVector {
     const input = vector['inputs'] as { [key: string]: any };
     const output = vector['outputs'] as { [key: string]: any };
 
@@ -77,11 +80,13 @@ export class CkdEd25519TestVector {
     }
 
     const rootSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(hexToUint8List(rSkString));
+    // console.log('rootSK -> ', rootSK);
 
     // output
     const cSkString = output['childSecretKey'] as string;
     const cVkString = output['childVerificationKey'] as string;
 
+    // console.log('childSK -> ', hexToUint8List(cSkString));
     const childSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(hexToUint8List(cSkString));
     const childVkBytes = hexToUint8List(cVkString);
     const childVk = new PublicKey(new spec.PublicKey(childVkBytes.slice(0, 32)), childVkBytes.slice(32, 64));

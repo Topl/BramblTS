@@ -257,7 +257,6 @@ export class Ed25519 extends EC {
     // Compute the point R' = nS * B + nA * A, where B is the standard base point and A is the public key.
     const pR = PointAccum.create();
     this.scalarMultStraussVar(nS, nA, pA, pR);
-    // console.log('working -> ');
 
     // Encode the point R' and check if it matches the R component of the signature.
     const check = new Uint8Array(POINT_BYTES);

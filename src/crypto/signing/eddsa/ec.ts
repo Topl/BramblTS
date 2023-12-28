@@ -337,7 +337,6 @@ export class EC {
   }
 
   pointAddVar1(negate: boolean, p: PointExt, r: PointAccum): void {
-    // console.log('p -> ', p);
     const A = x25519_field.create();
     const B = x25519_field.create();
     const C = x25519_field.create();
@@ -365,7 +364,6 @@ export class EC {
     }
 
     x25519_field.apm(r.y, r.x, B, A);
-    // console.log('p -> ', p);
     x25519_field.apm(p.y, p.x, d, c);
     x25519_field.mul2(A, C, A);
     x25519_field.mul2(B, D, B);
@@ -561,17 +559,8 @@ export class EC {
     this.pointExtendXY(b);
 
     const precompBaseTable: PointExt[] = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
-    // console.log('precompBaseTable -> ', precompBaseTable);
-
+    
     const p: PointAccum = PointAccum.create();
-
-    // const p: PointAccum = {
-    //   x: B_x.slice(),
-    //   y: B_y.slice(),
-    //   z: x25519_field.create(),
-    //   u: x25519_field.create(),
-    //   v: x25519_field.create(),
-    // };
 
     x25519_field.copy(B_x, 0, p.x, 0);
     x25519_field.copy(B_y, 0, p.y, 0);
@@ -915,12 +904,9 @@ export class EC {
     const wsB = Array.from(wsB2, (value) => (value > 127 ? value - 256 : value));
     const wsP = Array.from(wsP2, (value) => (value > 127 ? value - 256 : value));
 
-    // console.log('wsB -> ', wsB);
-
     // Compute a precomputed table of points based on the input point p.
     const tp = this.pointPrecompVar(p, 1 << (width - 2));
-    // console.log('tp -> ', tp);
-
+    
     // Initialize the result to the neutral element of the elliptic curve.
     this.pointSetNeutralAccum(r);
 
@@ -930,13 +916,9 @@ export class EC {
       bit -= 1;
     }
 
-    // console.log('bit -> ', this._precompBaseTable);
-
     while (true) {
       // Get the current bit of the scalar value nb.
       const wb = wsB[bit];
-
-      // console.log('wb -> ', wb);
 
       // If the bit is non-zero,
       // perform a point addition operation using the corresponding point from the precomputed table.
@@ -948,8 +930,6 @@ export class EC {
 
       // Get the current bit of the scalar value np.
       const wp = wsP[bit];
-
-      // console.log('wp -> ', wp);
 
       // If the bit is non-zero,
       // perform a point addition operation using the corresponding point from the precomputed table.

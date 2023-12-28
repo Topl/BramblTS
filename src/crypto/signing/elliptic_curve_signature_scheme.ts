@@ -16,7 +16,6 @@ export abstract class EllipticCurveSignatureScheme<SK extends SigningKey, VK ext
     entropyToSeed = new Pbkdf2Sha512(),
   ): KeyPair<SK, VK> {
     const seed = entropyToSeed.toSeed(entropy, passphrase, this.seedLength);
-    // console.log('seed -> ', this.seedLength);
     return this.deriveKeyPairFromSeed(seed);
   }
 

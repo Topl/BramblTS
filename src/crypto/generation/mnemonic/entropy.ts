@@ -30,10 +30,8 @@ export class Entropy {
 
   public static generate(size = defaultMnemonicSize): Entropy {
     const numBytes = size.entropyLength / 8;
-
     const r = new Uint8Array(numBytes);
     const secureRandom = getRandomValues(r);
-    // console.log('secureRandom -> ', Number(Buffer.from(secureRandom).toString('hex')));
     return new Entropy(secureRandom);
   }
 

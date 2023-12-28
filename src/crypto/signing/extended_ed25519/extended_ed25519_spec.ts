@@ -15,6 +15,16 @@ class InvalidDerivedKey implements Error {
   stack?: string;
 }
 
+function fromLittleEndian(bytes: Uint8Array): bigint {
+  let result = BigInt(0);
+
+  for (let i = bytes.length - 1; i >= 0; i--) {
+    result = (result << BigInt(8)) | BigInt(bytes[i]);
+  }
+
+  return result;
+}
+
 export class ExtendedEd25519Spec {
   static readonly signatureLength: number = 64;
   static readonly keyLength: number = 32;
@@ -43,11 +53,11 @@ export class ExtendedEd25519Spec {
   }
 
   static leftNumber(secretKey: SecretKey): bigint {
-    return BigInt(`0x${Buffer.from(secretKey.leftKey).toString('hex')}`);
+    return fromLittleEndian(secretKey.leftKey);
   }
 
   static rightNumber(secretKey: SecretKey): bigint {
-    return BigInt(`0x${Buffer.from(secretKey.rightKey).toString('hex')}`);
+    return fromLittleEndian(secretKey.rightKey);
   }
 
   static hmac512WithKey(key: Uint8Array, data: Uint8Array): Uint8Array {

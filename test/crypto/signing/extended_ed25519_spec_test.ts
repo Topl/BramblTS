@@ -14,25 +14,6 @@ describe('Extended Ed2519 Topl test vectors', () => {
   describe('ed25519 spec tests', () => {
     const xEd25519 = new ExtendedEd25519();
 
-    // function hexConvert(
-    //   secretKey: string,
-    //   message: string,
-    //   verificationKey: string,
-    //   signature: string,
-    // ): [x_spec.SecretKey, Uint8Array, x_spec.PublicKey, Uint8Array] {
-    //   const sk = hexToUint8Array(secretKey);
-    //   const vk = hexToUint8Array(verificationKey);
-    //   const msg = hexToUint8Array(message);
-    //   const sign = hexToUint8Array(signature);
-
-    //   return [
-    //     extendedEd25519Initializer.fromBytes(sk) as x_spec.SecretKey,
-    //     extendedEd25519Initializer.fromBytes(msg),
-    //     new x_spec.PublicKey(new spec.PublicKey(vk.slice(0, 32)), vk.slice(32, 64)),
-    //     extendedEd25519Initializer.fromBytes(sign),
-    //   ];
-    // }
-
     const hexConvert = (
       secretKey: string,
       message: string,

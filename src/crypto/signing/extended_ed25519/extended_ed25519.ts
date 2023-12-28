@@ -16,6 +16,18 @@ function fromLittleEndian(bytes: Uint8Array): bigint {
   return result;
 }
 
+function bigintToUint8Array(value: bigint): Uint8Array {
+  const hexString = value.toString(16);
+  const paddedHexString = hexString.length % 2 === 0 ? hexString : '0' + hexString;
+  const byteArray = new Uint8Array(paddedHexString.length / 2);
+
+  for (let i = 0; i < paddedHexString.length; i += 2) {
+    byteArray[i / 2] = parseInt(paddedHexString.slice(i, i + 2), 16);
+  }
+
+  return byteArray;
+}
+
 export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
   public impl = new eddsa.Ed25519();
 
@@ -43,7 +55,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     this.impl.scalarMultBaseEncoded(privateKey.leftKey, pk, 0);
     this.impl.implSignWithDigestAndPublicKey(new SHA512(), h, s, pk, 0, ctx, phflag, m, 0, m.length, resultSig, 0);
-    
+
     return resultSig;
   }
 
@@ -117,6 +129,8 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     const lNum = spec.ExtendedEd25519Spec.leftNumber(secretKey);
     const rNum = spec.ExtendedEd25519Spec.rightNumber(secretKey);
 
+    console.log('lNum -> ', lNum);
+
     // Get the public key from the secret key
     const publicKey = this.getVerificationKey(secretKey);
 
@@ -135,23 +149,23 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     // Compute the next left key by adding zLeft * 8 to the current left key
     const nextLeftBigInt = zLeft * BigInt(8) + lNum;
-    const nextLeftPre = new Uint8Array(
-      BigInt.asUintN(256, nextLeftBigInt)
-        .toString(16)
-        .match(/.{2}/g)!
-        .map((byte) => parseInt(byte, 16)),
-    );
-    const nextLeft = new Uint8Array(nextLeftPre.slice(nextLeftPre.length - 32));
+    const nextLeftPre = bigintToUint8Array(nextLeftBigInt);
+    // console.log('next left pre -> ', nextLeftPre);
+    const nextLeft = new Uint8Array(nextLeftPre.slice().reverse().slice(0, 32));
 
     // Compute the next right key by adding zRight to the current right key
-    const nextRightBigInt = BigInt.asUintN(256, zRight + rNum);
-    const nextRightPre = new Uint8Array(
-      BigInt.asUintN(256, nextRightBigInt)
-        .toString(16)
-        .match(/.{2}/g)!
-        .map((byte) => parseInt(byte, 16)),
-    );
-    const nextRight = new Uint8Array(nextRightPre.slice(nextRightPre.length - 32));
+    const nextRightBigInt = (zRight + rNum) % BigInt(2 ** 256);
+    // const nextRightPre = new Uint8Array(
+    //   BigInt.asUintN(256, nextRightBigInt)
+    //     .toString(16)
+    //     .match(/.{2}/g)!
+    //     .map((byte) => parseInt(byte, 16)),
+    // );
+    const nextRightPre = bigintToUint8Array(nextRightBigInt)
+
+    // console.log('next right pre -> ', nextRightPre);
+
+    const nextRight = new Uint8Array(nextRightPre.slice().reverse().slice(0, 32));
 
     // Compute the next chain code using HMAC-SHA-512 with the chain code as the key
     const chaincodeHmacData =
@@ -160,6 +174,8 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
         : new Uint8Array([0x01, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
 
     const nextChainCode = spec.ExtendedEd25519Spec.hmac512WithKey(secretKey.chainCode, chaincodeHmacData).slice(32, 64);
+
+    // console.log('next -> ', nextLeft);
 
     // Return the new secret key
     return new spec.SecretKey(nextLeft, nextRight, nextChainCode);
