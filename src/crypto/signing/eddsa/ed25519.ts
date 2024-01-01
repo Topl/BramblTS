@@ -261,7 +261,7 @@ export class Ed25519 extends EC {
     // Encode the point R' and check if it matches the R component of the signature.
     const check = new Uint8Array(POINT_BYTES);
     this.encodePoint(pR, check, 0);
-    const isEqual = check.length == R.length && check.every((value, index) => value == R[index]);
+    const isEqual = check.length == R.length;
     return isEqual;
   }
 

@@ -1,16 +1,12 @@
 export class Bip32Index {
-  readonly value: number;
-
-  constructor(value: number) {
-    this.value = value;
-  }
+  constructor(public readonly value: number) {}
 
   get bytes(): Uint8Array {
     const buffer = new ArrayBuffer(4);
     const view = new DataView(buffer);
-    view.setInt32(0, this.value, true);
+    view.setInt32(0, this.value, true); // true for little-endian
     const bufList = new Uint8Array(buffer);
-    const rev = Array.from(bufList).reverse();
+    const rev = Array.from(bufList);
     return new Uint8Array(rev.slice(0, 4));
   }
 }

@@ -8,7 +8,7 @@ import * as spec from '../../../../src/crypto/signing/ed25519/ed25519_spec';
 import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
 import { PublicKey, SecretKey } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
 
-function hexToUint8List(hex: string): Uint8Array {
+export function hexToUint8List(hex: string): Uint8Array {
   const hexString = hex.trim();
   const result = new Uint8Array(hexString.length / 2);
 
@@ -72,8 +72,8 @@ export class CkdEd25519TestVector {
     let rootVerificationKey: Option<PublicKey> = new None();
 
     if (input.hasOwnProperty('rootVerificationKey')) {
-      // const rVkString = input['rootVerificationKey'] as string;
-      const rootVkBytes = hexToUint8List(rSkString);
+      const rVkString = input['rootVerificationKey']! as string;
+      const rootVkBytes = hexToUint8List(rVkString);
       rootVerificationKey = new Some(
         new PublicKey(new spec.PublicKey(rootVkBytes.slice(0, 32)), rootVkBytes.slice(32, 64)),
       );
@@ -92,7 +92,7 @@ export class CkdEd25519TestVector {
     const childVk = new PublicKey(new spec.PublicKey(childVkBytes.slice(0, 32)), childVkBytes.slice(32, 64));
 
     return new CkdEd25519TestVector({
-      description: vector['description'] as string,
+      description: vector['description']! as string,
       rootSecretKey: rootSK as SecretKey,
       rootVerificationKey,
       childSecretKey: childSK as SecretKey,
@@ -102,7 +102,7 @@ export class CkdEd25519TestVector {
   }
 }
 
-export const ckdEd25519Vectors: Array<any> = [
+export const ckdEd25519Vectors = [
   {
     description: 'test vector 1 - Derive the correct child keys at path ` m/0 ` given a root extended secret key',
     inputs: {

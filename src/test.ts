@@ -1,4 +1,5 @@
 import { CkdEd25519TestVector, ckdEd25519Vectors } from './../test/crypto/signing/test_vectors/ckd_ed25519_vectors';
+// import { SoftIndex } from './crypto/generation/bip32_index';
 import { ExtendedEd25519 } from './crypto/signing/extended_ed25519/extended_ed25519';
 
 // function stringToUint8Array(str: string): Uint8Array {
@@ -149,11 +150,24 @@ for (const x of ckdEd25519Vectors) {
     vector.rootSecretKey,
   );
 
+  // const dChildXVK = vector.rootVerificationKey.map((vk) =>
+  //         vector.path.reduce((xvk, ind) => {
+  //           if (ind instanceof SoftIndex) {
+  //             return ed25519.deriveChildVerificationKey(xvk, ind);
+  //           } else {
+  //             throw new Error('Received hardened index when soft index was expected');
+  //           }
+  //         }, vk),
+  //       );
+
   // // const fromDerivedChildSkXVK = ed25519.getVerificationKey(dChildXSK);
 
-  console.log('d -> ', dChildXSK);
+  console.log('dChild -> ', dChildXSK);
+  // console.log('v -> ', vector.childSecretKey);
   // i++
   // console.log('child secret key -> ', vector.childSecretKey);
+
+  // console.log('d -> ', dChildXVK);
 }
 
 // console.log('iv -> ', i);

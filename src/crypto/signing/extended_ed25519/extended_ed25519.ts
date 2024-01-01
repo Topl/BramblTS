@@ -16,6 +16,21 @@ function fromLittleEndian(bytes: Uint8Array): bigint {
   return result;
 }
 
+export function hexToUint8List(hex: string): Uint8Array {
+  const hexString = hex.trim();
+  const result = new Uint8Array(hexString.length / 2);
+
+  for (let i = 0; i < hex.length; i += 2) {
+    result[i / 2] = parseInt(hex.slice(i, i + 2), 16);
+  }
+
+  return result;
+}
+
+function uint8ListFromBytes(bytes: number[]): Uint8Array {
+  return new Uint8Array(bytes);
+}
+
 function bigintToUint8Array(value: bigint): Uint8Array {
   const hexString = value.toString(16);
   const paddedHexString = hexString.length % 2 === 0 ? hexString : '0' + hexString;
@@ -26,6 +41,16 @@ function bigintToUint8Array(value: bigint): Uint8Array {
   }
 
   return byteArray;
+}
+
+function padArray(array: Uint8Array, length: number): Uint8Array {
+  const paddedArray = new Uint8Array(length);
+  paddedArray.set(array, 0);
+  return paddedArray;
+}
+
+function getSublist(array: Uint8Array, start: number, end: number): Uint8Array {
+  return array.slice(start, end);
 }
 
 export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
@@ -97,10 +122,10 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
   /// [verifyKey] - The key to use for verification
   /// Returns true if the signature is verified; otherwise false.
   verify(signature: Uint8Array, message: Uint8Array, verifyKey: spec.PublicKey): boolean {
-    if (signature.length !== spec.ExtendedEd25519Spec.signatureLength) {
+    if (signature.length != spec.ExtendedEd25519Spec.signatureLength) {
       return false;
     }
-    if (verifyKey.vk.bytes.length !== spec.ExtendedEd25519Spec.publicKeyLength) {
+    if (verifyKey.vk.bytes.length != spec.ExtendedEd25519Spec.publicKeyLength) {
       return false;
     }
 
@@ -129,19 +154,34 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     const lNum = spec.ExtendedEd25519Spec.leftNumber(secretKey);
     const rNum = spec.ExtendedEd25519Spec.rightNumber(secretKey);
 
-    console.log('lNum -> ', lNum);
+    // console.log('lNum -> ', rNum);
+
+    // console.log('secret key -> ', secretKey);
+    // console.log('index -> ', index);
 
     // Get the public key from the secret key
     const publicKey = this.getVerificationKey(secretKey);
 
-    // Construct the HMAC data for z
-    const zHmacData =
-      index instanceof SoftIndex
-        ? new Uint8Array([0x02, ...publicKey.vk.bytes, ...index.bytes])
-        : new Uint8Array([0x00, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
+    console.log('public -> ', index.bytes);
 
+    // Construct the HMAC data for z
+    // const zHmacData =
+    //   index instanceof SoftIndex
+    //     ? new Uint8Array([0x02, ...publicKey.vk.bytes, ...index.bytes])
+    //     : new Uint8Array([0x00, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
+
+    let zHmacData;
+
+    if(index instanceof SoftIndex) {
+      zHmacData = uint8ListFromBytes([0x02, ...publicKey.vk.bytes, ...index.bytes])
+    } else {
+      zHmacData = uint8ListFromBytes([0x00, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
+    }
+
+        // console.log('z -> ', zHmacData);
     // Compute z using HMAC-SHA-512 with the chain code as the key
     const z = spec.ExtendedEd25519Spec.hmac512WithKey(secretKey.chainCode, zHmacData);
+
 
     // Parse the left and right halves of z as big integers
     const zLeft = fromLittleEndian(z.slice(0, 28));
@@ -188,6 +228,8 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
   /// Returns:
   /// A new `PublicKey` object representing the derived child public key.
   deriveChildVerificationKey(verificationKey: spec.PublicKey, index: SoftIndex): spec.PublicKey {
+    // console.log('xvk -> ', verificationKey);
+    // console.log('index -> ', index);
     // Compute the HMAC-SHA-512 of the parent chain code
     const z = spec.ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,
@@ -196,23 +238,29 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     // Extract the first 28 bytes of the HMAC-SHA-512 output as zL.
     const zL = z.slice(0, 28);
-
+    
     // Multiply zL by 8 and convert the result to a little-endian byte array of length 8.
-    const zLMult8BigInt = BigInt(zL.reverse().join('')) * BigInt(8);
-    const zLMult8Pre = new Uint8Array(
-      BigInt.asUintN(256, zLMult8BigInt)
-        .toString(16)
-        .match(/.{2}/g)!
-        .map((byte) => parseInt(byte, 16)),
-    );
+    const zLMult8BigInt = fromLittleEndian(zL) * BigInt(8);
+    // console.log('z -> ', zLMult8BigInt);
+    // const zLMult8Pre = new Uint8Array(
+    //   BigInt.asUintN(256, zLMult8BigInt)
+    //   .toString(16)
+    //   .match(/.{2}/g)!
+    //   .map((byte) => parseInt(byte, 16)),
+    // );
+    const zLMult8Pre = bigintToUint8Array(zLMult8BigInt);
     const zLMult8Rev = new Uint8Array(zLMult8Pre.reverse());
-    const zLMult8 = new Uint8Array(new Array(32).fill(0).concat(Array.from(zLMult8Rev).slice(0, 32)));
+    // const zLMult8 = new Uint8Array(new Array(32).fill(0).concat(Array.from(zLMult8Rev).slice(0, 32)));
+    const paddedArray = padArray(zLMult8Rev, 32);
+    const zLMult8 = getSublist(paddedArray, 0, 32);
+    // console.log('z -> ', zLMult8);
 
     // Compute the scalar multiplication of the base point by zL*8 to obtain scaledZL.
     const scaledZL = PointAccum.create();
-    const zLMult8Bytes = new Uint8Array(zLMult8);
-    this.impl.scalarMultBase(zLMult8Bytes, scaledZL);
+    // console.log('scale -> ', zLMult8Bytes);
+    this.impl.scalarMultBase(zLMult8, scaledZL);
 
+    // console.log('scale -> ', zLMult8);
     // Decode the parent public key into a point and add scaledZL to it to obtain the next public key point.
     const publicKeyPoint = PointExt.create();
     this.impl.decodePointVar(verificationKey.vk.bytes, 0, { negate: false, r: publicKeyPoint });
@@ -221,6 +269,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     // Encode the next public key point as a byte array and compute the HMAC-SHA-512 of the parent chain code.
     const nextPublicKeyBytes = new Uint8Array(spec.ExtendedEd25519Spec.publicKeyLength);
     this.impl.encodePoint(scaledZL, nextPublicKeyBytes, 0);
+    console.log('chain -> ', nextPublicKeyBytes);
 
     const nextChainCode = spec.ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,
