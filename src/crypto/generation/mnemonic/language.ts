@@ -1,10 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { Either } from '../../../common/functional/either';
 import { createHash } from 'crypto';
 import { promises as fs } from 'fs';
+import { Either } from '../../../common/functional/either';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export abstract class Language {
   readonly filePath: string;
   readonly hash: string;

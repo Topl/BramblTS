@@ -1,4 +1,3 @@
-// import { SHA512 } from '../hash/sha';
 import { pbkdf2Sync } from 'crypto';
 import { Entropy } from './mnemonic/entropy';
 
@@ -20,9 +19,4 @@ export class Pbkdf2Sha512 extends EntropyToSeed {
     const deriveKey = pbkdf2Sync(password, salt, iterations, keySizeBytes, 'sha512');
     return Uint8Array.from(deriveKey);
   }
-
-  // private stringToUint8Array(str: string): Uint8Array {
-  //   const utf8 = new TextEncoder();
-  //   return utf8.encode(str);
-  // }
 }

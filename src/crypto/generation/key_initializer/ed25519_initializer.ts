@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Ed25519 from '@/crypto/signing/ed25519/ed25519';
 import { SigningKey } from '@/crypto/signing/signing';
 import { Uuid, v4 as uuidv4 } from 'uuid';
