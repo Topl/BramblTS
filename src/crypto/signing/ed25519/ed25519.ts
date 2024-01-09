@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Ed25519 as EdDSAEd25519 } from '../eddsa/ed25519';
 
 import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
