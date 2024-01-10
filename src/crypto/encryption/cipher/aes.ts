@@ -35,3 +35,22 @@ export class Aes {
   }
 }
 
+export class AesParams {
+  private iv: Buffer;
+
+  constructor(iv: Buffer) {
+    this.iv = iv;
+  }
+
+  static generate(): AesParams {
+    return new AesParams(Aes.generateIv());
+  }
+
+  static fromJson(json: { iv: string }): AesParams {
+    return new AesParams(Buffer.from(json.iv, 'hex'));
+  }
+
+  toJson(): { iv: string } {
+    return { iv: this.iv.toString('hex') };
+  }
+}
