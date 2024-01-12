@@ -62,7 +62,8 @@ class SCryptParams extends Params {
     }
 
     static fromJson(json: { [key: string]: any }): SCryptParams {
-        const salt = Json.decodeUint8List(json['salt']);
+        const saltUint8Array = Json.decodeUint8List(json['salt']);
+        const salt = Buffer.from(saltUint8Array);
         const n = json['n'];
         const r = json['r'];
         const p = json['p'];
