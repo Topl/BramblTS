@@ -17,6 +17,10 @@ export class Aes {
     this.iv = iv || Aes.generateIv();
   }
 
+  public get params(): AesParams {
+    return new AesParams(this.iv);
+  }
+
   /**
    * Generates a random initialization vector.
    * @returns {Buffer} The generated initialization vector.
@@ -79,7 +83,7 @@ export class Aes {
  * @param {Buffer} iv - Initialization vector.
  */
 export class AesParams {
-  private iv: Buffer;
+  public iv: Buffer;
 
   constructor(iv: Buffer) {
     this.iv = iv;
@@ -98,7 +102,7 @@ export class AesParams {
    * @param json - The JSON object with an 'iv' property.
    * @returns An instance of the AesParams class.
    */
-  static fromJson(json: { iv: string }): AesParams {
+  static fromJson(json: { [key: string]: any }): AesParams {
     return new AesParams(Buffer.from(json.iv, 'hex'));
   }
 
