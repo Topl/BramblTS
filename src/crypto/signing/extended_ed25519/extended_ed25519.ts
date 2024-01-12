@@ -7,51 +7,13 @@ import * as eddsa from '../eddsa/ed25519';
 import { EllipticCurveSignatureScheme } from '../elliptic_curve_signature_scheme';
 import { KeyPair } from '../signing';
 import * as spec from './extended_ed25519_spec';
-
-function fromLittleEndian(bytes: Uint8Array): bigint {
-  let result = BigInt(0);
-  for (let i = bytes.length - 1; i >= 0; i--) {
-    result = (result << 8n) | BigInt(bytes[i]);
-  }
-  return result;
-}
-
-export function hexToUint8List(hex: string): Uint8Array {
-  const hexString = hex.trim();
-  const result = new Uint8Array(hexString.length / 2);
-
-  for (let i = 0; i < hex.length; i += 2) {
-    result[i / 2] = parseInt(hex.slice(i, i + 2), 16);
-  }
-
-  return result;
-}
-
-function uint8ListFromBytes(bytes: number[]): Uint8Array {
-  return new Uint8Array(bytes);
-}
-
-function bigintToUint8Array(value: bigint): Uint8Array {
-  const hexString = value.toString(16);
-  const paddedHexString = hexString.length % 2 === 0 ? hexString : '0' + hexString;
-  const byteArray = new Uint8Array(paddedHexString.length / 2);
-
-  for (let i = 0; i < paddedHexString.length; i += 2) {
-    byteArray[i / 2] = parseInt(paddedHexString.slice(i, i + 2), 16);
-  }
-
-  return byteArray;
-}
-
-function padArray(array: Uint8Array, length: number): Uint8Array {
-  const paddedArray = new Uint8Array(length);
-  paddedArray.set(array, 0);
-  return paddedArray;
-}
-
-function getSublist(array: Uint8Array, start: number, end: number): Uint8Array {
-  return array.slice(start, end);
-}
+import {
+  fromLittleEndian,
+  uint8ListFromBytes,
+  bigIntToUint8Array,
+  padArray,
+  getSublist,
+} from '../../../utils/extensions';
 
 export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
   public impl = new eddsa.Ed25519();
@@ -172,16 +134,15 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     let zHmacData;
 
-    if(index instanceof SoftIndex) {
-      zHmacData = uint8ListFromBytes([0x02, ...publicKey.vk.bytes, ...index.bytes])
+    if (index instanceof SoftIndex) {
+      zHmacData = uint8ListFromBytes([0x02, ...publicKey.vk.bytes, ...index.bytes]);
     } else {
       zHmacData = uint8ListFromBytes([0x00, ...secretKey.leftKey, ...secretKey.rightKey, ...index.bytes]);
     }
 
-        // console.log('z -> ', zHmacData);
+    // console.log('z -> ', zHmacData);
     // Compute z using HMAC-SHA-512 with the chain code as the key
     const z = spec.ExtendedEd25519Spec.hmac512WithKey(secretKey.chainCode, zHmacData);
-
 
     // Parse the left and right halves of z as big integers
     const zLeft = fromLittleEndian(z.slice(0, 28));
@@ -189,7 +150,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     // Compute the next left key by adding zLeft * 8 to the current left key
     const nextLeftBigInt = zLeft * BigInt(8) + lNum;
-    const nextLeftPre = bigintToUint8Array(nextLeftBigInt);
+    const nextLeftPre = bigIntToUint8Array(nextLeftBigInt);
     // console.log('next left pre -> ', nextLeftPre);
     const nextLeft = new Uint8Array(nextLeftPre.slice().reverse().slice(0, 32));
 
@@ -201,7 +162,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     //     .match(/.{2}/g)!
     //     .map((byte) => parseInt(byte, 16)),
     // );
-    const nextRightPre = bigintToUint8Array(nextRightBigInt)
+    const nextRightPre = bigIntToUint8Array(nextRightBigInt);
 
     // console.log('next right pre -> ', nextRightPre);
 
@@ -238,7 +199,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     // Extract the first 28 bytes of the HMAC-SHA-512 output as zL.
     const zL = z.slice(0, 28);
-    
+
     // Multiply zL by 8 and convert the result to a little-endian byte array of length 8.
     const zLMult8BigInt = fromLittleEndian(zL) * BigInt(8);
     // console.log('z -> ', zLMult8BigInt);
@@ -248,7 +209,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     //   .match(/.{2}/g)!
     //   .map((byte) => parseInt(byte, 16)),
     // );
-    const zLMult8Pre = bigintToUint8Array(zLMult8BigInt);
+    const zLMult8Pre = bigIntToUint8Array(zLMult8BigInt);
     const zLMult8Rev = new Uint8Array(zLMult8Pre.reverse());
     // const zLMult8 = new Uint8Array(new Array(32).fill(0).concat(Array.from(zLMult8Rev).slice(0, 32)));
     const paddedArray = padArray(zLMult8Rev, 32);
@@ -345,5 +306,3 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     return new KeyPair(derivedSecretKey, derivedPublicKey);
   }
 }
-
-// export { PublicKey, SecretKey };

@@ -2,6 +2,7 @@
 import { createHmac } from 'crypto';
 import * as spec from '../ed25519/ed25519_spec';
 import { SigningKey } from '../signing';
+import { fromLittleEndian } from '@/utils/extensions';
 
 interface Either<L, R> {
   isLeft: boolean;
@@ -13,16 +14,6 @@ class InvalidDerivedKey implements Error {
   name: string;
   message: string;
   stack?: string;
-}
-
-function fromLittleEndian(bytes: Uint8Array): bigint {
-  let result = BigInt(0);
-
-  for (let i = bytes.length - 1; i >= 0; i--) {
-    result = (result << BigInt(8)) | BigInt(bytes[i]);
-  }
-
-  return result;
 }
 
 export class ExtendedEd25519Spec {
