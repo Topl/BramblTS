@@ -42,3 +42,7 @@ export function padArray(array: Uint8Array, length: number): Uint8Array {
 export function getSublist(array: Uint8Array, start: number, end: number): Uint8Array {
   return array.slice(start, end);
 }
+
+export function toIntList(uint8Array: Uint8Array): number[] {
+    return Array.from(uint8Array);
+}
