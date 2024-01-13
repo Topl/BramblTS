@@ -29,7 +29,7 @@ export abstract class Cipher {
    * @param key - Encryption key.
    * @returns Encrypted data.
    */
-  abstract encrypt(plainText: Buffer, key: Buffer): Buffer;
+  abstract encrypt(plainText: Uint8Array, key: Uint8Array): Uint8Array;
 
   /**
    * Decrypt data.
@@ -37,7 +37,7 @@ export abstract class Cipher {
    * @param key - Decryption key.
    * @returns Decrypted data.
    */
-  abstract decrypt(cipherText: Buffer, key: Buffer): Buffer;
+  abstract decrypt(cipherText: Uint8Array, key: Uint8Array): Uint8Array;
 
   /**
    * JSON encoder for a Cipher.

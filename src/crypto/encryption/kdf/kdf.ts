@@ -16,7 +16,7 @@ export abstract class Kdf {
     }
 
     abstract get params(): Params;
-    abstract deriveKey(secret: Buffer): Buffer;
+    abstract deriveKey(secret: Uint8Array): Uint8Array;
     abstract toJson(): { [key: string]: any };
 }
 
