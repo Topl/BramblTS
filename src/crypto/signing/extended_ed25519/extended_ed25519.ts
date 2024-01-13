@@ -124,7 +124,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     // Get the public key from the secret key
     const publicKey = this.getVerificationKey(secretKey);
 
-    console.log('public -> ', index.bytes);
+    // console.log('public -> ', index.bytes);
 
     // Construct the HMAC data for z
     // const zHmacData =
@@ -230,7 +230,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
     // Encode the next public key point as a byte array and compute the HMAC-SHA-512 of the parent chain code.
     const nextPublicKeyBytes = new Uint8Array(spec.ExtendedEd25519Spec.publicKeyLength);
     this.impl.encodePoint(scaledZL, nextPublicKeyBytes, 0);
-    console.log('chain -> ', nextPublicKeyBytes);
+    // console.log('chain -> ', nextPublicKeyBytes);
 
     const nextChainCode = spec.ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,

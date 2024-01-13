@@ -2,7 +2,7 @@
 import { createHmac } from 'crypto';
 import * as spec from '../ed25519/ed25519_spec';
 import { SigningKey } from '../signing';
-import { fromLittleEndian } from '@/utils/extensions';
+import { fromLittleEndian } from './../../../utils/extensions';
 
 interface Either<L, R> {
   isLeft: boolean;
