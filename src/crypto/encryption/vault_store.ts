@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Kdf } from './kdf/kdf';
 import { Cipher } from './cipher/cipher';
 import { Json } from '../../utils/json';
