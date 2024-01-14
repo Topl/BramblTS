@@ -43,7 +43,7 @@ export class EntropyToSeedVector {
   }
 }
 
-const entropyToSeedVectors: any[] = [
+export const entropyToSeedVectors: any[] = [
   {
     inputs: { entropy: '00000000000000000000000000000000', password: 'TREZOR' },
     outputs: {

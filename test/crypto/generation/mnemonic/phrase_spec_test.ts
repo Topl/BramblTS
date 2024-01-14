@@ -93,15 +93,15 @@ describe('Phrase Spec', () => {
     expect(mnemonic1.right!.value).toBe(mnemonic2.right!.value);
   });
 
-  // test('mnemonic with unusual characters is invalid', async () => {
-  //   const entropy = await Phrase.validated({
-  //     words: "voi\uD83D\uDD25d come effort suffer camp su\uD83D\uDD25rvey warrior heavy shoot primary"
-  //         " clutch c\uD83D\uDD25rush"
-  //         " open amazing screen "
-  //         "patrol group space point ten exist slush inv\uD83D\uDD25olve unfold",
-  //     language: new English(),
-  //   });
+  test('mnemonic with unusual characters is invalid', async () => {
+    const entropy = await Phrase.validated({
+      words: `voi\uD83D\uDD25d come effort suffer camp su\uD83D\uDD25rvey warrior heavy shoot primary
+           clutch c\uD83D\uDD25rush
+           open amazing screen 
+          patrol group space point ten exist slush inv\uD83D\uDD25olve unfold`,
+      language: new English(),
+    });
 
-  //   expect(entropy.isLeft).toBe(true);
-  // });
+    expect(entropy.isLeft).toBe(true);
+  });
 });
