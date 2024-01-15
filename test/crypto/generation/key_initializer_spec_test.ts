@@ -14,7 +14,7 @@ describe('Key Initializer spec', () => {
       const ed25519SkRes = await new Ed25519Initializer(new Ed25519()).fromMnemonicString(vector.mnemonic, {
         password: vector.password,
       });
-      const ed25519Sk: SecretKey = ed25519SkRes.right;
+      const ed25519Sk: SecretKey = ed25519SkRes.right!;
 
       const extendedEd25519SkRes = await new ExtendedEd25519Initializer(new ExtendedEd25519()).fromMnemonicString(
         vector.mnemonic,

@@ -1,6 +1,6 @@
 import { scrypt, randomBytes } from 'crypto';
 
-interface SCryptParams {
+export interface SCryptParams {
   salt: Buffer;
   keyLength: number;
   cost: number;
@@ -8,7 +8,7 @@ interface SCryptParams {
   parallelization: number;
 }
 
-class SCrypt {
+export class SCrypt {
   private params: SCryptParams;
 
   constructor(params: SCryptParams) {
@@ -28,7 +28,7 @@ class SCrypt {
   }
 }
 
-function generateSCryptParams(): SCryptParams {
+export function generateSCryptParams(): SCryptParams {
   const salt = randomBytes(16);
   const keyLength = 32;
   const cost = 16384; // You may adjust the cost factor based on your requirements
