@@ -1,16 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { None, Option, Some } from '../../../../src/common/functional/either';
+import { None, Some } from '../../../../src/common/functional/either';
 import { Bip32Index, HardenedIndex, SoftIndex } from '../../../../src/crypto/generation/bip32_index';
 import { ExtendedEd25519Initializer } from '../../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
+import { PublicKey } from '../../../../src/crypto/signing/ed25519/ed25519_spec';
 import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
+import { SecretKey } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
 
 export class Bip32Ed25519CkdTestVector {
   constructor(
     public description: string,
-    public rootSecretKey: ExtendedEd25519SecretKey,
-    public rootVerificationKey: Option<PublicKey>,
+    public rootSecretKey: SecretKey,
+    public rootVerificationKey: Some<PublicKey> | None<unknown>,
     public path: Bip32Index[],
-    public childSecretKey: ExtendedEd25519SecretKey,
+    public childSecretKey: SecretKey,
     public childVerificationKey: PublicKey,
   ) {}
 
@@ -45,10 +47,10 @@ export class Bip32Ed25519CkdTestVector {
 
     return new Bip32Ed25519CkdTestVector(
       vector.description,
-      rootSK as ExtendedEd25519SecretKey,
+      rootSK as SecretKey,
       rootVerificationKey,
       path,
-      childSK as ExtendedEd25519SecretKey,
+      childSK as SecretKey,
       childVk,
     );
   }
