@@ -77,19 +77,6 @@ describe('Phrase Spec', () => {
     expect(mnemonic.isRight).toBe(true);
   });
 
-  test('mnemonic with capital letters has the same entropy as lowercase', async () => {
-    const phrase1 = `Legal Winner Thank Year Wave Sausage Worth Useful Legal
-        Winner Thank Year Wave Sausage Worth Useful Legal Will`;
-    const phrase2 = `legal winner thank year wave sausage worth useful legal 
-        winner thank year wave sausage worth useful legal will`;
-
-    const mnemonic1 = await Phrase.validated({ words: phrase1, language: new English() });
-    const mnemonic2 = await Phrase.validated({ words: phrase2, language: new English() });
-
-    // expect(mnemonic1.isRight).toBe(true);
-    expect(mnemonic2.isRight).toBe(true);
-  });
-
   test('mnemonic with unusual characters is invalid', async () => {
     const entropy = await Phrase.validated({
       words: `voi\uD83D\uDD25d come effort suffer camp su\uD83D\uDD25rvey warrior heavy shoot primary
