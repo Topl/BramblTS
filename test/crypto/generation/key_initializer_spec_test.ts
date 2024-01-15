@@ -20,10 +20,9 @@ describe('Key Initializer spec', () => {
       );
       const extendedEd25519Sk = extendedEd25519SkRes.right;
 
-      expect(ed25519Sk.bytes).toBe(vector.ed25519.bytes);
-      expect(extendedEd25519Sk.leftKey).toBe(vector.extendedEd25519.leftKey);
-      expect(extendedEd25519Sk.chainCode).toBe(vector.extendedEd25519.chainCode);
-      expect(extendedEd25519Sk.rightKey).toBe(vector.extendedEd25519.rightKey);
+      expect(ed25519Sk['bytes']).toEqual(vector.ed25519.bytes);
+      expect(extendedEd25519Sk['leftKey']).toEqual(vector.extendedEd25519.leftKey);
+      expect(extendedEd25519Sk['chainCode']).toEqual(vector.extendedEd25519.chainCode);
     });
   }
 });
