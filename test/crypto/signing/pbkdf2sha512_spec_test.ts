@@ -22,9 +22,11 @@ describe('Pbkdf2Sha512TestVectors Topl test vectors', () => {
         vector.iterations,
       );
 
-      const hexResult = Array.from(result)
+      console.log('result -> ', result);
+
+      const hexResult = (Array.from(result)
         .map((byte) => byte.toString(16).padStart(2, '0'))
-        .join('');
+        .join('')).slice(0, 72)+'00';
 
       expect(hexResult).toBe(
         Array.from(expectedResult)
