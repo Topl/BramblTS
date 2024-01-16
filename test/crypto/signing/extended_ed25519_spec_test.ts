@@ -140,9 +140,6 @@ describe('Extended Ed2519 Topl test vectors', () => {
           }, vk),
         );
 
-        // console.log('left -> ', dChildXSK.leftKey)
-        // console.log('child -> ', vector.childSecretKey.leftKey);
-
         expect(dChildXSK).toEqual(vector.childSecretKey);
         expect(fromDerivedChildSkXVK).toEqual(vector.childVerificationKey);
 

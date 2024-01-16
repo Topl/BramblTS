@@ -1,5 +1,4 @@
 /* eslint-disable no-prototype-builtins */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { None, Option, Some } from '../../../../src/common/functional/either';
 import { Bip32Index, HardenedIndex, SoftIndex } from '../../../../src/crypto/generation/bip32_index';
@@ -80,13 +79,11 @@ export class CkdEd25519TestVector {
     }
 
     const rootSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(hexToUint8List(rSkString));
-    // console.log('rootSK -> ', rootSK);
-
+    
     // output
     const cSkString = output['childSecretKey'] as string;
     const cVkString = output['childVerificationKey'] as string;
 
-    // console.log('childSK -> ', hexToUint8List(cSkString));
     const childSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(hexToUint8List(cSkString));
     const childVkBytes = hexToUint8List(cVkString);
     const childVk = new PublicKey(new spec.PublicKey(childVkBytes.slice(0, 32)), childVkBytes.slice(32, 64));

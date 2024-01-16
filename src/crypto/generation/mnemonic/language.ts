@@ -81,17 +81,6 @@ export class LanguageWordList {
     this.value = value;
   }
 
-  // private static hexDigits = '0123456789abcdef';
-
-  // private static toHexString(bytes: number[]): string {
-  //   let buffer = '';
-  //   for (const byte of bytes) {
-  //     buffer += LanguageWordList.hexDigits[(byte >> 4) & 0xf];
-  //     buffer += LanguageWordList.hexDigits[byte & 0xf];
-  //   }
-  //   return buffer;
-  // }
-
   static async validated(language: Language): Promise<Either<ValidationFailure, LanguageWordList>> {
     try {
       const file = `assets/${language.wordlistDirectory}/${language.filePath}`;
@@ -123,14 +112,3 @@ class FileReadFailure extends ValidationFailure {
 }
 
 class InvalidChecksum extends ValidationFailure {}
-
-// Usage:
-
-const english = new English();
-LanguageWordList.validated(english).then((result) => {
-  if (result.isRight) {
-    console.log(result.right.value);
-  } else {
-    console.error(result.left);
-  }
-});

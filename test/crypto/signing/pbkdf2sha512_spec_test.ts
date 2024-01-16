@@ -1,5 +1,4 @@
 import { Pbkdf2Sha512 } from './../../../src/crypto/generation/entropy_to_seed';
-// import { hexToUint8List } from './test_vectors/ckd_ed25519_vectors';
 import { pbkdf2Sha512TestVectors } from './test_vectors/pbkdf2_sha512_vectors';
 
 describe('Pbkdf2Sha512TestVectors Topl test vectors', () => {
@@ -21,8 +20,6 @@ describe('Pbkdf2Sha512TestVectors Topl test vectors', () => {
         vector.keySize,
         vector.iterations,
       );
-
-      console.log('result -> ', result);
 
       const hexResult = (Array.from(result)
         .map((byte) => byte.toString(16).padStart(2, '0'))
