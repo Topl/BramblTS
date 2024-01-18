@@ -18,9 +18,6 @@ export class Aes implements Cipher {
   constructor(iv?: Buffer) {
     this.iv = iv || Aes.generateIv();
   }
-  // get params(): Params {
-  //   throw new Error('Method not implemented.');
-  // }
 
   public get params(): AesParams {
     return new AesParams(this.iv);
