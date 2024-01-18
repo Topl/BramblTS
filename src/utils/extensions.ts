@@ -39,6 +39,20 @@ export function padArray(array: Uint8Array, length: number): Uint8Array {
   return paddedArray;
 }
 
+export function equals(arr1: Uint8Array, arr2: Uint8Array): boolean {
+  if (arr1.length !== arr2.length) {
+    return false;
+  }
+
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 export function getSublist(array: Uint8Array, start: number, end: number): Uint8Array {
   return array.slice(start, end);
 }

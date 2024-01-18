@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { randomBytes, createCipheriv, createDecipheriv } from 'crypto';
+import { Cipher, Params } from './cipher';
 
 /**
  * AES encryption.
  * Aes is a symmetric block cipher that can encrypt and decrypt data using the same key.
  * @see [https://en.wikipedia.org/wiki/Advanced_Encryption_Standard]
  */
-export class Aes {
+export class Aes implements Cipher {
   private static readonly blockSize: number = 16;
   private iv: Buffer;
 
@@ -17,6 +18,9 @@ export class Aes {
   constructor(iv?: Buffer) {
     this.iv = iv || Aes.generateIv();
   }
+  // get params(): Params {
+  //   throw new Error('Method not implemented.');
+  // }
 
   public get params(): AesParams {
     return new AesParams(this.iv);
@@ -49,7 +53,7 @@ export class Aes {
    * @param key - The symmetric key for encryption and decryption must be 128/192/256 bits or 16/24/32 bytes.
    * @returns The encrypted data.
    */
-  encrypt(plainText: Buffer, key: Buffer): Buffer {
+  encrypt(plainText: Uint8Array, key: Buffer): Buffer {
     const cipher = createCipheriv('aes-256-cbc', key, this.iv);
     const amountPadded = (Aes.blockSize - ((plainText.length + 1) % Aes.blockSize)) % Aes.blockSize;
     const paddedBytes = Buffer.concat([Buffer.from([amountPadded]), plainText, Buffer.alloc(amountPadded)]);
@@ -83,10 +87,14 @@ export class Aes {
  * Class representing AES parameters.
  * @param {Buffer} iv - Initialization vector.
  */
-export class AesParams {
+export class AesParams extends Params {
+  public get cipher(): string {
+    return 'aes';
+  }
   public iv: Buffer;
 
   constructor(iv: Buffer) {
+    super();
     this.iv = iv;
   }
 
