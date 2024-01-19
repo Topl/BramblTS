@@ -19,7 +19,7 @@ export class Blake2b256 extends Blake2b {
     }
     input = input.concat(messages);
 
-    let flattened: number[] = [];
+    const flattened: number[] = [];
     input.forEach((arr) => {
       flattened.push(...arr);
     });
@@ -48,7 +48,7 @@ export class Blake2b512 extends Blake2b {
     }
     input = input.concat(messages);
 
-    let flattened: number[] = [];
+    const flattened: number[] = [];
     input.forEach((arr) => {
       flattened.push(...arr);
     });

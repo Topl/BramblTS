@@ -129,7 +129,6 @@ export class Phrase {
 
     const wordList = wordListResult.right!;
 
-    // const entropyBinaryString = entropy.value.map(_byteTo8BitString).join('');
     const entropyBinaryString = entropy.value
       .map((item): number => {
         return Number(_byteTo8BitString(item));

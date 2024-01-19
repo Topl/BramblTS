@@ -17,8 +17,4 @@ export class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
        this.signingKey === other.signingKey &&
        this.verificationKey === other.verificationKey);
   }
-
-  // get hashCode(): number {
-  //   return this.signingKey.hashCode() ^ this.verificationKey.hashCode();
-  // }
 }

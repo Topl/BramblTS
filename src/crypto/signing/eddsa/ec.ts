@@ -45,10 +45,6 @@ export class EC {
   private _precompBase: Int32Array;
 
   constructor() {
-    // const precompute = this._precompute();
-    // this._precompBaseTable = precompute[0];
-    // this._precompBase = precompute[1];
-
     const precompute = this._precompute();
     this._precompBaseTable = precompute[0];
     this._precompBase = precompute[1];
@@ -80,7 +76,7 @@ export class EC {
   }
 
   gte256(x: Int32Array, y: Int32Array): boolean {
-    const MIN_VALUE = 0x80000000; // Int32.MIN_VALUE in Dart
+    const MIN_VALUE = 0x80000000;
 
     for (let i = 7; i >= 0; i--) {
       const xi = x[i] ^ MIN_VALUE;
@@ -106,17 +102,6 @@ export class EC {
     }
   }
 
-  // cmov(len: number, mask: number, x: Int32Array, xOff: number, z: Int32Array, zOff: number): void {
-  //   let maskv: number = mask;
-  //   maskv = -(maskv & 1);
-  //   for (let i = 0; i < len; i++) {
-  //     let z_i: number = z[zOff + i];
-  //     const diff: number = z_i ^ x[xOff + i];
-  //     z_i ^= diff & maskv;
-  //     z[zOff + i] = z_i;
-  //   }
-  // }
-
   cadd(len: number, mask: number, x: Int32Array, y: Int32Array, z: Int32Array): number {
     const m = -BigInt(mask & 1) & M;
     // const mNew = Number(M)
@@ -124,9 +109,6 @@ export class EC {
 
     for (let i = 0; i < len; i++) {
       c += (BigInt(x[i]) & BigInt(M)) + (BigInt(y[i]) & BigInt(m));
-      // z[i] = c & Number(M);
-      // c >>>= 32;
-      // c += (BigInt(x[i]) & BigInt(M)) + (BigInt(y[i]) & BigInt(m));
       z[i] = Number(c);
       c >>= BigInt(32);
     }
@@ -247,7 +229,6 @@ export class EC {
     x25519_field.normalize(r.x);
     if (x_0 == 1 && x25519_field.isZeroVar(r.x)) return false;
     if (negate !== (x_0 !== (r.x[0] & 1))) x25519_field.negate(r.x, r.x);
-    // if (negate !== (x_0 !== (r.x[0] & 1))) x25519_field.negate(r.x, r.x);
     this.pointExtendXY(r);
     return true;
   }
@@ -541,17 +522,7 @@ export class EC {
   }
 
   _precompute(): [PointExt[], Int32Array] {
-    // Precomputed table for the base point in verification ladder
-    // const b: PointExt = {
-    //   x: x25519_field.create(),
-    //   y: x25519_field.create(),
-    //   z: x25519_field.create(),
-    //   t: x25519_field.create()
-    // }
     const b: PointExt = PointExt.create();
-    // const b = this.pointExtendXY(
-    //   this.pointCopyExt({ x: B_x.slice(), y: B_y.slice(), z: x25519_field.create(), t: x25519_field.create() }),
-    // );
 
     x25519_field.copy(B_x, 0, b.x, 0);
     x25519_field.copy(B_y, 0, b.y, 0);
@@ -893,31 +864,24 @@ export class EC {
     this.encodePoint(p, r, rOff);
   }
 
-  // This function performs scalar multiplication of a point on an elliptic curve using the Strauss algorithm with variable-time windowing.
   scalarMultStraussVar(nb: Int32Array, np: Int32Array, p: PointExt, r: PointAccum): void {
-    // Set the window size to 5.
     const width = 5;
 
-    // Compute the WNAF of the scalar values nb and np.
     const wsB2 = this.getWNAF(nb, WNAF_WIDTH_BASE);
     const wsP2 = this.getWNAF(np, width);
     const wsB = Array.from(wsB2, (value) => (value > 127 ? value - 256 : value));
     const wsP = Array.from(wsP2, (value) => (value > 127 ? value - 256 : value));
 
-    // Compute a precomputed table of points based on the input point p.
     const tp = this.pointPrecompVar(p, 1 << (width - 2));
     
-    // Initialize the result to the neutral element of the elliptic curve.
     this.pointSetNeutralAccum(r);
 
-    // Start from the most significant bit and skip over any leading zero bits in both scalar values.
     let bit = 255;
     while (bit > 0 && (wsB[bit] | wsP[bit]) == 0) {
       bit -= 1;
     }
 
     while (true) {
-      // Get the current bit of the scalar value nb.
       const wb = wsB[bit];
 
       // If the bit is non-zero,
@@ -933,7 +897,6 @@ export class EC {
 
       // If the bit is non-zero,
       // perform a point addition operation using the corresponding point from the precomputed table.
-
       if (wp != 0) {
         const sign = wp >> 31;
         const index = (wp ^ sign) >>> 1;

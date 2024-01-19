@@ -26,7 +26,7 @@ export class Ed25519Initializer implements KeyInitializer<SigningKey> {
   }
 
   fromBytes(bytes: Uint8Array): SigningKey {
-    return new ed25519_spec.SecretKey(bytes); // Assuming SecretKey constructor takes a Uint8Array
+    return new ed25519_spec.SecretKey(bytes);
   }
 
   async fromMnemonicString(

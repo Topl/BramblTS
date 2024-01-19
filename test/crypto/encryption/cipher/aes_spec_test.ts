@@ -1,15 +1,27 @@
 import crypto from 'crypto';
+import { Aes } from '../../../../src/crypto/encryption/cipher/aes';
+
+function stringToUint8Array(str: string): Uint8Array {
+  return new Uint8Array([...str].map(char => char.charCodeAt(0)));
+}
+
+function padUint8Array(arr: Uint8Array, length: number): Uint8Array {
+  const paddedArray = new Uint8Array(length);
+  paddedArray.set(arr, 0);
+  return paddedArray;
+}
 
 describe('Aes Spec', () => {
   test('Encrypting the same secret with different keys produces different ciphertexts', () => {
-    const aes = crypto.createCipheriv('aes-128-ecb', Buffer.from('encryptKey1').slice(0, 16), Buffer.alloc(0));
-    const message = Buffer.from('message');
-    const cipherText1 = Buffer.concat([aes.update(message), aes.final()]);
+    const aes = new Aes();
+    const encryptKey1 = padUint8Array(stringToUint8Array('encryptKey1'), 16);
+    const encryptKey2 = padUint8Array(stringToUint8Array('encryptKey2'), 16);
+    const message: Uint8Array = new TextEncoder().encode('message');
+    // const message = Buffer.from('message');
+    const cipherText1 = aes.encrypt(message, encryptKey1);
+    const cipherText2 = aes.encrypt(message, encryptKey2);
     
-    const aes2 = crypto.createCipheriv('aes-128-ecb', Buffer.from('encryptKey2').slice(0, 16), Buffer.alloc(0));
-    const cipherText2 = Buffer.concat([aes2.update(message), aes2.final()]);
-    
-    expect(cipherText1.equals(cipherText2)).toBe(false);
+    expect(cipherText1).not.toEqual(cipherText2);
   });
 
   test('encrypting the same secret with different key lengths produces different ciphertexts', () => {

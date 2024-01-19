@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { randomBytes, scryptSync } from 'crypto';
 
-// Assuming the existence of utility functions similar to Dart's extensions and json utils
 import { Json } from '../../../utils/json';
 import { Kdf, Params } from './kdf';
 
@@ -24,7 +24,7 @@ class SCrypt implements Kdf {
         return new SCrypt(params);
     }
 
-    deriveKey(secret: Buffer): Buffer {
+    deriveKey(secret: Uint8Array): Buffer {
         return scryptSync(secret, this.params.salt, this.params.dkLen, {
             N: this.params.n,
             r: this.params.r,
@@ -42,13 +42,13 @@ class SCrypt implements Kdf {
 }
 
 class SCryptParams extends Params {
-    readonly salt: Buffer;
+    readonly salt: Uint8Array;
     readonly n: number;
     readonly r: number;
     readonly p: number;
     readonly dkLen: number;
 
-    constructor(salt: Buffer, n: number = 262144, r: number = 8, p: number = 1, dkLen: number = 32) {
+    constructor(salt: Uint8Array, n: number = 262144, r: number = 8, p: number = 1, dkLen: number = 32) {
         super();
         this.salt = salt;
         this.n = n;

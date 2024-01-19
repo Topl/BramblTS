@@ -14,8 +14,7 @@ import {
 
 export class Ed25519 extends EC {
   private defaultDigest = new SHA512();
-  // private random = randomBytes;
-
+  
   private _dom2(d: SHA512, phflag: number, ctx: Uint8Array): void {
     if (ctx.length > 0) {
       d.update(Buffer.from(DOM2_PREFIX, 'utf-8'), 0, DOM2_PREFIX.length);
@@ -28,7 +27,6 @@ export class Ed25519 extends EC {
   generatePrivateKey(k: Uint8Array): void {
     for (let i = 0; i < k.length; i++) {
       k[i] = Math.floor(Math.random() * 256);
-      // k[i] = this.random(1)[0];
     }
     throw new Error('Not checked');
   }
@@ -70,24 +68,18 @@ export class Ed25519 extends EC {
     signature: Uint8Array,
     signatureOffset: number,
   ): void {
-    // Add domain separator to hash context
     this._dom2(digest, phflag, context);
 
-    // Update hash context with message hash
     digest.update(h, SCALAR_BYTES, SCALAR_BYTES);
     digest.update(message, messageOffset, messageLength);
 
-    // h = Buffer.alloc(digest.digestSize());
     digest.doFinal(h, 0);
-    // Compute random scalar r and corresponding point R
     const r = this.reduceScalar(h);
     const R = new Uint8Array(POINT_BYTES);
     this.scalarMultBaseEncoded(r, R, 0);
 
-    // Add domain separator to hash context
     this._dom2(digest, phflag, context);
 
-    // Update hash context with point R, public key, and message hash
     digest.update(R, 0, POINT_BYTES);
     digest.update(pk, pkOffset, POINT_BYTES);
     digest.update(message, messageOffset, messageLength);

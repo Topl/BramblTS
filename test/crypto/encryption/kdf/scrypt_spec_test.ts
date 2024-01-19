@@ -31,7 +31,7 @@ export class SCrypt {
 export function generateSCryptParams(): SCryptParams {
   const salt = randomBytes(16);
   const keyLength = 32;
-  const cost = 16384; // You may adjust the cost factor based on your requirements
+  const cost = 16384;
   const blockSize = 8;
   const parallelization = 1;
   return { salt, keyLength, cost, blockSize, parallelization };

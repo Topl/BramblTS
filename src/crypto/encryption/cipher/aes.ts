@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { randomBytes, createCipheriv, createDecipheriv } from 'crypto';
+import { randomBytes, createDecipheriv } from 'crypto';
 import { Cipher, Params } from './cipher';
+import { ModeOfOperation } from 'aes-js';
 
 /**
  * AES encryption.
@@ -8,14 +9,14 @@ import { Cipher, Params } from './cipher';
  * @see [https://en.wikipedia.org/wiki/Advanced_Encryption_Standard]
  */
 export class Aes implements Cipher {
-  private static readonly blockSize: number = 16;
-  private iv: Buffer;
+  static blockSize: number = 16;
+  private iv: Uint8Array;
 
   /**
    * Constructs an AES encryption object with an optional initialization vector (IV) and parameters.
    * @param {Buffer} [iv] - Initialization vector. If not provided, a random IV will be generated.
    */
-  constructor(iv?: Buffer) {
+  constructor(iv?: Uint8Array) {
     this.iv = iv || Aes.generateIv();
   }
 
@@ -50,11 +51,17 @@ export class Aes implements Cipher {
    * @param key - The symmetric key for encryption and decryption must be 128/192/256 bits or 16/24/32 bytes.
    * @returns The encrypted data.
    */
-  encrypt(plainText: Uint8Array, key: Buffer): Buffer {
-    const cipher = createCipheriv('aes-256-cbc', key, this.iv);
+  // encrypt(plainText: Uint8Array, key: Uint8Array): Buffer {
+  //   const cipher = createCipheriv('aes-256-cbc', key, this.iv);
+  //   const amountPadded = (Aes.blockSize - ((plainText.length + 1) % Aes.blockSize)) % Aes.blockSize;
+  //   const paddedBytes = Buffer.concat([Buffer.from([amountPadded]), plainText, Buffer.alloc(amountPadded)]);
+  //   return Buffer.concat([cipher.update(paddedBytes), cipher.final()]);
+  // }
+  encrypt(plainText: Uint8Array, key: Uint8Array): Uint8Array {
     const amountPadded = (Aes.blockSize - ((plainText.length + 1) % Aes.blockSize)) % Aes.blockSize;
-    const paddedBytes = Buffer.concat([Buffer.from([amountPadded]), plainText, Buffer.alloc(amountPadded)]);
-    return Buffer.concat([cipher.update(paddedBytes), cipher.final()]);
+  
+    const paddedBytes = new Uint8Array([...Array(amountPadded + 1).fill(amountPadded), ...plainText, ...Array(amountPadded).fill(0)]);
+    return this.processAes(paddedBytes, key, this.params.iv);
   }
 
   /**
@@ -71,12 +78,20 @@ export class Aes implements Cipher {
     return preImage.slice(1, preImage.length - paddedAmount);
   }
 
+  processAes(input: Uint8Array, key: Uint8Array, iv: Uint8Array): Uint8Array {
+    const aesCtr = new ModeOfOperation.ctr(key, new ModeOfOperation.ctr.Counter(iv));
+  
+    const output = aesCtr.encrypt(input);
+  
+    return output;
+  }
+
   /**
    * Converts the AES instance to a JSON object.
    * @returns A JSON representation of the AES instance.
    */
   toJson(): { iv: string } {
-    return { iv: this.iv.toString('hex') };
+    return { iv: this.iv.toString() };
   }
 }
 
@@ -88,9 +103,9 @@ export class AesParams extends Params {
   public get cipher(): string {
     return 'aes';
   }
-  public iv: Buffer;
+  public iv: Uint8Array;
 
-  constructor(iv: Buffer) {
+  constructor(iv: Uint8Array) {
     super();
     this.iv = iv;
   }
@@ -109,14 +124,16 @@ export class AesParams extends Params {
    * @returns An instance of the AesParams class.
    */
   static fromJson(json: { [key: string]: any }): AesParams {
-    return new AesParams(Buffer.from(json.iv, 'hex'));
+    return new AesParams(new Uint8Array(json.iv));
   }
 
   /**
    * Converts the AesParams instance to a JSON object.
    * @returns A JSON representation of the AesParams instance.
    */
-  toJson(): { iv: string } {
-    return { iv: this.iv.toString('hex') };
+  toJson(): { iv: Uint8Array } {
+    const ivArray = this.iv.toString().split(',').map(Number);
+    const ivUint8Array = new Uint8Array(ivArray);
+    return { iv: ivUint8Array };
   }
 }

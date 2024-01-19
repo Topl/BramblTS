@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { toByte } from './ec';
 
-/* eslint-disable @typescript-eslint/no-unused-vars */
 export const SIZE = 10;
 export const M24 = 0x00ffffff;
 export const M25 = 0x01ffffff;

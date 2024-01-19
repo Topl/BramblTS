@@ -88,10 +88,6 @@ export class SecretKey extends SigningKey implements ExtendedEd25519Spec {
     }
   }
 
-  // static proto(sk: pb.quivr.models.SigningKey): SecretKey {
-  //   return new SecretKey(sk.leftKey, sk.rightKey, sk.chainCode);
-  // }
-
   equals(other: SecretKey): boolean {
     return (
       Buffer.from(this.leftKey).equals(Buffer.from(other.leftKey)) &&
@@ -123,10 +119,6 @@ export class PublicKey {
       );
     }
   }
-
-  // static proto(vk: pb.quivr.models.VerificationKey): PublicKey {
-  //   return new PublicKey(new spec.PublicKey(vk.value), vk.chainCode);
-  // }
 
   equals(other: PublicKey): boolean {
     return this.vk.equals(other.vk) && Buffer.from(this.chainCode).equals(Buffer.from(other.chainCode));
