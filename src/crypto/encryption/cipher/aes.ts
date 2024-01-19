@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { randomBytes, createDecipheriv } from 'crypto';
+import { randomBytes } from 'crypto';
 import { Cipher, Params } from './cipher';
 import { ModeOfOperation } from 'aes-js';
 
@@ -28,7 +28,7 @@ export class Aes implements Cipher {
    * Generates a random initialization vector.
    * @returns {Buffer} The generated initialization vector.
    */
-  static generateIv(): Buffer {
+  static generateIv(): Uint8Array {
     return randomBytes(Aes.blockSize);
   }
 
@@ -71,19 +71,24 @@ export class Aes implements Cipher {
    * @param key - The symmetric key for encryption and decryption. Must be 128/192/256 bits or 16/24/32 bytes.
    * @returns Decrypted data.
    */
-  decrypt(cipherText: Buffer, key: Buffer): Buffer {
-    const decipher = createDecipheriv('aes-256-cbc', key, this.iv);
-    const preImage = Buffer.concat([decipher.update(cipherText), decipher.final()]);
+  decrypt(cipherText: Uint8Array, key: Uint8Array): Uint8Array {
+    const preImage = this.processAes(cipherText, key, this.iv);
     const paddedAmount = preImage[0];
-    return preImage.slice(1, preImage.length - paddedAmount);
+    const paddedBytes = preImage.slice(1);
+
+    const result = paddedBytes.slice(0, paddedBytes.length - paddedAmount);
+
+    return new Uint8Array(Buffer.from(result));
   }
 
-  processAes(input: Uint8Array, key: Uint8Array, iv: Uint8Array): Uint8Array {
-    const aesCtr = new ModeOfOperation.ctr(key, new ModeOfOperation.ctr.Counter(iv));
+  processAes(input: Uint8Array, key: Uint8Array, iv: Uint8Array, encrypt: boolean = false): Uint8Array {
+    const aesCtr = new ModeOfOperation.ctr(key, iv);
   
-    const output = aesCtr.encrypt(input);
-  
-    return output;
+    if (encrypt) {
+      return aesCtr.encrypt(input);
+    } else {
+      return aesCtr.decrypt(input);
+    }
   }
 
   /**
@@ -114,8 +119,8 @@ export class AesParams extends Params {
    * Generates a new AesParams instance with a random initialization vector.
    * @returns A new AesParams instance.
    */
-  static generate(): AesParams {
-    return new AesParams(Aes.generateIv());
+  static generate(): Uint8Array {
+    return Aes.generateIv();
   }
 
   /**
