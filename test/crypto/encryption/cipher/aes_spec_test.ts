@@ -1,8 +1,7 @@
-import crypto from 'crypto';
 import { Aes, AesParams } from '../../../../src/crypto/encryption/cipher/aes';
 
 function stringToUint8Array(str: string): Uint8Array {
-  return new Uint8Array([...str].map(char => char.charCodeAt(0)));
+  return new Uint8Array([...str].map((char) => char.charCodeAt(0)));
 }
 
 function padUint8Array(arr: Uint8Array, length: number): Uint8Array {
@@ -33,7 +32,7 @@ describe('Aes Spec', () => {
     const message: Uint8Array = new TextEncoder().encode('message');
     const cipherText1 = aes.encrypt(message, encryptKey1);
     const cipherText2 = aes.encrypt(message, encryptKey2);
-    
+
     expect(cipherText1).not.toEqual(cipherText2);
   });
 
@@ -44,7 +43,7 @@ describe('Aes Spec', () => {
     const message: Uint8Array = new TextEncoder().encode('message');
     const cipherText1 = aes.encrypt(message, encryptKey1);
     const cipherText2 = aes.encrypt(message, encryptKey2);
-    
+
     expect(cipherText1).not.toEqual(cipherText2);
   });
 
@@ -55,7 +54,7 @@ describe('Aes Spec', () => {
     while (areArraysEqual(params2, params1)) {
       params2 = Aes.generateIv();
     }
-    
+
     const aes1 = new Aes(params1);
     const aes2 = new Aes(params2);
 
@@ -84,30 +83,34 @@ describe('Aes Spec', () => {
   });
 
   test('encrypt and decrypt is unsuccessful with a different key', () => {
-    const encryptKey = Buffer.from('encryptKey').slice(0, 16);
-    const decryptKey = Buffer.from('decryptKey').slice(0, 16);
-    const iv = crypto.randomBytes(16);
-    const aesEncrypt = crypto.createCipheriv('aes-128-cbc', encryptKey, iv);
-    const message = Buffer.from('message');
-    const cipherText = Buffer.concat([aesEncrypt.update(message), aesEncrypt.final()]);
+    const aes = new Aes();
+    const encryptKey = padUint8Array(stringToUint8Array('encryptKey'), 16);
+    const decryptKey = padUint8Array(stringToUint8Array('decryptKey'), 16);
+    const message: Uint8Array = new TextEncoder().encode('message');
 
-    const aesDecrypt = crypto.createDecipheriv('aes-128-cbc', decryptKey, iv);
-    const decodedText = Buffer.concat([aesDecrypt.update(cipherText), aesDecrypt.final()]);
-    
-    expect(decodedText.equals(message)).toBe(false);
+    const cipherText = aes.encrypt(message, encryptKey);
+    const decodedText = aes.decrypt(cipherText, decryptKey);
+
+    expect(decodedText).not.toEqual(message);
   });
 
   test('encrypt and decrypt is unsuccessful with a different iv', () => {
-    const ivEncrypt = crypto.randomBytes(16);
-    const ivDecrypt = crypto.randomBytes(16);
-    const key = Buffer.from('key').slice(0, 16);
-    const aesEncrypt = crypto.createCipheriv('aes-128-cbc', key, ivEncrypt);
-    const message = Buffer.from('message');
-    const cipherText = Buffer.concat([aesEncrypt.update(message), aesEncrypt.final()]);
+    const encryptParams = AesParams.generate();
+    let decryptParams = AesParams.generate();
 
-    const aesDecrypt = crypto.createDecipheriv('aes-128-cbc', key, ivDecrypt);
-    const decodedText = Buffer.concat([aesDecrypt.update(cipherText), aesDecrypt.final()]);
-    
-    expect(decodedText.equals(message)).toBe(false);
+    while (areArraysEqual(decryptParams, encryptParams)) {
+      decryptParams = AesParams.generate();
+    }
+
+    const aesEncrypt = new Aes(encryptParams);
+    const aesDecrypt = new Aes(decryptParams);
+
+    const key = padUint8Array(stringToUint8Array('key'), 16);
+    const message: Uint8Array = new TextEncoder().encode('message');
+
+    const cipherText = aesEncrypt.encrypt(message, key);
+    const decodedText = aesDecrypt.decrypt(cipherText, key);
+
+    expect(decodedText).not.toEqual(message);
   });
 });
