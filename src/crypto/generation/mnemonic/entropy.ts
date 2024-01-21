@@ -1,9 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
 import { Either } from '../../../common/functional/either';
 import { English, Language } from './language';
 import { MnemonicSize } from './mnemonic';
 import { Phrase } from './phrase';
-import { getRandomValues } from 'crypto';
+import { randomBytes } from 'crypto';
 
 const defaultMnemonicSize = MnemonicSize.words12();
 
@@ -14,11 +14,11 @@ enum EntropyFailureType {
   InvalidSizeMismatch,
 }
 
-class Uuid {
-  v4() {
-    return uuidv4();
-  }
-}
+// class Uuid {
+//   v4() {
+//     return uuidv4();
+//   }
+// }
 /**
  * Represents an entropy value used in cryptographic operations.
  */
@@ -37,8 +37,8 @@ export class Entropy {
    */
   public static generate(size = defaultMnemonicSize): Entropy {
     const numBytes = size.entropyLength / 8;
-    const r = new Uint8Array(numBytes);
-    const secureRandom = getRandomValues(r);
+    // const r = new Uint8Array(numBytes);
+    const secureRandom = randomBytes(numBytes);
     return new Entropy(secureRandom);
   }
 
@@ -102,8 +102,8 @@ export class Entropy {
    * @param uuid The UUID to convert.
    * @returns The resulting Entropy instance.
    */
-  public static fromUuid(uuid: Uuid): Entropy {
-    const uuidString = uuid.v4().replace(/-/g, '');
+  public static fromUuid(uuid: string): Entropy {
+    const uuidString = uuid.replace(/-/g, '');
     const bytes = uuidString.split('').map((c) => parseInt(c, 16));
     return new Entropy(new Uint8Array(bytes));
   }
