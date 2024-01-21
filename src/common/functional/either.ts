@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+/**
+ * Represents an optional value. It either holds a value of type T or represents an absence of a value.
+ */
 export interface Option<T> {
   isDefined: boolean;
   getOrElse(defaultValue: T): T;
@@ -10,6 +14,10 @@ export interface Option<T> {
   fold<U>(onDefined: (t: T) => U, onUndefined: () => U): U;
 }
 
+/**
+ * A container class that represents one of two possible values (Left or Right).
+ * Either instances are either a Left value (L) or a Right value (R).
+ */
 export class Either<L, R> {
   private readonly _left: L | null;
   private readonly _right: R | null;
@@ -53,22 +61,27 @@ export class Either<L, R> {
     return this._right!;
   }
 
+  // Maps the right value of the Either using a provided function
   map<T>(f: (value: R) => T): Either<L, null> | Either<null, T> {
     return this.isRight ? Either.right(f(this.right)) : Either.left(this.left);
   }
 
+  // Applies a function to the right value of the Either if it exists, otherwise returns the current Either
   flatMap<T>(f: (value: R) => Either<L, T>): Either<L, T> | Either<L, null> {
     return this.isRight ? f(this.right) : Either.left(this.left);
   }
 
+  // Maps the left value of the Either using a provided function
   mapLeft<T>(f: (value: L) => T): Either<T, null> | Either<null, R> {
     return this.isLeft ? Either.left(f(this.left)) : Either.right(this.right);
   }
 
+  // Applies a function to the left value of the Either if it exists, otherwise returns the current Either
   flatMapLeft<T>(f: (value: L) => Either<T, R>): Either<null, R> | Either<T, R> {
     return this.isLeft ? f(this.left) : Either.right(this.right);
   }
 
+  // Applies one of two provided functions to the value of the Either, depending on its state
   fold<T>(onLeft: (value: L) => T, onRight: (value: R) => T): T {
     return this.isLeft ? onLeft(this.left) : onRight(this.right);
   }
@@ -161,6 +174,9 @@ export class Some<T> implements Option<T> {
   }
 }
 
+/**
+ * Represents the absence of a value. Implements the Option interface.
+ */
 export class None<T> implements Option<T> {
   get isDefined(): boolean {
     return false;
@@ -189,8 +205,9 @@ export class None<T> implements Option<T> {
   }
 }
 
-// export type Either<L, R> = { kind: 'Left'; value: L } | { kind: 'Right'; value: R };
-
+/**
+ * Custom exception class for handling errors in Either.
+ */
 export class EitherException extends Error {
   constructor(public readonly message: string) {
     super(message);
@@ -205,4 +222,7 @@ export class EitherException extends Error {
   }
 }
 
+/**
+ * A class that represents the absence of a value, functionally similar to `void`.
+ */
 export class Unit {}

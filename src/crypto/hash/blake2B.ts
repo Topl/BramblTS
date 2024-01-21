@@ -2,11 +2,17 @@ import * as blake from 'blakejs';
 import { Digest, Digest32, Digest64 } from './digest/digest';
 import { Hash, Message } from './baseHash';
 
+/**
+ * An abstract class for Blake2b hash functions.
+ */
 abstract class Blake2b extends Hash {
   abstract hash(bytes: Uint8Array): Uint8Array;
   abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
 }
 
+/**
+ * A 256-bit (32-byte) implementation of Blake2b.
+ */
 export class Blake2b256 extends Blake2b {
   hash(bytes: Uint8Array): Uint8Array {
     return blake.blake2b(bytes, undefined, 32);
@@ -36,6 +42,9 @@ export class Blake2b256 extends Blake2b {
   }
 }
 
+/**
+ * A 512-bit (64-byte) implementation of Blake2b.
+ */
 export class Blake2b512 extends Blake2b {
   hash(bytes: Uint8Array): Uint8Array {
     return blake.blake2b(bytes, undefined, 64);

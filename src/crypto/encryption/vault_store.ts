@@ -5,12 +5,23 @@ import { Json } from '../../utils/json';
 import { Mac } from './mac';
 import { Either, EitherException } from '../../common/functional/either';
 
+/**
+ * A VaultStore is a JSON encodable object that contains the KDF and Cipher necessary to decrypt the cipher text.
+ */
 export class VaultStore {
   readonly kdf: Kdf;
   readonly cipher: Cipher;
   readonly cipherText: Uint8Array;
   readonly mac: Uint8Array;
 
+  /**
+   * Constructs a VaultStore object.
+   * 
+   * @param kdf the associated KDF
+   * @param cipher the associated Cipher
+   * @param cipherText cipher text
+   * @param mac MAC to validate the data integrity
+   */
   constructor(kdf: Kdf, cipher: Cipher, cipherText: Uint8Array, mac: Uint8Array) {
     this.kdf = kdf;
     this.cipher = cipher;
@@ -18,6 +29,12 @@ export class VaultStore {
     this.mac = mac;
   }
 
+  /**
+   * Create a VaultStore instance from a JSON object.
+   *
+   * @param json the JSON object
+   * @returns Either an Error or VaultStore instance
+   */
   static fromJson(json: { [key: string]: any }): Either<Error, VaultStore> {
     try {
       const kdf = Kdf.fromJson(JSON.parse(json['kdf']));
@@ -30,6 +47,11 @@ export class VaultStore {
     }
   }
 
+  /**
+   * Converts the VaultStore instance to a JSON object.
+   * 
+   * @returns JSON representation of the VaultStore.
+   */
   toJson(): { [key: string]: any } {
     return {
       kdf: JSON.stringify(this.kdf.toJson()),
@@ -39,6 +61,13 @@ export class VaultStore {
     };
   }
 
+  /**
+   * Decodes the cipher text of a VaultStore.
+   * 
+   * @param vaultStore the VaultStore
+   * @param password the password to decrypt the cipher text
+   * @returns Either an Error or the decrypted data
+   */
   static decodeCipher(vaultStore: VaultStore, password: Uint8Array): Either<Error, Uint8Array> {
     try {
       const derivedKey = vaultStore.kdf.deriveKey(password);

@@ -1,6 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { toByte } from './ec';
 
+/**
+ * @notice AMS 2021:
+ * Curve point operations ported from BouncyCastle used in all EC primitives in crypto.primitives.eddsa.
+ * @license Licensing: https://www.bouncycastle.org/licence.html
+ * Copyright (c) 2000 - 2021 The Legion of the Bouncy Castle Inc. (https://www.bouncycastle.org)
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+ * documentation files (the "Software"), to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+ * and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions
+ * of the Software.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED
+ * TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ * CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
+
 export const SIZE = 10;
 export const M24 = 0x00ffffff;
 export const M25 = 0x01ffffff;
@@ -408,7 +426,7 @@ export function mul2(x: Int32Array, y: Int32Array, z: Int32Array) {
   t >>= BigInt(26);
 
   t += a2 + (c7 - a7) * BigInt(38);
-  z[2] = Number(t& M25);
+  z[2] = Number(t & M25);
   t >>= BigInt(25);
 
   t += a3 + (c8 - a8) * BigInt(38);

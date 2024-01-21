@@ -2,7 +2,7 @@
 import { EitherException } from '../../../common/functional/either';
 
 export class Digest {
-  constructor(public readonly bytes: Uint8Array) {}
+constructor(public readonly bytes: Uint8Array) {}
 
   static empty(): Digest {
     return new Digest(new Uint8Array(0));

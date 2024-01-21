@@ -2,16 +2,46 @@ import * as crypto from 'crypto';
 import { Digest, Digest32, Digest64 } from './digest/digest';
 import { Hash, Message } from './baseHash';
 
+/**
+ * An abstract class for SHA hash functions.
+ */
 abstract class SHA extends Hash {
+  /**
+   * Gets this algorithm's standard name.
+   * @returns The name of the algorithm.
+   */
   abstract algorithmName(): string;
+  /**
+   * Gets this digest's output size in bytes.
+   * @returns The size of the digest.
+   */
   abstract digestSize(): number;
+  /**
+   * Adds one byte of data to the digested input.
+   * @param inp The input byte array.
+   */
+  abstract updateByte(inp: Uint8Array): void;
+  /**
+   * Adds data to the digested input.
+   * @param inp The input byte array.
+   * @param inpOff The offset within the array.
+   * @param len The length of the data to add.
+   */
+  abstract update(inp: Uint8Array, inpOff: number, len: number): void;
+  /**
+   * Completes the hash computation and stores the result in the output array.
+   * @param out The output array to store the digest.
+   * @param outOff The offset within the output array.
+   * @returns The size of the digest.
+   */
+  abstract doFinal(out: Uint8Array, inp: number): number;
   abstract hash(bytes: Uint8Array): Uint8Array;
   abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
-  abstract updateByte(inp: Uint8Array): void;
-  abstract update(inp: Uint8Array, inpOff: number, len: number): void;
-  abstract doFinal(out: Uint8Array, inp: number): number;
 }
 
+/**
+ * Computes the SHA-256 (32-byte) hash of a list of bytes.
+ */
 export class SHA256 extends SHA {
   digest = crypto.createHash('sha256');
   hashDigest!: Uint8Array;
@@ -24,6 +54,14 @@ export class SHA256 extends SHA {
     return 32;
   }
 
+  updateByte(inp: Uint8Array): void {
+    this.digest.update(inp);
+  }
+
+  update(inp: Uint8Array, inpOff: number, len: number): void {
+    this.updateByte(inp.slice(inpOff, inpOff + len));
+  }
+
   doFinal(out: Uint8Array, inp: number): number {
     const hashBuffer = this.digest.digest();
 
@@ -31,14 +69,6 @@ export class SHA256 extends SHA {
     // Reset the hash object for future use
     this.digest = crypto.createHash('sha256');
     return out.length;
-  }
-
-  updateByte(inp: Uint8Array): void {
-    this.digest.update(inp);
-  }
-
-  update(inp: Uint8Array, inpOff: number, len: number): void {
-    this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
   hash(bytes: Uint8Array): Uint8Array {
@@ -72,6 +102,9 @@ export class SHA256 extends SHA {
   }
 }
 
+/**
+ * Computes the SHA-512 (64-byte) hash of a list of bytes.
+ */
 export class SHA512 extends SHA {
   digest = crypto.createHash('sha512');
   hashDigest!: Uint8Array;
@@ -84,6 +117,14 @@ export class SHA512 extends SHA {
     return 64;
   }
 
+  updateByte(inp: Uint8Array): void {
+    this.digest.update(inp);
+  }
+
+  update(inp: Uint8Array, inpOff: number, len: number): void {
+    this.updateByte(inp.slice(inpOff, inpOff + len));
+  }
+
   doFinal(out: Uint8Array, inp: number): number {
     const hashBuffer = this.digest.digest();
 
@@ -91,14 +132,6 @@ export class SHA512 extends SHA {
     // Reset the hash object for future use
     this.digest = crypto.createHash('sha512');
     return out.length;
-  }
-
-  updateByte(inp: Uint8Array): void {
-    this.digest.update(inp);
-  }
-
-  update(inp: Uint8Array, inpOff: number, len: number): void {
-    this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
   hash(bytes: Uint8Array): Uint8Array {

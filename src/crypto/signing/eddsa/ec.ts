@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-constant-condition */
+import Long from 'long';
+import * as x25519_field from './x25519_field';
+
 /*
- Ed25519 is EdDSA instantiated with:
+  Ed25519 is EdDSA instantiated with:
 +-----------+-------------------------------------------------------+
 | Parameter |                                                 Value |
 +-----------+-------------------------------------------------------+
@@ -26,11 +29,7 @@
 |    PH(x)  |                       x (i.e., the identity function) |
 +-----------+-------------------------------------------------------+
 Table 1: Parameters of Ed25519
-*/
-
-// import fs from 'fs';
-import Long from 'long';
-import * as x25519_field from './x25519_field';
+ */
 
 /// AMS 2021: Supporting curve point operations for all EC crypto primitives in eddsa package
 /// Directly ported from BouncyCastle implementation of Ed25519 RFC8032 https://tools.ietf.org/html/rfc8032
@@ -530,7 +529,7 @@ export class EC {
     this.pointExtendXY(b);
 
     const precompBaseTable: PointExt[] = this.pointPrecompVar(b, 1 << (WNAF_WIDTH_BASE - 2));
-    
+
     const p: PointAccum = PointAccum.create();
 
     x25519_field.copy(B_x, 0, p.x, 0);
@@ -873,7 +872,7 @@ export class EC {
     const wsP = Array.from(wsP2, (value) => (value > 127 ? value - 256 : value));
 
     const tp = this.pointPrecompVar(p, 1 << (width - 2));
-    
+
     this.pointSetNeutralAccum(r);
 
     let bit = 255;

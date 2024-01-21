@@ -32,6 +32,9 @@ export class ExtendedEd25519Spec {
     return new SecretKey(seed.slice(0, 32), seed.slice(32, 64), seed.slice(64, 96));
   }
 
+  /** ED-25519 Base Order N
+   * Equivalent to `2^252 + 27742317777372353535851937790883648493`
+   */
   static readonly edBaseN: bigint = BigInt(
     '7237005577332262213973186563042994240857116359379907606001950938285454250989',
   );

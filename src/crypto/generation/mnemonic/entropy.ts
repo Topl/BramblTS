@@ -19,7 +19,9 @@ class Uuid {
     return uuidv4();
   }
 }
-
+/**
+ * Represents an entropy value used in cryptographic operations.
+ */
 export class Entropy {
   value: Uint8Array;
 
@@ -27,6 +29,12 @@ export class Entropy {
     this.value = value;
   }
 
+  /**
+   * Generate an Entropy of the specified size.
+   *
+   * @param size The size of the entropy. Defaults to 12 words.
+   * @returns The generated Entropy.
+   */
   public static generate(size = defaultMnemonicSize): Entropy {
     const numBytes = size.entropyLength / 8;
     const r = new Uint8Array(numBytes);
@@ -34,6 +42,13 @@ export class Entropy {
     return new Entropy(secureRandom);
   }
 
+  /**
+   * Generate a mnemonic string from an Entropy value.
+   *
+   * @param entropy The entropy from which to compute the mnemonic.
+   * @param options Optional language for the mnemonic.
+   * @returns Either an EntropyFailure or a list of strings representing the mnemonic.
+   */
   public static async toMnemonicString(
     entropy: Entropy,
     options: { language?: Language } = {},
@@ -58,6 +73,13 @@ export class Entropy {
     return Either.right(phrase.value);
   }
 
+  /**
+   * Creates an Entropy instance from a mnemonic string.
+   *
+   * @param mnemonic The mnemonic string.
+   * @param options Optional language for the mnemonic.
+   * @returns Either an EntropyFailure or the Entropy.
+   */
   public static async fromMnemonicString(
     mnemonic: string,
     options: { language?: Language } = {},
@@ -74,12 +96,24 @@ export class Entropy {
     return Either.right(entropy);
   }
 
+  /**
+   * Creates an Entropy instance from a UUID.
+   *
+   * @param uuid The UUID to convert.
+   * @returns The resulting Entropy instance.
+   */
   public static fromUuid(uuid: Uuid): Entropy {
     const uuidString = uuid.v4().replace(/-/g, '');
     const bytes = uuidString.split('').map((c) => parseInt(c, 16));
     return new Entropy(new Uint8Array(bytes));
   }
 
+  /**
+   * Creates an Entropy instance from a byte array.
+   *
+   * @param bytes The byte array.
+   * @returns Either an EntropyFailure or the Entropy.
+   */
   public static fromBytes(bytes: Uint8Array): Either<EntropyFailure, Entropy> {
     const sizeResult = Entropy.sizeFromEntropyLength(bytes.length);
     if (sizeResult.isLeft) {
@@ -89,6 +123,12 @@ export class Entropy {
     return Either.right(entropy);
   }
 
+  /**
+   * Determines the mnemonic size from the length of entropy bytes.
+   *
+   * @param entropyByteLength The length of the entropy bytes.
+   * @returns Either an EntropyFailure or the MnemonicSize.
+   */
   public static sizeFromEntropyLength(entropyByteLength: number): Either<EntropyFailure, MnemonicSize> {
     switch (entropyByteLength) {
       case 16:
@@ -106,6 +146,12 @@ export class Entropy {
     }
   }
 
+  /**
+   * Creates an Entropy instance from a Phrase.
+   *
+   * @param phrase The Phrase to convert.
+   * @returns The resulting Entropy instance.
+   */
   public static unsafeFromPhrase(phrase: Phrase): Entropy {
     const binaryString = Phrase.toBinaryString(phrase)[0];
 
@@ -127,6 +173,9 @@ export class Entropy {
   }
 }
 
+/**
+ * Represents a failure in the entropy generation process.
+ */
 class EntropyFailure {
   /// A message describing the error.
   readonly message?: string | undefined;

@@ -14,7 +14,15 @@ import {
 
 export class Ed25519 extends EC {
   private defaultDigest = new SHA512();
-  
+
+  /**
+   * Updates a SHA512 hash with the domain separation constant [DOM2_PREFIX],
+   * a flag indicating whether the message is prehashed [phflag], and a context value [ctx].
+   *
+   * @param {SHA512} d - The SHA512 hash object.
+   * @param {number} phflag - Flag indicating whether the message is prehashed.
+   * @param {Uint8Array} ctx - The context value.
+   */
   private _dom2(d: SHA512, phflag: number, ctx: Uint8Array): void {
     if (ctx.length > 0) {
       d.update(Buffer.from(DOM2_PREFIX, 'utf-8'), 0, DOM2_PREFIX.length);
@@ -24,6 +32,11 @@ export class Ed25519 extends EC {
     }
   }
 
+  /**
+   * Generates a private key.
+   *
+   * @param {Uint8Array} k - The private key to be generated.
+   */
   generatePrivateKey(k: Uint8Array): void {
     for (let i = 0; i < k.length; i++) {
       k[i] = Math.floor(Math.random() * 256);
@@ -31,6 +44,15 @@ export class Ed25519 extends EC {
     throw new Error('Not checked');
   }
 
+  /**
+   * Generates a public key from a given private key.
+   *
+   * @param {Uint8Array} sk - The private key.
+   * @param {number} skOff - Offset in the private key.
+   * @param {Uint8Array} pk - The public key to be generated.
+   * @param {number} pkOff - Offset in the public key.
+   * @param {SHA512} [digest] - Optional SHA512 digest.
+   */
   generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
     const d = digest ?? this.defaultDigest;
 
@@ -43,17 +65,31 @@ export class Ed25519 extends EC {
     this.scalarMultBaseEncoded(s, pk, pkOff);
   }
 
-  /// Computes the Ed25519 signature of a message using a digest and a public key.
-  ///
-  /// The signature is computed as follows:
-  ///
-  /// 1. Add the domain separator to the hash context.
-  /// 2. Update the hash context with the message hash.
-  /// 3. Compute a random scalar `r` and the corresponding point `R` by scalar multiplication of the base point with `r`.
-  /// 4. Add the domain separator to the hash context.
-  /// 5. Update the hash context with the point `R`, the public key, and the message hash.
-  /// 6. Compute the scalar `k` and the signature scalar `S` using the `calculateS` function.
-  /// 7. Copy the values of `R` and `S` into the signature buffer.
+  /**
+   * Computes the Ed25519 signature of a message using a digest and a public key.
+   * The signature is computed as follows:
+   *
+   * 1. Add the domain separator to the hash context.
+   * 2. Update the hash context with the message hash.
+   * 3. Compute a random scalar `r` and the corresponding point `R` by scalar multiplication of the base point with `r`.
+   * 4. Add the domain separator to the hash context.
+   * 5. Update the hash context with the point `R`, the public key, and the message hash.
+   * 6. Compute the scalar `k` and the signature scalar `S` using the `calculateS` function.
+   * 7. Copy the values of `R` and `S` into the signature buffer.
+   *
+   * @param {SHA512} digest - The SHA512 digest.
+   * @param {Uint8Array} h - The hash of the message.
+   * @param {Uint8Array} s - The signature scalar.
+   * @param {Uint8Array} pk - The public key.
+   * @param {number} pkOffset - Offset in the public key.
+   * @param {Uint8Array} context - The context.
+   * @param {number} phflag - Flag for prehashed message.
+   * @param {Uint8Array} message - The message to be signed.
+   * @param {number} messageOffset - Offset in the message.
+   * @param {number} messageLength - Length of the message.
+   * @param {Uint8Array} signature - The signature buffer.
+   * @param {number} signatureOffset - Offset in the signature.
+   */
   implSignWithDigestAndPublicKey(
     digest: SHA512,
     h: Uint8Array,
@@ -94,16 +130,27 @@ export class Ed25519 extends EC {
     signature.set(S, signatureOffset + POINT_BYTES);
   }
 
-  /// Computes the Ed25519 signature of a message using a private key.
-  ///
-  /// The signature is computed as follows:
-  ///
-  /// 1. Compute the SHA-512 hash of the private key.
-  /// 2. Prune the hash to obtain a 32-byte scalar value.
-  /// 3. Compute the public key by scalar multiplication of the base point with the scalar value.
-  /// 4. Call the `implSignWithDigestAndPublicKey` function with the computed values and the remaining arguments.
-  ///
-  /// Throws an [ArgumentError] if the context variable is invalid.
+  /**
+   * Computes the Ed25519 signature of a message using a private key.
+   *
+   * The signature is computed as follows:
+   *
+   * 1. Compute the SHA-512 hash of the private key.
+   * 2. Prune the hash to obtain a 32-byte scalar value.
+   * 3. Compute the public key by scalar multiplication of the base point with the scalar value.
+   * 4. Call the `implSignWithDigestAndPublicKey` function with the computed values and the remaining arguments.
+   *
+   * Throws an [ArgumentError] if the context variable is invalid.
+   * @param {Uint8Array} sk - The private key.
+   * @param {number} skOffset - Offset in the private key.
+   * @param {Uint8Array} context - The context.
+   * @param {number} phflag - Flag for prehashed message.
+   * @param {Uint8Array} message - The message to be signed.
+   * @param {number} messageOffset - Offset in the message.
+   * @param {number} messageLength - Length of the message.
+   * @param {Uint8Array} signature - The signature buffer.
+   * @param {number} signatureOffset - Offset in the signature.
+   */
   implSignWithPrivateKey(
     sk: Uint8Array,
     skOffset: number,
@@ -148,14 +195,27 @@ export class Ed25519 extends EC {
       signatureOffset,
     );
   }
-  /// Computes the Ed25519 signature of a message using a private key and a public key.
-  ///
-  /// The signature is computed as follows:
-  ///
-  /// 1. Compute the SHA-512 hash of the private key.
-  /// 2. Prune the hash to obtain a 32-byte scalar value.
-  /// 3. Call the `implSignWithDigestAndPublicKey` function with the computed scalar value and the remaining arguments.
-  ///
+
+  /**
+   * Computes the Ed25519 signature of a message using a private key and a public key.
+   *
+   * The signature is computed as follows:
+   * 1. Compute the SHA-512 hash of the private key.
+   * 2. Prune the hash to obtain a 32-byte scalar value.
+   * 3. Call the `implSignWithDigestAndPublicKey` function with the computed scalar value and the remaining arguments.
+   *
+   * @param {Uint8Array} sk - The private key.
+   * @param {number} skOffset - Offset in the private key.
+   * @param {Uint8Array} pk - The public key.
+   * @param {number} pkOffset - Offset in the public key.
+   * @param {Uint8Array} context - The context.
+   * @param {number} phflag - Flag for prehashed message.
+   * @param {Uint8Array} message - The message to be signed.
+   * @param {number} messageOffset - Offset in the message.
+   * @param {number} messageLength - Length of the message.
+   * @param {Uint8Array} signature - The signature buffer.
+   * @param {number} signatureOffset - Offset in the signature.
+   */
   implSignWithPrivateKeyAndPublicKey(
     sk: Uint8Array,
     skOffset: number,
@@ -200,6 +260,20 @@ export class Ed25519 extends EC {
     );
   }
 
+  /**
+   * Verifies an Ed25519 signature.
+   *
+   * @param {Uint8Array} signature - The signature to verify.
+   * @param {number} signatureOffset - Offset in the signature.
+   * @param {Uint8Array} pk - The public key.
+   * @param {number} pkOffset - Offset in the public key.
+   * @param {Uint8Array} context - The context.
+   * @param {number} phflag - Flag for prehashed message.
+   * @param {Uint8Array} message - The message being verified.
+   * @param {number} messageOffset - Offset in the message.
+   * @param {number} messageLength - Length of the message.
+   * @returns {boolean} - Returns `true` if the signature is valid, `false` otherwise.
+   */
   _implVerify(
     signature: Uint8Array,
     signatureOffset: number,
@@ -215,19 +289,19 @@ export class Ed25519 extends EC {
     if (!this.checkContextVar(context, phflag)) {
       throw new Error('Invalid context');
     }
-    
+
     // Extract the R and S components from the signature.
     const R = signature.slice(signatureOffset, signatureOffset + POINT_BYTES);
     const S = signature.slice(signatureOffset + POINT_BYTES, signatureOffset + SIGNATURE_SIZE);
-    
+
     // Check if the R and S components are valid.
     if (!this.checkPointVar(R)) return false;
     if (!this.checkScalarVar(S)) return false;
-    
+
     // Decode the public key.
     const pA = PointExt.create();
     if (!this.decodePointVar(pk, pkOffset, { negate: true, r: pA })) return false;
-    
+
     // Compute the SHA-512 hash of the message and the other parameters.
     const h = new Uint8Array(this.defaultDigest.digestSize());
     this._dom2(this.defaultDigest, phflag, context);
@@ -235,17 +309,17 @@ export class Ed25519 extends EC {
     this.defaultDigest.update(pk, pkOffset, POINT_BYTES);
     this.defaultDigest.update(message, messageOffset, messageLength);
     this.defaultDigest.doFinal(h, 0);
-    
+
     // Reduce the hash to obtain a scalar value.
     const k = this.reduceScalar(h);
-    
+
     // Decode the S component of the signature and the scalar value k.
     const nS = new Int32Array(SCALAR_INTS).fill(0);
     this.decodeScalar(S, 0, nS);
-    
+
     const nA = new Int32Array(SCALAR_INTS).fill(0);
     this.decodeScalar(k, 0, nA);
-    
+
     // Compute the point R' = nS * B + nA * A, where B is the standard base point and A is the public key.
     const pR = PointAccum.create();
     this.scalarMultStraussVar(nS, nA, pA, pR);
@@ -257,14 +331,22 @@ export class Ed25519 extends EC {
     return isEqual;
   }
 
-  /// Signs a message using the Ed25519 digital signature algorithm.
-  ///
-  /// This function takes a secret key [sk], a [message], and optional parameters [pk], [pkOffset], and [context].
-  /// If [pk] and [pkOffset] are provided, the function signs the message using the private key corresponding to the given public key.
-  /// If [context] is provided, it is used as additional context information during the signing process.
-  /// If phFlag is set manually it will be used instead of the default value (0x00)
-  ///
-  /// Throws an `ArgumentError` if any of the required parameters are null or if `messageLength` is non-positive.
+  /**
+   * Signs a message using the Ed25519 digital signature algorithm.
+   *
+   * @param {Object} params - Object containing all parameters.
+   * @param {Uint8Array} params.sk - Secret key for signing.
+   * @param {number} params.skOffset - Offset in the secret key.
+   * @param {Uint8Array} params.message - Message to sign.
+   * @param {number} params.messageOffset - Offset in the message.
+   * @param {number} params.messageLength - Length of the message.
+   * @param {Uint8Array} params.signature - Buffer to hold the signature.
+   * @param {number} params.signatureOffset - Offset in the signature buffer.
+   * @param {Uint8Array} [params.pk] - Public key (optional).
+   * @param {number} [params.pkOffset] - Offset in the public key (optional).
+   * @param {Uint8Array} [params.context] - Additional context for signing (optional).
+   * @param {number} [params.phflag] - Flag for prehashed messages (optional).
+   */
   sign({
     sk,
     skOffset,
@@ -350,12 +432,26 @@ export class Ed25519 extends EC {
       );
     }
   }
-  /// Signs a prehashed message using the Ed25519 algorithm.
-  /// demands that either [phSha] or [ph] is not [null].
-  /// Only pass through a value to one of them or else this will raise [ArgumentError]
-  ///
-  /// Throws an [ArgumentError] if both [phSha] and [ph] are [null].
-  /// Throws an [ArgumentError] if the prehashed message is not valid.
+
+  /**
+   * Signs a prehashed message using the Ed25519 algorithm.
+   *
+   * Demands that either [phSha] or [ph] is not [null].
+   * Only pass through a value to one of them or else this will raise [ArgumentError]
+   *
+   * Throws an [ArgumentError] if both [phSha] and [ph] are [null].
+   * Throws an [ArgumentError] if the prehashed message is not valid.
+   *
+   * @param {Object} params - Object containing all parameters.
+   * @param {Uint8Array} params.sk - Secret key for signing.
+   * @param {number} params.skOffset - Offset in the secret key.
+   * @param {Uint8Array} params.context - Additional context for signing.
+   * @param {SHA512} [params.phSha] - SHA512 digest for prehash (optional).
+   * @param {Uint8Array} [params.ph] - Prehashed message (optional).
+   * @param {number} [params.phOffset] - Offset in the prehashed message (optional).
+   * @param {Uint8Array} params.signature - Buffer to hold the signature.
+   * @param {number} params.signatureOffset - Offset in the signature buffer.
+   */
   signPrehash({
     sk,
     skOffset,
@@ -422,9 +518,21 @@ export class Ed25519 extends EC {
       throw new Error('PhSha and ph should not both be passed in');
     }
   }
-  /// Verifies an Ed25519 signature.
-  ///
-  /// Returns `true` if the signature is valid, `false` otherwise.
+
+  /**
+   * Verifies an Ed25519 signature.
+   *
+   * @param {Object} params - Object containing all parameters.
+   * @param {Uint8Array} params.signature - Signature to verify.
+   * @param {number} params.signatureOffset - Offset in the signature.
+   * @param {Uint8Array} params.pk - Public key.
+   * @param {number} params.pkOffset - Offset in the public key.
+   * @param {Uint8Array} [params.context] - Additional context for verification (optional).
+   * @param {Uint8Array} params.message - Message being verified.
+   * @param {number} params.messageOffset - Offset in the message.
+   * @param {number} params.messageLength - Length of the message.
+   * @returns {boolean} - Returns `true` if the signature is valid, `false` otherwise.
+   */
   verify({
     signature,
     signatureOffset,
@@ -460,14 +568,25 @@ export class Ed25519 extends EC {
     );
   }
 
-  /// Verifies an Ed25519 signature of a prehashed message.
-  ///
-  /// demands that either [phSha] or [ph] is not [null].
-  /// Only pass through a value to one of them or else this will raise [ArgumentError]
-  ///
-  /// Throws an [ArgumentError] if both [phSha] and [ph] are [null].
-  ///
-  /// Returns `true` if the signature is valid, `false` otherwise.
+  /**
+   * Verifies an Ed25519 signature of a prehashed message.
+   *
+   * Demands that either [phSha] or [ph] is not [null].
+   * Only pass through a value to one of them or else this will raise [ArgumentError]
+   *
+   * Throws an [ArgumentError] if both [phSha] and [ph] are [null].
+   *
+   * @param {Object} params - Object containing all parameters.
+   * @param {Uint8Array} params.signature - Signature to verify.
+   * @param {number} params.signatureOffset - Offset in the signature.
+   * @param {Uint8Array} params.pk - Public key.
+   * @param {number} params.pkOffset - Offset in the public key.
+   * @param {Uint8Array} params.context - Additional context for verification.
+   * @param {Uint8Array} [params.ph] - Prehashed message (optional).
+   * @param {SHA512} [params.phSha] - SHA512 digest for prehash (optional).
+   * @param {number} params.phOff - Offset in the prehashed message.
+   * @returns {boolean} - Returns `true` if the signature is valid, `false` otherwise.
+   */
   verifyPrehash({
     signature,
     signatureOffset,
