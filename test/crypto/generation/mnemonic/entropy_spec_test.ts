@@ -14,8 +14,8 @@ describe('Entropy Spec Test Vectors', () => {
   });
 
   test('Entropy derived from UUIDs should result in valid mnemonic strings', async () => {
+    const uuid = uuidv4();
     for (let i = 0; i < 10; i++) {
-      const uuid = uuidv4();
       const entropy = Entropy.fromUuid(uuid);
 
       const res = await Entropy.toMnemonicString(entropy);
