@@ -1,5 +1,5 @@
 import { padArray, equals, hexToUint8List } from '../../../../src/utils/extensions';
-import { Aes, AesParams } from '../../../../src/crypto/encryption/cipher/aes';
+import { Aes } from '../../../../src/crypto/encryption/cipher/aes';
 
 // Converts a string to a hexadecimal string representation
 function stringToHex(str) {
@@ -54,8 +54,8 @@ describe('Aes Spec', () => {
   test('Encrypt and decrypt is successful with the same key and iv', () => {
     for (const keySize of [16, 24, 32]) {
       const key = padArray(hexToUint8List(stringToHex('key')), keySize);
-      const params = AesParams.generate();
-      const aes = new Aes(params);
+      const iv = Aes.generateIv();
+      const aes = new Aes(iv);
       const message: Uint8Array = new TextEncoder().encode('message');
 
       const cipherText = aes.encrypt(message, key);
@@ -78,15 +78,15 @@ describe('Aes Spec', () => {
   });
 
   test('Encrypt and decrypt is unsuccessful with a different iv', () => {
-    const encryptParams = AesParams.generate();
-    let decryptParams = AesParams.generate();
+    const iv1 = Aes.generateIv();
+    let iv2 = Aes.generateIv();
 
-    while (equals(decryptParams, encryptParams)) {
-      decryptParams = AesParams.generate();
+    while (equals(iv2, iv1)) {
+      iv2 = Aes.generateIv();
     }
 
-    const aesEncrypt = new Aes(encryptParams);
-    const aesDecrypt = new Aes(decryptParams);
+    const aesEncrypt = new Aes(iv1);
+    const aesDecrypt = new Aes(iv2);
 
     const key = padArray(hexToUint8List(stringToHex('key')), 16);
     const message: Uint8Array = new TextEncoder().encode('message');
