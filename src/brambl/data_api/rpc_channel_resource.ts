@@ -1,4 +1,4 @@
-import { Channel, ChannelCredentials, Client } from '@grpc/grpc-js';
+import { Channel, ChannelCredentials } from '@grpc/grpc-js';
 
 /**
  * A resource that provides a connection to a GRPC server.

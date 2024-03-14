@@ -1,6 +1,8 @@
 import { LockTemplate } from '../builders/locks/lock_template.js';
-import { Indices, Lock_Predicate } from '../common/types.js';
-import  {   KeyPair,
+import  {   
+    Indices,
+    Lock_Predicate,
+    KeyPair,
     Preimage,
     Proposition_Digest,
     Proposition_DigitalSignature, } from 'topl_common';
