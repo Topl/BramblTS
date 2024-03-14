@@ -4,7 +4,7 @@ import { BuilderError } from '../builder_error.js';
 import { VerificationKey, Proposition_Threshold } from '../../../quivr4s/common/types.js';
 import { Lock, Challenge } from '../../common/types.js';
 
-abstract class LockTemplate {
+export abstract class LockTemplate {
   lockType: LockType;
   abstract build(entityVks: VerificationKey[]): Either<BuilderError, Lock>;
 }
