@@ -1,31 +1,26 @@
-import { ChannelCredentials } from '@grpc/grpc-js';
-import { LockAddress, Txo, TxoState, TransactionServiceClient, QueryByLockAddressRequest} from 'topl_common';
-
 /**
- * Defines a Genus Query API for interacting with a Genus node.
+ * @param xIdx The X coordinate associated with the entity
+ * @param name The name of the entity
  */
-export interface GenusQueryAlgebra {
-
-  /**
-   * Query and retrieve a set of UTXOs encumbered by the given LockAddress.
-   * @param fromAddress The lock address to query the unspent UTXOs by.
-   * @param txoState The state of the UTXOs to query. By default, only unspent UTXOs are returned.
-   * @return A Promise that resolves to an array of UTXOs.
-   */
-  queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]>;
+export interface WalletFellowship {
+  xIdx: number;
+  name: string;
 }
 
-export class GenusQueryAlgebraImpl implements GenusQueryAlgebra {
-  private client: TransactionServiceClient;
+/**
+ * Defines a fellowship storage API.
+ */
+export interface FellowshipStorageAlgebra {
+  /**
+   * Fetches all fellowships.
+   * @returns A Promise that resolves to an array of WalletFellowship objects.
+   */
+  findFellowships(): Promise<WalletFellowship[]>;
 
-  constructor(address: string, credentials: ChannelCredentials, options: object) {
-    this.client = new TransactionServiceClient(address, credentials, options);
-  }
-
-  async queryUtxo(fromAddress: LockAddress, txoState: TxoState = TxoState.UNSPENT): Promise<Txo[]> {
-    const response = await this.client.getTxosByLockAddress(
-      new QueryByLockAddressRequest({ address: fromAddress, state: txoState })
-    );
-    return response.txos;
-  }
+  /**
+   * Add a new fellowship.
+   * @param walletEntity The wallet entity to add.
+   * @returns A Promise that resolves to an integer.
+   */
+  addFellowship(walletEntity: WalletFellowship): Promise<number>;
 }
