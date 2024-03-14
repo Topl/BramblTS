@@ -1,13 +1,16 @@
-import {
-  KeyPair,
-  Preimage,
-  Proposition_Digest,
-  Proposition_DigitalSignature,
-} from '../../quivr4s/common/types.js';
+// import {
+//   KeyPair,
+//   Preimage,
+//   Proposition_Digest,
+//   Proposition_DigitalSignature,
+// } from '../../quivr4s/common/types.js';
 
 import { LockTemplate } from '../builders/locks/lock_template.js';
 import { Indices, Lock_Predicate } from '../common/types.js';
-
+import  {   KeyPair,
+    Preimage,
+    Proposition_Digest,
+    Proposition_DigitalSignature, } from 'topl_common';
 
 /**
  * Defines a data API for storing and retrieving wallet interaction.

@@ -37,10 +37,10 @@
     "fs": "^0.0.1-security",
     "google-protobuf": "^3.21.2",
     "long": "^5.2.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
     "prettier": "3.0.2",
-    "typescript": "^5.1.6"
-    "blakejs": "^1.2.1",
+    "typescript": "^5.1.6",
     "bs58check": "^3.0.1",
+    "topl_common": "^1.0.0"
   }
 }
