@@ -4,41 +4,24 @@
  * source: brambl/models/box/lock.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../identifier";
-import * as dependency_2 from "./../../../quivr/models/proposition";
+import * as dependency_2 from "./challenge";
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models.box {
     export class Lock extends pb_1.Message {
-        #one_of_decls: number[][] = [[1, 2, 3, 4, 5]];
+        #one_of_decls: number[][] = [[1, 2, 3]];
         constructor(data?: any[] | ({} & (({
             predicate?: Lock.Predicate;
-            image32?: never;
-            image64?: never;
-            commitment32?: never;
-            commitment64?: never;
+            image?: never;
+            commitment?: never;
         } | {
             predicate?: never;
-            image32?: Lock.Image32;
-            image64?: never;
-            commitment32?: never;
-            commitment64?: never;
+            image?: Lock.Image;
+            commitment?: never;
         } | {
             predicate?: never;
-            image32?: never;
-            image64?: Lock.Image64;
-            commitment32?: never;
-            commitment64?: never;
-        } | {
-            predicate?: never;
-            image32?: never;
-            image64?: never;
-            commitment32?: Lock.Commitment32;
-            commitment64?: never;
-        } | {
-            predicate?: never;
-            image32?: never;
-            image64?: never;
-            commitment32?: never;
-            commitment64?: Lock.Commitment64;
+            image?: never;
+            commitment?: Lock.Commitment;
+
         })))) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -46,17 +29,13 @@ export namespace co.topl.brambl.models.box {
                 if ("predicate" in data && data.predicate != undefined) {
                     this.predicate = data.predicate;
                 }
-                if ("image32" in data && data.image32 != undefined) {
-                    this.image32 = data.image32;
+
+                if ("image" in data && data.image != undefined) {
+                    this.image = data.image;
                 }
-                if ("image64" in data && data.image64 != undefined) {
-                    this.image64 = data.image64;
-                }
-                if ("commitment32" in data && data.commitment32 != undefined) {
-                    this.commitment32 = data.commitment32;
-                }
-                if ("commitment64" in data && data.commitment64 != undefined) {
-                    this.commitment64 = data.commitment64;
+                if ("commitment" in data && data.commitment != undefined) {
+                    this.commitment = data.commitment;
+
                 }
             }
         }
@@ -69,102 +48,74 @@ export namespace co.topl.brambl.models.box {
         get has_predicate() {
             return pb_1.Message.getField(this, 1) != null;
         }
-        get image32() {
-            return pb_1.Message.getWrapperField(this, Lock.Image32, 2) as Lock.Image32;
+
+        get image() {
+            return pb_1.Message.getWrapperField(this, Lock.Image, 2) as Lock.Image;
         }
-        set image32(value: Lock.Image32) {
+        set image(value: Lock.Image) {
             pb_1.Message.setOneofWrapperField(this, 2, this.#one_of_decls[0], value);
         }
-        get has_image32() {
+        get has_image() {
             return pb_1.Message.getField(this, 2) != null;
         }
-        get image64() {
-            return pb_1.Message.getWrapperField(this, Lock.Image64, 3) as Lock.Image64;
+        get commitment() {
+            return pb_1.Message.getWrapperField(this, Lock.Commitment, 3) as Lock.Commitment;
         }
-        set image64(value: Lock.Image64) {
+        set commitment(value: Lock.Commitment) {
             pb_1.Message.setOneofWrapperField(this, 3, this.#one_of_decls[0], value);
         }
-        get has_image64() {
+        get has_commitment() {
             return pb_1.Message.getField(this, 3) != null;
-        }
-        get commitment32() {
-            return pb_1.Message.getWrapperField(this, Lock.Commitment32, 4) as Lock.Commitment32;
-        }
-        set commitment32(value: Lock.Commitment32) {
-            pb_1.Message.setOneofWrapperField(this, 4, this.#one_of_decls[0], value);
-        }
-        get has_commitment32() {
-            return pb_1.Message.getField(this, 4) != null;
-        }
-        get commitment64() {
-            return pb_1.Message.getWrapperField(this, Lock.Commitment64, 5) as Lock.Commitment64;
-        }
-        set commitment64(value: Lock.Commitment64) {
-            pb_1.Message.setOneofWrapperField(this, 5, this.#one_of_decls[0], value);
-        }
-        get has_commitment64() {
-            return pb_1.Message.getField(this, 5) != null;
         }
         get value() {
             const cases: {
-                [index: number]: "none" | "predicate" | "image32" | "image64" | "commitment32" | "commitment64";
+                [index: number]: "none" | "predicate" | "image" | "commitment";
             } = {
                 0: "none",
                 1: "predicate",
-                2: "image32",
-                3: "image64",
-                4: "commitment32",
-                5: "commitment64"
+                2: "image",
+                3: "commitment"
             };
-            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3, 4, 5])];
+            return cases[pb_1.Message.computeOneofCase(this, [1, 2, 3])];
         }
         static fromObject(data: {
             predicate?: ReturnType<typeof Lock.Predicate.prototype.toObject>;
-            image32?: ReturnType<typeof Lock.Image32.prototype.toObject>;
-            image64?: ReturnType<typeof Lock.Image64.prototype.toObject>;
-            commitment32?: ReturnType<typeof Lock.Commitment32.prototype.toObject>;
-            commitment64?: ReturnType<typeof Lock.Commitment64.prototype.toObject>;
+            image?: ReturnType<typeof Lock.Image.prototype.toObject>;
+            commitment?: ReturnType<typeof Lock.Commitment.prototype.toObject>;
+
         }): Lock {
             const message = new Lock({});
             if (data.predicate != null) {
                 message.predicate = Lock.Predicate.fromObject(data.predicate);
             }
-            if (data.image32 != null) {
-                message.image32 = Lock.Image32.fromObject(data.image32);
+
+            if (data.image != null) {
+                message.image = Lock.Image.fromObject(data.image);
             }
-            if (data.image64 != null) {
-                message.image64 = Lock.Image64.fromObject(data.image64);
-            }
-            if (data.commitment32 != null) {
-                message.commitment32 = Lock.Commitment32.fromObject(data.commitment32);
-            }
-            if (data.commitment64 != null) {
-                message.commitment64 = Lock.Commitment64.fromObject(data.commitment64);
+            if (data.commitment != null) {
+                message.commitment = Lock.Commitment.fromObject(data.commitment);
+
             }
             return message;
         }
         toObject() {
             const data: {
                 predicate?: ReturnType<typeof Lock.Predicate.prototype.toObject>;
-                image32?: ReturnType<typeof Lock.Image32.prototype.toObject>;
-                image64?: ReturnType<typeof Lock.Image64.prototype.toObject>;
-                commitment32?: ReturnType<typeof Lock.Commitment32.prototype.toObject>;
-                commitment64?: ReturnType<typeof Lock.Commitment64.prototype.toObject>;
+
+                image?: ReturnType<typeof Lock.Image.prototype.toObject>;
+                commitment?: ReturnType<typeof Lock.Commitment.prototype.toObject>;
+
             } = {};
             if (this.predicate != null) {
                 data.predicate = this.predicate.toObject();
             }
-            if (this.image32 != null) {
-                data.image32 = this.image32.toObject();
+
+            if (this.image != null) {
+                data.image = this.image.toObject();
             }
-            if (this.image64 != null) {
-                data.image64 = this.image64.toObject();
-            }
-            if (this.commitment32 != null) {
-                data.commitment32 = this.commitment32.toObject();
-            }
-            if (this.commitment64 != null) {
-                data.commitment64 = this.commitment64.toObject();
+            if (this.commitment != null) {
+                data.commitment = this.commitment.toObject();
+
             }
             return data;
         }
@@ -174,14 +125,12 @@ export namespace co.topl.brambl.models.box {
             const writer = w || new pb_1.BinaryWriter();
             if (this.has_predicate)
                 writer.writeMessage(1, this.predicate, () => this.predicate.serialize(writer));
-            if (this.has_image32)
-                writer.writeMessage(2, this.image32, () => this.image32.serialize(writer));
-            if (this.has_image64)
-                writer.writeMessage(3, this.image64, () => this.image64.serialize(writer));
-            if (this.has_commitment32)
-                writer.writeMessage(4, this.commitment32, () => this.commitment32.serialize(writer));
-            if (this.has_commitment64)
-                writer.writeMessage(5, this.commitment64, () => this.commitment64.serialize(writer));
+
+            if (this.has_image)
+                writer.writeMessage(2, this.image, () => this.image.serialize(writer));
+            if (this.has_commitment)
+                writer.writeMessage(3, this.commitment, () => this.commitment.serialize(writer));
+
             if (!w)
                 return writer.getResultBuffer();
         }
@@ -195,16 +144,12 @@ export namespace co.topl.brambl.models.box {
                         reader.readMessage(message.predicate, () => message.predicate = Lock.Predicate.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.image32, () => message.image32 = Lock.Image32.deserialize(reader));
+
+                        reader.readMessage(message.image, () => message.image = Lock.Image.deserialize(reader));
                         break;
                     case 3:
-                        reader.readMessage(message.image64, () => message.image64 = Lock.Image64.deserialize(reader));
-                        break;
-                    case 4:
-                        reader.readMessage(message.commitment32, () => message.commitment32 = Lock.Commitment32.deserialize(reader));
-                        break;
-                    case 5:
-                        reader.readMessage(message.commitment64, () => message.commitment64 = Lock.Commitment64.deserialize(reader));
+                        reader.readMessage(message.commitment, () => message.commitment = Lock.Commitment.deserialize(reader));
+
                         break;
                     default: reader.skipField();
                 }
@@ -222,7 +167,9 @@ export namespace co.topl.brambl.models.box {
         export class Predicate extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                challenges?: dependency_2.quivr.models.Proposition[];
+
+                challenges?: dependency_2.co.topl.brambl.models.box.Challenge[];
+
                 threshold?: number;
             }) {
                 super();
@@ -237,9 +184,11 @@ export namespace co.topl.brambl.models.box {
                 }
             }
             get challenges() {
-                return pb_1.Message.getRepeatedWrapperField(this, dependency_2.quivr.models.Proposition, 1) as dependency_2.quivr.models.Proposition[];
+
+                return pb_1.Message.getRepeatedWrapperField(this, dependency_2.co.topl.brambl.models.box.Challenge, 1) as dependency_2.co.topl.brambl.models.box.Challenge[];
             }
-            set challenges(value: dependency_2.quivr.models.Proposition[]) {
+            set challenges(value: dependency_2.co.topl.brambl.models.box.Challenge[]) {
+
                 pb_1.Message.setRepeatedWrapperField(this, 1, value);
             }
             get threshold() {
@@ -249,12 +198,16 @@ export namespace co.topl.brambl.models.box {
                 pb_1.Message.setField(this, 2, value);
             }
             static fromObject(data: {
-                challenges?: ReturnType<typeof dependency_2.quivr.models.Proposition.prototype.toObject>[];
+
+                challenges?: ReturnType<typeof dependency_2.co.topl.brambl.models.box.Challenge.prototype.toObject>[];
+
                 threshold?: number;
             }): Predicate {
                 const message = new Predicate({});
                 if (data.challenges != null) {
-                    message.challenges = data.challenges.map(item => dependency_2.quivr.models.Proposition.fromObject(item));
+
+                    message.challenges = data.challenges.map(item => dependency_2.co.topl.brambl.models.box.Challenge.fromObject(item));
+
                 }
                 if (data.threshold != null) {
                     message.threshold = data.threshold;
@@ -263,11 +216,13 @@ export namespace co.topl.brambl.models.box {
             }
             toObject() {
                 const data: {
-                    challenges?: ReturnType<typeof dependency_2.quivr.models.Proposition.prototype.toObject>[];
+
+                    challenges?: ReturnType<typeof dependency_2.co.topl.brambl.models.box.Challenge.prototype.toObject>[];
                     threshold?: number;
                 } = {};
                 if (this.challenges != null) {
-                    data.challenges = this.challenges.map((item: dependency_2.quivr.models.Proposition) => item.toObject());
+                    data.challenges = this.challenges.map((item: dependency_2.co.topl.brambl.models.box.Challenge) => item.toObject());
+
                 }
                 if (this.threshold != null) {
                     data.threshold = this.threshold;
@@ -279,7 +234,9 @@ export namespace co.topl.brambl.models.box {
             serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
                 const writer = w || new pb_1.BinaryWriter();
                 if (this.challenges.length)
-                    writer.writeRepeatedMessage(1, this.challenges, (item: dependency_2.quivr.models.Proposition) => item.serialize(writer));
+
+                    writer.writeRepeatedMessage(1, this.challenges, (item: dependency_2.co.topl.brambl.models.box.Challenge) => item.serialize(writer));
+
                 if (this.threshold != 0)
                     writer.writeUint32(2, this.threshold);
                 if (!w)
@@ -292,7 +249,9 @@ export namespace co.topl.brambl.models.box {
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.challenges, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_2.quivr.models.Proposition.deserialize(reader), dependency_2.quivr.models.Proposition));
+
+                            reader.readMessage(message.challenges, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_2.co.topl.brambl.models.box.Challenge.deserialize(reader), dependency_2.co.topl.brambl.models.box.Challenge));
+
                             break;
                         case 2:
                             message.threshold = reader.readUint32();
@@ -309,10 +268,12 @@ export namespace co.topl.brambl.models.box {
                 return Predicate.deserialize(bytes);
             }
         }
-        export class Image32 extends pb_1.Message {
+
+        export class Image extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                leaves?: dependency_1.co.topl.brambl.models.Identifier.Lock32[];
+                leaves?: dependency_1.co.topl.brambl.models.LockId[];
+
                 threshold?: number;
             }) {
                 super();
@@ -327,9 +288,11 @@ export namespace co.topl.brambl.models.box {
                 }
             }
             get leaves() {
-                return pb_1.Message.getRepeatedWrapperField(this, dependency_1.co.topl.brambl.models.Identifier.Lock32, 1) as dependency_1.co.topl.brambl.models.Identifier.Lock32[];
+
+                return pb_1.Message.getRepeatedWrapperField(this, dependency_1.co.topl.brambl.models.LockId, 1) as dependency_1.co.topl.brambl.models.LockId[];
             }
-            set leaves(value: dependency_1.co.topl.brambl.models.Identifier.Lock32[]) {
+            set leaves(value: dependency_1.co.topl.brambl.models.LockId[]) {
+
                 pb_1.Message.setRepeatedWrapperField(this, 1, value);
             }
             get threshold() {
@@ -339,12 +302,14 @@ export namespace co.topl.brambl.models.box {
                 pb_1.Message.setField(this, 2, value);
             }
             static fromObject(data: {
-                leaves?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.Lock32.prototype.toObject>[];
+
+                leaves?: ReturnType<typeof dependency_1.co.topl.brambl.models.LockId.prototype.toObject>[];
                 threshold?: number;
-            }): Image32 {
-                const message = new Image32({});
+            }): Image {
+                const message = new Image({});
                 if (data.leaves != null) {
-                    message.leaves = data.leaves.map(item => dependency_1.co.topl.brambl.models.Identifier.Lock32.fromObject(item));
+                    message.leaves = data.leaves.map(item => dependency_1.co.topl.brambl.models.LockId.fromObject(item));
+
                 }
                 if (data.threshold != null) {
                     message.threshold = data.threshold;
@@ -353,11 +318,12 @@ export namespace co.topl.brambl.models.box {
             }
             toObject() {
                 const data: {
-                    leaves?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.Lock32.prototype.toObject>[];
+
+                    leaves?: ReturnType<typeof dependency_1.co.topl.brambl.models.LockId.prototype.toObject>[];
                     threshold?: number;
                 } = {};
                 if (this.leaves != null) {
-                    data.leaves = this.leaves.map((item: dependency_1.co.topl.brambl.models.Identifier.Lock32) => item.toObject());
+                    data.leaves = this.leaves.map((item: dependency_1.co.topl.brambl.models.LockId) => item.toObject());
                 }
                 if (this.threshold != null) {
                     data.threshold = this.threshold;
@@ -369,20 +335,25 @@ export namespace co.topl.brambl.models.box {
             serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
                 const writer = w || new pb_1.BinaryWriter();
                 if (this.leaves.length)
-                    writer.writeRepeatedMessage(1, this.leaves, (item: dependency_1.co.topl.brambl.models.Identifier.Lock32) => item.serialize(writer));
+                    writer.writeRepeatedMessage(1, this.leaves, (item: dependency_1.co.topl.brambl.models.LockId) => item.serialize(writer));
+
                 if (this.threshold != 0)
                     writer.writeUint32(2, this.threshold);
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Image32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Image32();
+
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Image {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Image();
+
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.leaves, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_1.co.topl.brambl.models.Identifier.Lock32.deserialize(reader), dependency_1.co.topl.brambl.models.Identifier.Lock32));
+
+                            reader.readMessage(message.leaves, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_1.co.topl.brambl.models.LockId.deserialize(reader), dependency_1.co.topl.brambl.models.LockId));
+
                             break;
                         case 2:
                             message.threshold = reader.readUint32();
@@ -395,104 +366,16 @@ export namespace co.topl.brambl.models.box {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): Image32 {
-                return Image32.deserialize(bytes);
+
+            static deserializeBinary(bytes: Uint8Array): Image {
+                return Image.deserialize(bytes);
             }
         }
-        export class Image64 extends pb_1.Message {
+        export class Commitment extends pb_1.Message {
             #one_of_decls: number[][] = [];
             constructor(data?: any[] | {
-                leaves?: dependency_1.co.topl.brambl.models.Identifier.Lock64[];
-                threshold?: number;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [1], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("leaves" in data && data.leaves != undefined) {
-                        this.leaves = data.leaves;
-                    }
-                    if ("threshold" in data && data.threshold != undefined) {
-                        this.threshold = data.threshold;
-                    }
-                }
-            }
-            get leaves() {
-                return pb_1.Message.getRepeatedWrapperField(this, dependency_1.co.topl.brambl.models.Identifier.Lock64, 1) as dependency_1.co.topl.brambl.models.Identifier.Lock64[];
-            }
-            set leaves(value: dependency_1.co.topl.brambl.models.Identifier.Lock64[]) {
-                pb_1.Message.setRepeatedWrapperField(this, 1, value);
-            }
-            get threshold() {
-                return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
-            }
-            set threshold(value: number) {
-                pb_1.Message.setField(this, 2, value);
-            }
-            static fromObject(data: {
-                leaves?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.Lock64.prototype.toObject>[];
-                threshold?: number;
-            }): Image64 {
-                const message = new Image64({});
-                if (data.leaves != null) {
-                    message.leaves = data.leaves.map(item => dependency_1.co.topl.brambl.models.Identifier.Lock64.fromObject(item));
-                }
-                if (data.threshold != null) {
-                    message.threshold = data.threshold;
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    leaves?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.Lock64.prototype.toObject>[];
-                    threshold?: number;
-                } = {};
-                if (this.leaves != null) {
-                    data.leaves = this.leaves.map((item: dependency_1.co.topl.brambl.models.Identifier.Lock64) => item.toObject());
-                }
-                if (this.threshold != null) {
-                    data.threshold = this.threshold;
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.leaves.length)
-                    writer.writeRepeatedMessage(1, this.leaves, (item: dependency_1.co.topl.brambl.models.Identifier.Lock64) => item.serialize(writer));
-                if (this.threshold != 0)
-                    writer.writeUint32(2, this.threshold);
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Image64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Image64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.leaves, () => pb_1.Message.addToRepeatedWrapperField(message, 1, dependency_1.co.topl.brambl.models.Identifier.Lock64.deserialize(reader), dependency_1.co.topl.brambl.models.Identifier.Lock64));
-                            break;
-                        case 2:
-                            message.threshold = reader.readUint32();
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Image64 {
-                return Image64.deserialize(bytes);
-            }
-        }
-        export class Commitment32 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                root?: dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32;
+                root?: dependency_1.co.topl.brambl.models.AccumulatorRootId;
+
                 threshold?: number;
             }) {
                 super();
@@ -507,9 +390,11 @@ export namespace co.topl.brambl.models.box {
                 }
             }
             get root() {
-                return pb_1.Message.getWrapperField(this, dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32, 1) as dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32;
+
+                return pb_1.Message.getWrapperField(this, dependency_1.co.topl.brambl.models.AccumulatorRootId, 1) as dependency_1.co.topl.brambl.models.AccumulatorRootId;
             }
-            set root(value: dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32) {
+            set root(value: dependency_1.co.topl.brambl.models.AccumulatorRootId) {
+
                 pb_1.Message.setWrapperField(this, 1, value);
             }
             get has_root() {
@@ -522,12 +407,13 @@ export namespace co.topl.brambl.models.box {
                 pb_1.Message.setField(this, 2, value);
             }
             static fromObject(data: {
-                root?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32.prototype.toObject>;
+                root?: ReturnType<typeof dependency_1.co.topl.brambl.models.AccumulatorRootId.prototype.toObject>;
                 threshold?: number;
-            }): Commitment32 {
-                const message = new Commitment32({});
+            }): Commitment {
+                const message = new Commitment({});
                 if (data.root != null) {
-                    message.root = dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32.fromObject(data.root);
+                    message.root = dependency_1.co.topl.brambl.models.AccumulatorRootId.fromObject(data.root);
+
                 }
                 if (data.threshold != null) {
                     message.threshold = data.threshold;
@@ -536,7 +422,7 @@ export namespace co.topl.brambl.models.box {
             }
             toObject() {
                 const data: {
-                    root?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32.prototype.toObject>;
+                    root?: ReturnType<typeof dependency_1.co.topl.brambl.models.AccumulatorRootId.prototype.toObject>;
                     threshold?: number;
                 } = {};
                 if (this.root != null) {
@@ -558,14 +444,16 @@ export namespace co.topl.brambl.models.box {
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Commitment32 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Commitment32();
+
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Commitment {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Commitment();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
                     switch (reader.getFieldNumber()) {
                         case 1:
-                            reader.readMessage(message.root, () => message.root = dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot32.deserialize(reader));
+
+                            reader.readMessage(message.root, () => message.root = dependency_1.co.topl.brambl.models.AccumulatorRootId.deserialize(reader));
                             break;
                         case 2:
                             message.threshold = reader.readUint32();
@@ -578,101 +466,8 @@ export namespace co.topl.brambl.models.box {
             serializeBinary(): Uint8Array {
                 return this.serialize();
             }
-            static deserializeBinary(bytes: Uint8Array): Commitment32 {
-                return Commitment32.deserialize(bytes);
-            }
-        }
-        export class Commitment64 extends pb_1.Message {
-            #one_of_decls: number[][] = [];
-            constructor(data?: any[] | {
-                root?: dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64;
-                threshold?: number;
-            }) {
-                super();
-                pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
-                if (!Array.isArray(data) && typeof data == "object") {
-                    if ("root" in data && data.root != undefined) {
-                        this.root = data.root;
-                    }
-                    if ("threshold" in data && data.threshold != undefined) {
-                        this.threshold = data.threshold;
-                    }
-                }
-            }
-            get root() {
-                return pb_1.Message.getWrapperField(this, dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64, 1) as dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64;
-            }
-            set root(value: dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64) {
-                pb_1.Message.setWrapperField(this, 1, value);
-            }
-            get has_root() {
-                return pb_1.Message.getField(this, 1) != null;
-            }
-            get threshold() {
-                return pb_1.Message.getFieldWithDefault(this, 2, 0) as number;
-            }
-            set threshold(value: number) {
-                pb_1.Message.setField(this, 2, value);
-            }
-            static fromObject(data: {
-                root?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64.prototype.toObject>;
-                threshold?: number;
-            }): Commitment64 {
-                const message = new Commitment64({});
-                if (data.root != null) {
-                    message.root = dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64.fromObject(data.root);
-                }
-                if (data.threshold != null) {
-                    message.threshold = data.threshold;
-                }
-                return message;
-            }
-            toObject() {
-                const data: {
-                    root?: ReturnType<typeof dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64.prototype.toObject>;
-                    threshold?: number;
-                } = {};
-                if (this.root != null) {
-                    data.root = this.root.toObject();
-                }
-                if (this.threshold != null) {
-                    data.threshold = this.threshold;
-                }
-                return data;
-            }
-            serialize(): Uint8Array;
-            serialize(w: pb_1.BinaryWriter): void;
-            serialize(w?: pb_1.BinaryWriter): Uint8Array | void {
-                const writer = w || new pb_1.BinaryWriter();
-                if (this.has_root)
-                    writer.writeMessage(1, this.root, () => this.root.serialize(writer));
-                if (this.threshold != 0)
-                    writer.writeUint32(2, this.threshold);
-                if (!w)
-                    return writer.getResultBuffer();
-            }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Commitment64 {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Commitment64();
-                while (reader.nextField()) {
-                    if (reader.isEndGroup())
-                        break;
-                    switch (reader.getFieldNumber()) {
-                        case 1:
-                            reader.readMessage(message.root, () => message.root = dependency_1.co.topl.brambl.models.Identifier.AccumulatorRoot64.deserialize(reader));
-                            break;
-                        case 2:
-                            message.threshold = reader.readUint32();
-                            break;
-                        default: reader.skipField();
-                    }
-                }
-                return message;
-            }
-            serializeBinary(): Uint8Array {
-                return this.serialize();
-            }
-            static deserializeBinary(bytes: Uint8Array): Commitment64 {
-                return Commitment64.deserialize(bytes);
+            static deserializeBinary(bytes: Uint8Array): Commitment {
+                return Commitment.deserialize(bytes);
             }
         }
     }

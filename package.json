@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "TypScript SDK for the Topl Blockchain",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "lint": "eslint . --ext .ts",
@@ -37,5 +38,9 @@
     "google-protobuf": "^3.21.2",
     "long": "^5.2.3",
     "uuid": "^9.0.1"
+    "prettier": "3.0.2",
+    "typescript": "^5.1.6"
+    "blakejs": "^1.2.1",
+    "bs58check": "^3.0.1",
   }
 }

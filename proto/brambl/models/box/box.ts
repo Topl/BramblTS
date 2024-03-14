@@ -4,17 +4,18 @@
  * source: brambl/models/box/box.proto
  * git: https://github.com/thesayyn/protoc-gen-ts */
 import * as dependency_1 from "./../../../validate/validate";
-import * as dependency_2 from "./../../../scalapb/scalapb";
-import * as dependency_3 from "./../../../scalapb/validate";
-import * as dependency_4 from "./lock";
-import * as dependency_5 from "./value";
+import * as dependency_2 from "./lock";
+import * as dependency_3 from "./value";
+
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models.box {
     export class Box extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
-            lock?: dependency_4.co.topl.brambl.models.box.Lock;
-            value?: dependency_5.co.topl.brambl.models.box.Value;
+
+            lock?: dependency_2.co.topl.brambl.models.box.Lock;
+            value?: dependency_3.co.topl.brambl.models.box.Value;
+
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -28,40 +29,43 @@ export namespace co.topl.brambl.models.box {
             }
         }
         get lock() {
-            return pb_1.Message.getWrapperField(this, dependency_4.co.topl.brambl.models.box.Lock, 1) as dependency_4.co.topl.brambl.models.box.Lock;
+
+            return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.box.Lock, 1) as dependency_2.co.topl.brambl.models.box.Lock;
         }
-        set lock(value: dependency_4.co.topl.brambl.models.box.Lock) {
+        set lock(value: dependency_2.co.topl.brambl.models.box.Lock) {
+
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_lock() {
             return pb_1.Message.getField(this, 1) != null;
         }
         get value() {
-            return pb_1.Message.getWrapperField(this, dependency_5.co.topl.brambl.models.box.Value, 2) as dependency_5.co.topl.brambl.models.box.Value;
+            return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.box.Value, 2) as dependency_3.co.topl.brambl.models.box.Value;
         }
-        set value(value: dependency_5.co.topl.brambl.models.box.Value) {
+        set value(value: dependency_3.co.topl.brambl.models.box.Value) {
+
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_value() {
             return pb_1.Message.getField(this, 2) != null;
         }
         static fromObject(data: {
-            lock?: ReturnType<typeof dependency_4.co.topl.brambl.models.box.Lock.prototype.toObject>;
-            value?: ReturnType<typeof dependency_5.co.topl.brambl.models.box.Value.prototype.toObject>;
+            lock?: ReturnType<typeof dependency_2.co.topl.brambl.models.box.Lock.prototype.toObject>;
+            value?: ReturnType<typeof dependency_3.co.topl.brambl.models.box.Value.prototype.toObject>;
         }): Box {
             const message = new Box({});
             if (data.lock != null) {
-                message.lock = dependency_4.co.topl.brambl.models.box.Lock.fromObject(data.lock);
+                message.lock = dependency_2.co.topl.brambl.models.box.Lock.fromObject(data.lock);
             }
             if (data.value != null) {
-                message.value = dependency_5.co.topl.brambl.models.box.Value.fromObject(data.value);
+                message.value = dependency_3.co.topl.brambl.models.box.Value.fromObject(data.value);
             }
             return message;
         }
         toObject() {
             const data: {
-                lock?: ReturnType<typeof dependency_4.co.topl.brambl.models.box.Lock.prototype.toObject>;
-                value?: ReturnType<typeof dependency_5.co.topl.brambl.models.box.Value.prototype.toObject>;
+                lock?: ReturnType<typeof dependency_2.co.topl.brambl.models.box.Lock.prototype.toObject>;
+                value?: ReturnType<typeof dependency_3.co.topl.brambl.models.box.Value.prototype.toObject>;
             } = {};
             if (this.lock != null) {
                 data.lock = this.lock.toObject();
@@ -89,10 +93,11 @@ export namespace co.topl.brambl.models.box {
                     break;
                 switch (reader.getFieldNumber()) {
                     case 1:
-                        reader.readMessage(message.lock, () => message.lock = dependency_4.co.topl.brambl.models.box.Lock.deserialize(reader));
+                        reader.readMessage(message.lock, () => message.lock = dependency_2.co.topl.brambl.models.box.Lock.deserialize(reader));
                         break;
                     case 2:
-                        reader.readMessage(message.value, () => message.value = dependency_5.co.topl.brambl.models.box.Value.deserialize(reader));
+                        reader.readMessage(message.value, () => message.value = dependency_3.co.topl.brambl.models.box.Value.deserialize(reader));
+
                         break;
                     default: reader.skipField();
                 }
