@@ -6,6 +6,12 @@
     "sourceMap": true,
     "outDir": "dist",
     "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "noUnusedParameters": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
     "noUnusedParameters": true
   },
   "include": ["src/**/*"]

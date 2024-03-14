@@ -2,6 +2,7 @@ import { Preimage, Proof, SignableBytes, TxBind, Witness } from '../common/types
 import { Tokens } from './tokens.js';
 import { blake2b } from 'blakejs';
 
+
 /// Provers create proofs that are bound to the transaction which executes the proof.
 ///
 /// This provides a generic way to map all computations (single-step or sigma-protocol)

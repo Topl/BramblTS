@@ -6,13 +6,16 @@
 import * as dependency_1 from "./../../../validate/validate";
 import * as dependency_2 from "./lock";
 import * as dependency_3 from "./value";
+
 import * as pb_1 from "google-protobuf";
 export namespace co.topl.brambl.models.box {
     export class Box extends pb_1.Message {
         #one_of_decls: number[][] = [];
         constructor(data?: any[] | {
+
             lock?: dependency_2.co.topl.brambl.models.box.Lock;
             value?: dependency_3.co.topl.brambl.models.box.Value;
+
         }) {
             super();
             pb_1.Message.initialize(this, Array.isArray(data) ? data : [], 0, -1, [], this.#one_of_decls);
@@ -26,9 +29,11 @@ export namespace co.topl.brambl.models.box {
             }
         }
         get lock() {
+
             return pb_1.Message.getWrapperField(this, dependency_2.co.topl.brambl.models.box.Lock, 1) as dependency_2.co.topl.brambl.models.box.Lock;
         }
         set lock(value: dependency_2.co.topl.brambl.models.box.Lock) {
+
             pb_1.Message.setWrapperField(this, 1, value);
         }
         get has_lock() {
@@ -38,6 +43,7 @@ export namespace co.topl.brambl.models.box {
             return pb_1.Message.getWrapperField(this, dependency_3.co.topl.brambl.models.box.Value, 2) as dependency_3.co.topl.brambl.models.box.Value;
         }
         set value(value: dependency_3.co.topl.brambl.models.box.Value) {
+
             pb_1.Message.setWrapperField(this, 2, value);
         }
         get has_value() {
@@ -91,6 +97,7 @@ export namespace co.topl.brambl.models.box {
                         break;
                     case 2:
                         reader.readMessage(message.value, () => message.value = dependency_3.co.topl.brambl.models.box.Value.deserialize(reader));
+
                         break;
                     default: reader.skipField();
                 }
