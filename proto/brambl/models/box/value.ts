@@ -164,10 +164,6 @@ export namespace co.topl.brambl.models.box {
             }
             if (data.topl != null) {
                 message.topl = Value.TOPL.fromObject(data.topl);
-            }
-            if (data.asset != null) {
-                message.asset = Value.Asset.fromObject(data.asset);
-            }
             if (data.group != null) {
                 message.group = Value.Group.fromObject(data.group);
             }
@@ -393,6 +389,7 @@ export namespace co.topl.brambl.models.box {
                 if (this.registration != null) {
                     data.registration = this.registration.toObject();
                 }
+
                 return data;
             }
             serialize(): Uint8Array;
@@ -1046,6 +1043,7 @@ export namespace co.topl.brambl.models.box {
                     }
                     if ("kesKeyMinutes" in data && data.kesKeyMinutes != undefined) {
                         this.kesKeyMinutes = data.kesKeyMinutes;
+
                     }
                 }
             }
@@ -1221,6 +1219,7 @@ export namespace co.topl.brambl.models.box {
                     operationalPeriodsPerEpoch?: ReturnType<typeof dependency_8.google.protobuf.UInt64Value.prototype.toObject>;
                     kesKeyHours?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
                     kesKeyMinutes?: ReturnType<typeof dependency_8.google.protobuf.UInt32Value.prototype.toObject>;
+
                 } = {};
                 if (this.label != null) {
                     data.label = this.label;
@@ -1266,33 +1265,15 @@ export namespace co.topl.brambl.models.box {
                 const writer = w || new pb_1.BinaryWriter();
                 if (this.label.length)
                     writer.writeString(1, this.label);
-                if (this.has_fEffective)
-                    writer.writeMessage(2, this.fEffective, () => this.fEffective.serialize(writer));
-                if (this.has_vrfLddCutoff)
-                    writer.writeMessage(3, this.vrfLddCutoff, () => this.vrfLddCutoff.serialize(writer));
-                if (this.has_vrfPrecision)
-                    writer.writeMessage(4, this.vrfPrecision, () => this.vrfPrecision.serialize(writer));
-                if (this.has_vrfBaselineDifficulty)
-                    writer.writeMessage(5, this.vrfBaselineDifficulty, () => this.vrfBaselineDifficulty.serialize(writer));
-                if (this.has_vrfAmplitude)
-                    writer.writeMessage(6, this.vrfAmplitude, () => this.vrfAmplitude.serialize(writer));
-                if (this.has_chainSelectionKLookback)
-                    writer.writeMessage(7, this.chainSelectionKLookback, () => this.chainSelectionKLookback.serialize(writer));
-                if (this.has_slotDuration)
-                    writer.writeMessage(8, this.slotDuration, () => this.slotDuration.serialize(writer));
-                if (this.has_forwardBiasedSlotWindow)
-                    writer.writeMessage(9, this.forwardBiasedSlotWindow, () => this.forwardBiasedSlotWindow.serialize(writer));
-                if (this.has_operationalPeriodsPerEpoch)
-                    writer.writeMessage(10, this.operationalPeriodsPerEpoch, () => this.operationalPeriodsPerEpoch.serialize(writer));
-                if (this.has_kesKeyHours)
-                    writer.writeMessage(11, this.kesKeyHours, () => this.kesKeyHours.serialize(writer));
-                if (this.has_kesKeyMinutes)
-                    writer.writeMessage(12, this.kesKeyMinutes, () => this.kesKeyMinutes.serialize(writer));
+                if (this.has_quantity)
+                    writer.writeMessage(2, this.quantity, () => this.quantity.serialize(writer));
+                if (this.has_metadata)
+                    writer.writeMessage(3, this.metadata, () => this.metadata.serialize(writer));
                 if (!w)
                     return writer.getResultBuffer();
             }
-            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): UpdateProposal {
-                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new UpdateProposal();
+            static deserialize(bytes: Uint8Array | pb_1.BinaryReader): Asset {
+                const reader = bytes instanceof pb_1.BinaryReader ? bytes : new pb_1.BinaryReader(bytes), message = new Asset();
                 while (reader.nextField()) {
                     if (reader.isEndGroup())
                         break;
@@ -1301,37 +1282,10 @@ export namespace co.topl.brambl.models.box {
                             message.label = reader.readString();
                             break;
                         case 2:
-                            reader.readMessage(message.fEffective, () => message.fEffective = dependency_4.co.topl.node.models.Ratio.deserialize(reader));
+                            reader.readMessage(message.quantity, () => message.quantity = dependency_4.quivr.models.Int128.deserialize(reader));
                             break;
                         case 3:
-                            reader.readMessage(message.vrfLddCutoff, () => message.vrfLddCutoff = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
-                            break;
-                        case 4:
-                            reader.readMessage(message.vrfPrecision, () => message.vrfPrecision = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
-                            break;
-                        case 5:
-                            reader.readMessage(message.vrfBaselineDifficulty, () => message.vrfBaselineDifficulty = dependency_4.co.topl.node.models.Ratio.deserialize(reader));
-                            break;
-                        case 6:
-                            reader.readMessage(message.vrfAmplitude, () => message.vrfAmplitude = dependency_4.co.topl.node.models.Ratio.deserialize(reader));
-                            break;
-                        case 7:
-                            reader.readMessage(message.chainSelectionKLookback, () => message.chainSelectionKLookback = dependency_8.google.protobuf.UInt64Value.deserialize(reader));
-                            break;
-                        case 8:
-                            reader.readMessage(message.slotDuration, () => message.slotDuration = dependency_7.google.protobuf.Duration.deserialize(reader));
-                            break;
-                        case 9:
-                            reader.readMessage(message.forwardBiasedSlotWindow, () => message.forwardBiasedSlotWindow = dependency_8.google.protobuf.UInt64Value.deserialize(reader));
-                            break;
-                        case 10:
-                            reader.readMessage(message.operationalPeriodsPerEpoch, () => message.operationalPeriodsPerEpoch = dependency_8.google.protobuf.UInt64Value.deserialize(reader));
-                            break;
-                        case 11:
-                            reader.readMessage(message.kesKeyHours, () => message.kesKeyHours = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
-                            break;
-                        case 12:
-                            reader.readMessage(message.kesKeyMinutes, () => message.kesKeyMinutes = dependency_8.google.protobuf.UInt32Value.deserialize(reader));
+                            reader.readMessage(message.metadata, () => message.metadata = dependency_4.quivr.models.SmallData.deserialize(reader));
                             break;
                         default: reader.skipField();
                     }

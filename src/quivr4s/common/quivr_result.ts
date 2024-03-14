@@ -3,6 +3,7 @@ import { ValidationError } from '../runtime/quivr_runtime_error.js';
 
 type Either<E, A> = either.Either<E, A>;
 
+
 /**
  * A QuivrResult is a type alias for an [Either] of [QuivrRunTimeError] and [T]
  */
@@ -18,3 +19,4 @@ export const quivrEvaluationAuthorizationFailure = <T>(proof: unknown, propositi
       message: `(${proof.toString()}, ${proposition.toString()})`,
     }),
   );
+
