@@ -1,8 +1,8 @@
 import { Either, left, right, flatMap } from 'fp-ts/Either';
 import { PropositionTemplate, ThresholdTemplate } from './proposition_template.js';
 import { BuilderError } from '../builder_error.js';
-import { VerificationKey, Proposition_Threshold } from '../../../quivr4s/common/types.js';
-import { Lock, Challenge } from '../../common/types.js';
+import { VerificationKey, Proposition_Threshold } from 'topl_common';
+import { Lock, Challenge } from 'topl_common';
 
 export abstract class LockTemplate {
   lockType: LockType;
@@ -38,12 +38,14 @@ export class PredicateTemplate implements LockTemplate {
         const innerPropositions = ip.challenges;
 
         return right(
-          new Lock({
+          new Lock(
+            {
             predicate: new Lock.Predicate({
               challenges: innerPropositions.map((prop) => new Challenge({ revealed: prop })),
               threshold: this.threshold,
             }),
-          }),
+          }
+          ),
         ) as Either<BuilderError, Lock>;
       } else {
         return left(new BuilderError(`Unexpected inner proposition type: ${typeof result}`));
