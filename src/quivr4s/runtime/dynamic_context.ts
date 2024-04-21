@@ -1,15 +1,15 @@
 import { either } from 'fp-ts';
-import * as datum from '../../../proto/brambl/models/datum.js';
 import { DigestVerifier } from '../algebras/digest_verifer.js';
 import { SignatureVerifier } from '../algebras/signature_verifier.js';
 import { ParsableDataInterface } from '../common/parsable_data_interface.js';
 import { QuivrResult } from '../common/quivr_result.js';
-import { Data, DigestVerification, SignableBytes, SignatureVerification } from '../common/types.js';
+import { Data, Datum, DigestVerification, SignableBytes, SignatureVerification } from 'topl_common';
 import { ValidationError } from './quivr_runtime_error.js';
 
+
 export class DynamicContext {
-  datum: Map<string, datum.co.topl.brambl.models.Datum | null>;
-  interfaces: Map<string, ParsableDataInterface>;
+  datum: Map<string, Datum | null>;
+  interfaces: Map<string, ParsableDataInterface<Data>>;
   signingRoutines: Map<string, SignatureVerifier<unknown>>;
   hashingRoutines: Map<string, DigestVerifier<unknown>>;
   signableBytes: SignableBytes;
@@ -17,8 +17,8 @@ export class DynamicContext {
   heightOf?: (arg0: string) => number | null;
 
   constructor(
-    datum: Map<string, datum.co.topl.brambl.models.Datum | null>,
-    interfaces: Map<string, ParsableDataInterface>,
+    datum: Map<string, Datum | null>,
+    interfaces: Map<string, ParsableDataInterface<Data>>,
     signingRoutines: Map<string, SignatureVerifier<unknown>>,
     hashingRoutines: Map<string, DigestVerifier<unknown>>,
     signableBytes: SignableBytes,
