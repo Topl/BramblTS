@@ -1,12 +1,12 @@
-import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519';
-import { SigningKey } from '@/crypto/signing/signing';
-import { Uuid, v4 as uuidv4 } from 'uuid';
-import { Either } from '../../../common/functional/either';
-import * as spec from '../../signing/extended_ed25519/extended_ed25519_spec';
-import { Entropy } from '../mnemonic/entropy';
-import { English, Language } from '../mnemonic/language';
-import { InitializationFailure } from './initialization_failure';
-import { KeyInitializer } from './key_initializer';
+import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
+import { SigningKey } from '@/crypto/signing/signing.js';
+import { v4 as uuidv4 } from 'uuid';
+import { Either } from '../../../common/functional/either.js';
+import * as spec from '../../signing/extended_ed25519/extended_ed25519_spec.js';
+import { Entropy } from '../mnemonic/entropy.js';
+import { English, Language } from '../mnemonic/language.js';
+import { InitializationFailure } from './initialization_failure.js';
+import { KeyInitializer } from './key_initializer.js';
 
 export class ExtendedEd25519Initializer implements KeyInitializer<SigningKey> {
   private extendedEd25519: ExtendedEd25519;
@@ -16,8 +16,7 @@ export class ExtendedEd25519Initializer implements KeyInitializer<SigningKey> {
   }
 
   random(): SigningKey {
-    const randomUuidString: string = uuidv4();
-    const uuid: Uuid = new Uuid(randomUuidString);
+    const uuid = uuidv4();
     return this.fromEntropy(Entropy.fromUuid(uuid));
   }
 

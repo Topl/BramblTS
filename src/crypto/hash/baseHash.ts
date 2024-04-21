@@ -1,4 +1,4 @@
-import { Digest } from './digest/digest';
+import { Digest } from './digest/digest.js';
 
 export type Message = Uint8Array;
 

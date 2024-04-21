@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto';
 import { promises as fs } from 'fs';
-import { Either } from '../../../common/functional/either';
+import { Either } from '../../../common/functional/either.js';
 
 export abstract class Language {
   readonly filePath: string;

@@ -1,12 +1,12 @@
-import Ed25519 from '@/crypto/signing/ed25519/ed25519';
-import { SigningKey } from '@/crypto/signing/signing';
-import { Uuid, v4 as uuidv4 } from 'uuid';
-import { Either } from '../../../common/functional/either';
-import { Entropy } from '../mnemonic/entropy';
-import { English, Language } from '../mnemonic/language';
-import * as ed25519_spec from './../../signing/ed25519/ed25519_spec';
-import { InitializationFailure } from './initialization_failure';
-import { KeyInitializer } from './key_initializer';
+import Ed25519 from '@/crypto/signing/ed25519/ed25519.js';
+import { SigningKey } from '@/crypto/signing/signing.js';
+import { v4 as uuidv4 } from 'uuid';
+import { Either } from '../../../common/functional/either.js';
+import { Entropy } from '../mnemonic/entropy.js';
+import { English, Language } from '../mnemonic/language.js';
+import * as ed25519_spec from './../../signing/ed25519/ed25519_spec.js';
+import { InitializationFailure } from './initialization_failure.js';
+import { KeyInitializer } from './key_initializer.js';
 
 export class Ed25519Initializer implements KeyInitializer<SigningKey> {
   private readonly ed25519: Ed25519;
@@ -16,8 +16,7 @@ export class Ed25519Initializer implements KeyInitializer<SigningKey> {
   }
 
   random(): SigningKey {
-    const randomUuidString: string = uuidv4();
-    const uuid: Uuid = new Uuid(randomUuidString);
+    const uuid = uuidv4();
     return this.fromEntropy(Entropy.fromUuid(uuid));
   }
 

@@ -1,8 +1,7 @@
-import { Asset, Group, Int128, Lvl, Series, Topl, Value, QuantityDescriptorType, FungibilityType } from 'topl_common';
+import { Asset, FungibilityType, Group, Int128, Lvl, QuantityDescriptorType, Series, Topl, Value } from 'topl_common';
 
 export class BoxValueSyntax {
   static lvlAsBoxVal (lvl: Lvl): Value {
-    let x = new Value();
     return new Value({ lvl: lvl });
   }
 

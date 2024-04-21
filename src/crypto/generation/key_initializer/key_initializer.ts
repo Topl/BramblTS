@@ -1,8 +1,8 @@
-import { SigningKey } from '@/crypto/signing/signing';
-import { Either } from '../../../common/functional/either';
-import { Entropy } from '../mnemonic/entropy';
-import { Language } from '../mnemonic/language';
-import { InitializationFailure } from './initialization_failure';
+import { SigningKey } from '@/crypto/signing/signing.js';
+import { Either } from '../../../common/functional/either.js';
+import { Entropy } from '../mnemonic/entropy.js';
+import { Language } from '../mnemonic/language.js';
+import { InitializationFailure } from './initialization_failure.js';
 
 /**
  * Provides functionality for creating secret keys.

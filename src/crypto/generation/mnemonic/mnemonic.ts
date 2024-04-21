@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Either } from '../../../common/functional/either';
-import { PhraseFailure, PhraseFailureType } from './phrase';
+import { Either } from '../../../common/functional/either.js';
+import { PhraseFailure, PhraseFailureType } from './phrase.js';
 
 /**
  * Represents a set of random entropy used to derive a private key or other types of values.

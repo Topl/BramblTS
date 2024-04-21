@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EitherException } from '../../../common/functional/either';
+import { EitherException } from '../../../common/functional/either.js';
 
 export class Digest {
 constructor(public readonly bytes: Uint8Array) {}

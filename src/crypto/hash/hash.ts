@@ -1,5 +1,5 @@
-import { Blake2b256, Blake2b512 } from './blake2B';
-import { SHA256, SHA512 } from './sha';
+import { Blake2b256, Blake2b512 } from './blake2B.js';
+import { SHA256, SHA512 } from './sha.js';
 
 // Create instances of each hash function class.
 const blake2b256 = new Blake2b256();

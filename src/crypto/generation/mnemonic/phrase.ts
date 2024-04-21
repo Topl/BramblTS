@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Either } from '../../../common/functional/either';
-import { SHA256 } from '../../../crypto/hash/sha';
-import { Entropy } from './entropy';
-import { Language, LanguageWordList } from './language';
-import { MnemonicSize } from './mnemonic';
+import { Either } from '../../../common/functional/either.js';
+import { SHA256 } from '../../../crypto/hash/sha.js';
+import { Entropy } from './entropy.js';
+import { Language, LanguageWordList } from './language.js';
+import { MnemonicSize } from './mnemonic.js';
 
 export enum PhraseFailureType {
   InvalidWordLength,

@@ -1,7 +1,6 @@
 import { ContainsImmutable } from './contains_immutable.js';
-import { Evidence } from './types.js';
-import { Digest } from '../../quivr4s/common/types.js';
-import { blake2b } from 'blakejs';
+import { Evidence, Digest} from 'topl_common';
+import { blake2b256} from '../../crypto/crypto.js';
 
 export class ContainsEvidence {
   evidence: Evidence;
@@ -18,7 +17,7 @@ export class ContainsEvidence {
   static blake2bEvidenceFromImmutable(t: any) {
     const bytes = ContainsImmutable.apply(t).immutableBytes.value;
     //TODO replace once Crypto module is finished
-    const hash = blake2b(bytes, null, 32);
+    const hash = blake2b256.hash(bytes);
     const digest = new Digest({ value: hash });
     return new ContainsEvidence(new Evidence({ digest: digest }));
   }

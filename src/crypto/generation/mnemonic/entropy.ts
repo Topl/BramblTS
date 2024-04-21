@@ -1,8 +1,8 @@
 // import { v4 as uuidv4 } from 'uuid';
-import { Either } from '../../../common/functional/either';
-import { English, Language } from './language';
-import { MnemonicSize } from './mnemonic';
-import { Phrase } from './phrase';
+import { Either } from '../../../common/functional/either.js';
+import { English, Language } from './language.js';
+import { MnemonicSize } from './mnemonic.js';
+import { Phrase } from './phrase.js';
 import { randomBytes } from 'crypto';
 
 const defaultMnemonicSize = MnemonicSize.words12();
