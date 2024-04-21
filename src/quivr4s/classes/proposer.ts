@@ -1,4 +1,4 @@
-import { Data, Digest, Proposition, VerificationKey } from '../common/types.js';
+import { Data, Digest, Proposition, VerificationKey } from 'topl_common';;
 
 /**
  * A class representing proposers for creating [Proposition]s from various arguments.

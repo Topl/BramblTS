@@ -31,7 +31,7 @@ import {
   Proposition_TickRange,
   SignatureVerification,
   TxBind,
-} from '../common/types.js';
+} from 'topl_common';;
 import { DynamicContext } from '../runtime/dynamic_context.js';
 import { ValidationError } from '../runtime/quivr_runtime_error.js';
 import { either } from 'fp-ts';

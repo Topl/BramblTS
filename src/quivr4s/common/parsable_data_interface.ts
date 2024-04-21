@@ -1,4 +1,4 @@
-import { Data } from './types.js';
+import { Data } from 'topl_common';
 
 /// Provides Digest verification for use in a Dynamic Context
 export class ParsableDataInterface<T> {

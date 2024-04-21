@@ -1,5 +1,5 @@
 import { SHA256 } from '@/crypto/hash/sha.js';
-import { SeriesId, SeriesPolicy } from 'topl_common';
+import { SeriesId } from 'topl_common';
 
 export class SeriesPolicySyntax {
   static seriesPolicyAsSeriesPolicySyntaxOps (seriesPolicy: SeriesPolicy): SeriesPolicyAsSeriesPolicySyntaxOps {

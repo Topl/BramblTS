@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as crypto from 'crypto';
-import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters';
-import * as brambl from './pbe_parameters_generator';
+import { CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters.js';
+import * as brambl from './pbe_parameters_generator.js';
 
 interface Mac {
   init(key: Uint8Array): void;

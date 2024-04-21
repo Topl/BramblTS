@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
-import { Digest, Digest32, Digest64 } from './digest/digest';
-import { Hash, Message } from './baseHash';
+import { Digest, Digest32, Digest64 } from './digest/digest.js';
+import { Hash, Message } from './baseHash.js';
 
 /**
  * An abstract class for SHA hash functions.

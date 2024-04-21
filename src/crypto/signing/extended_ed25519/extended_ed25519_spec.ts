@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createHmac } from 'crypto';
-import * as spec from '../ed25519/ed25519_spec';
-import { SigningKey } from '../signing';
-import { fromLittleEndian } from './../../../utils/extensions';
+import * as spec from '../ed25519/ed25519_spec.js';
+import { SigningKey } from '../signing.js';
+import { fromLittleEndian } from './../../../utils/extensions.js';
 
 interface Either<L, R> {
   isLeft: boolean;
@@ -22,7 +22,7 @@ export class ExtendedEd25519Spec {
   static readonly publicKeyLength: number = 32;
   static readonly seedLength: number = 96;
 
-  static clampBits(sizedSeed: Uint8Array): SecretKey {
+  static clampBits (sizedSeed: Uint8Array): SecretKey {
     const seed = new Uint8Array(sizedSeed);
 
     // turn seed into a valid ExtendedPrivateKeyEd25519 per the SLIP-0023 Icarus spec
@@ -36,25 +36,25 @@ export class ExtendedEd25519Spec {
    * Equivalent to `2^252 + 27742317777372353535851937790883648493`
    */
   static readonly edBaseN: bigint = BigInt(
-    '7237005577332262213973186563042994240857116359379907606001950938285454250989',
+    '7237005577332262213973186563042994240857116359379907606001950938285454250989'
   );
 
-  static validate(value: SecretKey): Either<InvalidDerivedKey, SecretKey> {
+  static validate (value: SecretKey): Either<InvalidDerivedKey, SecretKey> {
     return {
       isLeft: ExtendedEd25519Spec.leftNumber(value) % ExtendedEd25519Spec.edBaseN !== BigInt(0),
-      rightValue: value,
+      rightValue: value
     };
   }
 
-  static leftNumber(secretKey: SecretKey): bigint {
+  static leftNumber (secretKey: SecretKey): bigint {
     return fromLittleEndian(secretKey.leftKey);
   }
 
-  static rightNumber(secretKey: SecretKey): bigint {
+  static rightNumber (secretKey: SecretKey): bigint {
     return fromLittleEndian(secretKey.rightKey);
   }
 
-  static hmac512WithKey(key: Uint8Array, data: Uint8Array): Uint8Array {
+  static hmac512WithKey (key: Uint8Array, data: Uint8Array): Uint8Array {
     const hmac = createHmac('sha512', Buffer.from(key));
     hmac.update(Buffer.from(data));
     return new Uint8Array(hmac.digest());
@@ -66,7 +66,7 @@ export class SecretKey extends SigningKey implements ExtendedEd25519Spec {
   rightKey: Uint8Array;
   chainCode: Uint8Array;
 
-  constructor(leftKey: Uint8Array, rightKey: Uint8Array, chainCode: Uint8Array) {
+  constructor (leftKey: Uint8Array, rightKey: Uint8Array, chainCode: Uint8Array) {
     super();
     this.leftKey = leftKey;
     this.rightKey = rightKey;
@@ -74,24 +74,24 @@ export class SecretKey extends SigningKey implements ExtendedEd25519Spec {
 
     if (this.leftKey.length !== ExtendedEd25519Spec.keyLength) {
       throw new Error(
-        `Invalid left key length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.leftKey.length}`,
+        `Invalid left key length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.leftKey.length}`
       );
     }
 
     if (this.rightKey.length !== ExtendedEd25519Spec.keyLength) {
       throw new Error(
-        `Invalid right key length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.rightKey.length}`,
+        `Invalid right key length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.rightKey.length}`
       );
     }
 
     if (this.chainCode.length !== ExtendedEd25519Spec.keyLength) {
       throw new Error(
-        `Invalid chain code length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.chainCode.length}`,
+        `Invalid chain code length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.chainCode.length}`
       );
     }
   }
 
-  equals(other: SecretKey): boolean {
+  equals (other: SecretKey): boolean {
     return (
       Buffer.from(this.leftKey).equals(Buffer.from(other.leftKey)) &&
       Buffer.from(this.rightKey).equals(Buffer.from(other.rightKey)) &&
@@ -99,7 +99,7 @@ export class SecretKey extends SigningKey implements ExtendedEd25519Spec {
     );
   }
 
-  hashCode(): number {
+  hashCode (): number {
     return (
       Buffer.from(this.leftKey).reduce((hash, byte) => (hash << 5) - hash + byte, 0) ^
       Buffer.from(this.rightKey).reduce((hash, byte) => (hash << 5) - hash + byte, 0) ^
@@ -112,22 +112,22 @@ export class PublicKey {
   vk: spec.PublicKey;
   chainCode: Uint8Array;
 
-  constructor(vk: spec.PublicKey, chainCode: Uint8Array) {
+  constructor (vk: spec.PublicKey, chainCode: Uint8Array) {
     this.vk = vk;
     this.chainCode = chainCode;
 
     if (this.chainCode.length !== ExtendedEd25519Spec.keyLength) {
       throw new Error(
-        `Invalid chain code length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.chainCode.length}`,
+        `Invalid chain code length. Expected: ${ExtendedEd25519Spec.keyLength}, Received: ${this.chainCode.length}`
       );
     }
   }
 
-  equals(other: PublicKey): boolean {
+  equals (other: PublicKey): boolean {
     return this.vk.equals(other.vk) && Buffer.from(this.chainCode).equals(Buffer.from(other.chainCode));
   }
 
-  hashCode(): number {
+  hashCode (): number {
     return this.vk.hashCode() ^ Buffer.from(this.chainCode).reduce((hash, byte) => (hash << 5) - hash + byte, 0);
   }
 }

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { CipherParameters } from './cipherParameters';
+import { CipherParameters } from './cipherParameters.js';
 
 /**
  * Super class for all Password Based Encryption (PBE) parameter generator classes.

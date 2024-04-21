@@ -1,4 +1,4 @@
-import { Preimage, Proof, SignableBytes, TxBind, Witness } from '../common/types.js';
+import { Preimage, Proof, SignableBytes, TxBind, Witness } from 'topl_common';;
 import { Tokens } from './tokens.js';
 import { blake2b } from 'blakejs';
 

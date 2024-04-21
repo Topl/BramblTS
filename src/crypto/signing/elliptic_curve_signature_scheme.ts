@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Pbkdf2Sha512 } from '../generation/entropy_to_seed';
-import { Entropy } from '../generation/mnemonic/entropy';
-import { KeyPair, SigningKey, VerificationKey } from './signing';
+import { Pbkdf2Sha512 } from '../generation/entropy_to_seed.js';
+import { Entropy } from '../generation/mnemonic/entropy.js';
+import { KeyPair, SigningKey, VerificationKey } from './signing.js';
 
 /**
  * Abstract class representing an elliptic curve signature scheme.
