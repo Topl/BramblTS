@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { createHmac } from 'crypto';
+import { ExtendedEd25519Sk, ExtendedEd25519Vk } from 'topl_common';
 import * as spec from '../ed25519/ed25519_spec.js';
 import { SigningKey } from '../signing.js';
 import { fromLittleEndian } from './../../../utils/extensions.js';
@@ -106,6 +107,11 @@ export class SecretKey extends SigningKey implements ExtendedEd25519Spec {
       Buffer.from(this.chainCode).reduce((hash, byte) => (hash << 5) - hash + byte, 0)
     );
   }
+
+  // Static method to create a SecretKey from a protocol buffer representation
+  static proto (vk: ExtendedEd25519Sk): SecretKey {
+    return new SecretKey(vk.leftKey, vk.rightKey, vk.chainCode);
+  }
 }
 
 export class PublicKey {
@@ -129,5 +135,13 @@ export class PublicKey {
 
   hashCode (): number {
     return this.vk.hashCode() ^ Buffer.from(this.chainCode).reduce((hash, byte) => (hash << 5) - hash + byte, 0);
+  }
+
+  // Static method equivalent to the Dart factory
+  static proto (vk: ExtendedEd25519Vk): PublicKey {
+    const publicKey = new spec.PublicKey(vk.vk.value);
+    const chainCode = vk.chainCode;
+
+    return new PublicKey(publicKey, chainCode);
   }
 }

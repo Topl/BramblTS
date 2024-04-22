@@ -1,6 +1,7 @@
 import Long from 'long';
 import { Int128 } from 'topl_common';
 
+// todo: confirm if this works?
 export class Int128Syntax {
   static int128AsBigInt (int128: Int128): BigInt {
     const bytes = int128.value;
