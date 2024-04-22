@@ -1,45 +1,28 @@
-import { ExtendedEd25519Sk, ExtendedEd25519Vk, KeyPair, SigningKey, VerificationKey } from 'topl_common';
-import { ExtendedEd25519} from '../../crypto/crypto.js';
-
+import { KeyPair, VerificationKey } from 'topl_common';
+import * as xspec from '../../crypto/signing/extended_ed25519/extended_ed25519_spec.js';
+import * as s from '../../crypto/signing/signing.js';
+import { ProtoConverters } from '../utils/proto_converters.js';
 
 export class KeyPairSyntax {
-
-  static pbVkToCryptoVk(pbVk: VerificationKey.ExtendedEd25519Vk): ExtendedEd25519.PublicKey {
-    return new ExtendedEd25519Vk(
-      new SigningKey.Ed25519.PublicKey(pbVk.vk.value),
-      pbVk.chainCode
-    );
+  static pbVkToCryptoVk (proto: VerificationKey): xspec.PublicKey {
+    // Assuming ProtoConverters.publicKeyFromProto exists and does the conversion
+    if (proto.vk.case === 'extendedEd25519') {
+      return ProtoConverters.publicKeyFromProto(proto.vk.value);
+    }
   }
 
-  static pbKeyPairToCryptoKeyPair(pbKeyPair: KeyPair): SigningKey.KeyPair<ExtendedEd25519.SecretKey, ExtendedEd25519.PublicKey> {
-    return new SigningKey.KeyPair(
-      new ExtendedEd25519.SecretKey(
-        pbKeyPair.sk.sk.extendedEd25519.leftKey,
-        pbKeyPair.sk.sk.extendedEd25519.rightKey,
-        pbKeyPair.sk.sk.extendedEd25519.chainCode
-      ),
-      pbKeyPair.vk.vk.extendedEd25519
-    );
+  static pbKeyPairToCryptoKeyPair (proto: KeyPair): s.KeyPair<xspec.SecretKey, xspec.PublicKey> {
+    // Assuming ProtoConverters.keyPairFromProto exists and does the conversion
+    return ProtoConverters.keyPairFromProto(proto);
   }
 
-  static cryptoVkToPbVk(cryptoVk: ExtendedEd25519.PublicKey): VerificationKey.ExtendedEd25519Vk {
-    VerificationKey.Ed25519Vk(cryptoVk.vk);
-    return new ExtendedEd25519Vk(
-      new Ed25519Vk(cryptoVk.vk.bytes),
-      cryptoVk.chainCode
-    );
+  static cryptoVkToPbVk (crypto: xspec.PublicKey): VerificationKey {
+    // Assuming ProtoConverters.publicKeyToProto exists and does the conversion
+    return ProtoConverters.publicKeyToProto(crypto);
   }
 
-  static cryptoToPbKeyPair(keyPair: SigningKey.KeyPair<ExtendedEd25519.SecretKey, ExtendedEd25519.PublicKey>): KeyPair {
-    const skCrypto = keyPair.signingKey;
-    const sk = new ExtendedEd25519Sk(
-      skCrypto.leftKey,
-      skCrypto.rightKey,
-      skCrypto.chainCode
-    );
-    return new KeyPair(
-      new VerificationKey(VerificationKey.Vk.ExtendedEd25519(keyPair.verificationKey)),
-      new SigningKey(SigningKey.Sk.ExtendedEd25519(sk))
-    );
+  static cryptoToPbKeyPair (crypto: s.KeyPair<xspec.SecretKey, xspec.PublicKey>): KeyPair {
+    // Assuming ProtoConverters.keyPairToProto exists and does the conversion
+    return ProtoConverters.keyPairToProto(crypto);
   }
 }
