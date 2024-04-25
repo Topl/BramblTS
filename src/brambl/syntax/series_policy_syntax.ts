@@ -1,22 +1,17 @@
 import { SHA256 } from '@/crypto/hash/sha.js';
-import { SeriesId } from 'topl_common';
+import { Event_SeriesPolicy, SeriesId } from 'topl_common';
+import { ContainsImmutable } from '../common/contains_immutable.js';
 
-export class SeriesPolicySyntax {
-  static seriesPolicyAsSeriesPolicySyntaxOps (seriesPolicy: SeriesPolicy): SeriesPolicyAsSeriesPolicySyntaxOps {
-    return new SeriesPolicyAsSeriesPolicySyntaxOps(seriesPolicy);
-  }
-}
+type SeriesPolicy = Event_SeriesPolicy;
 
-export class SeriesPolicyAsSeriesPolicySyntaxOps {
-  seriesPolicy: SeriesPolicy;
 
-  constructor (seriesPolicy: SeriesPolicy) {
-    this.seriesPolicy = seriesPolicy;
-  }
+/// Provides syntax operations for working with [GroupPolicy]s.
 
-  computeId (): SeriesId {
-    const digest: Buffer = Buffer.from(this.seriesPolicy.immutable.value);
+export default class SeriesPolicySyntax {
+    /// Computes the [GroupId] of the [GroupPolicy].
+  static computeId (seriesPolicy: SeriesPolicy): SeriesId {
+    const digest = ContainsImmutable.seriesPolicyEvent(seriesPolicy).immutableBytes.value;
     const sha256 = new SHA256().hash(digest);
-    return new SeriesId(sha256.buffer);
+    return new SeriesId(sha256);
   }
 }

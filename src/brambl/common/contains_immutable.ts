@@ -2,9 +2,14 @@ import {
   AccumulatorRootId,
   Digest,
   Evidence,
+  Event_GroupPolicy as GroupPolicy,
   ImmutableBytes,
   Lock,
+  Lock_Commitment,
+  Lock_Image,
+  Lock_Predicate,
   SeriesId,
+  Event_SeriesPolicy as SeriesPolicy,
   TransactionId,
   TransactionOutputAddress
 } from 'topl_common';
@@ -103,14 +108,15 @@ export class ContainsImmutable {
   }
 
   static lock (lock: Lock): ContainsImmutable {
-    if (lock.has_predicate) {
-      return ContainsImmutable.predicateLock(lock.predicate);
-    } else if (lock.has_image) {
-      return ContainsImmutable.imageLock(lock.image);
-    } else if (lock.has_commitment) {
-      return ContainsImmutable.commitmentLock(lock.commitment);
-    } else {
-      throw Error(`Invalid lock type ${typeof lock}`);
+    switch (lock.value.case) {
+      case 'predicate':
+        return ContainsImmutable.predicateLock(lock.value.value);
+      case 'image':
+        return ContainsImmutable.imageLock(lock.value.value);
+      case 'commitment':
+        return ContainsImmutable.commitmentLock(lock.value.value);
+      default:
+        throw Error(`Invalid lock type ${typeof lock}`);
     }
   }
 
@@ -143,7 +149,7 @@ export class ContainsImmutable {
     );
   }
 
-  static groupPolicyEvent (groupPolicy: Event_GroupPolicy) {
+  static groupPolicyEvent (groupPolicy: GroupPolicy) {
     const partiallyCombinedContainsImmutable = ContainsImmutable.addContainsImmutable(
       ContainsImmutable.string(groupPolicy.label),
       ContainsImmutable.seriesIdValue(groupPolicy.fixedSeries)
@@ -166,10 +172,10 @@ export class ContainsImmutable {
     return ContainsImmutable.int(quantityDescriptor.value);
   }
 
-  static seriesPolicyEvent (seriesPolicy: Event_SeriesPolicy) {
+  static seriesPolicyEvent (seriesPolicy: SeriesPolicy) {
     const combinedIntContainsImmutable = ContainsImmutable.addContainsImmutable(
       ContainsImmutable.string(seriesPolicy.label),
-      ContainsImmutable.int(seriesPolicy.tokenSupply.value)
+      ContainsImmutable.int(seriesPolicy.tokenSupply)
     );
     const combinedIntContainsImmutable2 = ContainsImmutable.addContainsImmutable(
       combinedIntContainsImmutable,

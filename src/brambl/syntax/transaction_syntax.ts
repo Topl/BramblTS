@@ -2,7 +2,7 @@ import { ImmutableBytes, IoTransaction, TransactionId } from 'topl_common';
 import { ContainsEvidence } from '../common/contains_evidence.js';
 import { ContainsSignable } from '../common/contains_signable.js';
 
-export class TransactionSyntax {
+export default class TransactionSyntax {
   readonly transaction: IoTransaction;
 
   constructor (transaction: IoTransaction) {

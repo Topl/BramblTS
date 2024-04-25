@@ -1,14 +1,5 @@
-import { ContainsEvidence, Lock, LockAddress, LockId } from 'topl_common';
-
-export class LockSyntax {
-  static lockAsLockSyntaxOps (lock: Lock): LockSyntaxOps {
-    return new LockSyntaxOps(lock);
-  }
-
-  static predicateLockAsLockSyntaxOps (lock: Lock.Predicate): PredicateLockSyntaxOps {
-    return new PredicateLockSyntaxOps(lock);
-  }
-}
+import { Lock, Lock_Predicate, LockAddress, LockId } from 'topl_common';
+import { ContainsEvidence } from '../common/contains_evidence.js';
 
 export class LockSyntaxOps {
   lock: Lock;
@@ -18,22 +9,25 @@ export class LockSyntaxOps {
   }
 
   lockAddress (network: number, ledger: number): LockAddress {
-    return new LockAddress(network, ledger, new LockId(ContainsEvidence.sizedEvidence(this.lock).digest.value));
+    const evidence = new LockId(ContainsEvidence.blake2bEvidenceFromImmutable(this.lock).evidence);
+    const digest = evidence.value;
+    const lockId = new LockId({ value: digest });
+    return new LockAddress({ network: network, ledger: ledger, id: lockId });
   }
 }
 
 export class PredicateLockSyntaxOps {
-  lock: Lock.Predicate;
+  lock: Lock_Predicate;
 
-  constructor (lock: Lock.Predicate) {
+  constructor (lock: Lock_Predicate) {
     this.lock = lock;
   }
 
   lockAddress (network: number, ledger: number): LockAddress {
-    return new LockAddress(
-      network,
-      ledger,
-      new LockId(ContainsEvidence.sizedEvidence(new Lock().withPredicate(this.lock)).digest.value)
-    );
+    const predicate = new Lock({ value: this.lock });
+    const evidence = new LockId(ContainsEvidence.blake2bEvidenceFromImmutable(predicate).evidence);
+    const digest = evidence.value;
+    const lockId = new LockId({ value: digest });
+    return new LockAddress({ network: network, ledger: ledger, id: lockId });
   }
 }

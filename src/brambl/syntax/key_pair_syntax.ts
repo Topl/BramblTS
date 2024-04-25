@@ -3,7 +3,7 @@ import * as xspec from '../../crypto/signing/extended_ed25519/extended_ed25519_s
 import * as s from '../../crypto/signing/signing.js';
 import { ProtoConverters } from '../utils/proto_converters.js';
 
-export class KeyPairSyntax {
+export default class KeyPairSyntax {
   static pbVkToCryptoVk (proto: VerificationKey): xspec.PublicKey {
     // Assuming ProtoConverters.publicKeyFromProto exists and does the conversion
     if (proto.vk.case === 'extendedEd25519') {

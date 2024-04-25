@@ -1,5 +1,5 @@
 import { ChannelCredentials } from '@grpc/grpc-js';
-import { LockAddress, Txo, TxoState, TransactionServiceClient, QueryByLockAddressRequest, TxoLockAddressResponse } from 'topl_common';
+import { LockAddress, Txo, TxoState, QueryByLockAddressRequest, TxoLockAddressResponse } from 'topl_common';
 
 /**
  * Defines a Genus Query API for interacting with a Genus node.
@@ -12,7 +12,7 @@ export interface GenusQueryAlgebra {
      * @param txoState The state of the UTXOs to query. By default, only unspent UTXOs are returned.
      * @return A Promise that resolves to an array of UTXOs.
      */
-    queryUtxo(fromAddress: LockAddress, txoState?: typeof TxoState.Unspent): Promise<Txo[]>;
+    queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]>;
 }
 
 export class GenusQueryAlgebraImpl implements GenusQueryAlgebra {
@@ -22,7 +22,7 @@ export class GenusQueryAlgebraImpl implements GenusQueryAlgebra {
     this.client = new TransactionServiceClient(address, credentials, options);
   }
 
-  async queryUtxo(fromAddress: LockAddress, txoState?: typeof TxoState.Unspent): Promise<Txo[]> {
+  async queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]> {
     const response = await this.client.getTxosByLockAddress(
       new QueryByLockAddressRequest({ address: fromAddress, state: txoState })
     );

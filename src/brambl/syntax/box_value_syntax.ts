@@ -53,8 +53,6 @@ export class ValueToQuantitySyntaxOps {
 }
 
 export class ValueToQuantityDescriptorSyntaxOps {
-  // TODO:  QuantityDescriptor not being returned as a type but a number from a map,
-  // need to figure out how to get around this
   static getQuantityDescriptor (value: Value): QuantityDescriptorType | null {
     if (value.value.case === 'asset') {
       return value.value.value.quantityDescriptor;
@@ -65,8 +63,6 @@ export class ValueToQuantityDescriptorSyntaxOps {
 }
 
 export class ValueToFungibilitySyntaxOps {
-  // TODO:  FungibilityType not being returned as a type but a number from a map,
-  // need to figure out how to get around this
   static getFungibility (value: Value): FungibilityType | null {
     if (value.value.case === 'asset') {
       return value.value.value.fungibility;
