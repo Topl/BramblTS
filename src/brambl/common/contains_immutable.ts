@@ -36,6 +36,9 @@ export class ContainsImmutable {
 
   //factories
   static evidence (evidence: Evidence): ContainsImmutable {
+    if (evidence.digest == null) {
+      throw Error('Evidence must have a digest');
+    }
     return ContainsImmutable.digest(evidence.digest);
   }
 
@@ -191,7 +194,8 @@ export class ContainsImmutable {
     );
   }
 
-  static apply (t): ContainsImmutable {
+  /// todo: chore expand this to include all types of ContainsImmutable
+  static apply (t: any): ContainsImmutable {
     if (t instanceof ContainsImmutable) {
       return t;
     }
@@ -201,5 +205,9 @@ export class ContainsImmutable {
     if (t instanceof Lock) {
       return ContainsImmutable.lock(t);
     }
+    if (t instanceof Lock_Predicate) {
+      return ContainsImmutable.predicateLock(t);
+    }
+    
   }
 }

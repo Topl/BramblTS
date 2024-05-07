@@ -1,10 +1,13 @@
-import { ChannelCredentials } from '@grpc/grpc-js';
-import { LockAddress, Txo, TxoState, QueryByLockAddressRequest, TxoLockAddressResponse } from 'topl_common';
+import { LockAddress, Txo, type TxoState, QueryByLockAddressRequest, TxoLockAddressResponse, TransactionService } from 'topl_common';
+import { createPromiseClient } from '@connectrpc/connect';
+import { createConnectTransport } from '@connectrpc/connect-node';
+
+
 
 /**
  * Defines a Genus Query API for interacting with a Genus node.
  */
-export interface GenusQueryAlgebra {
+export interface GenusQueryAlgebraDefinition {
 
     /**
      * Query and retrieve a set of UTXOs encumbered by the given LockAddress.
@@ -15,17 +18,22 @@ export interface GenusQueryAlgebra {
     queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]>;
 }
 
-export class GenusQueryAlgebraImpl implements GenusQueryAlgebra {
-  private client: TransactionServiceClient;
+export class GenusQueryAlgebra implements GenusQueryAlgebraDefinition {
+  // private client: typeof TransactionService;
 
-  constructor(address: string, credentials: ChannelCredentials, options: object) {
-    this.client = new TransactionServiceClient(address, credentials, options);
-  }
+  // constructor(address: string, credentials: ChannelCredentials, options: object) {
+  // }
 
   async queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]> {
-    const response = await this.client.getTxosByLockAddress(
-      new QueryByLockAddressRequest({ address: fromAddress, state: txoState })
-    );
+    const transport = createConnectTransport({
+      httpVersion: '1.1',
+      baseUrl: 'http://localhost:3000',
+  });
+
+    // Alternatively, use createGrpcTransport or createGrpcWebTransport here
+    // to use one of the other supported protocols.
+    let x = TransactionService.methods.getTxosByLockAddress;
+    const client = createPromiseClient(TransactionService, transport)
     return response.txos;
   }
 }

@@ -1,6 +1,6 @@
 import { VaultStore } from "@/crypto/encryption/vault_store.js";
-import { Unit } from "../../common/functional.js";
-import { Either } from "fp-ts/Either";
+import type { Unit } from "../../common/functional.js";
+import type { Either } from "fp-ts/Either";
 
     /**
      * Defines a storage API for fetching and storing Topl Main Key Vault Store.

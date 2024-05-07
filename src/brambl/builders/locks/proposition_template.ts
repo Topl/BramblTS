@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Either, left, right, isLeft, isRight } from 'fp-ts/Either';
 import { BuilderError } from '../builder_error.js';
-import { Data, Digest, Proposition, VerificationKey } from '../../../quivr4s/common/types.js';
-import { Proposer } from '../../../quivr4s/classes/proposer.js';
+import { Data, Digest, Proposition, VerificationKey } from '../../../quivr4s/quivr/common/types.js';
+import { Proposer } from '../../../quivr4s/quivr/api/proposer.js';
 
 enum PropositionType {
   locked = 'locked',

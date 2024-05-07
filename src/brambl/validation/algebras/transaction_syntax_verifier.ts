@@ -1,0 +1,7 @@
+import type { NonEmptyArray } from '@/common/functional/either.js';
+import type { IoTransaction } from 'topl_common';
+import type { TransactionSyntaxError } from '../transaction_syntax_error.js';
+import type { ContextlessValidation } from '@/quivr4s/quivr.js';
+
+export default interface TransactionSyntaxVerifier
+  extends ContextlessValidation<NonEmptyArray<TransactionSyntaxError>, IoTransaction> {}
