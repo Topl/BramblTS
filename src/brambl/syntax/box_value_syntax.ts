@@ -1,24 +1,59 @@
-import { Asset, FungibilityType, Group, Int128, Lvl, QuantityDescriptorType, Series, Topl, Value } from 'topl_common';
+import {
+  Asset,
+  type FungibilityType,
+  Group,
+  Int128,
+  Lvl,
+  type QuantityDescriptorType,
+  Series,
+  Topl,
+  Value
+} from 'topl_common';
 
 export class BoxValueSyntax {
   static lvlAsBoxVal (lvl: Lvl): Value {
-    return new Value({ lvl: lvl });
+    return new Value({
+      value: {
+        value: lvl,
+        case: 'lvl'
+      }
+    });
   }
 
   static toplAsBoxVal (topl: Topl): Value {
-    return new Value({ topl: topl });
+    return new Value({
+      value: {
+        value: topl,
+        case: 'topl'
+      }
+    });
   }
 
   static groupAsBoxVal (group: Group): Value {
-    return new Value({ group: group });
+    return new Value({
+      value: {
+        value: group,
+        case: 'group'
+      }
+    });
   }
 
   static seriesAsBoxVal (series: Series): Value {
-    return new Value({ series: series });
+    return new Value({
+      value: {
+        value: series,
+        case: 'series'
+      }
+    });
   }
 
   static assetAsBoxVal (asset: Asset): Value {
-    return new Value({ asset: asset });
+    return new Value({
+      value: {
+        value: asset,
+        case: 'asset'
+      }
+    });
   }
 }
 
@@ -30,7 +65,9 @@ export class ValueToQuantitySyntaxOps {
       case 'group':
       case 'series':
       case 'asset':
-        return value.value.value.quantity;
+        if (value.value.value.quantity != null) {
+          return value.value.value.quantity;
+        }
       default:
         throw new Error('Value is not set or does not have a quantity');
     }

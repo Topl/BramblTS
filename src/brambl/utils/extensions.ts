@@ -13,37 +13,53 @@ export function hasProperty<T> (obj: T, prop: keyof T): boolean {
 
 /**
  * Checks if a value is not null or undefined. shorthand to improve readability
- * 
+ *
  * @param value - The value to check.
  * @returns `true` if the value is not null or undefined, `false` otherwise.
  */
-export function has(value: any): boolean {
-    return isNotNull(value);
-  }
+export function has (value: any): boolean {
+  return isNotNull(value);
+}
 
 export function isNotNull<T> (value: T | null): boolean {
   return value !== null;
 }
 
 export function isNull<T> (value: T | null): boolean {
-    return value === null;
-  }
-
+  return value === null;
+}
 
 /**
  * Checks if any of the provided values are null.
  * @param values - The values to check.
  * @returns `true` if any of the values are null, `false` otherwise.
  */
-  export function areAnyNull(...values: Array<any>): boolean {
-    return values.some(value => value === null);
-  }
+export function areAnyNull (...values: Array<any>): boolean {
+  return values.some(value => value === null);
+}
 
 /**
  * Checks if all of the provided values are not null.
  * @param values - The values to check.
  * @returns `true` if all of the values are not null, `false` otherwise.
  */
-export function areAllNotNull(...values: Array<any>): boolean {
-    return values.every(value => value !== null);
+export function areAllNotNull (...values: Array<any>): boolean {
+  return values.every(value => value !== null);
+}
+
+export class Uint8ArrayUtils {
+  static add (a: Uint8Array, b: Uint8Array): Uint8Array {
+    const result = new Uint8Array(a.length + b.length);
+    result.set(a, 0);
+    result.set(b, a.length);
+    return result;
   }
+
+  static equals (a: Uint8Array, b: Uint8Array): boolean {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+}

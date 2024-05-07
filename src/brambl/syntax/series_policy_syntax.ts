@@ -12,6 +12,6 @@ export default class SeriesPolicySyntax {
   static computeId (seriesPolicy: SeriesPolicy): SeriesId {
     const digest = ContainsImmutable.seriesPolicyEvent(seriesPolicy).immutableBytes.value;
     const sha256 = new SHA256().hash(digest);
-    return new SeriesId(sha256);
+    return new SeriesId({ value: sha256 });
   }
 }

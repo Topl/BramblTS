@@ -9,8 +9,8 @@ export class LockSyntaxOps {
   }
 
   lockAddress (network: number, ledger: number): LockAddress {
-    const evidence = new LockId(ContainsEvidence.blake2bEvidenceFromImmutable(this.lock).evidence);
-    const digest = evidence.value;
+    const evidence = ContainsEvidence.blake2bEvidenceFromImmutable(this.lock).evidence;
+    const digest = evidence.digest.value;
     const lockId = new LockId({ value: digest });
     return new LockAddress({ network: network, ledger: ledger, id: lockId });
   }
@@ -24,9 +24,8 @@ export class PredicateLockSyntaxOps {
   }
 
   lockAddress (network: number, ledger: number): LockAddress {
-    const predicate = new Lock({ value: this.lock });
-    const evidence = new LockId(ContainsEvidence.blake2bEvidenceFromImmutable(predicate).evidence);
-    const digest = evidence.value;
+    const evidence = ContainsEvidence.blake2bEvidenceFromImmutable(this.lock).evidence;
+    const digest = evidence.digest.value;
     const lockId = new LockId({ value: digest });
     return new LockAddress({ network: network, ledger: ledger, id: lockId });
   }

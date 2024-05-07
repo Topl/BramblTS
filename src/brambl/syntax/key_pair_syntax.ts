@@ -8,6 +8,8 @@ export default class KeyPairSyntax {
     // Assuming ProtoConverters.publicKeyFromProto exists and does the conversion
     if (proto.vk.case === 'extendedEd25519') {
       return ProtoConverters.publicKeyFromProto(proto.vk.value);
+    } else {
+      throw new Error('Unsupported verification key type');
     }
   }
 
