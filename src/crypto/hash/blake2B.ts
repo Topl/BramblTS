@@ -1,13 +1,13 @@
 import * as blake from 'blakejs';
 import { Digest, Digest32, Digest64 } from './digest/digest.js';
-import { Hash, Message } from './baseHash.js';
+import { Hash, type Message } from './baseHash.js';
 
 /**
  * An abstract class for Blake2b hash functions.
  */
 abstract class Blake2b extends Hash {
-  abstract hash(bytes: Uint8Array): Uint8Array;
-  abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
+  abstract override hash(bytes: Uint8Array): Uint8Array;
+  abstract override hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
 }
 
 /**
