@@ -1,16 +1,26 @@
 {
   "compilerOptions": {
+    /* Base Options */
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "ES2020",
-    "sourceMap": true,
+    "target": "ES2022",
     "outDir": "dist",
-    "noUnusedLocals": true,
+    "sourceMap": true,
+
     "esModuleInterop": true,
-    "noUnusedParameters": true,
     "resolveJsonModule": true,
+    "declaration": true, // Will tell TS to emit .d.ts files, needed for autocomplete on .js files
+    "verbatimModuleSyntax": true, // forces import type and export type
+
+    //"strict": true, // Enable all strict type-checking options
+    "noUncheckedIndexedAccess": true, // Absolutely invaluable for preventing runtime errors
+    "noImplicitOverride": true,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true,
+
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]
-  },
-}}
+    }
+  }
+}

@@ -11,6 +11,7 @@ import {
   Proof_HeightRange,
   Proof_LessThan,
   Proof_Locked,
+  Proof_Not,
   Proof_Or,
   Proof_Threshold,
   Proof_TickRange,
@@ -18,7 +19,7 @@ import {
   TxBind,
   Witness
 } from 'topl_common';
-import { Tokens } from './tokens.js';
+import { Tokens } from '../../tokens.js';
 
 /// Provers create proofs that are bound to the transaction which executes the proof.
 ///
@@ -37,82 +38,118 @@ export class Prover {
   }
 
   public static lockedProver (): Proof {
-    return new Proof({ locked: new Proof_Locked() });
+    return new Proof({ value: { case: 'locked', value: new Proof_Locked() } });
   }
 
   public static digestProver (preimage: Preimage, message: SignableBytes): Proof {
     return new Proof({
-      digest: new Proof_Digest({ preimage, transactionBind: this._blake2b56ToTxBind(Tokens.digest, message) })
+      value: {
+        case: 'digest',
+        value: new Proof_Digest({ preimage, transactionBind: this._blake2b56ToTxBind(Tokens.digest, message) })
+      }
     });
   }
 
   public static signatureProver (witness: Witness, message: SignableBytes): Proof {
     return new Proof({
-      digitalSignature: new Proof_DigitalSignature({
-        witness,
-        transactionBind: this._blake2b56ToTxBind(Tokens.digitalSignature, message)
-      })
+      value: {
+        case: 'digitalSignature',
+        value: new Proof_DigitalSignature({
+          witness,
+          transactionBind: this._blake2b56ToTxBind(Tokens.digitalSignature, message)
+        })
+      }
     });
   }
 
   public static heightProver (message: SignableBytes): Proof {
     return new Proof({
-      heightRange: new Proof_HeightRange({ transactionBind: this._blake2b56ToTxBind(Tokens.heightRange, message) })
+      value: {
+        case: 'heightRange',
+        value: new Proof_HeightRange({ transactionBind: this._blake2b56ToTxBind(Tokens.heightRange, message) })
+      }
     });
   }
 
   public static tickProver (message: SignableBytes): Proof {
     return new Proof({
-      tickRange: new Proof_TickRange({ transactionBind: this._blake2b56ToTxBind(Tokens.tickRange, message) })
+      value: {
+        case: 'tickRange',
+        value: new Proof_TickRange({ transactionBind: this._blake2b56ToTxBind(Tokens.tickRange, message) })
+      }
     });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public static exactMatchProver (message: SignableBytes, compareTo: Int8Array): Proof {
     return new Proof({
-      exactMatch: new Proof_ExactMatch({ transactionBind: this._blake2b56ToTxBind(Tokens.exactMatch, message) })
+      value: {
+        case: 'exactMatch',
+        value: new Proof_ExactMatch({ transactionBind: this._blake2b56ToTxBind(Tokens.exactMatch, message) })
+      }
     });
   }
 
   public static lessThanProver (message: SignableBytes): Proof {
     return new Proof({
-      lessThan: new Proof_LessThan({ transactionBind: this._blake2b56ToTxBind(Tokens.lessThan, message) })
+      value: {
+        case: 'lessThan',
+        value: new Proof_LessThan({ transactionBind: this._blake2b56ToTxBind(Tokens.lessThan, message) })
+      }
     });
   }
 
   public static greaterThanProver (message: SignableBytes): Proof {
     return new Proof({
-      greaterThan: new Proof_GreaterThan({ transactionBind: this._blake2b56ToTxBind(Tokens.greaterThan, message) })
+      value: {
+        case: 'greaterThan',
+        value: new Proof_GreaterThan({ transactionBind: this._blake2b56ToTxBind(Tokens.greaterThan, message) })
+      }
     });
   }
 
   public static equalToProver (location: string, message: SignableBytes): Proof {
     return new Proof({
-      equalTo: new Proof_EqualTo({ transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) })
+      value: {
+        case: 'equalTo',
+        value: new Proof_EqualTo({ transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) })
+      }
     });
   }
 
   public static thresholdProver (responses: Proof[], message: SignableBytes): Proof {
     return new Proof({
-      threshold: new Proof_Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) })
+      value: {
+        case: 'threshold',
+        value: new Proof_Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) })
+      }
     });
   }
 
-  public static notProver (responses: Proof[], message: SignableBytes): Proof {
+  public static notProver (proof: Proof, message: SignableBytes): Proof {
     return new Proof({
-      threshold: new Proof_Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.not, message) })
+      value: {
+        case: 'not',
+        value: new Proof_Not({ proof, transactionBind: this._blake2b56ToTxBind(Tokens.not, message) })
+      }
     });
   }
 
   public static andProver (left: Proof, right: Proof, message: SignableBytes): Proof {
     return new Proof({
-      and: new Proof_And({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.and, message) })
+      value: {
+        case: 'and',
+        value: new Proof_And({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.and, message) })
+      }
     });
   }
 
   public static orProver (left: Proof, right: Proof, message: SignableBytes): Proof {
     return new Proof({
-      or: new Proof_Or({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.or, message) })
+      value: {
+        case: 'or',
+        value: new Proof_Or({ left, right, transactionBind: this._blake2b56ToTxBind(Tokens.or, message) })
+      }
     });
   }
 }

@@ -1,5 +1,5 @@
 import { blake2b } from 'blakejs';
-import { either } from 'fp-ts';
+import { either, option } from 'fp-ts';
 import {
   DigestVerification,
   Message,
@@ -30,22 +30,22 @@ import {
   Proposition_Threshold,
   Proposition_TickRange,
   SignatureVerification,
-  TxBind,
+  TxBind
 } from 'topl_common';
-import { QuivrResult, quivrEvaluationAuthorizationFailure } from '../common/quivr_result.js';
-import { DynamicContext } from '../runtime/dynamic_context.js';
+import { type QuivrResult, quivrEvaluationAuthorizationFailure } from '../common/quivr_result.js';
+
+import { Tokens } from '../../tokens.js';
+import { arraysEqual } from '../../utils/list_utils.js';
 import { ValidationError } from '../runtime/quivr_runtime_error.js';
-import { arraysEqual } from '../utils/list_utils.js';
-import { Tokens } from './tokens.js';
+import type DynamicContext from '../runtime/dynamic_context.js';
 
-
-export class Verifier {
+export default class Verifier {
   /// Will return [QuivrResult] Left => [QuivrRuntimeError.messageAuthorizationFailure] if the proof is invalid.
   static _evaluateBlake2b256Bind (
     tag: string,
     proof: Proof,
     proofTxBind: TxBind,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
     const sb = context.signableBytes;
     const encoder = new TextEncoder();
@@ -58,7 +58,7 @@ export class Verifier {
       ? either.left(
           ValidationError.messageAuthorizationFailure({
             name: 'Blake2b256Bind',
-            message: 'Error in evaluating Blake2b256Bind'
+            message: `Error in evaluating Blake2b256Bind : ${proof.toJsonString()}`
           })
         )
       : either.right(result);
@@ -75,7 +75,7 @@ export class Verifier {
       proof: Proof;
     }
   ): QuivrResult<boolean> {
-    if (messageResult._tag === 'Right' && evalResult._tag === 'Right') {
+    if (either.isRight(messageResult) && either.isRight(evalResult)) {
       return either.right(true);
     } else {
       return quivrEvaluationAuthorizationFailure(proof, proposition);
@@ -94,20 +94,20 @@ export class Verifier {
   static verifyDigest (
     proposition: Proposition_Digest,
     proof: Proof_Digest,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({
-      digest: new Proposition_Digest({ digest: proposition })
+      value: { case: 'digest', value: proposition }
     });
     const wrappedProof: Proof = new Proof({
-      digest: new Proof_Digest({ preimage: proof.preimage, transactionBind: proof.transactionBind })
+      value: { case: 'digest', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.digest, wrappedProof, proof.transactionBind, context);
 
     either.flatMap;
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
     const evalResult = context.digestVerify(
       proposition.routine,
@@ -123,16 +123,13 @@ export class Verifier {
   static verifySignature (
     proposition: Proposition_DigitalSignature,
     proof: Proof_DigitalSignature,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({
-      digitalSignature: new Proposition_DigitalSignature({
-        routine: proposition.routine,
-        verificationKey: proposition.verificationKey
-      })
+      value: { case: 'digitalSignature', value: proposition }
     });
     const wrappedProof: Proof = new Proof({
-      digitalSignature: new Proof_DigitalSignature({ witness: proof.witness, transactionBind: proof.transactionBind })
+      value: { case: 'digitalSignature', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -142,7 +139,7 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
     const signedMessage = context.signableBytes;
     const verification = new SignatureVerification({
@@ -159,17 +156,12 @@ export class Verifier {
   static verifyHeightRange (
     proposition: Proposition_HeightRange,
     proof: Proof_HeightRange,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
-    const wrappedProposition: Proposition = new Proposition({
-      heightRange: new Proposition_HeightRange({
-        chain: proposition.chain,
-        max: proposition.max,
-        min: proposition.min
-      })
-    });
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'heightRange', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      heightRange: new Proof_HeightRange({ transactionBind: proof.transactionBind })
+      value: { case: 'heightRange', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -179,13 +171,15 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
     const x = context.heightOf(proposition.chain);
-    const chainHeight: QuivrResult<number> =
-      x != null ? either.right(x) : quivrEvaluationAuthorizationFailure<number>(proof, proposition);
+    const chainHeight = option.fold(
+      () => quivrEvaluationAuthorizationFailure<bigint>(proof, proposition),
+      (value: bigint) => either.right(value)
+    )(x);
 
-    if (chainHeight._tag === 'Left') return either.left(chainHeight.left);
+    if (either.isLeft(chainHeight)) return either.left(chainHeight.left);
 
     const height = chainHeight.right!;
 
@@ -200,13 +194,12 @@ export class Verifier {
   static verifyTickRange (
     proposition: Proposition_TickRange,
     proof: Proof_TickRange,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
-    const wrappedProposition: Proposition = new Proposition({
-      tickRange: new Proposition_TickRange({ max: proposition.max, min: proposition.min })
-    });
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'tickRange', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      tickRange: new Proof_TickRange({ transactionBind: proof.transactionBind })
+      value: { case: 'tickRange', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -216,7 +209,7 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
     if (context.currentTick < proposition.min || context.currentTick > proposition.max) {
       return quivrEvaluationAuthorizationFailure(proof, proposition);
@@ -234,13 +227,12 @@ export class Verifier {
   static verifyExactMatch (
     proposition: Proposition_ExactMatch,
     proof: Proof_ExactMatch,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
-    const wrappedProposition: Proposition = new Proposition({
-      exactMatch: new Proposition_ExactMatch({ compareTo: proposition.compareTo, location: proposition.location })
-    });
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'exactMatch', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      exactMatch: new Proof_ExactMatch({ transactionBind: proof.transactionBind })
+      value: { case: 'exactMatch', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -250,7 +242,7 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
     const evalResult: QuivrResult<boolean> = context.exactMatch(proposition.location, proposition.compareTo)
       ? either.right(true)
@@ -262,13 +254,12 @@ export class Verifier {
   static verifyLessThan (
     proposition: Proposition_LessThan,
     proof: Proof_LessThan,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
-    const wrappedProposition: Proposition = new Proposition({
-      exactMatch: new Proposition_ExactMatch({ compareTo: proposition.compareTo, location: proposition.location })
-    });
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'lessThan', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      exactMatch: new Proof_ExactMatch({ transactionBind: proof.transactionBind })
+      value: { case: 'lessThan', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -278,12 +269,9 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
-    const evalResult: QuivrResult<boolean> = context.lessThan(
-      proposition.location,
-      proposition.compareTo.value
-    )
+    const evalResult: QuivrResult<boolean> = context.lessThan(proposition.location, proposition.compareTo.value)
       ? either.right(true)
       : quivrEvaluationAuthorizationFailure(proof, proposition);
 
@@ -293,13 +281,12 @@ export class Verifier {
   static verifyGreaterThan (
     proposition: Proposition_GreaterThan,
     proof: Proof_GreaterThan,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
-    const wrappedProposition: Proposition = new Proposition({
-      greaterThan: new Proposition_GreaterThan({ compareTo: proposition.compareTo, location: proposition.location })
-    });
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'greaterThan', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      greaterThan: new Proof_GreaterThan({ transactionBind: proof.transactionBind })
+      value: { case: 'greaterThan', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -309,12 +296,9 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
+    if (either.isLeft(messageResult)) return messageResult;
 
-    const evalResult: QuivrResult<boolean> = context.greaterThan(
-      proposition.location,
-      proposition.compareTo.value
-    )
+    const evalResult: QuivrResult<boolean> = context.greaterThan(proposition.location, proposition.compareTo.value)
       ? either.right(true)
       : quivrEvaluationAuthorizationFailure(proof, proposition);
 
@@ -324,12 +308,13 @@ export class Verifier {
   static verifyEqualTo (
     proposition: Proposition_EqualTo,
     proof: Proof_EqualTo,
-    context: DynamicContext
+    context: DynamicContext<String>
   ): QuivrResult<boolean> {
-    const wrappedProposition: Proposition = new Proposition({
-      equalTo: new Proposition_EqualTo({ compareTo: proposition.compareTo, location: proposition.location })
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'equalTo', value: proposition } });
+
+    const wrappedProof: Proof = new Proof({
+      value: { case: 'equalTo', value: proof }
     });
-    const wrappedProof: Proof = new Proof({ equalTo: new Proof_EqualTo({ transactionBind: proof.transactionBind }) });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
       Tokens.equalTo,
@@ -338,8 +323,7 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return messageResult;
-
+    if (either.isLeft(messageResult)) return messageResult;
 
     const evalResult: QuivrResult<boolean> = context.equalTo(proposition.location, proposition.compareTo.value)
       ? either.right(true)
@@ -348,16 +332,15 @@ export class Verifier {
     return Verifier.evaluateResult(messageResult, evalResult, { proposition: wrappedProposition, proof: wrappedProof });
   }
 
-  static async verifyThreshold (
+  static verifyThreshold (
     proposition: Proposition_Threshold,
     proof: Proof_Threshold,
-    context: DynamicContext
-  ): Promise<QuivrResult<boolean>> {
-    const wrappedProposition: Proposition = new Proposition({
-      threshold: new Proposition_Threshold({ challenges: proposition.challenges, threshold: proposition.threshold })
-    });
+    context: DynamicContext<String>
+  ): QuivrResult<boolean> {
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'threshold', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      threshold: new Proof_Threshold({ transactionBind: proof.transactionBind, responses: proof.responses })
+      value: { case: 'threshold', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(
@@ -367,7 +350,7 @@ export class Verifier {
       context
     );
 
-    if (messageResult._tag === 'Left') return Promise.reject(either.left(messageResult.left));
+    if (either.isLeft(messageResult)) return either.left(messageResult.left);
 
     // Initialize as true;
     let evalResult: QuivrResult<boolean> = either.right(false);
@@ -385,8 +368,8 @@ export class Verifier {
       for (let i = 0; i < proposition.challenges.length && successCount < proposition.threshold; i++) {
         const challenge = proposition.challenges[i];
         const response = proof.responses[i];
-        const verifyResult = await Verifier.verify(challenge, response, context);
-        if (verifyResult._tag === 'Right') {
+        const verifyResult = Verifier.verify(challenge, response, context);
+        if (either.isRight(verifyResult)) {
           successCount++;
         }
       }
@@ -395,84 +378,77 @@ export class Verifier {
       }
     }
 
-    return Promise.resolve(
-      Verifier.evaluateResult(messageResult, evalResult, { proposition: wrappedProposition, proof: wrappedProof })
-    );
+    return Verifier.evaluateResult(messageResult, evalResult, { proposition: wrappedProposition, proof: wrappedProof });
   }
 
-  static async verifyNot (
+  static verifyNot (
     proposition: Proposition_Not,
     proof: Proof_Not,
-    context: DynamicContext
-  ): Promise<QuivrResult<boolean>> {
-    const wrappedProposition: Proposition = new Proposition({
-      not: new Proposition_Not({ proposition: proposition.proposition })
-    });
+    context: DynamicContext<String>
+  ): QuivrResult<boolean> {
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'not', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      not: new Proof_Not({ transactionBind: proof.transactionBind, proof: proof.proof })
+      value: { case: 'not', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.not, wrappedProof, proof.transactionBind, context);
-    if (messageResult._tag === 'Left') return Promise.reject(either.left(messageResult.left));
+    if (either.isLeft(messageResult)) return either.left(messageResult.left);
 
-    const evalResult = await Verifier.verify(proposition.proposition, proof.proof, context);
+    const evalResult = Verifier.verify(proposition.proposition, proof.proof, context);
 
     const beforeReturn: QuivrResult<boolean> = Verifier.evaluateResult(messageResult, evalResult, {
       proposition: wrappedProposition,
       proof: wrappedProof
     });
 
-    return beforeReturn._tag === 'Right' ? quivrEvaluationAuthorizationFailure(proof, proposition) : either.right(true);
+    return either.isRight(beforeReturn) ? quivrEvaluationAuthorizationFailure(proof, proposition) : either.right(true);
   }
 
-  static async verifyAnd (
+  static verifyAnd (
     proposition: Proposition_And,
     proof: Proof_And,
-    context: DynamicContext
-  ): Promise<QuivrResult<boolean>> {
-    const wrappedProposition: Proposition = new Proposition({
-      and: new Proposition_And({ left: proposition.left, right: proposition.right })
-    });
+    context: DynamicContext<String>
+  ): QuivrResult<boolean> {
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'and', value: proposition } });
+
     const wrappedProof: Proof = new Proof({
-      not: new Proof_Not({ transactionBind: proof.transactionBind, proof: proof.left })
+      value: { case: 'and', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.and, wrappedProof, proof.transactionBind, context);
-    if (messageResult._tag === 'Left') return Promise.reject(either.left(messageResult.left));
+    if (either.isLeft(messageResult)) return either.left(messageResult.left);
 
-    const leftResult = await Verifier.verify(proposition.left, proof.left, context);
-    if (leftResult._tag === 'Left') return leftResult;
+    const leftResult = Verifier.verify(proposition.left, proof.left, context);
+    if (either.isLeft(leftResult)) return leftResult;
 
-    const rightResult = await Verifier.verify(proposition.right, proof.right, context);
-    if (rightResult._tag === 'Left') return rightResult;
+    const rightResult = Verifier.verify(proposition.right, proof.right, context);
+    if (either.isRight(rightResult)) return rightResult;
 
     // We're not checking the value of right as it's existence is enough to satisfy this condition
-    if (leftResult._tag === 'Right' && rightResult._tag === 'Right') return either.right(true);
+    if (either.isRight(leftResult) && either.isRight(rightResult)) return either.right(true);
 
     return quivrEvaluationAuthorizationFailure(wrappedProposition, wrappedProof);
   }
 
-  static async verifyOr (
-    proposition: Proposition_Or,
-    proof: Proof_Or,
-    context: DynamicContext
-  ): Promise<QuivrResult<boolean>> {
-    // const wrappedProposition: Proposition = new Proposition({ and: new Proposition.And({ left: proposition.left, right: proposition.right }) });
+  static verifyOr (proposition: Proposition_Or, proof: Proof_Or, context: DynamicContext<String>): QuivrResult<boolean> {
+    // const wrappedProposition: Proposition = new Proposition({value: { case: 'or', value: proposition}});
+
     const wrappedProof: Proof = new Proof({
-      not: new Proof_Not({ transactionBind: proof.transactionBind, proof: proof.left })
+      value: { case: 'or', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.or, wrappedProof, proof.transactionBind, context);
-    if (messageResult._tag === 'Left') return Promise.reject(either.left(messageResult.left));
+    if (either.isLeft(messageResult)) return either.left(messageResult.left);
 
-    const leftResult = await Verifier.verify(proposition.left, proof.left, context);
-    if (leftResult._tag === 'Right') return either.right(true);
+    const leftResult = Verifier.verify(proposition.left, proof.left, context);
+    if (either.isRight(leftResult)) either.right(true);
 
-    const rightResult = await Verifier.verify(proposition.right, proof.right, context);
+    const rightResult = Verifier.verify(proposition.right, proof.right, context);
     return rightResult;
   }
 
-  static async verify (proposition: Proposition, proof: Proof, context: DynamicContext): Promise<QuivrResult<boolean>> {
+  static verify (proposition: Proposition, proof: Proof, context: DynamicContext<String>): QuivrResult<boolean> {
     // note: good candidate for patternmatching, but can't figure out how protobuf-es handles the type matching in that case
     if (proposition.value.case === 'locked' && proof.value.case === 'locked') {
       return Verifier.verifyLocked();

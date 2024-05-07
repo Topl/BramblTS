@@ -1,7 +1,7 @@
-interface QuivrRunTimeError extends Error {}
+export interface QuivrRuntimeError extends Error {}
 
 /// A Validation error indicates that the evaluation of the proof failed for the given proposition within the provided context.
-export class ValidationError implements QuivrRunTimeError {
+export class ValidationError implements QuivrRuntimeError {
   /// A message describing the Quivr error.
   public message: string;
   public name: string;
@@ -85,7 +85,7 @@ enum ValidationErrorType {
 }
 
 /// A Context error indicates that the Dynamic context failed to retrieve an instance of a requested member
-export class ContextError implements QuivrRunTimeError {
+export class ContextError implements QuivrRuntimeError {
   /// A message describing the Context error.
   public message: string;
   public name: string;

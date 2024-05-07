@@ -1,7 +1,7 @@
 {
   "name": "BramblTS",
   "version": "1.0.0",
-  "description": "TypScript SDK for the Topl Blockchain",
+  "description": "TypeScript SDK for the Topl Blockchain",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -30,6 +30,8 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@connectrpc/connect": "^1.4.0",
+    "@connectrpc/connect-node": "^1.4.0",
     "@noble/ed25519": "^1.7.3",
     "aes-js": "^3.1.2",
     "big-integer": "^1.6.51",
@@ -40,7 +42,7 @@
     "google-protobuf": "^3.21.2",
     "long": "^5.2.3",
     "prettier": "3.0.2",
-    "topl_common": "1.0.8",
+    "topl_common": "1.0.10",
     "typescript": "^5.1.6",
     "uuid": "^9.0.1"
   }

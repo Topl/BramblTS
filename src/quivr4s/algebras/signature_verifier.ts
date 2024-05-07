@@ -1,14 +1,5 @@
-import { ContextlessValidation } from '../common/contextless_validation.js';
-import { QuivrResult } from '../common/quivr_result.js';
+import type { SignatureVerification } from 'topl_common';
+import type ContextlessValidation from '../quivr/common/contextless_validation.js';
+import type { QuivrRuntimeError } from '../quivr/runtime/quivr_runtime_error.js';
 
-export class SignatureVerifier<T> implements ContextlessValidation<T> {
-  definedFunction: (t: T) => QuivrResult<T>;
-
-  constructor(definedFunction: (t: T) => QuivrResult<T>) {
-    this.definedFunction = definedFunction;
-  }
-
-  validate(t: T): QuivrResult<T> {
-    return this.definedFunction(t);
-  }
-}
+export default interface SignatureVerifier extends ContextlessValidation<QuivrRuntimeError, SignatureVerification> {}
