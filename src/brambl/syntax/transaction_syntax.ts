@@ -1,6 +1,6 @@
 import { ImmutableBytes, IoTransaction, TransactionId } from 'topl_common';
 import { ContainsEvidence } from '../common/contains_evidence.js';
-import { ContainsSignable } from '../common/contains_signable.js';
+import ContainsSignable from '../common/contains_signable.js';
 
 export default class TransactionSyntax {
   readonly transaction: IoTransaction;
@@ -17,6 +17,8 @@ export default class TransactionSyntax {
   // Computes what the ID _should_ be for this Transaction.
   computeId (): TransactionId {
     const signable = ContainsSignable.ioTransaction(this.transaction).signableBytes;
+    const x = this.transaction.signable;
+    
     const immutable = new ImmutableBytes({ value: signable.value });
     const ce = ContainsEvidence.blake2bEvidenceFromImmutable(immutable);
     return new TransactionId({ value: ce.evidence.digest.value });

@@ -1,12 +1,14 @@
-import { Either, isLeft, left, right } from 'fp-ts/Either';
+import { isLeft, left, right, type Either } from '@/common/functional/either.js';
 import {
   Attestation,
+  Attestation_Predicate,
   Datum_GroupPolicy,
   Datum_IoTransaction,
   Datum_SeriesPolicy,
   Event_GroupPolicy,
   Event_IoTransaction,
   Event_SeriesPolicy,
+  Group,
   GroupId,
   Int128,
   IoTransaction,
@@ -14,19 +16,22 @@ import {
   LockAddress,
   LockId,
   Lock_Predicate,
+  Lvl,
   Proof,
   Schedule,
+  Series,
   SpentTransactionOutput,
   TransactionOutputAddress,
   Txo,
   UnspentTransactionOutput,
   Value
 } from 'topl_common';
-import { Unit, unit } from '../../common/functional.js';
+import { unit, type Unit } from '../../common/functional.js';
 import { AddressCodecs } from '../codecs/address_codec.js';
 import { ContainsEvidence } from '../common/contains_evidence.js';
 import GroupPolicySyntax from '../syntax/group_policy_syntax.js';
 import SeriesPolicySyntax from '../syntax/series_policy_syntax.js';
+import { Uint8ArrayUtils } from '../utils/extensions.js';
 import { BuilderError } from './builder_error.js';
 
 abstract class TransactionBuilderApi {
@@ -69,10 +74,13 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
 
   unprovenAttenstation (lockPredicate: Lock_Predicate): Attestation {
     return new Attestation({
-      predicate: new Attestation.Predicate({
-        lock: lockPredicate,
-        responses: new Array(lockPredicate.challenges.length).fill(new Proof())
-      })
+      value: {
+        case: 'predicate',
+        value: new Attestation_Predicate({
+          lock: lockPredicate,
+          responses: new Array(lockPredicate.challenges.length).fill(new Proof())
+        })
+      }
     });
   }
 
@@ -92,10 +100,12 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
         network: this.networkId,
         ledger: this.ledgerId,
         id: new LockId({
-          value: ContainsEvidence.blake2bEvidenceFromImmutable(new Lock({ predicate: predicate })).evidence.digest.value
+          value: ContainsEvidence.blake2bEvidenceFromImmutable(
+            new Lock({ value: { case: 'predicate', value: predicate } })
+          ).evidence.digest.value
         })
       }),
-      value: new Value({ lvl: new Value.LVL({ quantity: amount }) })
+      value: new Value({ value: { case: 'lvl', value: new Lvl({ quantity: amount }) } })
     });
   }
 
@@ -103,9 +113,12 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     return new UnspentTransactionOutput({
       address: lockAddress,
       value: new Value({
-        lvl: new Value.LVL({
-          quantity: amount
-        })
+        value: {
+          case: 'lvl',
+          value: new Lvl({
+            quantity: amount
+          })
+        }
       })
     });
   }
@@ -114,9 +127,9 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     return new Datum_IoTransaction({
       event: new Event_IoTransaction({
         schedule: new Schedule({
-          min: 0,
-          max: Number.MAX_VALUE,
-          timestamp: Date.now()
+          min: BigInt(0),
+          max: BigInt(Number.MAX_VALUE),
+          timestamp: BigInt(Date.now())
         })
       })
     });
@@ -124,10 +137,13 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
 
   unprovenAttestation (predicate: Lock_Predicate): Attestation {
     return new Attestation({
-      predicate: new Attestation.Predicate({
-        lock: predicate,
-        responses: Array.from({ length: predicate.challenges.length }, () => new Proof())
-      })
+      value: {
+        case: 'predicate',
+        value: new Attestation_Predicate({
+          lock: predicate,
+          responses: Array.from({ length: predicate.challenges.length }, () => new Proof())
+        })
+      }
     });
   }
 
@@ -141,7 +157,9 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     const unprovenAttestationToProve = this.unprovenAttenstation(lockPredicateFrom);
     const totalValues = lvlTxos.reduce((acc, x) => {
       const y = x.transactionOutput.value;
-      return y.hasLvl() && y.lvl.hasQuantity() ? acc + BigInt(y.lvl.quantity) : acc;
+      return y.value.case === 'lvl' && y.value.value.quantity !== null
+        ? acc + Uint8ArrayUtils.toBigInt(y.value.value.quantity.value)
+        : acc;
     }, BigInt(0));
 
     const d = this.datum();
@@ -178,8 +196,7 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     quantityToMint: Int128,
     mintedConstructorLockAddress: LockAddress
   ): Either<BuilderError, IoTransaction> {
-    const lock = new Lock();
-    lock.predicate = registrationLock;
+    const lock = new Lock({ value: { case: 'predicate', value: registrationLock } });
     const registrationLockAddr = new LockAddress({
       network: this.networkId,
       ledger: this.ledgerId,
@@ -206,7 +223,7 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     const utxoMinted = this.groupOutput(
       mintedConstructorLockAddress,
       quantityToMint,
-      GroupPolicySyntax.computeId(groupPolicy)
+      new GroupPolicySyntax(groupPolicy).computeId()
     );
     return right(
       new IoTransaction({
@@ -231,8 +248,7 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     quantityToMint: Int128,
     mintedConstructorLockAddress: LockAddress
   ): Either<BuilderError, IoTransaction> {
-    const lock = new Lock();
-    lock.predicate = registrationLock;
+    const lock = new Lock({ value: { case: 'predicate', value: registrationLock } });
     const registrationLockAddr = new LockAddress({
       network: this.networkId,
       ledger: this.ledgerId,
@@ -281,7 +297,7 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
   ): Either<UserInputError, Unit> {
     if (registrationTxo.outputAddress !== policyRegistrationUtxo) {
       return left(new UserInputError('registrationTxo does not match registrationUtxo'));
-    } else if (!registrationTxo.transactionOutput.value.hasLvl()) {
+    } else if (registrationTxo.transactionOutput.value.value.case !== 'lvl') {
       return left(new UserInputError('registrationUtxo does not contain LVLs'));
     } else if (registrationLockAddr != registrationTxo.transactionOutput.address) {
       return left(new UserInputError('registrationLock does not correspond to registrationTxo'));
@@ -296,18 +312,23 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
   }
 
   groupOutput (lockAddress: LockAddress, quantity: Int128, groupId: GroupId): UnspentTransactionOutput {
-    const value = new Value.Group({
+    const group = new Group({
       groupId: groupId,
       quantity: quantity
     });
     return new UnspentTransactionOutput({
       address: lockAddress,
-      value: value
+      value: {
+        value: {
+          case: 'group',
+          value: group
+        }
+      }
     });
   }
 
   seriesOutput (lockAddress: LockAddress, quantity: Int128, policy: Event_SeriesPolicy): UnspentTransactionOutput {
-    const value = new Value.Series({
+    const value = new Series({
       seriesId: {
         value: SeriesPolicySyntax.computeId(policy).value
       },
@@ -318,7 +339,12 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
     });
     return new UnspentTransactionOutput({
       address: lockAddress,
-      value: value
+      value: {
+        value: {
+          case: 'series',
+          value: value
+        }
+      }
     });
   }
 }
@@ -331,7 +357,6 @@ export class LockAddressOps {
   }
 
   toBase58 (): string {
-    // Assuming you have a suitable implementation of AddressCodecs.encode
     return AddressCodecs.encode(this.lockAddress);
   }
 }

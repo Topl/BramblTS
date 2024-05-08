@@ -1,5 +1,6 @@
 /// class made to emulate some dart and scala extension methods, somehow feels like a meme..
 
+
 /**
  * Checks if an object has a specific property.
  *
@@ -62,4 +63,31 @@ export class Uint8ArrayUtils {
     }
     return true;
   }
+
+  // TODO figure out which version to use, buffer not available in all environments
+  static toBigInt (a: Uint8Array): bigint {
+    return BigInt('0x' + Buffer.from(a).toString('hex'));
+  }
+
+  static toBigInt2 (a: Uint8Array): bigint {
+      const hex = Array.from(a)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+      return BigInt(`0x${hex}`);
+    }
 }
+
+
+class bigIntExtensions {
+  // WARNING: does not handle negatives!
+  static toUint8Array (n: bigint): Uint8Array {
+    const hex = n.toString(16);
+    const len = hex.length;
+    const u8 = new Uint8Array(len / 2);
+    for (let i = 0; i < len; i += 2) {
+      u8[i / 2] = parseInt(hex.substring(i, 2), 16);
+    }
+    return u8;
+  }
+}
+

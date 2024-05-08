@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Either, left, right, isLeft, isRight } from 'fp-ts/Either';
+import { type Either, isLeft, isRight, left, right } from '@/common/functional/either.js';
+import { Proposer } from '@/quivr4s/quivr.js';
+import { Data, Digest, type Proposition, type VerificationKey } from 'topl_common';
 import { BuilderError } from '../builder_error.js';
-import { Data, Digest, Proposition, VerificationKey } from '../../../quivr4s/quivr/common/types.js';
-import { Proposer } from '../../../quivr4s/quivr/api/proposer.js';
 
 enum PropositionType {
   locked = 'locked',
@@ -13,11 +13,11 @@ enum PropositionType {
   and = 'and',
   or = 'or',
   not = 'not',
-  threshold = 'threshold',
+  threshold = 'threshold'
 }
 
 export class UnableToBuildPropositionTemplate extends BuilderError {
-  constructor({ message }: { message: string }) {
+  constructor ({ message }: { message: string }) {
     super(message);
   }
 }
@@ -26,7 +26,7 @@ export abstract class PropositionTemplate {
   public propositionType: PropositionType;
   abstract build(entityVks: VerificationKey[]): Either<BuilderError, Proposition>;
   abstract toJson();
-  static fromJson(json) {
+  static fromJson (json) {
     const type = json.propositionType;
     switch (type) {
       case 'locked':
@@ -57,18 +57,18 @@ export abstract class PropositionTemplate {
         return ThresholdTemplate.fromJson(json);
         break;
     }
-  };
+  }
 }
 
 export class LockedTemplate implements PropositionTemplate {
   public data?: Data;
   public propositionType = PropositionType.locked;
 
-  constructor(data: Data | null) {
+  constructor (data: Data | null) {
     this.data = data;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       return right(Proposer.lockedProposer(this.data));
     } catch (e) {
@@ -76,32 +76,31 @@ export class LockedTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
-      data: this.data.serialize()
-    }
+      data: this.data.value
+    };
   }
 
-  static fromJson(json) {
-    return new LockedTemplate(json.data ? Data.deserialize(json.data) : null)
+  static fromJson (json) {
+    return new LockedTemplate(json.data ? Data.fromJson(json.data) : null);
   }
-
 }
 
 export class HeightTemplate implements PropositionTemplate {
   public chain: string;
-  public min: number;
-  public max: number;
+  public min: bigint;
+  public max: bigint;
   public propositionType = PropositionType.height;
 
-  constructor(chain: string, min: number, max: number) {
+  constructor (chain: string, min: bigint, max: bigint) {
     this.chain = chain;
     this.min = min;
     this.max = max;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       return right(Proposer.heightProposer(this.chain, this.min, this.max));
     } catch (e) {
@@ -109,31 +108,31 @@ export class HeightTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
       chain: this.chain,
       min: this.min,
       max: this.max
-    }
+    };
   }
 
-  static fromJson(json) {
+  static fromJson (json) {
     return new HeightTemplate(json.chain, json.min, json.max);
   }
 }
 
 export class TickTemplate implements PropositionTemplate {
-  public min: number;
-  public max: number;
+  public min: bigint;
+  public max: bigint;
   public propositionType = PropositionType.tick;
 
-  constructor(min: number, max: number) {
+  constructor (min: bigint, max: bigint) {
     this.min = min;
     this.max = max;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       return right(Proposer.tickProposer(this.min, this.max));
     } catch (e) {
@@ -141,15 +140,15 @@ export class TickTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
       min: this.min,
       max: this.max
-    }
+    };
   }
 
-  static fromJson(json) {
+  static fromJson (json) {
     return new TickTemplate(json.min, json.max);
   }
 }
@@ -159,12 +158,12 @@ export class DigestTemplate implements PropositionTemplate {
   public digest: Digest;
   public propositionType = PropositionType.digest;
 
-  constructor(routine: string, digest: Digest) {
+  constructor (routine: string, digest: Digest) {
     this.routine = routine;
     this.digest = digest;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       return right(Proposer.digestProposer(this.routine, this.digest));
     } catch (e) {
@@ -172,16 +171,16 @@ export class DigestTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
       routine: this.routine,
-      digest: this.digest.serialize()
+      digest: this.digest.value
     };
   }
 
-  static fromJson(json) {
-    return new DigestTemplate(json.routine, Digest.deserialize(json.digest));
+  static fromJson (json) {
+    return new DigestTemplate(json.routine, Digest.fromJson(json.digest));
   }
 }
 
@@ -190,20 +189,18 @@ export class SignatureTemplate implements PropositionTemplate {
   public entityIdx: number;
   public propositionType = PropositionType.signature;
 
-  constructor(routine: string, entityIdx: number) {
+  constructor (routine: string, entityIdx: number) {
     this.routine = routine;
     this.entityIdx = entityIdx;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       if (this.entityIdx >= 0 && this.entityIdx < entityVks.length) {
         return right(Proposer.signatureProposer(this.routine, entityVks[this.entityIdx]));
       } else {
         return left(
-          new BuilderError(
-            `Signature Proposition failed. Index: ${this.entityIdx}. Length of VKs: ${entityVks.length}`,
-          ),
+          new BuilderError(`Signature Proposition failed. Index: ${this.entityIdx}. Length of VKs: ${entityVks.length}`)
         );
       }
     } catch (e) {
@@ -211,15 +208,15 @@ export class SignatureTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
       routine: this.routine,
       entityIdx: this.entityIdx
-    }
+    };
   }
 
-  static fromJson(json) {
+  static fromJson (json) {
     return new SignatureTemplate(json.routine, json.entityIdx);
   }
 }
@@ -229,12 +226,12 @@ export class AndTemplate implements PropositionTemplate {
   public rightTemplate: PropositionTemplate;
   public propositionType = PropositionType.and;
 
-  constructor(leftTemplate: PropositionTemplate, rightTemplate: PropositionTemplate) {
+  constructor (leftTemplate: PropositionTemplate, rightTemplate: PropositionTemplate) {
     this.leftTemplate = leftTemplate;
     this.rightTemplate = rightTemplate;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       const lp = this.leftTemplate.build(entityVks);
       const rp = this.rightTemplate.build(entityVks);
@@ -250,15 +247,15 @@ export class AndTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propsitionType: this.propositionType,
       leftTemplate: this.leftTemplate.toJson(),
       rightTemplate: this.rightTemplate.toJson()
-    }
+    };
   }
 
-  static fromJson(json) {
+  static fromJson (json) {
     return new AndTemplate(json.leftTemplate.fromJson(), json.rightTemplate.fromJson());
   }
 }
@@ -268,12 +265,12 @@ export class OrTemplate implements PropositionTemplate {
   public rightTemplate: PropositionTemplate;
   public propositionType = PropositionType.or;
 
-  constructor(leftTemplate: PropositionTemplate, rightTemplate: PropositionTemplate) {
+  constructor (leftTemplate: PropositionTemplate, rightTemplate: PropositionTemplate) {
     this.leftTemplate = leftTemplate;
     this.rightTemplate = rightTemplate;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       const lp = this.leftTemplate.build(entityVks);
       const rp = this.rightTemplate.build(entityVks);
@@ -289,15 +286,15 @@ export class OrTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propsitionType: this.propositionType,
       leftTemplate: this.leftTemplate.toJson(),
       rightTemplate: this.rightTemplate.toJson()
-    }
+    };
   }
 
-  static fromJson(json) {
+  static fromJson (json) {
     return new OrTemplate(json.leftTemplate.fromJson(), json.rightTemplate.fromJson());
   }
 }
@@ -306,11 +303,11 @@ export class NotTemplate implements PropositionTemplate {
   public innerTemplate: PropositionTemplate;
   public propositionType = PropositionType.not;
 
-  constructor(innerTemplate: PropositionTemplate) {
+  constructor (innerTemplate: PropositionTemplate) {
     this.innerTemplate = innerTemplate;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     try {
       const ip = this.innerTemplate.build(entityVks);
       if (isRight(ip)) {
@@ -323,14 +320,14 @@ export class NotTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
       innerTemplate: this.innerTemplate.toJson()
-    }
+    };
   }
 
-  static fromJson(json) {
+  static fromJson (json) {
     return new NotTemplate(json.innerTemplate.fromJson());
   }
 }
@@ -340,15 +337,15 @@ export class ThresholdTemplate implements PropositionTemplate {
   public threshold: number;
   public propositionType = PropositionType.threshold;
 
-  constructor(innerTemplates: PropositionTemplate[], threshold: number) {
+  constructor (innerTemplates: PropositionTemplate[], threshold: number) {
     this.innerTemplates = innerTemplates;
     this.threshold = threshold;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Proposition> {
     const buildInner = (
       templates: PropositionTemplate[],
-      accumulator: Either<BuilderError, Proposition[]>,
+      accumulator: Either<BuilderError, Proposition[]>
     ): Either<BuilderError, Proposition[]> => {
       if (isLeft(accumulator)) {
         return accumulator;
@@ -382,19 +379,22 @@ export class ThresholdTemplate implements PropositionTemplate {
     }
   }
 
-  toJson() {
+  toJson () {
     return {
       propositionType: this.propositionType,
       threshold: this.threshold,
-      innerTemplates: this.innerTemplates.map((innerTemplate) => {
+      innerTemplates: this.innerTemplates.map(innerTemplate => {
         return innerTemplate.toJson();
       })
-    }
+    };
   }
 
-  static fromJson(json) {
-    return new ThresholdTemplate(json.innerTemplates.map((innerTemplateJson) => {
-      return innerTemplateJson.fromJson()
-    }), json.threshold);
+  static fromJson (json) {
+    return new ThresholdTemplate(
+      json.innerTemplates.map(innerTemplateJson => {
+        return innerTemplateJson.fromJson();
+      }),
+      json.threshold
+    );
   }
 }

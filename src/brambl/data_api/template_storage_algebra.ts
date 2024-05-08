@@ -12,13 +12,13 @@ export interface WalletTemplate {
   /**
    * Defines a contract storage API.
    */
-  export interface TemplateStorageAlgebra<F> {
+  export interface TemplateStorageAlgebra {
   
     /**
      * Fetches all templates.
      * @returns A Promise that resolves to an array of WalletTemplate objects.
      */
-    findTemplates(): Promise<WalletTemplate[]>;
+    findTemplates(): WalletTemplate[];
 
   
     /**
@@ -26,5 +26,5 @@ export interface WalletTemplate {
      * @param walletTemplate The wallet contract to add.
      * @returns A Promise that resolves to a number.
      */
-    addTemplate(walletTemplate: WalletTemplate): Promise<number>;
+    addTemplate(walletTemplate: WalletTemplate): number;
   }

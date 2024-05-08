@@ -1,4 +1,4 @@
-import { MnemonicSize } from '../../../src/crypto/generation/mnemonic/mnemonic';
+import { MnemonicSize } from "@/crypto/crypto.js";
 
 class SecureRandom {
   private _random = Math.random();

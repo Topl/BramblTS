@@ -1,7 +1,6 @@
 // A Verification Context opinionated to the Topl context.
 
 
-import type { ParsableDataInterface } from '@/quivr4s/quivr/common/parsable_data_interface.js';
 import { SignableBytes, type Datum, type IoTransaction } from 'topl_common';
 import Blake2b256DigestInterpreter from './validation/blake2b256_digest_interpreter.js';
 import { type Option, none, some } from '@/common/functional/either.js';
@@ -9,6 +8,7 @@ import type SignatureVerifier from '@/quivr4s/algebras/signature_verifier.js';
 import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
 import Sha256DigestInterpreter from './validation/sha256_digest_interpreter.js';
 import ExtendedEd25519SignatureInterpreter from './validation/extended_ed25519_signature_interpreter.js';
+import type ParsableDataInterface from '@/quivr4s/quivr/common/parsable_data_interface.js';
 
 // signableBytes, currentTick and the datums are dynamic
 export default class Context {
@@ -37,7 +37,7 @@ export default class Context {
   }
 
   signableBytes (): SignableBytes {
-    return new SignableBytes({ value: this.tx });
+    return this.tx.signable();
   }
 
   currentTick (): number {

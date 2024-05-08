@@ -1,9 +1,9 @@
 import { left, right, type Either } from '@/common/functional/either.js';
 import { SHA256 } from '@/crypto/hash/sha.js';
-import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
-import { ValidationError, type QuivrRuntimeError } from '@/quivr4s/runtime/quivr_runtime_error.js';
 import { DigestVerification } from 'topl_common';
 import { Uint8ArrayUtils } from '../utils/extensions.js';
+import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
+import { type QuivrRuntimeError, ValidationError } from '@/quivr4s/quivr.js';
 
 /**
  * Validates that a Sha256 digest is valid.
