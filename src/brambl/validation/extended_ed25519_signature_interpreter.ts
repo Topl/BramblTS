@@ -1,6 +1,6 @@
 import { left, right, type Either } from '@/common/functional/either.js';
-import { ExtendedEd25519 } from '@/crypto/crypto.js';
 import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
+import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
 import * as xspec from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
 import type SignatureVerifier from '@/quivr4s/algebras/signature_verifier.js';
 import { ValidationError, type QuivrRuntimeError } from '@/quivr4s/quivr.js';

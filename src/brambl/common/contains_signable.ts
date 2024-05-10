@@ -43,10 +43,10 @@ export default class ContainsSignable {
 /// experimental extensions via typescript module augmentation
 declare module 'topl_common' {
   interface IoTransaction {
-    signable(): SignableBytes;
+    signable?(): SignableBytes; // marked optional to not mess up with type identification
   }
   interface ImmutableBytes {
-    signable(): SignableBytes;
+    signable?(): SignableBytes;
   }
 }
 IoTransaction.prototype.signable = function () {

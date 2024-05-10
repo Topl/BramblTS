@@ -36,10 +36,10 @@ import { type QuivrResult, quivrEvaluationAuthorizationFailure } from '../common
 
 import { Tokens } from '../../tokens.js';
 import { arraysEqual } from '../../utils/list_utils.js';
-import { ValidationError } from '../runtime/quivr_runtime_error.js';
 import type DynamicContext from '../runtime/dynamic_context.js';
+import { ValidationError } from '../runtime/quivr_runtime_error.js';
 
-export default class Verifier {
+export class Verifier {
   /// Will return [QuivrResult] Left => [QuivrRuntimeError.messageAuthorizationFailure] if the proof is invalid.
   static _evaluateBlake2b256Bind (
     tag: string,

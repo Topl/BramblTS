@@ -1,10 +1,9 @@
 import { array, either, left, pipe, right, zip, type Either } from '@/common/functional/either.js';
+import { Verifier, type QuivrRuntimeError } from '@/quivr4s/quivr.js';
+import type DynamicContext from '@/quivr4s/quivr/runtime/dynamic_context.js';
 import type { AccumulatorRootId, IoTransaction, LockId, Proof, Proposition } from 'topl_common';
 import type TransactionAuthorizationVerifier from './algebras/transaction_authorization_verifier.js';
 import { AuthorizationFailed, TransactionAuthorizationError } from './transaction_authorization_error.js';
-import type { QuivrRuntimeError } from '@/quivr4s/quivr.js';
-import Verifier from '@/quivr4s/quivr/api/verifier.js';
-import type DynamicContext from '@/quivr4s/quivr/runtime/dynamic_context.js';
 
 /**
  * Validates that each Input within a Transaction is properly "authorized".  "Authorized" simply means "does the given

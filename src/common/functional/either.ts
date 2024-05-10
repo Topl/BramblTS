@@ -6,5 +6,5 @@ export { array, either, option } from 'fp-ts';
 export { pipe } from 'fp-ts/lib/function.js';
 export type { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray.js';
 export type { Task } from 'fp-ts/Task';
-export { none, some, type Option } from 'fp-ts/Option';
+export { none, some, type Option, fromNullable } from 'fp-ts/Option';
 

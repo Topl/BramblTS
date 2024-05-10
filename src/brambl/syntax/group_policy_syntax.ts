@@ -7,7 +7,7 @@ type GroupPolicy = Event_GroupPolicy;
 /**
  * Provides syntax operations for working with GroupPolicies.
  */
-export default class GroupPolicySyntax {
+export class GroupPolicySyntax {
   groupPolicy: GroupPolicy;
 
   constructor (groupPolicy: GroupPolicy) {

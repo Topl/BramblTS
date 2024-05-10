@@ -29,8 +29,8 @@ import {
 import { unit, type Unit } from '../../common/functional.js';
 import { AddressCodecs } from '../codecs/address_codec.js';
 import { ContainsEvidence } from '../common/contains_evidence.js';
-import GroupPolicySyntax from '../syntax/group_policy_syntax.js';
-import SeriesPolicySyntax from '../syntax/series_policy_syntax.js';
+import { GroupPolicySyntax } from '../syntax/group_policy_syntax.js';
+import { SeriesPolicySyntax } from '../syntax/series_policy_syntax.js';
 import { Uint8ArrayUtils } from '../utils/extensions.js';
 import { BuilderError } from './builder_error.js';
 
