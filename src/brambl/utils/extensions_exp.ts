@@ -15,21 +15,28 @@ declare global {
     /**
      * Converts a number to a Uint8Array.
      */
-    toUint8Array(): Uint8Array;
+    bToUint8Array(): Uint8Array;
   }
   interface Uint8Array {
     /**
      * Converts a Uint8Array to a number.
      */
-    toNumber(): number;
+    bToNumber(): number;
   }
+  interface Array<T> {
+    /**
+     * Returns the sum of all elements in the array.
+     */
+    bSum(): number;  
+  }
+
 }
 
 Number.prototype.bramblTestingOverride = function () {
   return this.toString() + ' bramblTestingOverride';
 };
 
-Number.prototype.toUint8Array = function () {
+Number.prototype.bToUint8Array = function () {
   let arr = new Uint8Array(8);
   let num = this;
 
@@ -41,7 +48,7 @@ Number.prototype.toUint8Array = function () {
   return arr;
 };
 
-Uint8Array.prototype.toNumber = function () {
+Uint8Array.prototype.bToNumber = function () {
   let num = 0;
 
   for (let i = 7; i >= 0; i--) {
@@ -50,3 +57,8 @@ Uint8Array.prototype.toNumber = function () {
 
   return num;
 };
+
+
+Array.prototype.bSum = function() {
+  return this.reduce((a: number, b: number) => a + b, 0);
+}

@@ -131,7 +131,7 @@ export class ContainsImmutable {
   }
 
   static number (i: number): ContainsImmutable {
-    const immutableBytes = new ImmutableBytes({ value: i.toUint8Array() });
+    const immutableBytes = new ImmutableBytes({ value: i.bToUint8Array() });
     return immutableBytes.immutable();
   }
 

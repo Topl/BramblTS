@@ -1,7 +1,16 @@
 import { fromNullable, option, type Option } from '@/common/functional/either.js';
 import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect';
 import { isSome, none } from 'fp-ts/lib/Option.js';
-import { BlockBody, BlockHeader, BlockId, IoTransaction, NodeRpc, TransactionId } from 'topl_common';
+import {
+  BlockBody,
+  BlockHeader,
+  BlockId,
+  IoTransaction,
+  NodeRpc,
+  SynchronizationTraversalReq,
+  SynchronizationTraversalRes,
+  TransactionId
+} from 'topl_common';
 
 /**
  * Defines a Bifrost Query API for interacting with a Bifrost node.
@@ -35,6 +44,7 @@ export abstract class BifrostQueryAlgebra {
    */
   abstract fetchTransaction(txId: TransactionId): Promise<Option<IoTransaction>>;
 
+
   /**
    * Broadcasts a transaction to the network.
    * @param tx The transaction to broadcast.
@@ -55,6 +65,12 @@ export abstract class BifrostQueryAlgebra {
    * @return A Promise that resolves to the BlockId, BlockHeader, BlockBody, and contained transactions of the fetched block, if it exists.
    */
   abstract fetchBlockHeader(blockId: BlockId): Promise<BlockHeader>;
+
+    /**
+   * Retrieve an iterator of changes to the canonical head of the chain.
+   * @return an iterator of changes to the chain tip
+   */
+    abstract synchronizationTraversal(): Promise<AsyncIterable<SynchronizationTraversalRes>>;
 }
 
 // Todo error handling
@@ -64,6 +80,7 @@ export class BifrostQueryInterpreter implements BifrostQueryAlgebra {
   constructor (transport: Transport) {
     this.client = createPromiseClient(NodeRpc, transport);
   }
+
 
   async fetchBlockBody (blockId: BlockId): Promise<BlockBody> {
     return (await this.client.fetchBlockBody({ blockId })).body;
@@ -97,6 +114,11 @@ export class BifrostQueryInterpreter implements BifrostQueryAlgebra {
       return option.some([blockId, blockHeader.header, blockBody.body, transactions]);
     }
     return none;
+  }
+
+  async synchronizationTraversal(): Promise<AsyncIterable<SynchronizationTraversalRes>> {
+    const req = new SynchronizationTraversalReq({});
+    return this.client.synchronizationTraversal(req);
   }
 
   // better error handling
