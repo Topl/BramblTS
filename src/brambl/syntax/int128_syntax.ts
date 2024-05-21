@@ -28,3 +28,32 @@ export default class Int128Syntax {
     return int128;
   }
 }
+
+declare global {
+  interface BigInt {
+    bAsInt128(): Int128;
+  }
+  interface Number {
+    bAsInt128(): Int128;
+  }
+}
+
+BigInt.prototype.bAsInt128 = function (): Int128 {
+  return Int128Syntax.bigIntAsInt128(this);
+};
+
+Number.prototype.bAsInt128 = function (): Int128 {
+  return Int128Syntax.numberAsInt128(this);
+};
+
+// / todo: messes with Int128$1 typing
+declare module 'topl_common' {
+  interface Int128 {
+    bAsBigInt?(): BigInt;
+  }
+}
+
+Int128.prototype.bAsBigInt = function (): BigInt {
+  return Int128Syntax.int128AsBigInt(this);
+};
+

@@ -1,9 +1,14 @@
+import type { AnyValue } from '@/common/any_value.js';
 import { ValidationError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
 import type { Proof, Proposition, Schedule, TransactionOutputAddress, UpdateProposal, Value } from 'topl_common';
 
 export abstract class TransactionSyntaxError extends ValidationError {}
 
-export class EmptyInputs extends TransactionSyntaxError {}
+export class EmptyInputs extends TransactionSyntaxError {
+  constructor () {
+    super(null);
+  }
+}
 
 export class DuplicateInput extends TransactionSyntaxError {
   knownIdentifier: TransactionOutputAddress;
@@ -14,7 +19,11 @@ export class DuplicateInput extends TransactionSyntaxError {
   }
 }
 
-export class ExcessiveOutputsCount extends TransactionSyntaxError {}
+export class ExcessiveOutputsCount extends TransactionSyntaxError {
+  constructor () {
+    super(null);
+  }
+}
 
 export class InvalidTimestamp extends TransactionSyntaxError {
   timestamp: bigint;
@@ -65,7 +74,11 @@ export class InvalidProofType extends TransactionSyntaxError {
   }
 }
 
-export class InvalidDataLength extends TransactionSyntaxError {}
+export class InvalidDataLength extends TransactionSyntaxError {
+  constructor () {
+    super(null);
+  }
+}
 
 export class InvalidUpdateProposal extends TransactionSyntaxError {
   outputs: UpdateProposal[];

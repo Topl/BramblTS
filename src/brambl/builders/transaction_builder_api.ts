@@ -30,7 +30,6 @@ import { unit, type Unit } from '../../common/functional.js';
 import { AddressCodecs } from '../codecs/address_codec.js';
 import { ContainsEvidence } from '../common/contains_evidence.js';
 import { GroupPolicySyntax } from '../syntax/group_policy_syntax.js';
-import { SeriesPolicySyntax } from '../syntax/series_policy_syntax.js';
 import { Uint8ArrayUtils } from '../utils/extensions.js';
 import { BuilderError } from './builder_error.js';
 
@@ -330,7 +329,7 @@ export class transactionBuilderApiImpl implements TransactionBuilderApi {
   seriesOutput (lockAddress: LockAddress, quantity: Int128, policy: Event_SeriesPolicy): UnspentTransactionOutput {
     const value = new Series({
       seriesId: {
-        value: SeriesPolicySyntax.computeId(policy).value
+        value: policy.computeId().value
       },
       quantity: quantity,
       tokenSupply: policy.tokenSupply,

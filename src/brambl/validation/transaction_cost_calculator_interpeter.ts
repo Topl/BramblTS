@@ -1,10 +1,8 @@
 import { error } from 'console';
 import { IoTransaction, Proof, SpentTransactionOutput, UnspentTransactionOutput } from 'topl_common'; // replace with actual import paths
 import { ContainsImmutable } from '../common/contains_immutable.js';
+import type TransactionCostCalculator from './algebras/transaction_cost_calculator.js';
 
-interface TransactionCostCalculator {
-  costOf(transaction: IoTransaction): number;
-}
 
 export class TransactionCostCalculatorInterpreter implements TransactionCostCalculator {
   private transactionCostConfig: TransactionCostConfig;

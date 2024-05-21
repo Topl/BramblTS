@@ -22,3 +22,19 @@ export class GroupPolicySyntax {
     return groupId;
   }
 }
+
+declare module 'topl_common' {
+  interface Event_GroupPolicy {
+    syntax?(): GroupPolicySyntax;
+    computeId?(): GroupId;
+  }
+}
+
+Event_GroupPolicy.prototype.syntax = function () {
+  return new GroupPolicySyntax(this);
+};
+
+Event_GroupPolicy.prototype.computeId = function () {
+  /// prevent issues with type identification/declaration, duplicate the above code
+  return new GroupPolicySyntax(this).computeId();
+};

@@ -6,5 +6,5 @@ export default interface TransactionCostCalculator {
    * @param transaction The transaction to cost
    * @return a bigint value representing the cost
    */
-  costOf(transaction: IoTransaction): BigInt;
+  costOf(transaction: IoTransaction): number;
 }

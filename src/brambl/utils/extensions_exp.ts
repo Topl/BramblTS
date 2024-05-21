@@ -28,9 +28,11 @@ declare global {
      * Returns the sum of all elements in the array.
      */
     bSum(): number;  
+
   }
 
 }
+
 
 Number.prototype.bramblTestingOverride = function () {
   return this.toString() + ' bramblTestingOverride';
