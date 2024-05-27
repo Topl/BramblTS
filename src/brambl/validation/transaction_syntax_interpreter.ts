@@ -1,57 +1,57 @@
 import { unit, type Unit } from '@/common/functional.js';
 import { isLeft, left, right, type Either } from 'fp-ts/lib/Either.js';
-import type { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray.js';
 import {
-    AssetMintingStatement,
-    Event_GroupPolicy,
-    Event_SeriesPolicy,
-    FungibilityTypeEnum,
-    Group,
-    Int128,
-    Lock_Predicate,
-    Proof,
-    Proposition,
-    Series,
-    Value,
-    type IoTransaction,
-    type SpentTransactionOutput,
-    type TransactionOutputAddress
+  AssetMintingStatement,
+  Event_GroupPolicy,
+  Event_SeriesPolicy,
+  FungibilityTypeEnum,
+  Group,
+  Int128,
+  IoTransaction,
+  Lock_Predicate,
+  Proof,
+  Proposition,
+  Series,
+  UnspentTransactionOutput,
+  Value,
+  type SpentTransactionOutput,
+  type TransactionOutputAddress
 } from 'topl_common';
 import { ContainsImmutable } from '../common/contains_immutable.js';
+import { BoxValueSyntax } from '../syntax/box_value_syntax.js';
 import Int128Syntax from '../syntax/int128_syntax.js';
 import {
-    DuplicateInput,
-    EmptyInputs,
-    ExcessiveOutputsCount,
-    InsufficientInputFunds,
-    InvalidDataLength,
-    InvalidProofType,
-    InvalidSchedule,
-    InvalidTimestamp,
-    NonPositiveOutputValue,
-    TransactionSyntaxError
+  DuplicateInput,
+  EmptyInputs,
+  ExcessiveOutputsCount,
+  InsufficientInputFunds,
+  InvalidDataLength,
+  InvalidProofType,
+  InvalidSchedule,
+  InvalidTimestamp,
+  InvalidUpdateProposal,
+  NonPositiveOutputValue,
+  TransactionSyntaxError
 } from './transaction_syntax_error.js';
-import TokenTypeIdentifier from '../syntax/token_type_identifier_syntax.js';
-import { BoxValueSyntax, ValueToFungibilitySyntaxOps, ValueToQuantityDescriptorSyntaxOps, ValueToQuantitySyntaxOps } from '../syntax/box_value_syntax.js';
 
-export class TransactionSyntaxValidators {
+class TransactionSyntaxValidators {
   static readonly MaxDataLength = 15360;
 
   /**
    * Verify that this transaction contains at least one input
    */
-  static nonEmptyInputsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static nonEmptyInputsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     if (transaction.inputs.length === 0) {
       return left(new EmptyInputs());
     } else {
-      return right(transaction);
+      return right(unit);
     }
   }
 
   /**
    * Verify that this transaction does not spend the same box more than once
    */
-  static distinctInputsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static distinctInputsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     //Todo: figure out if this is a good grouping implementation
     const groupedInputs = transaction.inputs.reduce((acc, input) => {
       const existingInputs = acc.get(input.address) || [];
@@ -65,20 +65,20 @@ export class TransactionSyntaxValidators {
       }
     }
 
-    return right(transaction);
+    return right(unit);
   }
 
   /**
    * Verify that this transaction does not contain too many outputs. A transaction's outputs are referenced by index,
    * but that index must be a number value.
    */
-  static maximumOutputsCountValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static maximumOutputsCountValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     const SHORT_MAX_VALUE = 32767;
 
     if (transaction.outputs.length >= SHORT_MAX_VALUE) {
       return left(new ExcessiveOutputsCount());
     } else {
-      return right(transaction);
+      return right(unit);
     }
   }
 
@@ -86,32 +86,32 @@ export class TransactionSyntaxValidators {
    * Verify that the timestamp of the transaction is positive (greater than or equal to 0). Transactions _can_ be created
    * in the past.
    */
-  static nonNegativeTimestampValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static nonNegativeTimestampValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     if (transaction.datum.event.schedule.timestamp < 0) {
       return left(new InvalidTimestamp(transaction.datum.event.schedule.timestamp));
     } else {
-      return right(transaction);
+      return right(unit);
     }
   }
 
   /**
    * Verify that the schedule of the timestamp contains valid minimum and maximum slot values
    */
-  static scheduleValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static scheduleValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     if (
       transaction.datum.event.schedule.max < transaction.datum.event.schedule.min ||
       transaction.datum.event.schedule.min < 0
     ) {
       return left(new InvalidSchedule(transaction.datum.event.schedule));
     } else {
-      return right(transaction);
+      return right(unit);
     }
   }
 
   /**
    * Verify that each transaction output contains a positive quantity (where applicable)
    */
-  static positiveOutputValuesValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static positiveOutputValuesValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     for (const output of transaction.outputs) {
       let quantity: Int128;
 
@@ -127,18 +127,25 @@ export class TransactionSyntaxValidators {
           break;
       }
 
+      // TODO: replace with updated accessor
+      //       let quantity: Int128 = (output.value as Value).quantity();
+
       if (quantity !== null && Int128Syntax.int128AsBigInt(quantity).valueOf() <= BigInt(0).valueOf()) {
         return left(new NonPositiveOutputValue(output.value));
       }
     }
 
-    return right(transaction);
+    return right(unit);
   }
 
   /**
    * Verify that the transaction has sufficient funds to cover the outputs
    */
   private static getQuantity (value: Value): BigInt {
+    /// TODO: update this code segment with improvement
+    // return value.quantity().bAsBigInt();
+
+
     switch (value.value.case) {
       case 'lvl':
         return Int128Syntax.int128AsBigInt(value.value.value.quantity);
@@ -161,7 +168,7 @@ export class TransactionSyntaxValidators {
   /**
    * Ensure the input value quantities exceed or equal the (non-minting) output value quantities
    */
-  static sufficientFundsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static sufficientFundsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     const sumAll = (values: Value[]): bigint => {
       if (values.length === 0) return BigInt(0);
       return values
@@ -174,7 +181,7 @@ export class TransactionSyntaxValidators {
     const outputsSum = sumAll(transaction.outputs.map(output => output.value));
 
     return inputsSum >= outputsSum
-      ? right(transaction)
+      ? right(unit)
       : left(
           new InsufficientInputFunds(
             transaction.inputs.map(input => input.value),
@@ -275,14 +282,14 @@ export class TransactionSyntaxValidators {
       .filter(input => input.value.value.case === 'asset')
       .map(input => {
         // type promotion
-        if (input.value.value.case === 'asset') return input.value.value.value;
+        if (input.value.value.case === 'asset') return BoxValueSyntax.assetAsBoxVal(input.value.value.value);
       });
 
     const outputAssets = transaction.outputs
       .filter(output => output.value.value.case === 'asset')
       .map(output => {
         // type promotion
-        if (output.value.value.case === 'asset') return output.value.value.value;
+        if (output.value.value.case === 'asset') return BoxValueSyntax.assetAsBoxVal(output.value.value.value);
       });
 
     const groupGivenMintedStatements = (stm: AssetMintingStatement): Group => {
@@ -318,44 +325,60 @@ export class TransactionSyntaxValidators {
       });
     });
 
-    // TODO: fix this one...
+    const tupleAndGroup = (s: Value[]): Either<Error, { [key: string]: bigint }> => {
+      try {
+        const grouped: { [key: string]: bigint[] } = {};
 
-    // Map[(ValueTypeIdentifier, Option[FungibilityType], Option[QuantityDescriptorType]),BigInt]
+        for (const v of s) {
+          const key = `${v.typeIdentifier}-${v.getFungibility()}-${v.getQuantityDescriptor()}`;
 
-    
+          if (!grouped[key]) {
+            grouped[key] = [];
+          }
 
-    const tupleAndGroup = (s: Value[]) => {
-      return s
-        .map(v => {
-          return [TokenTypeIdentifier.typeIdentifier(v), ValueToFungibilitySyntaxOps.getFungibility(v), ValueToQuantityDescriptorSyntaxOps.getQuantityDescriptor(v), ValueToQuantitySyntaxOps.getQuantity(v)];
-        })
-        .reduce((acc, [typeIdentifier, fungibility, quantityDescriptor, quantity]) => {
-          const key = `${typeIdentifier}-${fungibility}-${quantityDescriptor}`;
-        //   const key = typeIdentifier, fungibility, quantityDescriptor;
-          acc[key] = (acc[key] || BigInt(0)) + BigInt(quantity);
-          return acc;
-        }, {} as Record<string, bigint>);
+          const add = (v as Value).quantity().asbigint();
+          grouped[key].push(add);
+        }
+
+        const summed: { [key: string]: bigint } = {};
+
+        for (const key in grouped) {
+          summed[key] = grouped[key].reduce((a, b) => a + b, BigInt(0));
+        }
+
+        return right(summed);
+      } catch (e) {
+        return left(e);
+      }
     };
 
     const input = tupleAndGroup(inputAssets);
     const minted = tupleAndGroup(mintedAsset);
-    // const output = tupleAndGroup(outputAssets);
+    const output = tupleAndGroup(outputAssets);
 
-    // const keySetResult = new Set([...Object.keys(input), ...Object.keys(minted)]).size === Object.keys(output).length;
-    // const compareResult = Object.keys(output).every(k => input[k] + minted[k] === output[k]);
+    if (isLeft(input) || isLeft(minted) || isLeft(output)) {
+      return left(
+        new InsufficientInputFunds(
+          transaction.inputs.map(input => input.value),
+          transaction.outputs.map(output => output.value)
+        )
+      );
+    }
 
-    // if (keySetResult && compareResult) {
-    //   return right(undefined);
-    // } else {
-    //   return left(
-    //     new InsufficientInputFunds(
-    //       transaction.inputs.map(input => input.value.value),
-    //       transaction.outputs.map(output => output.value.value)
-    //     )
-    //   );
-    // }
+    const keySetResult =
+      new Set([...Object.keys(input.right), ...Object.keys(minted.right)]).size === Object.keys(output.right).length;
+    const compareResult = Object.keys(output.right).every(
+      k => (input.right[k] || BigInt(0)) + (minted.right[k] || BigInt(0)) === output.right[k]
+    );
 
-    return right(unit);
+    return keySetResult && compareResult
+      ? right(unit)
+      : left(
+          new InsufficientInputFunds(
+            transaction.inputs.map(input => input.value),
+            transaction.outputs.map(output => output.value)
+          )
+        );
   }
 
   /**
@@ -371,7 +394,7 @@ export class TransactionSyntaxValidators {
    * @param transaction - transaction
    * @return
    */
-  static groupEqualFundsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, void> {
+  static groupEqualFundsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     const groupsIn = transaction.inputs
       .filter(i => i.value.value.case === 'group')
       .flatMap(input => {
@@ -424,7 +447,7 @@ export class TransactionSyntaxValidators {
     });
 
     if (res) {
-      return right(undefined);
+      return right(unit);
     } else {
       return left(
         new InsufficientInputFunds(
@@ -447,7 +470,7 @@ export class TransactionSyntaxValidators {
    * @param transaction
    * @return
    */
-  static seriesEqualFundsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, void> {
+  static seriesEqualFundsValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
     const seriesIn = transaction.inputs
       .filter(i => i.value.value.case === 'series')
       .flatMap(input => {
@@ -511,7 +534,7 @@ export class TransactionSyntaxValidators {
     });
 
     if (res) {
-      return right(undefined);
+      return right(unit);
     } else {
       return left(
         new InsufficientInputFunds(
@@ -521,10 +544,252 @@ export class TransactionSyntaxValidators {
       );
     }
   }
+
+  /**
+   * Asset, Group and Series,  No Repeated Utxos Validation
+   * - For all assets minting statement ams1, ams2, ...,  Should not contain repeated UTXOs
+   * - For all group/series policies gp1, gp2, ..., ++ sp1, sp2, ..., Should not contain repeated UTXOs
+   *
+   * @param transaction - transaction
+   * @return
+   */
+  static assetNoRepeatedUtxosValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
+    const mintingStatementsValidation = Array.from(
+      transaction.mintingStatements
+        .flatMap(stm => [stm.groupTokenUtxo, stm.seriesTokenUtxo])
+        .reduce((acc, utxo) => {
+          acc.set(utxo, (acc.get(utxo) || []) as TransactionOutputAddress[]);
+          return acc;
+        }, new Map<TransactionOutputAddress, TransactionOutputAddress[]>())
+        .entries()
+    )
+      .filter(([address, seqAddresses]) => seqAddresses.length > 1)
+      .map(([address]) => new DuplicateInput(address));
+
+    const policiesValidation = Array.from(
+      transaction.groupPolicies
+        .map(policy => policy.event.registrationUtxo)
+        .concat(transaction.seriesPolicies.map(policy => policy.event.registrationUtxo))
+        .reduce((acc, utxo) => {
+          acc.set(utxo, (acc.get(utxo) || []) as TransactionOutputAddress[]);
+          return acc;
+        }, new Map<TransactionOutputAddress, TransactionOutputAddress[]>())
+        .entries()
+    )
+      .filter(([address, seqAddresses]) => seqAddresses.length > 1)
+      .map(([address]) => new DuplicateInput(address));
+
+    const errors = [...mintingStatementsValidation, ...policiesValidation];
+
+    /// TODO: report all errors?
+    return errors.length > 0 ? left(errors[0]) : right(unit);
+  }
+
+  private static mintingInputsProjection (transaction: IoTransaction): SpentTransactionOutput[] {
+    return transaction.inputs.filter(
+      stxo =>
+        !(stxo.value.value.case === 'topl') &&
+        !(stxo.value.value.case === 'asset') &&
+        (!(stxo.value.value.case === 'lvl') ||
+          transaction.groupPolicies.some(policy => policy.event.registrationUtxo === stxo.address) ||
+          transaction.seriesPolicies.some(policy => policy.event.registrationUtxo === stxo.address))
+    );
+  }
+
+  private static mintingOutputsProjection (transaction: IoTransaction): UnspentTransactionOutput[] {
+    const groupIdsOnMintedStatements = transaction.inputs
+      .filter(
+        input =>
+          input.value.value.case === 'group' &&
+          transaction.mintingStatements.some(statement => statement.groupTokenUtxo === input.address)
+      )
+      .map(input => {
+        if (input.value.value.case === 'group') {
+          return input.value.value.value.groupId;
+        }
+      });
+
+    const seriesIdsOnMintedStatements = transaction.inputs
+      .filter(
+        input =>
+          input.value.value.case === 'series' &&
+          transaction.mintingStatements.some(statement => statement.seriesTokenUtxo === input.address)
+      )
+      .map(input => {
+        if (input.value.value.case === 'series') {
+          return input.value.value.value.seriesId;
+        }
+      });
+
+    return transaction.outputs.filter(
+      utxo =>
+        !(utxo.value.value.case === 'lvl') &&
+        !(utxo.value.value.case === 'topl') &&
+        (!(utxo.value.value.case === 'group') ||
+          transaction.groupPolicies.some(policy => {
+            if (utxo.value.value.case === 'group') {
+              return (policy.event as Event_GroupPolicy).computeId() === utxo.value.value.value.groupId;
+            }
+          })) &&
+        (!(utxo.value.value.case === 'series') ||
+          transaction.seriesPolicies.some(policy => {
+            if (utxo.value.value.case === 'series') {
+              return (policy.event as Event_GroupPolicy).computeId() === utxo.value.value.value.seriesId;
+            }
+          })) &&
+        (!(utxo.value.value.case === 'asset') ||
+          (groupIdsOnMintedStatements.includes(utxo.value.value.value.groupId) &&
+            seriesIdsOnMintedStatements.includes(utxo.value.value.value.seriesId)))
+    );
+  }
+
+  static mintingValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
+    const projectedTransaction = new IoTransaction({
+      inputs: this.mintingInputsProjection(transaction),
+      outputs: this.mintingOutputsProjection(transaction)
+    });
+
+    const groups = projectedTransaction.outputs.flatMap(output => {
+      if (output.value.value.case === 'group') {
+        return output.value.value.value;
+      }
+    });
+    const series = projectedTransaction.outputs.flatMap(output => {
+      if (output.value.value.case === 'series') {
+        return output.value.value.value;
+      }
+    });
+
+    const registrationInPolicyContainsLvls = (registrationUtxo: TransactionOutputAddress): boolean =>
+      projectedTransaction.inputs.some(
+        stxo =>
+          stxo.value.value.case === 'lvl' &&
+          stxo.value.value.value.quantity > Int128Syntax.numberAsInt128(0) &&
+          stxo.address === registrationUtxo
+      );
+
+    const validGroups = groups.every(
+      group =>
+        transaction.groupPolicies.some(
+          policy =>
+            (policy.event as Event_GroupPolicy).computeId() === group.groupId &&
+            registrationInPolicyContainsLvls(policy.event.registrationUtxo)
+        ) && group.quantity > Int128Syntax.numberAsInt128(0)
+    );
+
+    const validSeries = series.every(series =>
+      transaction.seriesPolicies.some(
+        policy =>
+          (policy.event as Event_GroupPolicy).computeId() === series.seriesId &&
+          registrationInPolicyContainsLvls(policy.event.registrationUtxo) &&
+          series.quantity > Int128Syntax.numberAsInt128(0)
+      )
+    );
+
+    const validAssets = transaction.mintingStatements.every(ams => {
+      const maybeSeries = transaction.inputs
+        .filter(input => input.value.value.case === 'series' && input.address === ams.seriesTokenUtxo)
+        .map(input => {
+          if (input.value.value.case === 'series') {
+            return input.value.value.value;
+          }
+        })[0];
+
+      if (maybeSeries) {
+        if (maybeSeries.tokenSupply) {
+          const sIn = transaction.inputs
+            .filter(
+              input => input.value.value.case === 'series' && input.value.value.value.seriesId === maybeSeries.seriesId
+            )
+            .reduce((sum, input) => {
+              if (input.value.value.case === 'series') {
+                return sum + (input.value.value.value.quantity as Int128).asbigint();
+              }
+            }, BigInt(0));
+
+          const sOut = transaction.outputs
+            .filter(
+              output =>
+                output.value.value.case === 'series' && output.value.value.value.seriesId === maybeSeries.seriesId
+            )
+            .reduce((sum, output) => {
+              if (output.value.value.case === 'series') {
+                return sum + (output.value.value.value.quantity as Int128).asbigint();
+              }
+            }, BigInt(0));
+
+          const burned = sIn - sOut;
+
+          const quantity = transaction.mintingStatements.reduce((sum, ams) => {
+            const filterSeries = transaction.inputs
+              .filter(input => input.address === ams.seriesTokenUtxo && input.value.value.case === 'series')
+              .map(input => {
+                if (input.value.value.case === 'series') {
+                  return input.value.value.value;
+                }
+              })
+              .filter(series => series.seriesId === maybeSeries.seriesId);
+
+            return sum + (filterSeries.length === 0 ? BigInt(0) : (ams.quantity as Int128).asbigint());
+          }, BigInt(0));
+
+          const amsq = (ams.quantity as Int128).asbigint();
+
+          return (
+            amsq <= (maybeSeries.quantity as Int128).asbigint() * BigInt(maybeSeries.tokenSupply) &&
+            amsq % BigInt(maybeSeries.tokenSupply) === BigInt(0) &&
+            burned * BigInt(maybeSeries.tokenSupply) === quantity
+          );
+        } else {
+          return true;
+        }
+      } else {
+        return false;
+      }
+    });
+
+    if (validGroups && validSeries && validAssets) {
+      return right(unit);
+    } else {
+      return left(
+        new InsufficientInputFunds(
+          transaction.inputs.map(input => input.value),
+          transaction.outputs.map(output => output.value)
+        )
+      );
+    }
+  }
+
+  static updateProposalValidation (transaction: IoTransaction): Either<TransactionSyntaxError, Unit> {
+    const upsOut = transaction.outputs.flatMap(output => {
+      if (output.value.value.case === 'updateProposal') return output.value.value.value;
+    });
+    const isValid = upsOut.every(up => {
+      return (
+        up.label.length > 0 &&
+        up.fEffective.denominator > Int128Syntax.numberAsInt128(0) &&
+        up.fEffective.numerator > Int128Syntax.numberAsInt128(0) &&
+        up.vrfLddCutoff > 0 &&
+        up.vrfPrecision > 0 &&
+        up.vrfBaselineDifficulty.denominator > Int128Syntax.numberAsInt128(0) &&
+        up.vrfBaselineDifficulty.numerator > Int128Syntax.numberAsInt128(0) &&
+        up.vrfAmplitude.denominator > Int128Syntax.numberAsInt128(0) &&
+        up.vrfAmplitude.numerator > Int128Syntax.numberAsInt128(0) &&
+        up.chainSelectionKLookback > 0 &&
+        up.slotDuration.seconds > 0 &&
+        up.forwardBiasedSlotWindow > 0 &&
+        up.operationalPeriodsPerEpoch > 0 &&
+        up.kesKeyHours > 0 &&
+        up.kesKeyMinutes > 0
+      );
+    });
+
+    return isValid ? right(unit) : left(new InvalidUpdateProposal(upsOut));
+  }
 }
 
 export class TransactionSyntaxInterpreter extends TransactionSyntaxValidators {
-  static validate (t: IoTransaction): Either<NonEmptyArray<TransactionSyntaxError>, IoTransaction> {
+  static validate (t: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
     const validators = [
       this.nonEmptyInputsValidation,
       this.distinctInputsValidation,
@@ -545,7 +810,7 @@ export class TransactionSyntaxInterpreter extends TransactionSyntaxValidators {
 
     for (const validator of validators) {
       const result = validator(t);
-      if (result.isLeft()) {
+      if (isLeft(result)) {
         return result; // If any validator fails, return the error
       }
     }

@@ -116,3 +116,15 @@ class UnknownType implements ValueTypeIdentifier {}
 export function asByteString (bytes: Uint8Array): ByteString {
   return ByteString.fromUint8Array(bytes);
 }
+
+
+/// experimental extensions via typescript module augmentation
+declare module 'topl_common' {
+  interface Value {
+    typeIdentifier?(): ValueTypeIdentifier; // marked optional to not mess up with type identification
+  }
+}
+
+Value.prototype.typeIdentifier = function () {
+  return TokenTypeIdentifier.typeIdentifier(this);
+};

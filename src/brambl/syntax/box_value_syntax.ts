@@ -108,3 +108,29 @@ export class ValueToFungibilitySyntaxOps {
     }
   }
 }
+
+/// experimental extensions via typescript module augmentation
+declare module 'topl_common' {
+  interface Value {
+    getFungibility?(): FungibilityType | null; // marked optional to not mess up with type identification
+    getQuantityDescriptor?(): QuantityDescriptorType | null; // marked optional to not mess up with type identification
+    quantity?(): Int128;
+    withQuantity?(quantity: Int128): Value;
+  }
+}
+
+Value.prototype.getFungibility = function () {
+  return ValueToFungibilitySyntaxOps.getFungibility(this);
+};
+
+Value.prototype.getQuantityDescriptor = function () {
+  return ValueToQuantityDescriptorSyntaxOps.getQuantityDescriptor(this);
+};
+
+Value.prototype.quantity = function () {
+  return ValueToQuantitySyntaxOps.getQuantity(this);
+};
+
+Value.prototype.withQuantity = function (quantity: Int128) {
+  return ValueToQuantitySyntaxOps.setQuantity(this, quantity);
+};

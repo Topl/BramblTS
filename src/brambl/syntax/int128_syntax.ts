@@ -50,6 +50,7 @@ Number.prototype.bAsInt128 = function (): Int128 {
 declare module 'topl_common' {
   interface Int128 {
     bAsBigInt?(): BigInt;
+    asbigint?(): bigint;
   }
 }
 
@@ -57,3 +58,6 @@ Int128.prototype.bAsBigInt = function (): BigInt {
   return Int128Syntax.int128AsBigInt(this);
 };
 
+Int128.prototype.asbigint = function (): bigint {
+  return Int128Syntax.int128AsBigInt(this).valueOf();
+};
