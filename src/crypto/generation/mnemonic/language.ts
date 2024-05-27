@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto';
 import { promises as fs } from 'fs';
-import { Either } from '../../../common/functional/either.js';
+import { left, right, type Either } from '../../../common/functional/either.js';
 
 export abstract class Language {
   readonly filePath: string;
@@ -87,16 +87,16 @@ export class LanguageWordList {
       const words = (await fs.readFile(file, 'utf-8')).split('\n');
 
       const hash = LanguageWordList.validateChecksum(words, language.hash);
-      return hash ? Either.right(new LanguageWordList(words)) : Either.left(new InvalidChecksum());
+      return hash ? right(new LanguageWordList(words)) : left(new InvalidChecksum());
     } catch (e) {
-      return Either.left(new FileReadFailure(e));
+      return left(new FileReadFailure(e));
     }
   }
 
   static validateChecksum(words: string[], expectedHash: string): Either<ValidationFailure, string[]> {
     const hash = createHash('sha256').update(words.join('')).digest('hex');
 
-    return hash === expectedHash ? Either.right(words) : Either.left(new InvalidChecksum());
+    return hash === expectedHash ? right(words) : left(new InvalidChecksum());
   }
 }
 

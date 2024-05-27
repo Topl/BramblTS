@@ -4,8 +4,7 @@ import {
   QueryByLockAddressRequest,
   TransactionService,
   Txo,
-  type TxoState,
-  TxoStateEnum
+  TxoState,
 } from 'topl_common';
 
 /**
@@ -30,7 +29,7 @@ export class GenusQueryAlgebra implements GenusQueryAlgebraDefinition {
 
   async queryUtxo (fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]> {
     const response = await this.client.getTxosByLockAddress(
-      new QueryByLockAddressRequest({ address: fromAddress, state: txoState ?? TxoStateEnum.UNSPENT })
+      new QueryByLockAddressRequest({ address: fromAddress, state: txoState ?? TxoState.UNSPENT })
     );
     return response.Txos;
   }

@@ -99,7 +99,7 @@ import {
   VerificationKey,
   Witness
 } from 'topl_common';
-import { isFungibilityType, isOptionContainsImmutable, isQuantityDescriptorType } from './guard.js';
+import { isFungibilityType, isOptionContainsImmutable, isQuantityDescriptorType } from '../utils/guard.js';
 import { Identifier } from './tags.js';
 
 /**

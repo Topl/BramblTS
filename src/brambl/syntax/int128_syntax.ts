@@ -46,7 +46,6 @@ Number.prototype.bAsInt128 = function (): Int128 {
   return Int128Syntax.numberAsInt128(this);
 };
 
-// / todo: messes with Int128$1 typing
 declare module 'topl_common' {
   interface Int128 {
     bAsBigInt?(): BigInt;

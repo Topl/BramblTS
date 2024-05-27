@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Either } from '../../../common/functional/either.js';
+import { left, right, type Either } from '../../../common/functional/either.js';
 import { PhraseFailure, PhraseFailureType } from './phrase.js';
 
 /**
@@ -27,21 +27,21 @@ export class Mnemonic {
 
   /**
    * Converts an integer into a binary representation with 11 bits.
-   * 
+   *
    * @param i The integer to convert.
    * @returns The 11-bit binary representation as a string.
    */
-  intTo11BitString(i: number): string {
+  intTo11BitString (i: number): string {
     return i.toString(2).padStart(Mnemonic._indexLen, '0');
   }
 
   /**
    * Converts a byte to a binary string.
-   * 
+   *
    * @param b The byte to convert.
    * @returns The binary representation as a string.
    */
-  byteTo8BitString(b: number): string {
+  byteTo8BitString (b: number): string {
     return b.toString(2).padStart(Mnemonic._byteLen, '0');
   }
 }
@@ -54,52 +54,52 @@ export class MnemonicSize {
   checksumLength: number;
   entropyLength: number;
 
-  constructor(wordLength: number) {
+  constructor (wordLength: number) {
     this.wordLength = wordLength;
     this.checksumLength = Math.floor(wordLength / 3);
     this.entropyLength = 32 * this.checksumLength;
   }
 
-  static words12(): MnemonicSize {
+  static words12 (): MnemonicSize {
     return new MnemonicSize(12);
   }
 
-  static words15(): MnemonicSize {
+  static words15 (): MnemonicSize {
     return new MnemonicSize(15);
   }
 
-  static words18(): MnemonicSize {
+  static words18 (): MnemonicSize {
     return new MnemonicSize(18);
   }
 
-  static words21(): MnemonicSize {
+  static words21 (): MnemonicSize {
     return new MnemonicSize(21);
   }
 
-  static words24(): MnemonicSize {
+  static words24 (): MnemonicSize {
     return new MnemonicSize(24);
   }
 
   /**
    * Creates a MnemonicSize instance based on the number of words.
-   * 
+   *
    * @param numberOfWords The number of words in the mnemonic.
    * @returns Either a PhraseFailure or a MnemonicSize instance.
    */
-  static fromNumberOfWords(numberOfWords: number): Either<PhraseFailure, MnemonicSize> {
+  static fromNumberOfWords (numberOfWords: number): Either<PhraseFailure, MnemonicSize> {
     switch (numberOfWords) {
       case 12:
-        return Either.right(MnemonicSize.words12());
+        return right(MnemonicSize.words12());
       case 15:
-        return Either.right(MnemonicSize.words15());
+        return right(MnemonicSize.words15());
       case 18:
-        return Either.right(MnemonicSize.words18());
+        return right(MnemonicSize.words18());
       case 21:
-        return Either.right(MnemonicSize.words21());
+        return right(MnemonicSize.words21());
       case 24:
-        return Either.right(MnemonicSize.words24());
+        return right(MnemonicSize.words24());
       default:
-        return Either.left(new PhraseFailure(PhraseFailureType.InvalidWordLength, 'Invalid number of words'));
+        return left(new PhraseFailure(PhraseFailureType.InvalidWordLength, 'Invalid number of words'));
     }
   }
 }

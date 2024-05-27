@@ -43,7 +43,7 @@
     "google-protobuf": "^3.21.2",
     "long": "^5.2.3",
     "prettier": "3.0.2",
-    "topl_common": "1.0.16-alpha.0",
+    "topl_common": "1.0.16-alpha.3",
     "typescript": "^5.1.6",
     "uuid": "^9.0.1"
   }

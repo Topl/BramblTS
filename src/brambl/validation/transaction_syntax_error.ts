@@ -1,4 +1,3 @@
-import type { AnyValue } from '@/common/any_value.js';
 import { ValidationError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
 import type { Proof, Proposition, Schedule, TransactionOutputAddress, UpdateProposal, Value } from 'topl_common';
 
@@ -86,5 +85,48 @@ export class InvalidUpdateProposal extends TransactionSyntaxError {
   constructor (outputs: UpdateProposal[]) {
     super(null);
     this.outputs = outputs;
+  }
+}
+
+
+export class TransactionSyntaxErrors {
+  static createEmptyInputs () {
+    return new EmptyInputs();
+  }
+
+  static createDuplicateInput (knownIdentifier: TransactionOutputAddress) {
+    return new DuplicateInput(knownIdentifier);
+  }
+
+  static createExcessiveOutputsCount () {
+    return new ExcessiveOutputsCount();
+  }
+
+  static createInvalidTimestamp (timestamp: bigint) {
+    return new InvalidTimestamp(timestamp);
+  }
+
+  static createInvalidSchedule (schedule: Schedule) {
+    return new InvalidSchedule(schedule);
+  }
+
+  static createNonPositiveOutputValue (outputValue: Value) {
+    return new NonPositiveOutputValue(outputValue);
+  }
+
+  static createInsufficientInputFunds (inputs: Value[], outputs: Value[]) {
+    return new InsufficientInputFunds(inputs, outputs);
+  }
+
+  static createInvalidProofType (proposition: Proposition, proof: Proof) {
+    return new InvalidProofType(proposition, proof);
+  }
+
+  static createInvalidDataLength () {
+    return new InvalidDataLength();
+  }
+
+  static createInvalidUpdateProposal (outputs: UpdateProposal[]) {
+    return new InvalidUpdateProposal(outputs);
   }
 }

@@ -2,11 +2,8 @@ import { unit, type Unit } from '@/common/functional.js';
 import { isLeft, left, right, type Either } from 'fp-ts/lib/Either.js';
 import {
   AssetMintingStatement,
-  Event_GroupPolicy,
-  Event_SeriesPolicy,
-  FungibilityTypeEnum,
+  FungibilityType,
   Group,
-  Int128,
   IoTransaction,
   Lock_Predicate,
   Proof,
@@ -14,6 +11,7 @@ import {
   Series,
   UnspentTransactionOutput,
   Value,
+  type Int128,
   type SpentTransactionOutput,
   type TransactionOutputAddress
 } from 'topl_common';
@@ -128,7 +126,7 @@ class TransactionSyntaxValidators {
       }
 
       // TODO: replace with updated accessor
-      //       let quantity: Int128 = (output.value as Value).quantity();
+      //       let quantity: Int128 = output.value.quantity();
 
       if (quantity !== null && Int128Syntax.int128AsBigInt(quantity).valueOf() <= BigInt(0).valueOf()) {
         return left(new NonPositiveOutputValue(output.value));
@@ -144,7 +142,6 @@ class TransactionSyntaxValidators {
   private static getQuantity (value: Value): BigInt {
     /// TODO: update this code segment with improvement
     // return value.quantity().bAsBigInt();
-
 
     switch (value.value.case) {
       case 'lvl':
@@ -319,7 +316,7 @@ class TransactionSyntaxValidators {
             groupId: groupGivenMintedStatements(stm)?.groupId,
             seriesId: series?.seriesId,
             quantity: stm.quantity,
-            fungibility: series?.fungibility || FungibilityTypeEnum.GROUP_AND_SERIES
+            fungibility: series?.fungibility || FungibilityType.GROUP_AND_SERIES
           }
         }
       });
@@ -336,7 +333,7 @@ class TransactionSyntaxValidators {
             grouped[key] = [];
           }
 
-          const add = (v as Value).quantity().asbigint();
+          const add = v.quantity().asbigint();
           grouped[key].push(add);
         }
 
@@ -417,7 +414,7 @@ class TransactionSyntaxValidators {
       ...groupsIn.map(group => group.groupId),
       ...groupsOut.map(group => group.groupId),
       ...transaction.groupPolicies.map(policy => {
-        return (policy.event as Event_GroupPolicy).computeId();
+        return policy.event.computeId();
       })
     ]);
 
@@ -425,7 +422,7 @@ class TransactionSyntaxValidators {
       if (
         !transaction.groupPolicies
           .map(policy => {
-            return (policy.event as Event_GroupPolicy).computeId();
+            return policy.event.computeId();
           })
           .includes(gId)
       ) {
@@ -489,7 +486,7 @@ class TransactionSyntaxValidators {
     const sIds = new Set([
       ...seriesIn.map(series => series.seriesId),
       ...seriesOut.map(series => series.seriesId),
-      ...transaction.seriesPolicies.map(policy => (policy.event as Event_SeriesPolicy).computeId())
+      ...transaction.seriesPolicies.map(policy => policy.event.computeId())
     ]);
 
     const sIdsOnMintingStatements = transaction.inputs
@@ -512,9 +509,7 @@ class TransactionSyntaxValidators {
             .reduce((sum, series) => sum + Int128Syntax.int128AsBigInt(series.quantity).valueOf(), BigInt(0)) >=
           BigInt(0)
         );
-      } else if (
-        !transaction.seriesPolicies.map(policy => (policy.event as Event_SeriesPolicy).computeId()).includes(sId)
-      ) {
+      } else if (!transaction.seriesPolicies.map(policy => policy.event.computeId()).includes(sId)) {
         return (
           seriesIn
             .filter(series => series.seriesId === sId)
@@ -628,13 +623,13 @@ class TransactionSyntaxValidators {
         (!(utxo.value.value.case === 'group') ||
           transaction.groupPolicies.some(policy => {
             if (utxo.value.value.case === 'group') {
-              return (policy.event as Event_GroupPolicy).computeId() === utxo.value.value.value.groupId;
+              return policy.event.computeId() === utxo.value.value.value.groupId;
             }
           })) &&
         (!(utxo.value.value.case === 'series') ||
           transaction.seriesPolicies.some(policy => {
             if (utxo.value.value.case === 'series') {
-              return (policy.event as Event_GroupPolicy).computeId() === utxo.value.value.value.seriesId;
+              return policy.event.computeId() === utxo.value.value.value.seriesId;
             }
           })) &&
         (!(utxo.value.value.case === 'asset') ||
@@ -672,7 +667,7 @@ class TransactionSyntaxValidators {
       group =>
         transaction.groupPolicies.some(
           policy =>
-            (policy.event as Event_GroupPolicy).computeId() === group.groupId &&
+            policy.event.computeId() === group.groupId &&
             registrationInPolicyContainsLvls(policy.event.registrationUtxo)
         ) && group.quantity > Int128Syntax.numberAsInt128(0)
     );
@@ -680,7 +675,7 @@ class TransactionSyntaxValidators {
     const validSeries = series.every(series =>
       transaction.seriesPolicies.some(
         policy =>
-          (policy.event as Event_GroupPolicy).computeId() === series.seriesId &&
+          policy.event.computeId() === series.seriesId &&
           registrationInPolicyContainsLvls(policy.event.registrationUtxo) &&
           series.quantity > Int128Syntax.numberAsInt128(0)
       )
@@ -703,7 +698,7 @@ class TransactionSyntaxValidators {
             )
             .reduce((sum, input) => {
               if (input.value.value.case === 'series') {
-                return sum + (input.value.value.value.quantity as Int128).asbigint();
+                return sum + input.value.value.value.quantity.asbigint();
               }
             }, BigInt(0));
 
@@ -714,7 +709,7 @@ class TransactionSyntaxValidators {
             )
             .reduce((sum, output) => {
               if (output.value.value.case === 'series') {
-                return sum + (output.value.value.value.quantity as Int128).asbigint();
+                return sum + output.value.value.value.quantity.asbigint();
               }
             }, BigInt(0));
 
@@ -730,13 +725,13 @@ class TransactionSyntaxValidators {
               })
               .filter(series => series.seriesId === maybeSeries.seriesId);
 
-            return sum + (filterSeries.length === 0 ? BigInt(0) : (ams.quantity as Int128).asbigint());
+            return sum + (filterSeries.length === 0 ? BigInt(0) : ams.quantity.asbigint());
           }, BigInt(0));
 
-          const amsq = (ams.quantity as Int128).asbigint();
+          const amsq = ams.quantity.asbigint();
 
           return (
-            amsq <= (maybeSeries.quantity as Int128).asbigint() * BigInt(maybeSeries.tokenSupply) &&
+            amsq <= maybeSeries.quantity.asbigint() * BigInt(maybeSeries.tokenSupply) &&
             amsq % BigInt(maybeSeries.tokenSupply) === BigInt(0) &&
             burned * BigInt(maybeSeries.tokenSupply) === quantity
           );
