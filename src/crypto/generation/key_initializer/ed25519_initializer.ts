@@ -1,12 +1,12 @@
 import Ed25519 from '@/crypto/signing/ed25519/ed25519.js';
 import { SigningKey } from '@/crypto/signing/signing.js';
 import { v4 as uuidv4 } from 'uuid';
-import { Either } from '../../../common/functional/either.js';
 import { Entropy } from '../mnemonic/entropy.js';
 import { English, Language } from '../mnemonic/language.js';
 import * as ed25519_spec from './../../signing/ed25519/ed25519_spec.js';
 import { InitializationFailure } from './initialization_failure.js';
-import { KeyInitializer } from './key_initializer.js';
+import { isLeft, left, right, type Either } from '@/common/functional/either.js';
+import type { KeyInitializer } from './key_initializer.js';
 
 export class Ed25519Initializer implements KeyInitializer<SigningKey> {
   private readonly ed25519: Ed25519;
@@ -34,12 +34,12 @@ export class Ed25519Initializer implements KeyInitializer<SigningKey> {
   ): Promise<Either<InitializationFailure, SigningKey>> {
     const entropyResult = await Entropy.fromMnemonicString(mnemonicString, { language });
 
-    if (entropyResult.isLeft) {
-      return Either.left(InitializationFailure.failedToCreateEntropy(entropyResult.left.toString()));
+    if (isLeft(entropyResult)) {
+      return left(InitializationFailure.failedToCreateEntropy(entropyResult.left.toString()));
     }
 
     const entropy = entropyResult.right;
     const keyResult = this.fromEntropy(entropy, password);
-    return Either.right(keyResult);
+    return right(keyResult);
   }
 }

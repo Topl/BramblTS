@@ -561,3 +561,4 @@ export class FailureDefault extends WalletApiFailure {
     super('Default Failure', originalError);
   }
 }
+
