@@ -1,4 +1,4 @@
-import { either, left, right, type Either, type Option } from '@/common/functional/either.js';
+import { isLeft, left, right, type Either, type Option } from '@/common/functional/either.js';
 import { Data, Datum, DigestVerification, SignableBytes, SignatureVerification } from 'topl_common';
 
 import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
@@ -46,7 +46,7 @@ export default class DynamicContext<K> {
       );
 
     const result = verifier.validate(verification) as QuivrResult<DigestVerification>;
-    if (either.isLeft(result)) return result;
+    if (isLeft(result)) return result;
 
     return right(result.right);
   }
@@ -62,8 +62,8 @@ export default class DynamicContext<K> {
         })
       );
 
-    const result = verifier.validate(verification) as QuivrResult<SignatureVerification>;
-    if (either.isLeft(result)) return result;
+    const result = verifier.validate(verification);
+    if (isLeft(result)) return result;
 
     return right(result.right);
   }
@@ -89,7 +89,7 @@ export default class DynamicContext<K> {
   exactMatch (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
-    if (either.isLeft(result)) return false;
+    if (isLeft(result)) return false;
 
     return JSON.stringify(result.right?.value) === JSON.stringify(compareTo);
   }
@@ -97,24 +97,24 @@ export default class DynamicContext<K> {
   lessThan (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
-    if (either.isLeft(result)) return false;
+    if (isLeft(result)) return false;
 
-    return result.right!.value <= compareTo;
+    return result.right.value <= compareTo;
   }
 
   greaterThan (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
-    if (either.isLeft(result)) return false;
+    if (isLeft(result)) return false;
 
-    return result.right!.value >= compareTo;
+    return result.right.value >= compareTo;
   }
 
   equalTo (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
-    if (either.isLeft(result)) return false;
+    if (isLeft(result)) return false;
 
-    return result.right?.value === compareTo;
+    return result.right.value === compareTo;
   }
 }

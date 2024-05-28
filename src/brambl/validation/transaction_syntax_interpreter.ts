@@ -784,7 +784,7 @@ class TransactionSyntaxValidators {
 }
 
 export class TransactionSyntaxInterpreter extends TransactionSyntaxValidators {
-  static validate (t: IoTransaction): Either<TransactionSyntaxError, IoTransaction> {
+  static validate (t: IoTransaction): Either<TransactionSyntaxError[], IoTransaction> {
     const validators = [
       this.nonEmptyInputsValidation,
       this.distinctInputsValidation,
@@ -806,7 +806,7 @@ export class TransactionSyntaxInterpreter extends TransactionSyntaxValidators {
     for (const validator of validators) {
       const result = validator(t);
       if (isLeft(result)) {
-        return result; // If any validator fails, return the error
+        return left([result.left]); // If any validator fails, return the error
       }
     }
 

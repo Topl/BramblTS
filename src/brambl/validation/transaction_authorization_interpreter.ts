@@ -10,6 +10,14 @@ import { AuthorizationFailed, TransactionAuthorizationError } from './transactio
  * Proof satisfy the given Proposition?".
  */
 export class TransactionAuthorizationInterpreter implements TransactionAuthorizationVerifier {
+
+  static validate (
+    context: DynamicContext<string>,
+    transaction: IoTransaction
+  ): Either<TransactionAuthorizationError, IoTransaction> {
+    return new TransactionAuthorizationInterpreter().validate(context, transaction);
+  }
+
   /// TODO:  figure out if this logic is valid.. error context returning seems flawed
   validate (
     context: DynamicContext<string>,

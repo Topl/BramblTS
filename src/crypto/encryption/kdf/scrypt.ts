@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { randomBytes, scryptSync } from 'crypto';
-import { Json } from '../../../utils/json';
-import { Kdf, Params } from './kdf';
+import { Params, type Kdf } from './kdf.js';
+import { Json } from '@/utils/json.js';
+
 
 /**
  * SCrypt is a key derivation function.

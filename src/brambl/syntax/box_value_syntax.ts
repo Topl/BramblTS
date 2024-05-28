@@ -1,9 +1,11 @@
 import {
   Asset,
+  Challenge,
   type FungibilityType,
   Group,
   Int128,
   Lvl,
+  Proposition,
   type QuantityDescriptorType,
   Series,
   Topl,
@@ -117,6 +119,9 @@ declare module 'topl_common' {
     quantity?(): Int128;
     withQuantity?(quantity: Int128): Value;
   }
+  interface Challenge {
+    getRevealed?(): Proposition | null;
+  }
 }
 
 Value.prototype.getFungibility = function () {
@@ -133,4 +138,8 @@ Value.prototype.quantity = function () {
 
 Value.prototype.withQuantity = function (quantity: Int128) {
   return ValueToQuantitySyntaxOps.setQuantity(this, quantity);
+};
+
+Challenge.prototype.getRevealed = function () {
+  return this.proposition.case === 'revealed' ? this.proposition.value : null;
 };

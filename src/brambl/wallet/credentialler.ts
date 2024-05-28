@@ -1,6 +1,6 @@
-import type { Either, Task } from '@/common/functional/either.js';
+import type { Either } from '@/common/functional/either.js';
 import type { ValidationError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
-import Context from 'brambl/context.js';
+import { Context } from 'brambl/context.js';
 import type { IoTransaction } from 'topl_common';
 
 /**
@@ -15,7 +15,7 @@ export default interface Credentialler {
    * @param unprovenTx The unproven transaction to prove
    * @return The proven version of the transaction.
    */
-  prove(unprovenTx: IoTransaction): Task<IoTransaction>;
+  prove(unprovenTx: IoTransaction): Promise<IoTransaction>;
 
   /**
    * Validate whether the transaction is syntactically valid and authorized.
@@ -27,7 +27,7 @@ export default interface Credentialler {
    * @param ctx Context to validate the transaction in
    * @return List of validation errors, if any
    */
-  validate(tx: IoTransaction, ctx: Context): Task<ValidationError[]>;
+  validate(tx: IoTransaction, ctx: Context): Promise<ValidationError[]>;
 
   /**
    * Prove and validate a transaction.
@@ -37,5 +37,5 @@ export default interface Credentialler {
    * @param unprovenTx The unproven transaction to prove
    * @return The proven version of the input if valid. Else the validation errors
    */
-  proveAndValidate(unprovenTx: IoTransaction, ctx: Context): Task<Either<ValidationError[], IoTransaction>>;
+  proveAndValidate(unprovenTx: IoTransaction, ctx: Context): Promise<Either<ValidationError[], IoTransaction>>;
 }

@@ -1,4 +1,4 @@
-import { Blake2b256 } from '../hash/blake2B';
+import { Blake2b256 } from "../hash/blake2B.js";
 
 /**
  * Message authentication codes (MACs) are used to verify the integrity of data.

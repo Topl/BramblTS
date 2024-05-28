@@ -12,7 +12,7 @@ import  {
  */
 
 /// new, chose interface because of easier exports
-export interface WalletStateAlgebraC {
+export interface WalletStateAlgebra {
   /**
    * Initialize the wallet interaction with the given key pair
    *

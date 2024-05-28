@@ -28,3 +28,5 @@ export default class KeyPairSyntax {
     return ProtoConverters.keyPairToProto(crypto);
   }
 }
+
+/// Module augmetnation not compatible due to conflicting class names in project

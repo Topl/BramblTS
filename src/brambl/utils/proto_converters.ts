@@ -53,4 +53,21 @@ export class ProtoConverters {
       throw new Error('Invalid key pair');
     }
   }
+
+  static secretKeyFromProto (sk: ExtendedEd25519Sk): xspec.SecretKey {
+    return xspec.SecretKey.proto(sk);
+  }
+
+  static secretKeyToProto (sk: xspec.SecretKey): SigningKey {
+    return new SigningKey({
+      sk: {
+        case: 'extendedEd25519',
+        value: new ExtendedEd25519Sk({
+          leftKey: sk.leftKey,
+          rightKey: sk.rightKey,
+          chainCode: sk.chainCode
+        })
+      }
+    });
+  }
 }
