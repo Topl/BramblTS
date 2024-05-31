@@ -1,4 +1,5 @@
-import { SHA256, SHA512 } from '../../../src/crypto/hash/sha';
+import { SHA256, SHA512 } from "@/crypto/hash/sha.js";
+import { describe, test, expect } from "vitest";
 
 // Helper function to perform the hash and convert the result to a hex string.
 function doHashCheck(input: string, sha: { hash: (input: Uint8Array) => Uint8Array }): string {

@@ -1,6 +1,7 @@
-import { Pbkdf2Sha512 } from "../../../src/crypto/generation/entropy_to_seed";
-import { hexToUint8List } from "../signing/test_vectors/ckd_ed25519_vectors";
-import { EntropyToSeedVector, entropyToSeedVectors } from "./test_vectors/entropy_to_seed_vectors";
+import { Pbkdf2Sha512 } from "@/crypto/crypto.js";
+import { hexToUint8List } from "../signing/test_vectors/ckd_ed25519_vectors.js";
+import { entropyToSeedVectors, EntropyToSeedVector } from "./test_vectors/entropy_to_seed_vectors.js";
+
 
 describe('Entropy to Seed Spec', () => {
   entropyToSeedVectors.forEach((v) => {

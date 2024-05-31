@@ -8,12 +8,13 @@
 // import { Generators } from '../helpers/generators';
 // import { ed25519TestVectors, parseVector } from './test_vectors/ed25519_vectors';
 
-import { Entropy } from '../../../src/crypto/generation/mnemonic/entropy';
-import { Ed25519 } from '../../../src/crypto/signing/ed25519/ed25519';
-import { PublicKey, SecretKey } from '../../../src/crypto/signing/ed25519/ed25519_spec';
-import { KeyPair } from '../../../src/crypto/signing/signing';
-import { Generators } from '../helpers/generators';
-import { ed25519TestVectors, parseVector } from './test_vectors/ed25519_vectors';
+import { Ed25519, Entropy, KeyPair } from "@/crypto/crypto.js";
+import { SecretKey, PublicKey } from "@/crypto/signing/ed25519/ed25519_spec.js";
+import { Generators } from "../helpers/generators.js";
+import { ed25519TestVectors, parseVector } from "./test_vectors/ed25519_vectors.js";
+import { describe, test, expect } from "vitest";
+
+
 
 // // interface TestVector {
 // //   description: string;

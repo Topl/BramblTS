@@ -65,6 +65,7 @@ export class Generators {
 
   // Generate a random mnemonic size
   static getGeneratedMnemonicSize(): MnemonicSize {
+    const random = Generators._random.nextRange(0, 5);
     const sizes = [
       MnemonicSize.words12(),
       MnemonicSize.words15(),
@@ -72,6 +73,6 @@ export class Generators {
       MnemonicSize.words21(),
       MnemonicSize.words24(),
     ];
-    return sizes[Generators._random.nextRange(0, 5)];
+    return sizes[random];
   }
 }

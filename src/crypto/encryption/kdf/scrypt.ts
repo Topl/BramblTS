@@ -64,7 +64,7 @@ class SCrypt implements Kdf {
 /**
  * SCrypt parameters.
  */
-class SCryptParams extends Params {
+class SCryptParams implements Params {
     readonly salt: Uint8Array;
     readonly n: number;
     readonly r: number;
@@ -80,7 +80,6 @@ class SCryptParams extends Params {
      * @param dkLen Length of derived key. Defaults to 32.
      */
     constructor(salt: Uint8Array, n: number = 262144, r: number = 8, p: number = 1, dkLen: number = 32) {
-        super();
         this.salt = salt;
         this.n = n;
         this.r = r;

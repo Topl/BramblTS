@@ -111,7 +111,7 @@ export class Phrase {
     entropy: Entropy;
     size: MnemonicSize;
     language: Language;
-  }): Promise<any> {
+  }): Promise<Either<PhraseFailure, Phrase>> {
     if (entropy.value.length !== size.entropyLength / 8) {
       return left(PhraseFailure.invalidEntropyLength());
     }
@@ -135,7 +135,13 @@ export class Phrase {
     const phraseBinaryString = entropyBinaryString + checksum;
     const phraseWords: string[] = [];
     for (let i = 0; i < phraseBinaryString.length; i += 11) {
-      const index = parseInt(phraseBinaryString.substring(i, i + 11), 2);
+      const binaryStr = phraseBinaryString.substring(i, i + 11);
+      const index = parseInt(binaryStr, 2);
+      ///  DEBUG
+      if (isNaN(index)) {
+        throw new Error(`Invalid binary string: ${binaryStr}`);
+      }
+
       phraseWords.push(wordList.value[index]);
     }
 

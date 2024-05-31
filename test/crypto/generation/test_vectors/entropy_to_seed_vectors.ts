@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Pbkdf2Sha512 } from '../../../../src/crypto/generation/entropy_to_seed';
-import { Entropy } from '../../../../src/crypto/generation/mnemonic/entropy';
+import { getOrThrowEither } from '@/common/functional/either.js';
+import { Pbkdf2Sha512 } from '@/crypto/generation/entropy_to_seed.js';
+import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
 
 export class EntropyToSeedVector {
   entropy: Entropy;
@@ -32,7 +33,7 @@ export class EntropyToSeedVector {
     const password = inputs['password'];
     const seed96 = outputs['seed96'];
 
-    const entropy = Entropy.fromBytes(Buffer.from(entropyString, 'hex')).right!;
+    const entropy = getOrThrowEither(Entropy.fromBytes(Buffer.from(entropyString, 'hex')));
 
     return new EntropyToSeedVector({
       entropy,

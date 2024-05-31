@@ -1,5 +1,7 @@
-import { Pbkdf2Sha512 } from './../../../src/crypto/generation/entropy_to_seed';
-import { pbkdf2Sha512TestVectors } from './test_vectors/pbkdf2_sha512_vectors';
+import { Pbkdf2Sha512 } from "@/crypto/crypto.js";
+import { pbkdf2Sha512TestVectors } from "./test_vectors/pbkdf2_sha512_vectors.js";
+import { describe, test, expect } from "vitest";
+
 
 describe('Pbkdf2Sha512TestVectors Topl test vectors', () => {
   let n = 0;

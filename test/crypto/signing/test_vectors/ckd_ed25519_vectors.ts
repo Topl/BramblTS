@@ -1,11 +1,15 @@
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { None, Option, Some } from '../../../../src/common/functional/either';
-import { Bip32Index, HardenedIndex, SoftIndex } from '../../../../src/crypto/generation/bip32_index';
-import { ExtendedEd25519Initializer } from '../../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
-import * as spec from '../../../../src/crypto/signing/ed25519/ed25519_spec';
-import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
-import { PublicKey, SecretKey } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import  { none, type Option, some } from '@/common/functional/either.js';
+import { Bip32Index, HardenedIndex, SoftIndex } from '@/crypto/generation/bip32_index.js';
+import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
+import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
+import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
+import { PublicKey, SecretKey } from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
+
+
 
 export function hexToUint8List(hex: string): Uint8Array {
   const hexString = hex.trim();
@@ -68,12 +72,12 @@ export class CkdEd25519TestVector {
     // input
     const rSkString = input['rootSecretKey'] as string;
 
-    let rootVerificationKey: Option<PublicKey> = new None();
+    let rootVerificationKey: Option<PublicKey> = none;
 
     if (input.hasOwnProperty('rootVerificationKey')) {
       const rVkString = input['rootVerificationKey']! as string;
       const rootVkBytes = hexToUint8List(rVkString);
-      rootVerificationKey = new Some(
+      rootVerificationKey = some(
         new PublicKey(new spec.PublicKey(rootVkBytes.slice(0, 32)), rootVkBytes.slice(32, 64)),
       );
     }

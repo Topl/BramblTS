@@ -1,4 +1,5 @@
-import { Entropy } from '../../../../src/crypto/generation/mnemonic/entropy';
+import { isRight } from '@/common/functional/either.js';
+import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
 import {
   ChineseSimplified,
   ChineseTraditional,
@@ -11,12 +12,13 @@ import {
   Language,
   LanguageWordList,
   Portuguese,
-  Spanish,
-} from '../../../../src/crypto/generation/mnemonic/language';
-import { Phrase } from '../../../../src/crypto/generation/mnemonic/phrase';
-import { Generators } from '../../helpers/generators';
+  Spanish
+} from '@/crypto/generation/mnemonic/language.js';
+import { Phrase } from '@/crypto/generation/mnemonic/phrase.js';
+import { describe, expect, test } from 'vitest';
+import { Generators } from '../../helpers/generators.js';
 
-describe('Language Spec Test Vectors', () => {
+describe('Language Spec Test Vectors', async () => {
   const languages: Language[] = [
     new English(),
     new ChineseSimplified(),
@@ -27,20 +29,20 @@ describe('Language Spec Test Vectors', () => {
     new Italian(),
     new French(),
     new Japanese(),
-    new Korean(),
+    new Korean()
   ];
 
   for (const language of languages) {
-    test(`Language resolves wordlist ${language}`, async () => {
+    test.concurrent(`Language resolves wordlist ${language}`, async () => {
       const x = await LanguageWordList.validated(language);
-      expect(x.isRight).toBe(true);
+      expect(isRight(x)).toBe(true);
     });
 
     test(`phrases should be generated in ${language}`, async () => {
       const size = Generators.getGeneratedMnemonicSize();
       const entropy = Entropy.generate(size);
       const phrase = await Phrase.fromEntropy({ entropy, size, language });
-      expect(phrase.isRight).toBe(true);
+      expect(isRight(phrase)).toBe(true);
     });
   }
 });
