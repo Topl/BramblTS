@@ -55,10 +55,11 @@ export class Phrase {
     }
 
     const size = sizeResult.right!;
-
+    
     const phrase: Phrase = {
       value: words
         .toLowerCase()
+        .trim() /// Port Note: Extra trim because the carriage returns end up returning an extra whitespace character.
         .split(/\s+/)
         .map(w => w.trim()),
       size,
@@ -133,11 +134,6 @@ export class Phrase {
     for (let i = 0; i < phraseBinaryString.length; i += 11) {
       const binaryStr = phraseBinaryString.substring(i, i + 11);
       const index = parseInt(binaryStr, 2);
-      ///  DEBUG
-      if (isNaN(index)) {
-        throw new Error(`Invalid binary string: ${binaryStr}`);
-      }
-
       phraseWords.push(wordList.value[index]);
     }
 

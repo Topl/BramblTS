@@ -33,7 +33,7 @@ export function getOrThrowOption<A> (
   }
 }
 
-export const withRightO = getOrThrowOption;
+export const toRightO = getOrThrowOption;
 
 /**
  * Returns the value contained in the `Either` if it's `Right`, otherwise throws the provided error.
@@ -54,7 +54,7 @@ export function getOrThrowEither<E, A> (
   }
 }
 
-export const withRightE = getOrThrowEither;
+export const toRightE = getOrThrowEither;
 
 /// experimental extensions via typescript module augmentation
 declare module 'fp-ts' {}

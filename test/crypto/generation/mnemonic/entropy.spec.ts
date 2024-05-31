@@ -1,9 +1,9 @@
-import { v4 as uuidv4 } from 'uuid';
+import { isRight, toRightE } from '@/common/functional/either.js';
 import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
+import { v4 as uuidv4 } from 'uuid';
+import { describe, expect, test } from 'vitest';
 import { Generators } from '../../helpers/generators.js';
-import {  getOrThrowEither, isRight, withRightE } from '@/common/functional/either.js';
-import { describe, test, expect } from 'vitest';
-
+import { mnemonicToEntropyTestVectors, MnemonicToEntropyVector } from '../test_vectors/mnemonic_to_entropy_vectors.js';
 
 describe('Entropy Spec Test Vectors', () => {
   test('random byte arrays (of the correct length) should be a valid Entropy', () => {
@@ -27,17 +27,36 @@ describe('Entropy Spec Test Vectors', () => {
   });
 
   test('Entropy can be generated and results in valid mnemonic strings', async () => {
-    for (let i = 0; i < 10; i++) {
-      const mnemonicSize = Generators.getGeneratedMnemonicSize();
+    for (const mnemonicSize of Generators.mnemonicSizes) {
       const entropy1 = Entropy.generate(mnemonicSize);
       const entropy2Res = await Entropy.toMnemonicString(entropy1);
 
-      
-      const entropy2String = withRightE(entropy2Res).join(' ');
-      const entropy2E = await Entropy.fromMnemonicString(entropy2String);
-      const entropy2 = withRightE(entropy2E);
+      const entropy2String = toRightE(entropy2Res).join(' ');
+      const entropy2 = toRightE(await Entropy.fromMnemonicString(entropy2String));
 
-      expect(entropy1.value).toBe(entropy2.value);
+      expect(entropy1.value).toEqual(entropy2.value);
+    }
+  });
+
+  test('Entropy can be generated, transformed to a mnemonic phrase string, and converted back to the original entropy value', async () => {
+    for (const mnemonicSize of Generators.mnemonicSizes) {
+      const entropy1 = Entropy.generate(mnemonicSize);
+      const entropy2String = toRightE(await Entropy.toMnemonicString(entropy1));
+      const entropy2 = toRightE(await Entropy.fromMnemonicString(entropy2String.join(' ')));
+
+      expect(entropy1.value).toEqual(entropy2.value);
+    }
+  });
+
+  describe('Test vector mnemonic should produce known entropy.', () => {
+    for (const v of mnemonicToEntropyTestVectors) {
+      const vector = MnemonicToEntropyVector.fromJson(v);
+
+      test(`Test vector mnemonic should produce known entropy. Mnemonic: ${vector.mnemonic}`, async () => {
+        const actualEntropy = await Entropy.fromMnemonicString(vector.mnemonic);
+        expect(isRight(actualEntropy)).toBeTruthy();
+        expect(toRightE(actualEntropy).value).toEqual(vector.entropy.value);
+      });
     }
   });
 });

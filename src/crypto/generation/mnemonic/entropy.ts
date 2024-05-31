@@ -26,7 +26,10 @@ export class Entropy {
   value: Uint8Array;
 
   constructor (value: Uint8Array) {
-    this.value = value;
+    // Create a new Uint8Array from the input value.
+    // This ensures that we're storing a Uint8Array and not any of it's subtypes like Buffer
+    // Port note: during testing any subtype of Uint8Array would trip the unit tests.
+    this.value = new Uint8Array(value);
   }
 
   /**
@@ -37,9 +40,9 @@ export class Entropy {
    */
   public static generate (size = defaultMnemonicSize): Entropy {
     const numBytes = size.entropyLength / 8;
-    // const r = new Uint8Array(numBytes);
     const secureRandom = randomBytes(numBytes);
-    return new Entropy(secureRandom);
+    const r = new Uint8Array(secureRandom.buffer); /// overwrite to Uint8Array
+    return new Entropy(r);
   }
 
   /**

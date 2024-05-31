@@ -84,7 +84,8 @@ export class LanguageWordList {
   static async validated(language: Language): Promise<Either<ValidationFailure, LanguageWordList>> {
     try {
       const file = `assets/${language.wordlistDirectory}/${language.filePath}`;
-      const words = (await fs.readFile(file, 'utf-8')).split('\n');
+      const content = await fs.readFile(file, 'utf-8');
+      const words = content.replace(/\r/g, '').split('\n'); // Port Note: Replace to remove /r carriage returns which mess up future logic
 
       const hash = LanguageWordList.validateChecksum(words, language.hash);
       return hash ? right(new LanguageWordList(words)) : left(new InvalidChecksum());
