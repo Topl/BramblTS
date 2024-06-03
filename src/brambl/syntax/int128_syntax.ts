@@ -1,4 +1,3 @@
-import Long from 'long';
 import { Int128 } from 'topl_common';
 
 // todo: confirm if this works?
@@ -10,40 +9,59 @@ export default class Int128Syntax {
     return bytes.reduce((acc, val) => acc * BigInt(256) + BigInt(val), BigInt(0));
   }
 
-  static bigIntAsInt128 (bigInt: BigInt): Int128 {
-    const int128 = new Int128();
-    Buffer.from(bigInt.toString(16), 'hex').copy(int128.value);
-    return int128;
+  static bigIntAsInt128 (bigInt: bigint): Int128 {
+    const x = BigIntSyntax.bigIntToUint8Array(bigInt);
+    return new Int128({ value: x });
   }
 
   static numberAsInt128 (number: number): Int128 {
-    const int128 = new Int128();
-    int128.value = Buffer.from(number.toString(16), 'hex');
-    return int128;
+    const x = number.bToUint8Array();
+    return new Int128({ value: x });
   }
+}
 
-  static longAsInt128 (long: Long): Int128 {
-    const int128 = new Int128();
-    int128.value = Buffer.from(long.toString(16), 'hex');
-    return int128;
+export class BigIntSyntax  {
+  static bigIntToUint8Array(value: bigint): Uint8Array {
+    const hexString = value.toString(16);
+    const paddedHexString = hexString.length % 2 === 0 ? hexString : '0' + hexString;
+    const byteArray = new Uint8Array(paddedHexString.length / 2);
+  
+    for (let i = 0; i < paddedHexString.length; i += 2) {
+      byteArray[i / 2] = parseInt(paddedHexString.slice(i, i + 2), 16);
+    }
+  
+    return byteArray;
   }
 }
 
 declare global {
   interface BigInt {
-    bAsInt128(): Int128;
+    bAsInt128?(): Int128;
   }
   interface Number {
-    bAsInt128(): Int128;
+    bAsInt128?(): Int128;
+    bAsBigInt?(): BigInt;
+    bAsbigint?(): bigint;
   }
 }
 
 BigInt.prototype.bAsInt128 = function (): Int128 {
-  return Int128Syntax.bigIntAsInt128(this);
+  const x = Int128Syntax.bigIntAsInt128(this);
+  return x;
 };
+
+/// Number
 
 Number.prototype.bAsInt128 = function (): Int128 {
   return Int128Syntax.numberAsInt128(this);
+};
+
+Number.prototype.bAsBigInt = function (): BigInt {
+  return BigInt(this);
+};
+
+Number.prototype.bAsbigint = function (): bigint {
+  return BigInt(this).valueOf();
 };
 
 declare module 'topl_common' {

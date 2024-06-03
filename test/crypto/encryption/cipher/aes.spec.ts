@@ -1,5 +1,8 @@
-import { padArray, equals, hexToUint8List } from '../../../../src/utils/extensions';
-import { Aes } from '../../../../src/crypto/encryption/cipher/aes';
+
+import { Aes } from '@/crypto/encryption/cipher/aes.js';
+import { equals, padArray } from '@/utils/extensions.js';
+import { describe, test, expect } from 'vitest';
+import { hexToUint8List } from '../../signing/test_vectors/ckd_ed25519_vectors.js';
 
 // Converts a string to a hexadecimal string representation
 function stringToHex(str) {
@@ -12,10 +15,9 @@ describe('Aes Spec', () => {
     // Using padArray and hexToUint8List from the extension file
     const encryptKey1 = padArray(hexToUint8List(stringToHex('encryptKey1')), 16);
     const encryptKey2 = padArray(hexToUint8List(stringToHex('encryptKey2')), 16);
-    const message: Uint8Array = new TextEncoder().encode('message');
+    const message: Uint8Array = 'message'.bToUint8Array();
     const cipherText1 = aes.encrypt(message, encryptKey1);
     const cipherText2 = aes.encrypt(message, encryptKey2);
-
     expect(cipherText1).not.toEqual(cipherText2);
   });
 
@@ -23,7 +25,7 @@ describe('Aes Spec', () => {
     const aes = new Aes();
     const encryptKey1 = padArray(hexToUint8List(stringToHex('encryptKey1')), 16);
     const encryptKey2 = padArray(hexToUint8List(stringToHex('encryptKey2')), 32);
-    const message: Uint8Array = new TextEncoder().encode('message');
+    const message: Uint8Array = 'message'.bToUint8Array();
     const cipherText1 = aes.encrypt(message, encryptKey1);
     const cipherText2 = aes.encrypt(message, encryptKey2);
 
@@ -43,7 +45,7 @@ describe('Aes Spec', () => {
     const aes2 = new Aes(params2);
 
     const key = padArray(hexToUint8List(stringToHex('key')), 16);
-    const message: Uint8Array = new TextEncoder().encode('message');
+    const message: Uint8Array = 'message'.bToUint8Array();
 
     const cipherText1 = aes1.encrypt(message, key);
     const cipherText2 = aes2.encrypt(message, key);
@@ -56,7 +58,7 @@ describe('Aes Spec', () => {
       const key = padArray(hexToUint8List(stringToHex('key')), keySize);
       const iv = Aes.generateIv();
       const aes = new Aes(iv);
-      const message: Uint8Array = new TextEncoder().encode('message');
+      const message: Uint8Array = 'message'.bToUint8Array();
 
       const cipherText = aes.encrypt(message, key);
       const decodedText = aes.decrypt(cipherText, key);
@@ -69,7 +71,7 @@ describe('Aes Spec', () => {
     const aes = new Aes();
     const encryptKey = padArray(hexToUint8List(stringToHex('encryptKey')), 16);
     const decryptKey = padArray(hexToUint8List(stringToHex('decryptKey')), 16);
-    const message: Uint8Array = new TextEncoder().encode('message');
+    const message: Uint8Array = 'message'.bToUint8Array();
 
     const cipherText = aes.encrypt(message, encryptKey);
     const decodedText = aes.decrypt(cipherText, decryptKey);
@@ -89,7 +91,7 @@ describe('Aes Spec', () => {
     const aesDecrypt = new Aes(iv2);
 
     const key = padArray(hexToUint8List(stringToHex('key')), 16);
-    const message: Uint8Array = new TextEncoder().encode('message');
+    const message: Uint8Array = 'message'.bToUint8Array();
 
     const cipherText = aesEncrypt.encrypt(message, key);
     const decodedText = aesDecrypt.decrypt(cipherText, key);

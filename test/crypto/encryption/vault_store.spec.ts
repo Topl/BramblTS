@@ -1,7 +1,9 @@
-import { Mac } from '../../../src/crypto/encryption/mac';
-import { Aes } from './../../../src/crypto/encryption/cipher/aes';
-import { SCrypt, SCryptParams } from './../../../src/crypto/encryption/kdf/scrypt';
-import { VaultStore } from './../../../src/crypto/encryption/vault_store';
+import { toLeftE, toRightE } from "@/common/functional/either.js";
+import { Mac, VaultStore } from "@/crypto/crypto.js";
+import { Aes } from "@/crypto/encryption/cipher/aes.js";
+import { SCrypt, SCryptParams } from "@/crypto/encryption/kdf/scrypt.js";
+import { describe, expect, test } from "vitest";
+
 
 function copyWith<T>(original: T, updates: Partial<T>): T {
   return Object.assign({}, original, updates);
@@ -34,7 +36,7 @@ describe('Vault store Spec', () => {
 
     const decoded = VaultStore.decodeCipher(vaultStore, password);
 
-    expect(decoded.right).toEqual(sensitiveInformation);
+    expect(toRightE(decoded)).toEqual(sensitiveInformation);
   });
 
   test('Verify decodeCipher returns InvalidMac with a different password', () => {
@@ -44,7 +46,7 @@ describe('Vault store Spec', () => {
 
     const decoded = VaultStore.decodeCipher(vaultStore, Uint8Array.from(Buffer.from('this is a different password')));
 
-    expect(decoded.left instanceof InvalidMac).toBe(true);
+    expect(toLeftE(decoded) instanceof InvalidMac).toBe(true);
   });
 
   test('Verify decodeCipher returns InvalidMac with a corrupted VaultStore', () => {
@@ -57,19 +59,19 @@ describe('Vault store Spec', () => {
       copyWith(vaultStore, { cipherText: Uint8Array.from(Buffer.from('this is an invalid cipher text')) }),
       password
     );
-    expect(decoded1.left instanceof InvalidMac).toBe(true);
+    expect(toLeftE(decoded1) instanceof InvalidMac).toBe(true);
 
     // VaultStore is corrupted by changing the mac
     const decoded2 = VaultStore.decodeCipher(
       copyWith(vaultStore, { mac: Uint8Array.from(Buffer.from('this is an invalid mac')) }),
       password
     );
-    expect(decoded2.left instanceof InvalidMac).toBe(true);
+    expect(toLeftE(decoded2) instanceof InvalidMac).toBe(true);
 
     // VaultStore is corrupted by changing some parameter in KdfParams
     const kdfParams = new SCryptParams(Uint8Array.from(Buffer.from('invalid salt')));
     const wrongKdf = new SCrypt(kdfParams);
     const decoded3 = VaultStore.decodeCipher(copyWith(vaultStore, { kdf: wrongKdf }), password);
-    expect(decoded3.left instanceof InvalidMac).toBe(true);
+    expect(toLeftE(decoded3) instanceof InvalidMac).toBe(true);
   });
 });

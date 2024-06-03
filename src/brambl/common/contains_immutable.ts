@@ -131,7 +131,9 @@ export class ContainsImmutable {
   }
 
   static number (i: number): ContainsImmutable {
-    const immutableBytes = new ImmutableBytes({ value: i.bToUint8Array() });
+    if (typeof i === 'undefined')  throw Error("Number passed is undefined")
+    const x = i ?? 0;
+    const immutableBytes = new ImmutableBytes({ value: x.bToUint8Array() });
     return immutableBytes.immutable();
   }
 
@@ -535,8 +537,17 @@ export class ContainsImmutable {
   }
 
   static seriesPolicyEvent (es: Event_SeriesPolicy): ContainsImmutable {
+    if (
+      typeof es === 'undefined' ||
+      typeof es.tokenSupply === 'undefined' ||
+      typeof es.label === 'undefined' ||
+      typeof es.fungibility === 'undefined' ||
+      typeof es.quantityDescriptor === 'undefined'
+    ) {
+      throw Error('SeriesPolicyEvent values are undefined');
+    }
     return this.string(es.label)
-      .add(es.tokenSupply.bImmutable())
+      .add(this.number(es.tokenSupply))
       .add(this.transactionOutputAddress(es.registrationUtxo))
       .add(this.fungibility(es.fungibility))
       .add(this.quantityDescriptor(es.quantityDescriptor));
@@ -739,9 +750,7 @@ export class ContainsImmutable {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   static list (list: any[]): ContainsImmutable {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return list.reduce((acc: ContainsImmutable, entry: any, index: number) => {
       const intResult = ContainsImmutable.number(index);
       const applyResult = ContainsImmutable.apply(entry);
@@ -1073,13 +1082,13 @@ declare global {
      * Converts the number to an ImmutableBytes instance.
      * @returns An ImmutableBytes instance representing the number.
      */
-    bImmutableBytes(): ImmutableBytes;
+    bImmutableBytes?(): ImmutableBytes;
 
     /**
      * Converts the number to a ContainsImmutable instance.
      * @returns A ContainsImmutable instance representing the number.
      */
-    bImmutable(): ContainsImmutable;
+    bImmutable?(): ContainsImmutable;
   }
 
   interface Uint8Array {
@@ -1087,36 +1096,37 @@ declare global {
      * Converts the Uint8Array to an ImmutableBytes instance.
      * @returns An ImmutableBytes instance representing the Uint8Array.
      */
-    bImmutableBytes(): ImmutableBytes;
+    bImmutableBytes?(): ImmutableBytes;
 
     /**
      * Converts the Uint8Array to a ContainsImmutable instance.
      * @returns A ContainsImmutable instance representing the Uint8Array.
      */
-    bImmutable(): ContainsImmutable;
+    bImmutable?(): ContainsImmutable;
   }
   interface Array<T> {
     /**
      * Converts the array to an ImmutableBytes instance.
      * @returns An ImmutableBytes instance representing the array.
      */
-    bImmutableBytes(): ImmutableBytes;
+    bImmutableBytes?(): ImmutableBytes;
 
     /**
      * Converts the array to a ContainsImmutable instance.
      * @returns A ContainsImmutable instance representing the array.
      */
-    bImmutable(): ContainsImmutable;
+    bImmutable?(): ContainsImmutable;
   }
 }
 
 // Number
 Number.prototype.bImmutableBytes = function () {
-  return this.immutable.immutableBytes;
+  return this.bImmutable.immutableBytes;
 };
 
 Number.prototype.bImmutable = function () {
-  return ContainsImmutable.number(this);
+  if (this !== null) return ContainsImmutable.number(this);
+  // return
 };
 
 // Uint8Array

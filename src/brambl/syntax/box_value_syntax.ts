@@ -101,6 +101,27 @@ export class ValueToQuantityDescriptorSyntaxOps {
   }
 }
 
+export function setFungibilityType (value: Value, type: FungibilityType): Value {
+  switch (value.value.case) {
+    case 'asset':
+      value.value.value.fungibility = type;
+      break;
+    case 'lvl':
+    case 'topl':
+    case 'group':
+    case 'series':
+    default:
+      throw new Error('Value is asset and thus has no Fungibility');
+  }
+  return value;
+}
+
+export function setQuantityDescriptorType (value: Value, type: QuantityDescriptorType): Value {
+  if (value.value.case !== 'asset') throw new Error('Expected asset');
+  value.value.value.quantityDescriptor = type;
+  return value;
+}
+
 export class ValueToFungibilitySyntaxOps {
   static getFungibility (value: Value): FungibilityType | null {
     if (value.value.case === 'asset') {

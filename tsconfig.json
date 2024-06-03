@@ -17,6 +17,7 @@
     "noImplicitOverride": true,
     "noUnusedParameters": true,
     "noUnusedLocals": true,
+    "preserveSymlinks": true, /// vitest support?
 
     "baseUrl": "./src",
     "paths": {

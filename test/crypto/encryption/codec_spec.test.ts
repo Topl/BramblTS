@@ -1,10 +1,12 @@
-import { Aes, AesParams } from '../../../src/crypto/encryption/cipher/aes';
-import { SCryptParams } from '../../../src/crypto/encryption/kdf/scrypt';
-import { VaultStore } from '../../../src/crypto/encryption/vault_store';
-import { Cipher } from '../../../src/crypto/encryption/cipher/cipher';
-import { Kdf } from '../../../src/crypto/encryption/kdf/kdf';
-import { SCrypt } from '../../../src/crypto/encryption/kdf/scrypt';
-import { Json } from '../../../src/utils/json';
+import { VaultStore } from "@/crypto/crypto.js";
+import { AesParams, Aes } from "@/crypto/encryption/cipher/aes.js";
+import { Kdf } from "@/crypto/encryption/kdf/kdf.js";
+import { SCrypt, SCryptParams } from "@/crypto/encryption/kdf/scrypt.js";
+import { Json } from "@/utils/json.js";
+import { describe, test, expect } from "vitest";
+import { Cipher } from "@/crypto/encryption/cipher/cipher.js";
+import { isLeft, toRightE } from "@/common/functional/either.js";
+
 
 describe('Codec Spec', () => {
   test('AES Params > Encode and Decode', () => {
@@ -76,7 +78,7 @@ describe('Codec Spec', () => {
     const testKdf = Kdf.fromJson(JSON.parse(expected.json));
     expect(testKdf).toEqual(expected.value);
 
-    const testJson = JSON.stringify(expected.value.toJson());
+    const testJson = JSON.stringify(expected.value);
     expect(testJson).toEqual(expected.json);
 
     const encodedFromDecoded = JSON.stringify(testKdf.toJson());
@@ -106,7 +108,7 @@ describe('Codec Spec', () => {
   test('VaultStore > Encode and Decode', () => {
     const expected = Helpers.expectedVaultStore();
 
-    const testVaultStore = VaultStore.fromJson(JSON.parse(expected.json)).getOrThrow();
+    const testVaultStore = toRightE(VaultStore.fromJson(JSON.parse(expected.json)));
     expect(testVaultStore).toEqual(expected.value);
 
     const testJson = JSON.stringify(expected.value.toJson());
@@ -115,7 +117,7 @@ describe('Codec Spec', () => {
     const encodedFromDecoded = JSON.stringify(testVaultStore.toJson());
     expect(encodedFromDecoded).toEqual(expected.json);
 
-    const decodedFromEncoded = VaultStore.fromJson(JSON.parse(testJson)).getOrThrow();
+    const decodedFromEncoded = toRightE(VaultStore.fromJson(JSON.parse(testJson)));
     expect(decodedFromEncoded).toEqual(expected.value);
   });
 
@@ -130,7 +132,7 @@ describe('Codec Spec', () => {
 
     // Assuming VaultStore.fromJson returns a result object
     const result = VaultStore.fromJson(invalidJson);
-    expect(result.isLeft).toBe(true);
+    expect(isLeft(result)).toBe(true);
   });
 });
 

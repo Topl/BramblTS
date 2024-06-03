@@ -1,6 +1,8 @@
 // import { equals } from '../../../src/utils/extensions';
-import { Generators } from '../helpers/generators';
-import { Mac } from './../../../src/crypto/encryption/mac';
+
+import { Mac } from '@/crypto/crypto.js';
+import { describe, expect, test } from 'vitest';
+import { Generators } from '../helpers/generators.js';
 
 describe('Mac Spec', () => {
   // test('Different derived keys should produce different macs > Fail validation', () => {

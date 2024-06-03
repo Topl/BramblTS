@@ -27,10 +27,14 @@ declare global {
     /**
      * converts a dynamic value to a sized evidence via blake 2b hash
      */
-    sizedEvidence(): Evidence;
+    bSizedEvidence?(): Evidence;
   }
 }
 
-Object.prototype.sizedEvidence = function () {
+Object.prototype.bSizedEvidence = function () {
   return ContainsEvidence.blake2bEvidenceFromImmutable(this).evidence;
 };
+
+export function sizedEvidence(object: any) {
+  return ContainsEvidence.blake2bEvidenceFromImmutable(object).evidence;
+}

@@ -1,4 +1,4 @@
-import { isLeft, type Either } from 'fp-ts/lib/Either.js';
+import { isLeft, isRight, type Either } from 'fp-ts/lib/Either.js';
 import type { LazyArg } from 'fp-ts/lib/function.js';
 import { type Option } from 'fp-ts/Option';
 
@@ -55,6 +55,27 @@ export function getOrThrowEither<E, A> (
 }
 
 export const toRightE = getOrThrowEither;
+
+/**
+ * Returns the value contained in the `Either` if it's `Left`, otherwise throws the provided error.
+ *
+ * @param ma - The `Either` to extract the value from.
+ * @param error - A function that takes the `Right` value and returns an `Error` to throw when the `Either` is `Right`. Defaults to a function that returns a new `Error` with the message 'getOrThrowEitherLeft: (Right: ${a})'.
+ * @returns The value contained in the `Either` if it's `Left`.
+ * @throws The `Error` returned by the `error` function if the `Either` is `Right`.
+ */
+export function getOrThrowEitherLeft<A, E> (
+  ma: Either<E, A>,
+  error: (a: A) => Error = a => new Error(`getOrThrowEitherLeft: (Right: ${a})`)
+): E {
+  if (isRight(ma)) {
+    throw error(ma.right);
+  } else {
+    return ma.left;
+  }
+}
+
+export const toLeftE = getOrThrowEitherLeft;
 
 /// experimental extensions via typescript module augmentation
 declare module 'fp-ts' {}

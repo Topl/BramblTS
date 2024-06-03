@@ -29,7 +29,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
    * costs to save and transmit.
    *
    * @param transaction the transaction to cost
-   * @returns a cost, represented as a Long
+   * @returns a cost, represented as a number
    */
   private transactionDataCost (transaction: IoTransaction): number {
     const bytes = ContainsImmutable.ioTransaction(transaction).immutableBytes.value;
@@ -67,7 +67,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
    * Proof verification has a CPU/memory cost associated with it.  Different proofs have different complexity.
    *
    * @param proof the proof to cost
-   * @returns a cost, represented as a Long
+   * @returns a cost, represented as a number
    */
   private proofCost (proof: Proof): number {
     const c = this.proofCostConfig;
