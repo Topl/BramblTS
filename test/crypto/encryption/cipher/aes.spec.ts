@@ -28,7 +28,6 @@ describe('Aes Spec', () => {
     const message: Uint8Array = 'message'.bToUint8Array();
     const cipherText1 = aes.encrypt(message, encryptKey1);
     const cipherText2 = aes.encrypt(message, encryptKey2);
-
     expect(cipherText1).not.toEqual(cipherText2);
   });
 

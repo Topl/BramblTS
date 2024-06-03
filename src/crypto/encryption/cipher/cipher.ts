@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-case-declarations */
-import { Aes, AesParams } from './aes';
+import { Aes, AesParams } from './aes.js';
 
 /**
  * Ciphers are used to encrypt and decrypt data.
@@ -12,7 +10,7 @@ export abstract class Cipher {
    * @param json - JSON object to decode.
    * @returns An instance of a subclass of Cipher.
    */
-  static fromJson(json: { [key: string]: any }): any {
+  static fromJson (json: { [key: string]: any }): any {
     const cipherType = json['cipher'];
     switch (cipherType) {
       case 'aes':
@@ -59,7 +57,7 @@ export abstract class Params {
  * Exception for unknown cipher types.
  */
 export class UnknownCipherException extends Error {
-  constructor() {
+  constructor () {
     super('Unknown cipher type.');
   }
 }

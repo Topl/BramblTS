@@ -89,4 +89,4 @@ export class VaultStore {
 
 abstract class InvalidVaultStoreFailure extends Error {}
 
-class InvalidMac extends InvalidVaultStoreFailure {}
+export class InvalidMac extends InvalidVaultStoreFailure {}

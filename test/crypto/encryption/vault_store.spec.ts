@@ -1,5 +1,5 @@
 import { toLeftE, toRightE } from "@/common/functional/either.js";
-import { Mac, VaultStore } from "@/crypto/crypto.js";
+import { InvalidMac, Mac, VaultStore } from "@/crypto/crypto.js";
 import { Aes } from "@/crypto/encryption/cipher/aes.js";
 import { SCrypt, SCryptParams } from "@/crypto/encryption/kdf/scrypt.js";
 import { describe, expect, test } from "vitest";
@@ -7,13 +7,6 @@ import { describe, expect, test } from "vitest";
 
 function copyWith<T>(original: T, updates: Partial<T>): T {
   return Object.assign({}, original, updates);
-}
-
-class InvalidMac extends Error {
-  constructor(message?: string) {
-    super(message);
-    this.name = 'InvalidMac';
-  }
 }
 
 describe('Vault store Spec', () => {
@@ -30,13 +23,14 @@ describe('Vault store Spec', () => {
   }
 
   test('Verify decodeCipher produces the plain text secret', () => {
-    const sensitiveInformation = Uint8Array.from(Buffer.from('this is a secret'));
-    const password = Uint8Array.from(Buffer.from('this is a password'));
+    const sensitiveInformation = 'this is a secret'.bToUint8Array();
+    const password = 'this is a password'.bToUint8Array();
     const vaultStore = generateVaultStore(sensitiveInformation, password);
 
     const decoded = VaultStore.decodeCipher(vaultStore, password);
+    const decodedValue = toRightE(decoded);
 
-    expect(toRightE(decoded)).toEqual(sensitiveInformation);
+    expect(decodedValue).toEqual(sensitiveInformation);
   });
 
   test('Verify decodeCipher returns InvalidMac with a different password', () => {
@@ -45,6 +39,7 @@ describe('Vault store Spec', () => {
     const vaultStore = generateVaultStore(sensitiveInformation, password);
 
     const decoded = VaultStore.decodeCipher(vaultStore, Uint8Array.from(Buffer.from('this is a different password')));
+    const decodedValue = toLeftE(decoded);
 
     expect(toLeftE(decoded) instanceof InvalidMac).toBe(true);
   });

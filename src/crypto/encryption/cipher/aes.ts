@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createCipheriv, randomBytes } from 'crypto';
-// import { Cipher, Params } from './cipher';
-// import { ModeOfOperation } from 'aes-js';
+import type { Cipher } from './cipher.js';
 
-export class Aes {
+export class Aes implements Cipher {
   static readonly blockSize: number = 16;
-  readonly iv: Uint8Array;
   readonly params: AesParams;
 
   constructor (iv?: Uint8Array, params?: AesParams) {
@@ -53,20 +50,17 @@ export class Aes {
     const preImage = this.processAes(cipherText, key, this.params.iv, false);
     const paddedAmount = preImage[0];
     const paddedBytes = preImage.slice(1);
-    paddedBytes.slice(0, paddedBytes.length - paddedAmount);
-    return paddedBytes;
+    const out = paddedBytes.slice(0, paddedBytes.length - paddedAmount);
+    return out;
   }
 
   private processAes (input: Uint8Array, key: Uint8Array, iv: Uint8Array, encrypt: boolean = false): Uint8Array {
-    const algo = this.getAlgorithm(iv);
+    const algo = this.getAlgorithm(key);
     const aesCtr = createCipheriv(algo, key, iv);
 
-    // const out = new Uint8Array(input.length).fill(1);
     const out = aesCtr.update(input);
     const out2 = aesCtr.final();
     const final = Buffer.concat([out, out2]);
-    console.log('out', out, 'out2', out2);
-    console.log('final', final);
     return final;
   }
 
