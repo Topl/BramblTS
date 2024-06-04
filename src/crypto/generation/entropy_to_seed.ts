@@ -1,5 +1,5 @@
 import { pbkdf2Sync } from 'crypto';
-import { Entropy } from './mnemonic/entropy';
+import { Entropy } from './mnemonic/entropy.js';
 
 /**
  * Abstract class defining a method to convert entropy to a seed.

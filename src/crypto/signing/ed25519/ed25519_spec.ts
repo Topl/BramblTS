@@ -1,4 +1,4 @@
-import * as spec from '../../../../proto/quivr/models/shared';
+import { SigningKey, VerificationKey } from '../signing.js';
 
 export class Ed25519Spec {
   static signatureLength: number = 64;
@@ -7,7 +7,7 @@ export class Ed25519Spec {
   static seedLength: number = 32;
 }
 
-export class SecretKey extends spec.quivr.models.SigningKey implements Ed25519Spec {
+export class SecretKey extends SigningKey implements Ed25519Spec {
   bytes: Uint8Array;
 
   constructor(bytes: Uint8Array) {
@@ -29,7 +29,7 @@ export class SecretKey extends spec.quivr.models.SigningKey implements Ed25519Sp
   }
 }
 
-export class PublicKey extends spec.quivr.models.VerificationKey implements Ed25519Spec {
+export class PublicKey extends VerificationKey implements Ed25519Spec {
   bytes: Uint8Array;
 
   constructor(bytes: Uint8Array) {

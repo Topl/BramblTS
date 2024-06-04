@@ -1,9 +1,9 @@
 // import { v4 as uuidv4 } from 'uuid';
-import { Either } from '../../../common/functional/either';
-import { English, Language } from './language';
-import { MnemonicSize } from './mnemonic';
-import { Phrase } from './phrase';
+import { isLeft, left, right, type Either } from '@/common/functional/brambl_fp.js';
 import { randomBytes } from 'crypto';
+import { English, Language } from './language.js';
+import { MnemonicSize } from './mnemonic.js';
+import { Phrase } from './phrase.js';
 
 const defaultMnemonicSize = MnemonicSize.words12();
 
@@ -11,7 +11,7 @@ enum EntropyFailureType {
   InvalidByteSize,
   PhraseToEntropyFailure,
   WordListFailure,
-  InvalidSizeMismatch,
+  InvalidSizeMismatch
 }
 
 // class Uuid {
@@ -25,8 +25,11 @@ enum EntropyFailureType {
 export class Entropy {
   value: Uint8Array;
 
-  constructor(value: Uint8Array) {
-    this.value = value;
+  constructor (value: Uint8Array) {
+    // Create a new Uint8Array from the input value.
+    // This ensures that we're storing a Uint8Array and not any of it's subtypes like Buffer
+    // Port note: during testing any subtype of Uint8Array would trip the unit tests.
+    this.value = new Uint8Array(value);
   }
 
   /**
@@ -35,11 +38,11 @@ export class Entropy {
    * @param size The size of the entropy. Defaults to 12 words.
    * @returns The generated Entropy.
    */
-  public static generate(size = defaultMnemonicSize): Entropy {
+  public static generate (size = defaultMnemonicSize): Entropy {
     const numBytes = size.entropyLength / 8;
-    // const r = new Uint8Array(numBytes);
     const secureRandom = randomBytes(numBytes);
-    return new Entropy(secureRandom);
+    const r = new Uint8Array(secureRandom.buffer); /// overwrite to Uint8Array
+    return new Entropy(r);
   }
 
   /**
@@ -49,28 +52,28 @@ export class Entropy {
    * @param options Optional language for the mnemonic.
    * @returns Either an EntropyFailure or a list of strings representing the mnemonic.
    */
-  public static async toMnemonicString(
+  public static async toMnemonicString (
     entropy: Entropy,
-    options: { language?: Language } = {},
+    options: { language?: Language } = {}
   ): Promise<Either<EntropyFailure, string[]>> {
     const language = options.language || new English();
 
     const sizeResult = this.sizeFromEntropyLength(entropy.value.length);
-    if (sizeResult.isLeft) return Either.left(sizeResult.left);
+    if (isLeft(sizeResult)) return left(sizeResult.left);
     const size = sizeResult.right!;
 
     const phraseResult = await Phrase.fromEntropy({
       entropy: entropy,
       size: size,
-      language: language,
+      language: language
     });
 
-    if (phraseResult.isLeft) {
-      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.left.toString() }));
+    if (isLeft(phraseResult)) {
+      return left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.left.toString() }));
     }
 
     const phrase = phraseResult.right!;
-    return Either.right(phrase.value);
+    return right(phrase.value);
   }
 
   /**
@@ -80,20 +83,20 @@ export class Entropy {
    * @param options Optional language for the mnemonic.
    * @returns Either an EntropyFailure or the Entropy.
    */
-  public static async fromMnemonicString(
+  public static async fromMnemonicString (
     mnemonic: string,
-    options: { language?: Language } = {},
+    options: { language?: Language } = {}
   ): Promise<Either<EntropyFailure, Entropy>> {
     const language = options.language || new English(); // Define default language or replace with appropriate logic
 
     const phraseResult = await Phrase.validated({ words: mnemonic, language });
-    if (phraseResult.isLeft) {
-      return Either.left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.left.toString() }));
+    if (isLeft(phraseResult)) {
+      return left(EntropyFailure.phraseToEntropyFailure({ context: phraseResult.left.toString() }));
     }
     const phrase = phraseResult.right!;
 
     const entropy = this.unsafeFromPhrase(phrase);
-    return Either.right(entropy);
+    return right(entropy);
   }
 
   /**
@@ -102,9 +105,9 @@ export class Entropy {
    * @param uuid The UUID to convert.
    * @returns The resulting Entropy instance.
    */
-  public static fromUuid(uuid: string): Entropy {
+  public static fromUuid (uuid: string): Entropy {
     const uuidString = uuid.replace(/-/g, '');
-    const bytes = uuidString.split('').map((c) => parseInt(c, 16));
+    const bytes = uuidString.split('').map(c => parseInt(c, 16));
     return new Entropy(new Uint8Array(bytes));
   }
 
@@ -114,13 +117,13 @@ export class Entropy {
    * @param bytes The byte array.
    * @returns Either an EntropyFailure or the Entropy.
    */
-  public static fromBytes(bytes: Uint8Array): Either<EntropyFailure, Entropy> {
+  public static fromBytes (bytes: Uint8Array): Either<EntropyFailure, Entropy> {
     const sizeResult = Entropy.sizeFromEntropyLength(bytes.length);
-    if (sizeResult.isLeft) {
-      return Either.left(sizeResult.left);
+    if (isLeft(sizeResult)) {
+      return left(sizeResult.left);
     }
     const entropy = new Entropy(bytes);
-    return Either.right(entropy);
+    return right(entropy);
   }
 
   /**
@@ -129,20 +132,20 @@ export class Entropy {
    * @param entropyByteLength The length of the entropy bytes.
    * @returns Either an EntropyFailure or the MnemonicSize.
    */
-  public static sizeFromEntropyLength(entropyByteLength: number): Either<EntropyFailure, MnemonicSize> {
+  public static sizeFromEntropyLength (entropyByteLength: number): Either<EntropyFailure, MnemonicSize> {
     switch (entropyByteLength) {
       case 16:
-        return Either.right(MnemonicSize.words12());
+        return right(MnemonicSize.words12());
       case 20:
-        return Either.right(MnemonicSize.words15());
+        return right(MnemonicSize.words15());
       case 24:
-        return Either.right(MnemonicSize.words18());
+        return right(MnemonicSize.words18());
       case 28:
-        return Either.right(MnemonicSize.words21());
+        return right(MnemonicSize.words21());
       case 32:
-        return Either.right(MnemonicSize.words24());
+        return right(MnemonicSize.words24());
       default:
-        return Either.left(EntropyFailure.invalidByteSize());
+        return left(EntropyFailure.invalidByteSize());
     }
   }
 
@@ -152,7 +155,7 @@ export class Entropy {
    * @param phrase The Phrase to convert.
    * @returns The resulting Entropy instance.
    */
-  public static unsafeFromPhrase(phrase: Phrase): Entropy {
+  public static unsafeFromPhrase (phrase: Phrase): Entropy {
     const binaryString = Phrase.toBinaryString(phrase)[0];
 
     const bytes: number[] = [];
@@ -176,35 +179,33 @@ export class Entropy {
 /**
  * Represents a failure in the entropy generation process.
  */
-class EntropyFailure {
-  /// A message describing the error.
-  readonly message?: string | undefined;
+class EntropyFailure extends Error {
   readonly type: EntropyFailureType;
 
-  constructor(type: EntropyFailureType, message?: string) {
+  constructor (type: EntropyFailureType, message?: string) {
+    super(message);
     this.type = type;
     this.message = message;
+    Object.setPrototypeOf(this, new.target.prototype);
   }
-  name: string;
-  stack?: string;
 
-  static invalidByteSize({ context }: { context?: string } = {}): EntropyFailure {
+  static invalidByteSize ({ context }: { context?: string } = {}): EntropyFailure {
     return new EntropyFailure(EntropyFailureType.InvalidByteSize, context);
   }
 
-  static phraseToEntropyFailure({ context }: { context?: string } = {}): EntropyFailure {
+  static phraseToEntropyFailure ({ context }: { context?: string } = {}): EntropyFailure {
     return new EntropyFailure(EntropyFailureType.PhraseToEntropyFailure, context);
   }
 
-  static wordListFailure({ context }: { context?: string } = {}): EntropyFailure {
+  static wordListFailure ({ context }: { context?: string } = {}): EntropyFailure {
     return new EntropyFailure(EntropyFailureType.WordListFailure, context);
   }
 
-  static invalidSizeMismatch({ context }: { context?: string } = {}): EntropyFailure {
+  static invalidSizeMismatch ({ context }: { context?: string } = {}): EntropyFailure {
     return new EntropyFailure(EntropyFailureType.InvalidSizeMismatch, context);
   }
 
-  toString(): string {
+  override toString (): string {
     return `EntropyFailure{message: ${this.message}, type: ${this.type}}`;
   }
 }

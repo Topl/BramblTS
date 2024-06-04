@@ -12,3 +12,5 @@ export class Identifier {
   static readonly series32: string = 'series_32';
   static readonly series64: string = 'series_64';
 }
+
+export default class Tags extends Identifier {}

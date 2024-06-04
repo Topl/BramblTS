@@ -1,4 +1,4 @@
-import { MnemonicSize } from '../../../src/crypto/generation/mnemonic/mnemonic';
+import { MnemonicSize } from "@/crypto/crypto.js";
 
 class SecureRandom {
   private _random = Math.random();
@@ -63,15 +63,17 @@ export class Generators {
     return chars.join('');
   }
 
+  static mnemonicSizes = [
+    MnemonicSize.words12(),
+    MnemonicSize.words15(),
+    MnemonicSize.words18(),
+    MnemonicSize.words21(),
+    MnemonicSize.words24(),
+  ];
+
   // Generate a random mnemonic size
   static getGeneratedMnemonicSize(): MnemonicSize {
-    const sizes = [
-      MnemonicSize.words12(),
-      MnemonicSize.words15(),
-      MnemonicSize.words18(),
-      MnemonicSize.words21(),
-      MnemonicSize.words24(),
-    ];
-    return sizes[Generators._random.nextRange(0, 5)];
+    const random = Generators._random.nextRange(0, 5);
+    return this.mnemonicSizes[random];
   }
 }

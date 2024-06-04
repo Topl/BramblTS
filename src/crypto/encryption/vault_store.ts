@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Kdf } from './kdf/kdf';
-import { Cipher } from './cipher/cipher';
-import { Json } from '../../utils/json';
-import { Mac } from './mac';
-import { Either, EitherException } from '../../common/functional/either';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { type Either, left, right } from "@/common/functional/brambl_fp.js";
+import { Json } from "@/utils/json.js";
+import { Cipher } from "./cipher/cipher.js";
+import { Kdf } from "./kdf/kdf.js";
+import { Mac } from "./mac.js";
+
 
 /**
  * A VaultStore is a JSON encodable object that contains the KDF and Cipher necessary to decrypt the cipher text.
@@ -41,9 +44,9 @@ export class VaultStore {
       const cipher = Cipher.fromJson(JSON.parse(json['cipher']));
       const cipherText = Json.decodeUint8List(json['cipherText']);
       const mac = Json.decodeUint8List(json['mac']);
-      return Either.right(new VaultStore(kdf, cipher, cipherText, mac));
+      return right(new VaultStore(kdf, cipher, cipherText, mac));
     } catch (e) {
-      return Either.left(new Error(`Failed to parse VaultStore JSON: ${e}`));
+      return left(new Error(`Failed to parse VaultStore JSON: ${e}`));
     }
   }
 
@@ -68,16 +71,22 @@ export class VaultStore {
    * @param password the password to decrypt the cipher text
    * @returns Either an Error or the decrypted data
    */
-  static decodeCipher(vaultStore: VaultStore, password: Uint8Array): Either<Error, Uint8Array> {
+  static decodeCipher(vaultStore: VaultStore, password: Uint8Array): Either<InvalidMac, Uint8Array> {
     try {
       const derivedKey = vaultStore.kdf.deriveKey(password);
       const mac = new Mac(derivedKey, vaultStore.cipherText);
       if (!mac.validateMac(undefined, vaultStore.mac)) {
-        return Either.left(new EitherException('Invalid MAC'));
+        return left(new InvalidMac('Invalid MAC'));
       }
-      return Either.right(vaultStore.cipher.decrypt(vaultStore.cipherText, derivedKey));
+      return right(vaultStore.cipher.decrypt(vaultStore.cipherText, derivedKey));
     } catch (e) {
-      return Either.left(new Error(`Error decoding cipher: ${e}`));
+      return left(new Error(`Error decoding cipher: ${e}`));
     }
   }
+
+  
 }
+
+abstract class InvalidVaultStoreFailure extends Error {}
+
+export class InvalidMac extends InvalidVaultStoreFailure {}

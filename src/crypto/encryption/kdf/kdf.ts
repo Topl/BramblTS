@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-case-declarations */
-import { SCrypt, SCryptParams } from './scrypt';
+import { SCrypt, SCryptParams } from "./scrypt.js";
 
 /**
  * Abstract class representing Key Derivation Functions (KDF).

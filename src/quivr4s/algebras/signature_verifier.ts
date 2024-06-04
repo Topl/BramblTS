@@ -1,14 +1,16 @@
-import { ContextlessValidation } from '../common/contextless_validation.js';
-import { QuivrResult } from '../common/quivr_result.js';
+import type { Either } from 'fp-ts/lib/either.js';
+import type { SignatureVerification } from 'topl_common';
+import ContextlessValidation from '../quivr/common/contextless_validation.js';
+import type { QuivrRuntimeError } from '../quivr/runtime/quivr_runtime_error.js';
 
-export class SignatureVerifier<T> implements ContextlessValidation<T> {
-  definedFunction: (t: T) => QuivrResult<T>;
-
-  constructor(definedFunction: (t: T) => QuivrResult<T>) {
-    this.definedFunction = definedFunction;
+export default class SignatureVerifier extends ContextlessValidation<QuivrRuntimeError, SignatureVerification> {
+  protected f?: (t: SignatureVerification) => Either<QuivrRuntimeError, SignatureVerification>;
+  constructor (f?: (t: SignatureVerification) => Either<QuivrRuntimeError, SignatureVerification>) {
+    super();
+    this.f = f;
   }
 
-  validate(t: T): QuivrResult<T> {
-    return this.definedFunction(t);
+  override validate (t: SignatureVerification): Either<QuivrRuntimeError, SignatureVerification> {
+    return this.f(t);
   }
 }

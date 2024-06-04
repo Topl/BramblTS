@@ -1,21 +1,28 @@
 import * as blake from 'blakejs';
-import { Digest, Digest32, Digest64 } from './digest/digest';
-import { Hash, Message } from './baseHash';
+import { Digest, Digest32, Digest64 } from './digest/digest.js';
+import { Hash, type Message } from './baseHash.js';
+import { blake2bInit } from 'blakejs';
 
 /**
  * An abstract class for Blake2b hash functions.
  */
 abstract class Blake2b extends Hash {
-  abstract hash(bytes: Uint8Array): Uint8Array;
-  abstract hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
+  abstract override hash(bytes: Uint8Array): Uint8Array;
+  abstract override hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
 }
+Digest
 
 /**
  * A 256-bit (32-byte) implementation of Blake2b.
  */
 export class Blake2b256 extends Blake2b {
+  readonly _digest = Digest32;
+
   hash(bytes: Uint8Array): Uint8Array {
-    return blake.blake2b(bytes, undefined, 32);
+    const ctx = blake2bInit(this._digest.size);
+    blake.blake2bUpdate(ctx, bytes);
+    const out = blake.blake2bFinal(ctx);
+    return out;
   }
 
   hashComplex({ prefix, messages }: { prefix?: number; messages: Message[] }): Digest {

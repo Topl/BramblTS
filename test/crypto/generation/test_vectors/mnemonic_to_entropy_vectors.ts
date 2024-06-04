@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Entropy } from '../../../../src/crypto/generation/mnemonic/entropy';
+import { getOrThrowEither } from '@/common/functional/brambl_fp.js';
+import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
 
 export class MnemonicToEntropyVector {
   constructor(
@@ -13,8 +14,8 @@ export class MnemonicToEntropyVector {
     const mnemonic = inputs['mnemonic'];
     const entropyString = outputs['entropy'];
 
-    const entropy = Entropy.fromBytes(Buffer.from(entropyString, 'hex'));
-    return new MnemonicToEntropyVector(mnemonic, entropy.right!);
+    const entropy = getOrThrowEither(Entropy.fromBytes(Buffer.from(entropyString, 'hex')));
+    return new MnemonicToEntropyVector(mnemonic, entropy);
   }
 }
 

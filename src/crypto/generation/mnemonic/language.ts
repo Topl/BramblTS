@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto';
 import { promises as fs } from 'fs';
-import { Either } from '../../../common/functional/either';
+import { left, right, type Either } from '../../../common/functional/brambl_fp.js';
+import path from 'path';
 
 export abstract class Language {
   readonly filePath: string;
@@ -83,20 +84,21 @@ export class LanguageWordList {
 
   static async validated(language: Language): Promise<Either<ValidationFailure, LanguageWordList>> {
     try {
-      const file = `assets/${language.wordlistDirectory}/${language.filePath}`;
-      const words = (await fs.readFile(file, 'utf-8')).split('\n');
+      const file = path.resolve(__dirname, '..', '..','..', '..', `assets/${language.wordlistDirectory}/${language.filePath}`);
+      const content = await fs.readFile(file, 'utf-8');
+      const words = content.replace(/\r/g, '').split('\n'); // Port Note: Replace to remove /r carriage returns which mess up future logic
 
       const hash = LanguageWordList.validateChecksum(words, language.hash);
-      return hash ? Either.right(new LanguageWordList(words)) : Either.left(new InvalidChecksum());
+      return hash ? right(new LanguageWordList(words)) : left(new InvalidChecksum());
     } catch (e) {
-      return Either.left(new FileReadFailure(e));
+      return left(new FileReadFailure(e));
     }
   }
 
   static validateChecksum(words: string[], expectedHash: string): Either<ValidationFailure, string[]> {
     const hash = createHash('sha256').update(words.join('')).digest('hex');
 
-    return hash === expectedHash ? Either.right(words) : Either.left(new InvalidChecksum());
+    return hash === expectedHash ? right(words) : left(new InvalidChecksum());
   }
 }
 

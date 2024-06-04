@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { toByte } from './ec';
+import { toByte } from './ec.js';
 
 /**
  * @notice AMS 2021:

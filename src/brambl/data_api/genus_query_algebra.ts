@@ -1,34 +1,36 @@
-import { promisify } from 'util';
-
+import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect';
 import {
   LockAddress,
+  QueryByLockAddressRequest,
+  TransactionService,
   Txo,
   TxoState,
-  TransactionServiceClient,
-  QueryByLockAddressRequest,
-  TxoLockAddressResponse
-} from '../common/types.js';
+} from 'topl_common';
 
-export class GenusQueryAlgebra {
-    private client: TransactionServiceClient;
+/**
+ * Defines a Genus Query API for interacting with a Genus node.
+ */
+export interface GenusQueryAlgebraDefinition {
+  /**
+   * Query and retrieve a set of UTXOs encumbered by the given LockAddress.
+   * @param fromAddress The lock address to query the unspent UTXOs by.
+   * @param txoState The state of the UTXOs to query. By default, only unspent UTXOs are returned.
+   * @return A Promise that resolves to an array of UTXOs.
+   */
+  queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]>;
+}
 
-    constructor(address, credentials, options) {
-        this.client = new TransactionServiceClient(address, credentials, options);
-    }
+export class GenusQueryAlgebra implements GenusQueryAlgebraDefinition {
+  private client: PromiseClient<typeof TransactionService>;
 
-    // Using object destructuring for named and default parameters
-    async queryUtxo({ 
-        fromAddress, 
-        txoState = TxoState.UNSPENT
-    }: {
-        fromAddress: LockAddress,
-        txoState?
-    }): Promise<Txo[]> {
-        const getTxosPromise = promisify(this.client.getTxosByLockAddress);
+  constructor (transport: Transport) {
+    this.client = createPromiseClient(TransactionService, transport);
+  }
 
-        const response = (await getTxosPromise(
-            new QueryByLockAddressRequest({ address: fromAddress, state: txoState })
-        )) as TxoLockAddressResponse;
-        return response.Txos;
-    }
+  async queryUtxo (fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]> {
+    const response = await this.client.getTxosByLockAddress(
+      new QueryByLockAddressRequest({ address: fromAddress, state: txoState ?? TxoState.UNSPENT })
+    );
+    return response.Txos;
+  }
 }

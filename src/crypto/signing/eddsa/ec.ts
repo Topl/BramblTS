@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-constant-condition */
 import Long from 'long';
-import * as x25519_field from './x25519_field';
+import * as x25519_field from './x25519_field.js';
 
 /*
   Ed25519 is EdDSA instantiated with:

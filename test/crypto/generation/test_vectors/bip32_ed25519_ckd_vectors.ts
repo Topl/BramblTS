@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { None, Some } from '../../../../src/common/functional/either';
-import { Bip32Index, HardenedIndex, SoftIndex } from '../../../../src/crypto/generation/bip32_index';
-import { ExtendedEd25519Initializer } from '../../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
-import { PublicKey } from '../../../../src/crypto/signing/ed25519/ed25519_spec';
-import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
-import { SecretKey } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
+import { none, some, type Option } from '@/common/functional/brambl_fp.js';
+import { Bip32Index, HardenedIndex, SoftIndex } from '@/crypto/generation/bip32_index.js';
+import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
+import { PublicKey } from '@/crypto/signing/ed25519/ed25519_spec.js';
+import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
+import { SecretKey } from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
 
 export class Bip32Ed25519CkdTestVector {
   constructor(
     public description: string,
     public rootSecretKey: SecretKey,
-    public rootVerificationKey: Some<PublicKey> | None<unknown>,
+    public rootVerificationKey: Option<PublicKey>,
     public path: Bip32Index[],
     public childSecretKey: SecretKey,
     public childVerificationKey: PublicKey,
@@ -32,8 +32,8 @@ export class Bip32Ed25519CkdTestVector {
     });
 
     const rootVerificationKey = input.rootVerificationKey
-      ? new Some(new PublicKey(input.rootVerificationKey))
-      : new None();
+      ?  some(new PublicKey(input.rootVerificationKey))
+      :  none;
 
     const rootSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(
       Buffer.from(input.rootSecretKey, 'hex'),

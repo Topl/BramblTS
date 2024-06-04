@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Ed25519Initializer } from '../../../../src/crypto/generation/key_initializer/ed25519_initializer';
-import { ExtendedEd25519Initializer } from '../../../../src/crypto/generation/key_initializer/extended_ed25519_initializer';
-import { ExtendedEd25519 } from '../../../../src/crypto/signing/extended_ed25519/extended_ed25519';
-import * as spec from './../../../../src/crypto/signing/ed25519/ed25519_spec';
-import * as x_spec from './../../../../src/crypto/signing/extended_ed25519/extended_ed25519_spec';
+import { Ed25519Initializer } from '@/crypto/generation/key_initializer/ed25519_initializer.js';
+import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
+import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
+import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
+import * as x_spec from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
 
 export class KeyInitializerVector {
   constructor(

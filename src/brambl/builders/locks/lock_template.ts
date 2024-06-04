@@ -1,17 +1,16 @@
-import { Either, left, right, flatMap } from 'fp-ts/Either';
-import { PropositionTemplate, ThresholdTemplate } from './proposition_template.js';
+import { type Either, flatMap, left, right } from '@/common/functional/brambl_fp.js';
+import { Challenge, Lock, Lock_Predicate, Proposition_Threshold, VerificationKey } from 'topl_common';
 import { BuilderError } from '../builder_error.js';
-import { VerificationKey, Proposition_Threshold } from '../../../quivr4s/common/types.js';
-import { Lock, Challenge } from '../../common/types.js';
+import { PropositionTemplate, ThresholdTemplate } from './proposition_template.js';
 
-abstract class LockTemplate {
+export abstract class LockTemplate {
   lockType: LockType;
   abstract build(entityVks: VerificationKey[]): Either<BuilderError, Lock>;
 }
 
 class LockType {
   public label: string;
-  constructor(label: string) {
+  constructor (label: string) {
     this.label = label;
   }
 }
@@ -25,12 +24,12 @@ export class PredicateTemplate implements LockTemplate {
   public threshold: number;
   public lockType = LockTypes.predicate;
 
-  constructor(innerTemplates: PropositionTemplate[], threshold: number) {
+  constructor (innerTemplates: PropositionTemplate[], threshold: number) {
     this.innerTemplates = innerTemplates;
     this.threshold = threshold;
   }
 
-  build(entityVks: VerificationKey[]): Either<BuilderError, Lock> {
+  build (entityVks: VerificationKey[]): Either<BuilderError, Lock> {
     const result = new ThresholdTemplate(this.innerTemplates, this.threshold).build(entityVks);
 
     const getLock = function (ip) {
@@ -39,11 +38,16 @@ export class PredicateTemplate implements LockTemplate {
 
         return right(
           new Lock({
-            predicate: new Lock.Predicate({
-              challenges: innerPropositions.map((prop) => new Challenge({ revealed: prop })),
-              threshold: this.threshold,
-            }),
-          }),
+            value: {
+              case: 'predicate',
+              value: new Lock_Predicate({
+                challenges: innerPropositions.map(
+                  prop => new Challenge({ proposition: { case: 'revealed', value: prop } })
+                ),
+                threshold: this.threshold
+              })
+            }
+          })
         ) as Either<BuilderError, Lock>;
       } else {
         return left(new BuilderError(`Unexpected inner proposition type: ${typeof result}`));
@@ -54,18 +58,18 @@ export class PredicateTemplate implements LockTemplate {
   }
 
   //used for pickling
-  toJson() {
+  toJson () {
     return {
       type: this.lockType.label,
       threshold: this.threshold,
-      innerTemplates: this.innerTemplates.map((innerTemplate) => {
+      innerTemplates: this.innerTemplates.map(innerTemplate => {
         return innerTemplate.toJson();
       })
     };
   }
 
-  fromJson(json): PredicateTemplate {
-    const innerTemplates = json.innerTemplates.map((innerTemplateJson) => {
+  fromJson (json): PredicateTemplate {
+    const innerTemplates = json.innerTemplates.map(innerTemplateJson => {
       return PropositionTemplate.fromJson(innerTemplateJson);
     });
 
