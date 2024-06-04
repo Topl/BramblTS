@@ -1,4 +1,3 @@
-import { blake2b } from 'blakejs';
 import { either, option } from 'fp-ts';
 import {
   DigestVerification,
@@ -38,6 +37,7 @@ import { Tokens } from '../../tokens.js';
 import { arraysEqual } from '../../utils/list_utils.js';
 import type DynamicContext from '../runtime/dynamic_context.js';
 import { ValidationError } from '../runtime/quivr_runtime_error.js';
+import { blake2b256 } from '@/crypto/crypto.js';
 
 export class Verifier {
   /// Will return [QuivrResult] Left => [QuivrRuntimeError.messageAuthorizationFailure] if the proof is invalid.
@@ -48,20 +48,19 @@ export class Verifier {
     context: DynamicContext<String>
   ): QuivrResult<boolean> {
     const sb = context.signableBytes;
-    const encoder = new TextEncoder();
+    const merge = new Uint8Array([...Buffer.from(tag, 'utf8'), ...sb.value]);
+    const verifierTxBind = blake2b256.hash(merge);
 
-    const merge = new Uint8Array([...encoder.encode(tag), ...sb.value]);
-    const verifierTxBind = blake2b(merge);
     const result = arraysEqual(verifierTxBind, proofTxBind.value);
 
     return result
-      ? either.left(
+      ? either.right(result)
+      : either.left(
           ValidationError.messageAuthorizationFailure({
             name: 'Blake2b256Bind',
             message: `Error in evaluating Blake2b256Bind : ${proof.toJsonString()}`
           })
-        )
-      : either.right(result);
+        );
   }
 
   static evaluateResult (

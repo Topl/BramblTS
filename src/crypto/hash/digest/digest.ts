@@ -17,7 +17,7 @@ export class Digest {
 }
 
 export class Digest32 {
-  private static readonly size: number = 32;
+  static readonly size: number = 32;
 
   private constructor () {}
 
@@ -30,7 +30,7 @@ export class Digest32 {
 }
 
 export class Digest64 {
-  private static readonly size: number = 64;
+  static readonly size: number = 64;
 
   private constructor () {}
 

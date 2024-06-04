@@ -25,7 +25,7 @@ export class MockHelpers {
   static saltString = 'I am a digest';
   static preimageString = 'I am a preimage';
 
-  static signableBytes = new SignableBytes({ value: Buffer.from('someSignableBytes', 'utf8') });
+  static signableBytes = new SignableBytes({ value: 'someSignableBytes'.bToUint8Array() });
 
   static dynamicContext (proposition: Proposition, proof: Proof) {
     const header = new Datum().withHeader(

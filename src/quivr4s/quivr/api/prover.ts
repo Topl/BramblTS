@@ -1,4 +1,3 @@
-import { blake2b } from 'blakejs';
 import {
   Preimage,
   Proof,
@@ -20,6 +19,7 @@ import {
   Witness
 } from 'topl_common';
 import { Tokens } from '../../tokens.js';
+import { blake2b256 } from '@/crypto/crypto.js';
 
 /// Provers create proofs that are bound to the transaction which executes the proof.
 ///
@@ -31,9 +31,8 @@ export class Prover {
   /// [message] unique bytes from a transaction that will be bound to the proof
   /// @return [TxBind] / array of bytes that is similar to a "signature" for the proof
   private static _blake2b56ToTxBind (tag: string, message: SignableBytes): TxBind {
-    const encoder = new TextEncoder();
-    const m = new Uint8Array([...encoder.encode(tag), ...message.value]);
-    const h = blake2b(m);
+    const merge = new Uint8Array([...Buffer.from(tag, 'utf8'), ...message.value]);
+    const h = blake2b256.hash(merge);
     return new TxBind({ value: h });
   }
 

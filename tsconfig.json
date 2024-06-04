@@ -19,7 +19,7 @@
     "noUnusedLocals": true,
     "preserveSymlinks": true, /// vitest support?
 
-    "baseUrl": "./src",
+    "baseUrl": "src",
     "paths": {
       "@/*": ["*"]
     }
