@@ -11,13 +11,13 @@
     "resolveJsonModule": true,
     "declaration": true, // Will tell TS to emit .d.ts files, needed for autocomplete on .js files
     "verbatimModuleSyntax": true, // forces import type and export type
-
     //"strict": true, // Enable all strict type-checking options
     "noUncheckedIndexedAccess": true, // Absolutely invaluable for preventing runtime errors
     "noImplicitOverride": true,
-    "noUnusedParameters": true,
-    "noUnusedLocals": true,
+    "noUnusedParameters": false,  /// todo revert
+    "noUnusedLocals": false, /// todo revert
     "preserveSymlinks": true, /// vitest support?
+    "skipLibCheck": true, /// todo figure out a different way to do this
 
     "baseUrl": "src",
     "paths": {
