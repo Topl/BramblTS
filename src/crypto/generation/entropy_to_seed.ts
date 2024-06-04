@@ -9,7 +9,7 @@ export abstract class EntropyToSeed {
 
   /**
    * Converts entropy to a seed using a key derivation function.
-   *
+   * 
    * @param entropy The entropy value.
    * @param password Optional password for the key derivation function.
    * @param seedLength The desired length of the seed.
@@ -32,7 +32,7 @@ export class Pbkdf2Sha512 extends EntropyToSeed {
 
   /**
    * Generates a key from the given password and salt.
-   *
+   * 
    * @param password The password used to create the key.
    * @param salt The salt applied to the key.
    * @param keySizeBytes The size of the key in bytes.

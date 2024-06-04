@@ -31,7 +31,7 @@ export class Mnemonic {
    * @param i The integer to convert.
    * @returns The 11-bit binary representation as a string.
    */
-  intTo11BitString(i: number): string {
+  intTo11BitString (i: number): string {
     return i.toString(2).padStart(Mnemonic._indexLen, '0');
   }
 
@@ -41,7 +41,7 @@ export class Mnemonic {
    * @param b The byte to convert.
    * @returns The binary representation as a string.
    */
-  byteTo8BitString(b: number): string {
+  byteTo8BitString (b: number): string {
     return b.toString(2).padStart(Mnemonic._byteLen, '0');
   }
 }
@@ -54,29 +54,29 @@ export class MnemonicSize {
   checksumLength: number;
   entropyLength: number;
 
-  constructor(wordLength: number) {
+  constructor (wordLength: number) {
     this.wordLength = wordLength;
     this.checksumLength = Math.floor(wordLength / 3);
     this.entropyLength = 32 * this.checksumLength;
   }
 
-  static words12(): MnemonicSize {
+  static words12 (): MnemonicSize {
     return new MnemonicSize(12);
   }
 
-  static words15(): MnemonicSize {
+  static words15 (): MnemonicSize {
     return new MnemonicSize(15);
   }
 
-  static words18(): MnemonicSize {
+  static words18 (): MnemonicSize {
     return new MnemonicSize(18);
   }
 
-  static words21(): MnemonicSize {
+  static words21 (): MnemonicSize {
     return new MnemonicSize(21);
   }
 
-  static words24(): MnemonicSize {
+  static words24 (): MnemonicSize {
     return new MnemonicSize(24);
   }
 
@@ -86,7 +86,7 @@ export class MnemonicSize {
    * @param numberOfWords The number of words in the mnemonic.
    * @returns Either a PhraseFailure or a MnemonicSize instance.
    */
-  static fromNumberOfWords(numberOfWords: number): Either<PhraseFailure, MnemonicSize> {
+  static fromNumberOfWords (numberOfWords: number): Either<PhraseFailure, MnemonicSize> {
     switch (numberOfWords) {
       case 12:
         return right(MnemonicSize.words12());

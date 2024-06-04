@@ -3,16 +3,17 @@ import { IoTransaction, Proof, SpentTransactionOutput, UnspentTransactionOutput 
 import { ContainsImmutable } from '../common/contains_immutable.js';
 import type TransactionCostCalculator from './algebras/transaction_cost_calculator.js';
 
+
 export class TransactionCostCalculatorInterpreter implements TransactionCostCalculator {
   private transactionCostConfig: TransactionCostConfig;
   private proofCostConfig: ProofCostConfig;
 
-  constructor() {
+  constructor () {
     this.proofCostConfig = new ProofCostConfig();
     this.transactionCostConfig = new TransactionCostConfig({ proofCostConfig: this.proofCostConfig });
   }
 
-  costOf(transaction: IoTransaction): number {
+  costOf (transaction: IoTransaction): number {
     const t = this.transactionCostConfig;
 
     return (
@@ -30,7 +31,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
    * @param transaction the transaction to cost
    * @returns a cost, represented as a number
    */
-  private transactionDataCost(transaction: IoTransaction): number {
+  private transactionDataCost (transaction: IoTransaction): number {
     const bytes = ContainsImmutable.ioTransaction(transaction).immutableBytes.value;
     return (bytes.length * this.transactionCostConfig.dataCostPerMB) / 1024 / 1024;
   }
@@ -42,7 +43,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
    * @param input The input to cost
    * @returns a cost, represented as a number
    */
-  private transactionInputCost(input: SpentTransactionOutput): number {
+  private transactionInputCost (input: SpentTransactionOutput): number {
     let cost = this.transactionCostConfig.inputCost;
 
     switch (input.attestation.value.case) {
@@ -68,7 +69,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
    * @param proof the proof to cost
    * @returns a cost, represented as a number
    */
-  private proofCost(proof: Proof): number {
+  private proofCost (proof: Proof): number {
     const c = this.proofCostConfig;
     if (proof.value === null) return c.emptyCost;
     switch (proof.value.case) {
@@ -107,7 +108,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
     }
   }
 
-  private transactionOutputCost(output: UnspentTransactionOutput): number {
+  private transactionOutputCost (output: UnspentTransactionOutput): number {
     return this.transactionCostConfig.outputCost;
   }
 }
@@ -127,7 +128,7 @@ export class TransactionCostConfig {
    * @param outputCost base cost for each new output
    * @param proofCostConfig configuration values for individual proofs
    */
-  constructor({ baseCost = 1, dataCostPerMB = 1024, inputCost = -1, outputCost = 5, proofCostConfig }) {
+  constructor ({ baseCost = 1, dataCostPerMB = 1024, inputCost = -1, outputCost = 5, proofCostConfig }) {
     this.baseCost = baseCost;
     this.dataCostPerMB = dataCostPerMB;
     this.inputCost = inputCost;
@@ -172,7 +173,7 @@ export class ProofCostConfig {
    * @param orCost The base cost to verify an or (recursive calls will be added)
    * @param notCost The base cost to verify a not (recursive call will be added)
    */
-  constructor({
+  constructor ({
     txBindCost = 50,
     emptyCost = 1,
     lockedCost = 1,
@@ -187,7 +188,7 @@ export class ProofCostConfig {
     thresholdCost = 1,
     andCost = 1,
     orCost = 1,
-    notCost = 1,
+    notCost = 1
   }: Partial<ProofCostConfig> = {}) {
     this.txBindCost = txBindCost;
     this.emptyCost = emptyCost;

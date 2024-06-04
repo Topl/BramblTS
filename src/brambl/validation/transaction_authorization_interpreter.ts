@@ -10,17 +10,18 @@ import { AuthorizationFailed, TransactionAuthorizationError } from './transactio
  * Proof satisfy the given Proposition?".
  */
 export class TransactionAuthorizationInterpreter implements TransactionAuthorizationVerifier {
-  static validate(
+
+  static validate (
     context: DynamicContext<string>,
-    transaction: IoTransaction,
+    transaction: IoTransaction
   ): Either<TransactionAuthorizationError, IoTransaction> {
     return new TransactionAuthorizationInterpreter().validate(context, transaction);
   }
 
   /// TODO:  figure out if this logic is valid.. error context returning seems flawed
-  validate(
+  validate (
     context: DynamicContext<string>,
-    transaction: IoTransaction,
+    transaction: IoTransaction
   ): Either<TransactionAuthorizationError, IoTransaction> {
     let acc: Either<TransactionAuthorizationError, IoTransaction> = right(transaction);
 
@@ -31,7 +32,7 @@ export class TransactionAuthorizationInterpreter implements TransactionAuthoriza
       switch (attestation.case) {
         case 'predicate': {
           const p = attestation.value;
-          const challenges = p.lock.challenges.map((c) => {
+          const challenges = p.lock.challenges.map(c => {
             if (c.proposition.case === 'revealed') return c.proposition.value;
           });
 
@@ -39,34 +40,34 @@ export class TransactionAuthorizationInterpreter implements TransactionAuthoriza
 
           acc = either.fold(
             (l: TransactionAuthorizationError) => left(l),
-            (r: boolean) => right(transaction),
+            (r: boolean) => right(transaction)
           )(result);
           break;
         }
         case 'image': {
           const i = attestation.value;
-          const known = i.known.map((e) => {
+          const known = i.known.map(e => {
             if (e.proposition.case === 'revealed') return e.proposition.value;
           });
 
           const result = this.imageValidate(i.lock.leaves, i.lock.threshold, known, i.responses, context);
           acc = either.fold(
             (l: TransactionAuthorizationError) => left(l),
-            (r: boolean) => right(transaction),
+            (r: boolean) => right(transaction)
           )(result);
 
           break;
         }
         case 'commitment': {
           const c = attestation.value;
-          const known = c.known.map((e) => {
+          const known = c.known.map(e => {
             if (e.proposition.case === 'revealed') return e.proposition.value;
           });
 
           const result = this.commitmentValidate(c.lock.root, c.lock.threshold, known, c.responses, context);
           acc = either.fold(
             (l: TransactionAuthorizationError) => left(l),
-            (r: boolean) => right(transaction),
+            (r: boolean) => right(transaction)
           )(result);
           break;
         }
@@ -78,43 +79,43 @@ export class TransactionAuthorizationInterpreter implements TransactionAuthoriza
     return acc;
   }
 
-  private predicateValidate(
+  private predicateValidate (
     challenges: Proposition[],
     threshold: number,
     responses: Proof[],
-    context: DynamicContext<string>,
+    context: DynamicContext<string>
   ): Either<TransactionAuthorizationError, boolean> {
     return this.thresholdVerifier(challenges, responses, threshold, context);
   }
 
-  private imageValidate(
+  private imageValidate (
     leaves: LockId[],
     threshold: number,
     known: Proposition[],
     responses: Proof[],
-    context: DynamicContext<string>,
+    context: DynamicContext<string>
   ): Either<TransactionAuthorizationError, boolean> {
     // todo: check that the known Propositions match the leaves?
     // leaves remains uninmplemented in scala
     return this.thresholdVerifier(known, responses, threshold, context);
   }
 
-  private commitmentValidate(
+  private commitmentValidate (
     root: AccumulatorRootId,
     threshold: number,
     known: Proposition[],
     responses: Proof[],
-    context: DynamicContext<string>,
+    context: DynamicContext<string>
   ): Either<TransactionAuthorizationError, boolean> {
     // todo: root remains uninmplemented in scala
     return this.thresholdVerifier(known, responses, threshold, context);
   }
 
-  private thresholdVerifier(
+  private thresholdVerifier (
     propositions: Proposition[],
     proofs: Proof[],
     threshold: number,
-    context: DynamicContext<string>,
+    context: DynamicContext<string>
   ): Either<TransactionAuthorizationError, boolean> {
     if (threshold === 0) {
       return right(true);
@@ -129,10 +130,10 @@ export class TransactionAuthorizationInterpreter implements TransactionAuthoriza
       return left(new AuthorizationFailed());
     } else {
       const a = zip(propositions, proofs);
-      const evalResult: Either<QuivrRuntimeError, boolean>[] = a.map((p) => Verifier.verify(p[0], p[1], context));
+      const evalResult: Either<QuivrRuntimeError, boolean>[] = a.map(p => Verifier.verify(p[0], p[1], context));
       const partitionedResults = pipe(
         evalResult,
-        array.partitionMap((n): Either<QuivrRuntimeError, boolean> => n),
+        array.partitionMap((n): Either<QuivrRuntimeError, boolean> => n)
       );
 
       if (partitionedResults.right.length >= threshold) {

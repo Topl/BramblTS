@@ -1,13 +1,14 @@
 import {
-  Datum,
-  Datum_Eon,
-  Datum_Epoch,
-  Datum_Era,
-  Datum_GroupPolicy,
-  Datum_Header,
-  Datum_IoTransaction,
-  Datum_SeriesPolicy,
+    Datum,
+    Datum_Eon,
+    Datum_Epoch,
+    Datum_Era,
+    Datum_GroupPolicy,
+    Datum_Header,
+    Datum_IoTransaction,
+    Datum_SeriesPolicy
 } from 'topl_common';
+
 
 /**
  * Extend the Datum interface from 'topl_common' module with additional methods.

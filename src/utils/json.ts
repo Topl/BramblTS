@@ -1,4 +1,4 @@
-import { toIntList } from './extensions.js';
+import { toIntList } from "./extensions.js";
 
 export class Json {
   static decodeUint8List(encoded: string): Uint8Array {

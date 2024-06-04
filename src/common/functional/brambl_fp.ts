@@ -12,15 +12,17 @@ export type { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray.js';
 export { fromNullable, none, some, type Option } from 'fp-ts/Option';
 export type { Task } from 'fp-ts/Task';
 
+
 /**
  * Custom functional interpretation with the help of fp-ts
  */
 
+
 /**
  * `Unit` is a type that represents the absence of a meaningful value.
  * It is similar to the `Unit` type in Scala
- *
- * In TypeScript, we don't have an exact equivalent of Scala's `Unit`.
+ * 
+ * In TypeScript, we don't have an exact equivalent of Scala's `Unit`. 
  * The closest we can get is `void`, but `void` is not a real type and it can't be used in the same way as `Unit`.
  * So, we define `Unit` as an empty object type, which can only have one value, an empty object `{}`.
  * This allows us to use `Unit` in a similar way as in Scala, for methods that don't return a meaningful value.
@@ -29,6 +31,7 @@ export type Unit = {};
 
 // Create a constant value named unit
 export const unit: Unit = {};
+
 
 /// custom functions to align with dart code
 
@@ -40,9 +43,9 @@ export const unit: Unit = {};
  * @returns The value contained in the `Option` if it's `Some`.
  * @throws The `Error` returned by the `error` function if the `Option` is `None`.
  */
-export function getOrThrowOption<A>(
+export function getOrThrowOption<A> (
   ma: Option<A>,
-  error: LazyArg<Error> = () => new Error('getOrThrow: Option is None'),
+  error: LazyArg<Error> = () => new Error('getOrThrow: Option is None')
 ): A {
   if (ma._tag === 'None') {
     throw error();
@@ -61,9 +64,9 @@ export const toRightO = getOrThrowOption;
  * @returns The value contained in the `Either` if it's `Right`.
  * @throws The `Error` returned by the `error` function if the `Either` is `Left`.
  */
-export function getOrThrowEither<E, A>(
+export function getOrThrowEither<E, A> (
   ma: Either<E, A>,
-  error: (e: E) => Error = (e) => new Error(`getorThrow: (Left: ${e})`),
+  error: (e: E) => Error = e => new Error(`getorThrow: (Left: ${e})`)
 ): A {
   if (isLeft(ma)) {
     throw error(ma.left);
@@ -82,9 +85,9 @@ export const toRightE = getOrThrowEither;
  * @returns The value contained in the `Either` if it's `Left`.
  * @throws The `Error` returned by the `error` function if the `Either` is `Right`.
  */
-export function getOrThrowEitherLeft<A, E>(
+export function getOrThrowEitherLeft<A, E> (
   ma: Either<E, A>,
-  error: (a: A) => Error = (a) => new Error(`getOrThrowEitherLeft: (Right: ${a})`),
+  error: (a: A) => Error = a => new Error(`getOrThrowEitherLeft: (Right: ${a})`)
 ): E {
   if (isRight(ma)) {
     throw error(ma.right);

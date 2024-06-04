@@ -1,4 +1,4 @@
-import { ValidationError, type QuivrRuntimeError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
+import { ValidationError, type QuivrRuntimeError } from "@/quivr4s/quivr/runtime/quivr_runtime_error.js";
 
 export abstract class TransactionAuthorizationError extends ValidationError {}
 

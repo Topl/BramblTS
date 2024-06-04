@@ -1,18 +1,18 @@
 import {
-  Proposition,
-  Proposition_And,
-  Proposition_Digest,
-  Proposition_DigitalSignature,
-  Proposition_EqualTo,
-  Proposition_ExactMatch,
-  Proposition_GreaterThan,
-  Proposition_HeightRange,
-  Proposition_LessThan,
-  Proposition_Locked,
-  Proposition_Not,
-  Proposition_Or,
-  Proposition_Threshold,
-  Proposition_TickRange,
+    Proposition,
+    Proposition_And,
+    Proposition_Digest,
+    Proposition_DigitalSignature,
+    Proposition_EqualTo,
+    Proposition_ExactMatch,
+    Proposition_GreaterThan,
+    Proposition_HeightRange,
+    Proposition_LessThan,
+    Proposition_Locked,
+    Proposition_Not,
+    Proposition_Or,
+    Proposition_Threshold,
+    Proposition_TickRange
 } from 'topl_common';
 
 declare module 'topl_common' {

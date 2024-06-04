@@ -6,9 +6,9 @@ import type { VaultStore } from '@/crypto/crypto.js';
  * Mock Implementation of the DataApi
  */
 export class MockWalletKeyApi extends WalletKeyApiAlgebra {
-  override saveMainKeyVaultStore(
+  override saveMainKeyVaultStore (
     mainKeyVaultStore: VaultStore,
-    name: string = 'default',
+    name: string = 'default'
   ): Promise<Either<WalletKeyException, Unit>> {
     if (name === 'error') {
       return Promise.resolve(left(WalletKeyException.vaultStoreSave('Error saving MainKeyVaultStore'))); // Mocking a save failure
@@ -18,12 +18,12 @@ export class MockWalletKeyApi extends WalletKeyApiAlgebra {
     }
   }
 
-  override saveMnemonic(mnemonic: string[], mnemonicName: string): Promise<Either<WalletKeyException, Unit>> {
+  override saveMnemonic (mnemonic: string[], mnemonicName: string): Promise<Either<WalletKeyException, Unit>> {
     this.mnemonicInstance.set(mnemonicName, mnemonic);
     return Promise.resolve(right(unit));
   }
 
-  override getMainKeyVaultStore(name: string): Promise<Either<WalletKeyException, VaultStore>> {
+  override getMainKeyVaultStore (name: string): Promise<Either<WalletKeyException, VaultStore>> {
     const store = this.mainKeyVaultStoreInstance.get(name);
     if (!store) {
       return Promise.resolve(left(WalletKeyException.vaultStoreNotInitialized()));
@@ -36,9 +36,9 @@ export class MockWalletKeyApi extends WalletKeyApiAlgebra {
     }
   }
 
-  override updateMainKeyVaultStore(
+  override updateMainKeyVaultStore (
     mainKeyVaultStore: VaultStore,
-    name: string,
+    name: string
   ): Promise<Either<WalletKeyException, Unit>> {
     const store = this.mainKeyVaultStoreInstance.get(name);
     // not using getMainKeyVaultStore since it's okay if the existing VaultStore is invalid
@@ -50,7 +50,7 @@ export class MockWalletKeyApi extends WalletKeyApiAlgebra {
     }
   }
 
-  override deleteMainKeyVaultStore(name: string): Promise<Either<WalletKeyException, Unit>> {
+  override deleteMainKeyVaultStore (name: string): Promise<Either<WalletKeyException, Unit>> {
     const store = this.mainKeyVaultStoreInstance.get(name);
     // not using getMainKeyVaultStore since it's okay if the existing VaultStore is invalid
     // if the existing VaultStore does not exist, return an error

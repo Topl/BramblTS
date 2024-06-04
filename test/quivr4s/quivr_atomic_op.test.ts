@@ -10,7 +10,7 @@ describe('QuivrAtomicOpTests', () => {
     const result = Verifier.verify(
       lockedProposition,
       lockedProverProof,
-      MockHelpers.dynamicContext(lockedProposition, lockedProverProof),
+      MockHelpers.dynamicContext(lockedProposition, lockedProverProof)
     );
 
     expect(isLeft(result)).toBe(true);
@@ -27,7 +27,7 @@ describe('QuivrAtomicOpTests', () => {
     const result = Verifier.verify(
       tickProposition,
       tickProverProof,
-      MockHelpers.dynamicContext(tickProposition, tickProverProof),
+      MockHelpers.dynamicContext(tickProposition, tickProverProof)
     );
 
     expect(isRight(result)).toBe(true);
@@ -39,7 +39,7 @@ describe('QuivrAtomicOpTests', () => {
     const result = Verifier.verify(
       tickProposition,
       tickProverProof,
-      MockHelpers.dynamicContext(tickProposition, tickProverProof),
+      MockHelpers.dynamicContext(tickProposition, tickProverProof)
     );
 
     expect(isLeft(result)).toBe(true);
@@ -55,7 +55,7 @@ describe('QuivrAtomicOpTests', () => {
     const result = Verifier.verify(
       tickProposition,
       tickProverProof,
-      MockHelpers.dynamicContext(tickProposition, tickProverProof),
+      MockHelpers.dynamicContext(tickProposition, tickProverProof)
     );
 
     expect(isLeft(result)).toBe(true);
@@ -71,7 +71,7 @@ describe('QuivrAtomicOpTests', () => {
     const result = Verifier.verify(
       heightProposition,
       heightProverProof,
-      MockHelpers.dynamicContext(heightProposition, heightProverProof),
+      MockHelpers.dynamicContext(heightProposition, heightProverProof)
     );
 
     expect(isRight(result)).toBe(true);
@@ -83,7 +83,7 @@ describe('QuivrAtomicOpTests', () => {
     const result = Verifier.verify(
       heightProposition,
       heightProverProof,
-      MockHelpers.dynamicContext(heightProposition, heightProverProof),
+      MockHelpers.dynamicContext(heightProposition, heightProverProof)
     );
 
     expect(isLeft(result)).toBe(true);

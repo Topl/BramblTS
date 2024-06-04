@@ -5,16 +5,16 @@ import { ContainsImmutable } from './contains_immutable.js';
 export class ContainsEvidence {
   evidence: Evidence;
 
-  constructor(evidence: Evidence) {
+  constructor (evidence: Evidence) {
     this.evidence = evidence;
   }
 
-  empty(): ContainsEvidence {
+  empty (): ContainsEvidence {
     return new ContainsEvidence(new Evidence());
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  static blake2bEvidenceFromImmutable(t: any) {
+  static blake2bEvidenceFromImmutable (t: any) {
     const bytes = ContainsImmutable.apply(t).immutableBytes.value;
     const hash = new Blake2b256().hash(bytes);
     const digest = new Digest({ value: hash });

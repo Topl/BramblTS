@@ -5,12 +5,12 @@ import type { QuivrRuntimeError } from '../quivr/runtime/quivr_runtime_error.js'
 
 export default class DigestVerifier extends ContextlessValidation<QuivrRuntimeError, DigestVerification> {
   protected f?: (t: DigestVerification) => Either<QuivrRuntimeError, DigestVerification>;
-  constructor(f?: (t: DigestVerification) => Either<QuivrRuntimeError, DigestVerification>) {
+  constructor (f?: (t: DigestVerification) => Either<QuivrRuntimeError, DigestVerification>) {
     super();
     this.f = f;
   }
 
-  override validate(t: DigestVerification): Either<QuivrRuntimeError, DigestVerification> {
+  override validate (t: DigestVerification): Either<QuivrRuntimeError, DigestVerification> {
     return this.f(t);
   }
 }

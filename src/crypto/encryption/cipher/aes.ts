@@ -5,16 +5,16 @@ export class Aes implements Cipher {
   static readonly blockSize: number = 16;
   readonly params: AesParams;
 
-  constructor(iv?: Uint8Array, params?: AesParams) {
+  constructor (iv?: Uint8Array, params?: AesParams) {
     this.params = params ?? new AesParams(iv ?? Aes.generateIv());
   }
 
-  static fromJson(json: any): Aes {
+  static fromJson (json: any): Aes {
     const params = AesParams.fromJson(json);
     return new Aes(params.iv, params);
   }
 
-  static generateIv(): Uint8Array {
+  static generateIv (): Uint8Array {
     return randomBytes(Aes.blockSize);
   }
 
@@ -30,7 +30,7 @@ export class Aes implements Cipher {
    *                  Must be 128/192/256 bits or 16/24/32 bytes.
    * @return encrypted data
    */
-  encrypt(plainText: Uint8Array, key: Uint8Array): Uint8Array {
+  encrypt (plainText: Uint8Array, key: Uint8Array): Uint8Array {
     // + 1 to account for the byte storing the amount padded. This value is guaranteed to be <16
     const amountPadded = (Aes.blockSize - ((plainText.length + 1) % Aes.blockSize)) % Aes.blockSize;
     const paddedBytes = new Uint8Array([amountPadded, ...plainText, ...new Uint8Array(amountPadded)]);
@@ -46,7 +46,7 @@ export class Aes implements Cipher {
    *                   Must be 128/192/256 bits or 16/24/32 bytes.
    * @returns decrypted data
    */
-  decrypt(cipherText: Uint8Array, key: Uint8Array): Uint8Array {
+  decrypt (cipherText: Uint8Array, key: Uint8Array): Uint8Array {
     const preImage = this.processAes(cipherText, key, this.params.iv, false);
     const paddedAmount = preImage[0];
     const paddedBytes = preImage.slice(1);
@@ -54,7 +54,7 @@ export class Aes implements Cipher {
     return out;
   }
 
-  private processAes(input: Uint8Array, key: Uint8Array, iv: Uint8Array, encrypt: boolean = false): Uint8Array {
+  private processAes (input: Uint8Array, key: Uint8Array, iv: Uint8Array, encrypt: boolean = false): Uint8Array {
     const algo = this.getAlgorithm(key);
     const aesCtr = createCipheriv(algo, key, iv);
 
@@ -64,15 +64,15 @@ export class Aes implements Cipher {
     return final;
   }
 
-  toJson(): any {
+  toJson (): any {
     return {
       cipher: this.params.cipher,
-      ...this.params.toJson(),
+      ...this.params.toJson()
     };
   }
 
   /// Get the algorithm based on the IV length.
-  private getAlgorithm(iv: Uint8Array): string {
+  private getAlgorithm (iv: Uint8Array): string {
     switch (iv.length) {
       case 16:
         return 'aes-128-ctr';
@@ -89,24 +89,24 @@ export class Aes implements Cipher {
 export class AesParams {
   readonly iv: Uint8Array;
 
-  constructor(iv: Uint8Array) {
+  constructor (iv: Uint8Array) {
     this.iv = iv;
   }
 
-  static generate(): AesParams {
+  static generate (): AesParams {
     return new AesParams(Aes.generateIv());
   }
 
-  static fromJson(json: any): AesParams {
+  static fromJson (json: any): AesParams {
     const iv = new Uint8Array(Buffer.from(json.iv, 'hex'));
     return new AesParams(iv);
   }
 
-  get cipher(): string {
+  get cipher (): string {
     return 'aes';
   }
 
-  toJson(): any {
+  toJson (): any {
     return { iv: Buffer.from(this.iv).toString('hex') };
   }
 }

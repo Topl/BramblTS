@@ -1,4 +1,9 @@
-import { Attestation, Attestation_Commitment, Attestation_Image, Attestation_Predicate } from 'topl_common';
+import {
+    Attestation,
+    Attestation_Commitment,
+    Attestation_Image,
+    Attestation_Predicate
+} from 'topl_common';
 
 /**
  * Extend the Attestation interface from 'topl_common' module with additional methods.

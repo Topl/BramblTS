@@ -11,26 +11,26 @@ import type { KeyInitializer } from './key_initializer.js';
 export class ExtendedEd25519Initializer implements KeyInitializer<SigningKey> {
   private extendedEd25519: ExtendedEd25519;
 
-  constructor(extendedEd25519: ExtendedEd25519) {
+  constructor (extendedEd25519: ExtendedEd25519) {
     this.extendedEd25519 = extendedEd25519;
   }
 
-  random(): SigningKey {
+  random (): SigningKey {
     const uuid = uuidv4();
     return this.fromEntropy(Entropy.fromUuid(uuid));
   }
 
-  fromBytes(bytes: Uint8Array): SigningKey {
+  fromBytes (bytes: Uint8Array): SigningKey {
     return new spec.SecretKey(bytes.slice(0, 32), bytes.slice(32, 64), bytes.slice(64, 96));
   }
 
-  fromEntropy(entropy: Entropy, password?: string | null): SigningKey {
+  fromEntropy (entropy: Entropy, password?: string | null): SigningKey {
     return this.extendedEd25519.deriveKeyPairFromEntropy(entropy, password).signingKey;
   }
 
-  async fromMnemonicString(
+  async fromMnemonicString (
     mnemonicString: string,
-    { language = new English(), password }: { language?: Language; password?: string } = {},
+    { language = new English(), password }: { language?: Language; password?: string } = {}
   ): Promise<Either<InitializationFailure, SigningKey>> {
     const entropyResult = await Entropy.fromMnemonicString(mnemonicString, { language });
 

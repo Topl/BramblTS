@@ -1,6 +1,7 @@
 import type { Either, Unit } from '@/common/functional/brambl_fp.js';
 import { VaultStore } from '@/crypto/encryption/vault_store.js';
 
+
 /**
  * Defines a storage API for fetching and storing Topl Main Key Vault Store.
  */
@@ -16,7 +17,7 @@ export abstract class WalletKeyApiAlgebra {
    */
   abstract saveMainKeyVaultStore(
     mainKeyVaultStore: VaultStore,
-    name: string,
+    name: string
   ): Promise<Either<WalletKeyException, Unit>>;
 
   /**
@@ -48,7 +49,7 @@ export abstract class WalletKeyApiAlgebra {
    */
   abstract updateMainKeyVaultStore(
     mainKeyVaultStore: VaultStore,
-    name: string,
+    name: string
   ): Promise<Either<WalletKeyException, Unit>>;
 
   /**
@@ -70,7 +71,7 @@ export enum WalletKeyExceptionType {
   vaultStoreSaveException,
   vaultStoreInvalidException,
   vaultStoreDeleteException,
-  vaultStoreNotInitialized,
+  vaultStoreNotInitialized
 }
 
 export class WalletKeyException implements Error {
@@ -79,32 +80,32 @@ export class WalletKeyException implements Error {
   stack?: string | undefined;
   type: WalletKeyExceptionType;
 
-  constructor(type: WalletKeyExceptionType, message?: string) {
+  constructor (type: WalletKeyExceptionType, message?: string) {
     this.type = type;
     this.message = message || 'An error occurred';
     this.stack = new Error().stack; // Capture the stack trace
   }
 
-  static decodeVaultStore(context?: string) {
+  static decodeVaultStore (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.decodeVaultStoreException, context);
   }
-  static vaultStoreDoesNotExist(context?: string) {
+  static vaultStoreDoesNotExist (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.vaultStoreDoesNotExistException, context);
   }
-  static mnemonicDoesNotExist(context?: string) {
+  static mnemonicDoesNotExist (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.mnemonicDoesNotExistException, context);
   }
 
-  static vaultStoreSave(context?: string) {
+  static vaultStoreSave (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.vaultStoreSaveException, context);
   }
-  static vaultStoreInvalid(context?: string) {
+  static vaultStoreInvalid (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.vaultStoreInvalidException, context);
   }
-  static vaultStoreDelete(context?: string) {
+  static vaultStoreDelete (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.vaultStoreDeleteException, context);
   }
-  static vaultStoreNotInitialized(context?: string) {
+  static vaultStoreNotInitialized (context?: string) {
     return new WalletKeyException(WalletKeyExceptionType.vaultStoreNotInitialized, context);
   }
 }

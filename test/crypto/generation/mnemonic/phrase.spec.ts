@@ -1,10 +1,10 @@
-import { isLeft, isRight } from '@/common/functional/brambl_fp.js';
-import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
-import { English } from '@/crypto/generation/mnemonic/language.js';
-import { MnemonicSize } from '@/crypto/generation/mnemonic/mnemonic.js';
-import { Phrase } from '@/crypto/generation/mnemonic/phrase.js';
-import { describe, expect, test } from 'vitest';
-import { Generators } from '../../helpers/generators.js';
+import { isLeft, isRight } from "@/common/functional/brambl_fp.js";
+import { Entropy } from "@/crypto/generation/mnemonic/entropy.js";
+import { English } from "@/crypto/generation/mnemonic/language.js";
+import { MnemonicSize } from "@/crypto/generation/mnemonic/mnemonic.js";
+import { Phrase } from "@/crypto/generation/mnemonic/phrase.js";
+import { describe, expect, test } from "vitest";
+import { Generators } from "../../helpers/generators.js";
 
 describe('Phrase Spec', () => {
   test('random entropy (of the correct length) should be a valid phrase', async () => {
@@ -20,7 +20,7 @@ describe('Phrase Spec', () => {
     const result = await Phrase.fromEntropy({
       entropy: Entropy.generate(new MnemonicSize(24)),
       size: new MnemonicSize(12),
-      language: new English(),
+      language: new English()
     });
     expect(isLeft(result)).toBe(true);
   });
@@ -85,7 +85,7 @@ describe('Phrase Spec', () => {
            clutch c\uD83D\uDD25rush
            open amazing screen 
           patrol group space point ten exist slush inv\uD83D\uDD25olve unfold`,
-      language: new English(),
+      language: new English()
     });
 
     expect(isLeft(entropy)).toBe(true);

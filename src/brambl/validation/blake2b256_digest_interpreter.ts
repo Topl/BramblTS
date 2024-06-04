@@ -9,7 +9,7 @@ import { left, right, type Either } from '@/common/functional/brambl_fp.js';
  * Validates that a Blake2b256 digest is valid.
  */
 export default class Blake2b256DigestInterpreter implements DigestVerifier {
-  validate(t: DigestVerification): Either<ValidationError, DigestVerification> {
+  validate (t: DigestVerification): Either<ValidationError, DigestVerification> {
     if (t instanceof DigestVerification) {
       const d = t.digest.value;
       const p = t.preimage.input;
@@ -22,7 +22,7 @@ export default class Blake2b256DigestInterpreter implements DigestVerifier {
         return left(ValidationError.lockedPropositionIsUnsatisfiable(null));
       }
     } else {
-      return left(ValidationError.userProvidedInterfaceFailure(t));
+      return left(ValidationError.userProvidedInterfaceFailure(t))
     }
   }
 }

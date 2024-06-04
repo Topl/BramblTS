@@ -1,25 +1,8 @@
 export abstract class SigningKey {}
 
-import type {
-  PlainMessage,
-  BinaryReadOptions,
-  JsonValue,
-  JsonReadOptions,
-  BinaryWriteOptions,
-  JsonWriteOptions,
-  JsonWriteStringOptions,
-  MessageType,
-} from '@bufbuild/protobuf';
+import type { PlainMessage, BinaryReadOptions, JsonValue, JsonReadOptions, BinaryWriteOptions, JsonWriteOptions, JsonWriteStringOptions, MessageType } from '@bufbuild/protobuf';
 import { extend } from 'fp-ts/lib/pipeable.js';
-import {
-  type SigningKey as tSK,
-  Ed25519Sk,
-  Ed25519Vk,
-  ExtendedEd25519Sk,
-  ExtendedEd25519Vk,
-  type VerificationKey as tVK,
-  KeyPair as tKP,
-} from 'topl_common';
+import { type SigningKey as tSK, Ed25519Sk, Ed25519Vk, ExtendedEd25519Sk, ExtendedEd25519Vk, type VerificationKey as tVK, KeyPair as tKP } from 'topl_common';
 
 export abstract class VerificationKey {}
 
@@ -27,12 +10,12 @@ export class KeyPair<SK extends SigningKey, VK extends VerificationKey> {
   readonly signingKey: SK;
   readonly verificationKey: VK;
 
-  constructor(signingKey: SK, verificationKey: VK) {
+  constructor (signingKey: SK, verificationKey: VK) {
     this.signingKey = signingKey;
     this.verificationKey = verificationKey;
   }
 
-  equals(other: KeyPair<SK, VK>): boolean {
+  equals (other: KeyPair<SK, VK>): boolean {
     return (
       this === other ||
       (other instanceof KeyPair &&
@@ -49,14 +32,14 @@ export class UnifiedKeyPair extends tKP {
   readonly _verificationKey: tVK;
 
   readonly algorithm: string;
-
-  constructor(signingKey: tSK, verificationKey: tVK) {
+ 
+  constructor (signingKey: tSK, verificationKey: tVK) {
     if (signingKey.sk.case !== verificationKey.vk.case) {
       throw new Error('Algorithm mismatch');
     }
     super({
       sk: signingKey,
-      vk: verificationKey,
+      vk: verificationKey
     });
 
     this.algorithm = signingKey.sk.case;

@@ -9,7 +9,7 @@ import {
   SCALAR_BYTES,
   SCALAR_INTS,
   SECRET_KEY_SIZE,
-  SIGNATURE_SIZE,
+  SIGNATURE_SIZE
 } from './ec.js';
 
 export class Ed25519 extends EC {
@@ -23,7 +23,7 @@ export class Ed25519 extends EC {
    * @param {number} phflag - Flag indicating whether the message is prehashed.
    * @param {Uint8Array} ctx - The context value.
    */
-  private _dom2(d: SHA512, phflag: number, ctx: Uint8Array): void {
+  private _dom2 (d: SHA512, phflag: number, ctx: Uint8Array): void {
     if (ctx.length > 0) {
       d.update(Buffer.from(DOM2_PREFIX, 'utf-8'), 0, DOM2_PREFIX.length);
       d.updateByte(Buffer.from([phflag]));
@@ -37,7 +37,7 @@ export class Ed25519 extends EC {
    *
    * @param {Uint8Array} k - The private key to be generated.
    */
-  generatePrivateKey(k: Uint8Array): void {
+  generatePrivateKey (k: Uint8Array): void {
     for (let i = 0; i < k.length; i++) {
       k[i] = Math.floor(Math.random() * 256);
     }
@@ -53,7 +53,7 @@ export class Ed25519 extends EC {
    * @param {number} pkOff - Offset in the public key.
    * @param {SHA512} [digest] - Optional SHA512 digest.
    */
-  generatePublicKey(sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
+  generatePublicKey (sk: Uint8Array, skOff: number, pk: Uint8Array, pkOff: number, digest?: SHA512): void {
     const d = digest ?? this.defaultDigest;
 
     const h = new Uint8Array(d.digestSize());
@@ -90,7 +90,7 @@ export class Ed25519 extends EC {
    * @param {Uint8Array} signature - The signature buffer.
    * @param {number} signatureOffset - Offset in the signature.
    */
-  implSignWithDigestAndPublicKey(
+  implSignWithDigestAndPublicKey (
     digest: SHA512,
     h: Uint8Array,
     s: Uint8Array,
@@ -102,7 +102,7 @@ export class Ed25519 extends EC {
     messageOffset: number,
     messageLength: number,
     signature: Uint8Array,
-    signatureOffset: number,
+    signatureOffset: number
   ): void {
     this._dom2(digest, phflag, context);
 
@@ -151,7 +151,7 @@ export class Ed25519 extends EC {
    * @param {Uint8Array} signature - The signature buffer.
    * @param {number} signatureOffset - Offset in the signature.
    */
-  implSignWithPrivateKey(
+  implSignWithPrivateKey (
     sk: Uint8Array,
     skOffset: number,
     context: Uint8Array,
@@ -160,7 +160,7 @@ export class Ed25519 extends EC {
     messageOffset: number,
     messageLength: number,
     signature: Uint8Array,
-    signatureOffset: number,
+    signatureOffset: number
   ): void {
     if (!this.checkContextVar(context, phflag)) {
       throw new Error('Invalid context');
@@ -192,7 +192,7 @@ export class Ed25519 extends EC {
       messageOffset,
       messageLength,
       signature,
-      signatureOffset,
+      signatureOffset
     );
   }
 
@@ -216,7 +216,7 @@ export class Ed25519 extends EC {
    * @param {Uint8Array} signature - The signature buffer.
    * @param {number} signatureOffset - Offset in the signature.
    */
-  implSignWithPrivateKeyAndPublicKey(
+  implSignWithPrivateKeyAndPublicKey (
     sk: Uint8Array,
     skOffset: number,
     pk: Uint8Array,
@@ -227,7 +227,7 @@ export class Ed25519 extends EC {
     messageOffset: number,
     messageLength: number,
     signature: Uint8Array,
-    signatureOffset: number,
+    signatureOffset: number
   ): void {
     // Check if the context variable is valid.
     if (!this.checkContextVar(context, phflag)) {
@@ -256,7 +256,7 @@ export class Ed25519 extends EC {
       messageOffset,
       messageLength,
       signature,
-      signatureOffset,
+      signatureOffset
     );
   }
 
@@ -274,7 +274,7 @@ export class Ed25519 extends EC {
    * @param {number} messageLength - Length of the message.
    * @returns {boolean} - Returns `true` if the signature is valid, `false` otherwise.
    */
-  _implVerify(
+  _implVerify (
     signature: Uint8Array,
     signatureOffset: number,
     pk: Uint8Array,
@@ -283,7 +283,7 @@ export class Ed25519 extends EC {
     phflag: number,
     message: Uint8Array,
     messageOffset: number,
-    messageLength: number,
+    messageLength: number
   ): boolean {
     // Check if the context variable is valid.
     if (!this.checkContextVar(context, phflag)) {
@@ -347,7 +347,7 @@ export class Ed25519 extends EC {
    * @param {Uint8Array} [params.context] - Additional context for signing (optional).
    * @param {number} [params.phflag] - Flag for prehashed messages (optional).
    */
-  sign({
+  sign ({
     sk,
     skOffset,
     message,
@@ -358,7 +358,7 @@ export class Ed25519 extends EC {
     pk,
     pkOffset,
     context,
-    phflag,
+    phflag
   }: {
     sk: Uint8Array;
     skOffset: number;
@@ -416,7 +416,7 @@ export class Ed25519 extends EC {
         messageOffset,
         messageLength,
         signature,
-        signatureOffset,
+        signatureOffset
       );
     } else {
       this.implSignWithPrivateKey(
@@ -428,7 +428,7 @@ export class Ed25519 extends EC {
         messageOffset,
         messageLength,
         signature,
-        signatureOffset,
+        signatureOffset
       );
     }
   }
@@ -452,7 +452,7 @@ export class Ed25519 extends EC {
    * @param {Uint8Array} params.signature - Buffer to hold the signature.
    * @param {number} params.signatureOffset - Offset in the signature buffer.
    */
-  signPrehash({
+  signPrehash ({
     sk,
     skOffset,
     pk,
@@ -462,7 +462,7 @@ export class Ed25519 extends EC {
     ph,
     phOffset,
     signature,
-    signatureOffset,
+    signatureOffset
   }: {
     sk: Uint8Array;
     skOffset: number;
@@ -494,7 +494,7 @@ export class Ed25519 extends EC {
         messageOffset: phOff,
         messageLength: PREHASH_SIZE,
         signature,
-        signatureOffset,
+        signatureOffset
       });
     } else if (phSha != null && ph == null) {
       const m = new Uint8Array(PREHASH_SIZE);
@@ -512,7 +512,7 @@ export class Ed25519 extends EC {
         messageOffset: 0,
         messageLength: m.length,
         signature,
-        signatureOffset,
+        signatureOffset
       });
     } else {
       throw new Error('PhSha and ph should not both be passed in');
@@ -533,7 +533,7 @@ export class Ed25519 extends EC {
    * @param {number} params.messageLength - Length of the message.
    * @returns {boolean} - Returns `true` if the signature is valid, `false` otherwise.
    */
-  verify({
+  verify ({
     signature,
     signatureOffset,
     pk,
@@ -541,7 +541,7 @@ export class Ed25519 extends EC {
     context,
     message,
     messageOffset,
-    messageLength,
+    messageLength
   }: {
     signature: Uint8Array;
     signatureOffset: number;
@@ -564,7 +564,7 @@ export class Ed25519 extends EC {
       phflag,
       message,
       messageOffset,
-      messageLength,
+      messageLength
     );
   }
 
@@ -587,7 +587,7 @@ export class Ed25519 extends EC {
    * @param {number} params.phOff - Offset in the prehashed message.
    * @returns {boolean} - Returns `true` if the signature is valid, `false` otherwise.
    */
-  verifyPrehash({
+  verifyPrehash ({
     signature,
     signatureOffset,
     pk,
@@ -595,7 +595,7 @@ export class Ed25519 extends EC {
     context,
     ph,
     phSha,
-    phOff,
+    phOff
   }: {
     signature: Uint8Array;
     signatureOffset: number;

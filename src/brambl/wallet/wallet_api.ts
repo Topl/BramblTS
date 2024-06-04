@@ -1,13 +1,13 @@
 import { isLeft, left, right, unit, type Either, type Unit } from '@/common/functional/brambl_fp.js';
 import {
-  Entropy,
-  ExtendedEd25519,
-  ExtendedEd25519Initializer,
-  HardenedIndex,
-  Mac,
-  MnemonicSize,
-  SoftIndex,
-  VaultStore,
+    Entropy,
+    ExtendedEd25519,
+    ExtendedEd25519Initializer,
+    HardenedIndex,
+    Mac,
+    MnemonicSize,
+    SoftIndex,
+    VaultStore
 } from '@/crypto/crypto.js';
 import { Aes } from '@/crypto/encryption/cipher/aes.js';
 import type { Cipher } from '@/crypto/encryption/cipher/cipher.js';
@@ -100,7 +100,7 @@ export abstract class WalletApiDefinition {
   abstract createNewWallet(
     password: Uint8Array,
     passphrase?: string,
-    mLen?: MnemonicSize,
+    mLen?: MnemonicSize
   ): Promise<Either<WalletApiFailure, NewWalletResult>>;
 
   /**
@@ -115,12 +115,12 @@ export abstract class WalletApiDefinition {
    * @param mnemonicName A name used to identify the mnemonic. Defaults to "mnemonic".
    * @return The mnemonic and VaultStore of the newly created wallet, if creation and save successful. Else an error
    */
-  async createAndSaveNewWallet(
+  async createAndSaveNewWallet (
     password: Uint8Array,
     passphrase?: string,
     mLen: MnemonicSize = MnemonicSize.words12(),
     name: string = 'default',
-    mnemonicName: string = 'mnemonic',
+    mnemonicName: string = 'mnemonic'
   ): Promise<Either<WalletApiFailure, NewWalletResult>> {
     try {
       const walletRes = await this.createNewWallet(password, passphrase, mLen);
@@ -191,9 +191,9 @@ export abstract class WalletApiDefinition {
    *             the wallet identities if multiple will be used.
    * @return The main key pair of the wallet, if successful. Else an error
    */
-  async loadAndExtractMainKey(
+  async loadAndExtractMainKey (
     password: Uint8Array,
-    name: string = 'default',
+    name: string = 'default'
   ): Promise<Either<WalletApiFailure, KeyPair>> {
     // Load the wallet
     const walletRes = await this.loadWallet(name);
@@ -220,10 +220,10 @@ export abstract class WalletApiDefinition {
    *             the wallet identities if multiple will be used.
    * @return The wallet's new VaultStore if creation and save was successful. An error if unsuccessful.
    */
-  async updateWalletPassword(
+  async updateWalletPassword (
     oldPassword: Uint8Array,
     newPassword: Uint8Array,
-    name: string = 'default',
+    name: string = 'default'
   ): Promise<Either<WalletApiFailure, VaultStore>> {
     // Load the old wallet
     const oldWallet = await this.loadWallet(name);
@@ -270,7 +270,7 @@ export abstract class WalletApiDefinition {
   abstract importWallet(
     mnemonic: string[],
     password: Uint8Array,
-    passphrase?: string,
+    passphrase?: string
   ): Promise<Either<WalletApiFailure, VaultStore>>;
 
   /**
@@ -284,11 +284,11 @@ export abstract class WalletApiDefinition {
    *             the wallet identities if multiple will be used.
    * @return The wallet's VaultStore if import and save was successful. An error if unsuccessful.
    */
-  async importWalletAndSave(
+  async importWalletAndSave (
     mnemonic: string[],
     password: Uint8Array,
     passphrase?: string,
-    name: string = 'default',
+    name: string = 'default'
   ): Promise<Either<WalletApiFailure, VaultStore>> {
     // Import the wallet from the mnemonic
     const walletRes = await this.importWallet(mnemonic, password, passphrase);
@@ -329,7 +329,7 @@ export class WalletApi extends WalletApiDefinition {
   readonly instance: ExtendedEd25519;
   readonly walletKeyApi: WalletKeyApiAlgebra;
 
-  constructor(walletKeyApi: WalletKeyApiAlgebra) {
+  constructor (walletKeyApi: WalletKeyApiAlgebra) {
     super();
     this.kdf = SCrypt.withGeneratedSalt();
     this.cipher = new Aes();
@@ -337,7 +337,7 @@ export class WalletApi extends WalletApiDefinition {
     this.walletKeyApi = walletKeyApi;
   }
 
-  async extractMainKey(vaultStore: VaultStore, password: Uint8Array): Promise<Either<WalletApiFailure, KeyPair>> {
+  async extractMainKey (vaultStore: VaultStore, password: Uint8Array): Promise<Either<WalletApiFailure, KeyPair>> {
     try {
       const decoded = VaultStore.decodeCipher(vaultStore, password);
       if (isLeft(decoded)) {
@@ -351,7 +351,7 @@ export class WalletApi extends WalletApiDefinition {
     }
   }
 
-  async deriveChildKeys(keyPair: KeyPair, idx: Indices): Promise<KeyPair> {
+  async deriveChildKeys (keyPair: KeyPair, idx: Indices): Promise<KeyPair> {
     if (!(keyPair.vk.vk.case === 'extendedEd25519') || !(keyPair.sk.sk.case === 'extendedEd25519')) {
       throw new Error('keyPair must be an extended Ed25519 key');
     }
@@ -366,7 +366,7 @@ export class WalletApi extends WalletApiDefinition {
     return ProtoConverters.keyPairToProto(kp);
   }
 
-  async deriveChildKeysPartial(keyPair: KeyPair, xFellowship: number, yTemplate: number): Promise<KeyPair> {
+  async deriveChildKeysPartial (keyPair: KeyPair, xFellowship: number, yTemplate: number): Promise<KeyPair> {
     if (!(keyPair.vk.vk.case === 'extendedEd25519') || !(keyPair.sk.sk.case === 'extendedEd25519')) {
       throw new Error('keyPair must be an extended Ed25519 key');
     }
@@ -380,7 +380,7 @@ export class WalletApi extends WalletApiDefinition {
     return ProtoConverters.keyPairToProto(kp);
   }
 
-  async deriveChildVerificationKey(vk: VerificationKey, idx: number): Promise<VerificationKey> {
+  async deriveChildVerificationKey (vk: VerificationKey, idx: number): Promise<VerificationKey> {
     if (!(vk.vk.case === 'extendedEd25519')) {
       throw new Error('verification key must be an extended Ed25519 key');
     }
@@ -391,10 +391,10 @@ export class WalletApi extends WalletApiDefinition {
     return ProtoConverters.publicKeyToProto(derivedVk);
   }
 
-  async createNewWallet(
+  async createNewWallet (
     password: Uint8Array,
     passphrase?: string,
-    mLen: MnemonicSize = MnemonicSize.words12(),
+    mLen: MnemonicSize = MnemonicSize.words12()
   ): Promise<Either<WalletApiFailure, NewWalletResult>> {
     const entropy = Entropy.generate(mLen);
     const mainKeyRaw = await this.entropyToMainKey(entropy, passphrase);
@@ -407,10 +407,10 @@ export class WalletApi extends WalletApiDefinition {
       : right(new NewWalletResult(mnemonic.right, vaultStore));
   }
 
-  async importWallet(
+  async importWallet (
     mnemonic: string[],
     password: Uint8Array,
-    passphrase?: string,
+    passphrase?: string
   ): Promise<Either<WalletApiFailure, VaultStore>> {
     const entropy = await Entropy.fromMnemonicString(mnemonic.join(' '));
     if (isLeft(entropy)) {
@@ -424,37 +424,37 @@ export class WalletApi extends WalletApiDefinition {
     return right(vaultStore);
   }
 
-  async saveWallet(vaultStore: VaultStore, name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
+  async saveWallet (vaultStore: VaultStore, name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.saveMainKeyVaultStore(vaultStore, name);
 
     return isLeft(res) ? left(new FailedToSaveWallet(res.left)) : right(unit);
   }
 
-  async saveMnemonic(mnemonic: string[], mnemonicName: string = 'mnemonic'): Promise<Either<WalletApiFailure, Unit>> {
+  async saveMnemonic (mnemonic: string[], mnemonicName: string = 'mnemonic'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.saveMnemonic(mnemonic, mnemonicName);
 
     return isLeft(res) ? left(new FailedToSaveMnemonic(res.left)) : right(undefined);
   }
 
-  async loadWallet(name: string = 'default'): Promise<Either<WalletApiFailure, VaultStore>> {
+  async loadWallet (name: string = 'default'): Promise<Either<WalletApiFailure, VaultStore>> {
     const res = await this.walletKeyApi.getMainKeyVaultStore(name);
 
     return isLeft(res) ? left(new FailedToLoadWallet(res.left)) : right(res.right);
   }
 
-  async updateWallet(newWallet: VaultStore, name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
+  async updateWallet (newWallet: VaultStore, name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.updateMainKeyVaultStore(newWallet, name);
 
     return isLeft(res) ? left(new FailedToUpdateWallet(res.left)) : right(undefined);
   }
 
-  async deleteWallet(name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
+  async deleteWallet (name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.deleteMainKeyVaultStore(name);
 
     return isLeft(res) ? left(new FailedToDeleteWallet(res.left)) : right(undefined);
   }
 
-  async buildMainKeyVaultStore(mainKey: Uint8Array, password: Uint8Array): Promise<VaultStore> {
+  async buildMainKeyVaultStore (mainKey: Uint8Array, password: Uint8Array): Promise<VaultStore> {
     const derivedKey = await this.kdf.deriveKey(password);
     const cipherText = await this.cipher.encrypt(mainKey, derivedKey);
     const mac = new Mac(derivedKey, cipherText).value;
@@ -462,7 +462,7 @@ export class WalletApi extends WalletApiDefinition {
     return new VaultStore(this.kdf, this.cipher, cipherText, mac);
   }
 
-  private async entropyToMainKey(entropy: Entropy, passphrase?: string): Promise<KeyPair> {
+  private async entropyToMainKey (entropy: Entropy, passphrase?: string): Promise<KeyPair> {
     const intializer = new ExtendedEd25519Initializer(this.instance);
     const rootKey = intializer.fromEntropy(entropy, passphrase);
     const p = new HardenedIndex(this.Purpose); // following CIP-1852
@@ -476,20 +476,14 @@ export class WalletApi extends WalletApiDefinition {
  * Class representing the result of a new wallet creation
  */
 export class NewWalletResult {
-  constructor(
-    public readonly mnemonic: string[],
-    public readonly mainKeyVaultStore: VaultStore,
-  ) {}
+  constructor (public readonly mnemonic: string[], public readonly mainKeyVaultStore: VaultStore) {}
 }
 
 /**
  * Base class for Wallet API failures
  */
 export class WalletApiFailure extends Error {
-  constructor(
-    message?: string,
-    public readonly originalError?: Error,
-  ) {
+  constructor (message?: string, public readonly originalError?: Error) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);
   }
@@ -499,7 +493,7 @@ export class WalletApiFailure extends Error {
  * Failure class for wallet initialization failures
  */
 export class FailedToInitializeWallet extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to initialize wallet', originalError);
   }
 }
@@ -508,7 +502,7 @@ export class FailedToInitializeWallet extends WalletApiFailure {
  * Failure class for wallet save failures
  */
 export class FailedToSaveWallet extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to save wallet', originalError);
   }
 }
@@ -517,7 +511,7 @@ export class FailedToSaveWallet extends WalletApiFailure {
  * Failure class for mnemonic save failures
  */
 export class FailedToSaveMnemonic extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to save mnemonic', originalError);
   }
 }
@@ -526,7 +520,7 @@ export class FailedToSaveMnemonic extends WalletApiFailure {
  * Failure class for wallet load failures
  */
 export class FailedToLoadWallet extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to load wallet', originalError);
   }
 }
@@ -535,7 +529,7 @@ export class FailedToLoadWallet extends WalletApiFailure {
  * Failure class for wallet update failures
  */
 export class FailedToUpdateWallet extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to update wallet', originalError);
   }
 }
@@ -544,7 +538,7 @@ export class FailedToUpdateWallet extends WalletApiFailure {
  * Failure class for wallet delete failures
  */
 export class FailedToDeleteWallet extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to delete wallet', originalError);
   }
 }
@@ -553,7 +547,7 @@ export class FailedToDeleteWallet extends WalletApiFailure {
  * Failure class for wallet decode failures
  */
 export class FailedToDecodeWallet extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Failed to decode wallet', originalError);
   }
 }
@@ -562,7 +556,8 @@ export class FailedToDecodeWallet extends WalletApiFailure {
  * Failure class for wallet default failures
  */
 export class FailureDefault extends WalletApiFailure {
-  constructor(originalError?: Error) {
+  constructor (originalError?: Error) {
     super('Default Failure', originalError);
   }
 }
+

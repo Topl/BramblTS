@@ -16,14 +16,14 @@ export default class DynamicContext<K> {
   currentTick: bigint;
   heightOf?: (label: string) => Option<bigint>;
 
-  constructor(
+  constructor (
     datums: (k: K) => Option<Datum>,
     interfaces: Map<K, ParsableDataInterface>,
     signingRoutines: Map<K, SignatureVerifier>,
     hashingRoutines: Map<K, DigestVerifier>,
     signableBytes: SignableBytes,
     currentTick: bigint,
-    heightOf?: (label: string) => Option<bigint>,
+    heightOf?: (label: string) => Option<bigint>
   ) {
     this.datums = datums;
     this.interfaces = interfaces;
@@ -34,15 +34,15 @@ export default class DynamicContext<K> {
     this.heightOf = heightOf;
   }
 
-  digestVerify(routine: K, verification: DigestVerification): QuivrResult<DigestVerification> {
+  digestVerify (routine: K, verification: DigestVerification): QuivrResult<DigestVerification> {
     const verifier = this.hashingRoutines.has(routine) ? this.hashingRoutines.get(routine) : null;
 
     if (verifier === null)
       return left(
         ValidationError.failedToFindDigestVerifier({
           name: 'DynamicContext',
-          message: `failed to find digest verifier for ${routine}`,
-        }),
+          message: `failed to find digest verifier for ${routine}`
+        })
       );
 
     const result = verifier.validate(verification) as QuivrResult<DigestVerification>;
@@ -51,15 +51,15 @@ export default class DynamicContext<K> {
     return right(result.right);
   }
 
-  signatureVerify(routine: K, verification: SignatureVerification): QuivrResult<SignatureVerification> {
+  signatureVerify (routine: K, verification: SignatureVerification): QuivrResult<SignatureVerification> {
     const verifier = this.signingRoutines.has(routine) ? this.signingRoutines.get(routine) : null;
 
     if (verifier === null)
       return left(
         ValidationError.failedToFindSignatureVerifier({
           name: 'DynamicContext',
-          message: `failed to find signature verifier for ${routine}`,
-        }),
+          message: `failed to find signature verifier for ${routine}`
+        })
       );
 
     const result = verifier.validate(verification);
@@ -68,15 +68,15 @@ export default class DynamicContext<K> {
     return right(result.right);
   }
 
-  useInterface(label: K): Either<QuivrRuntimeError, Data> {
+  useInterface (label: K): Either<QuivrRuntimeError, Data> {
     const interfaceObj = this.interfaces.has(label) ? this.interfaces.get(label) : null;
 
     if (interfaceObj === null)
       return left(
         ValidationError.failedToFindInterface({
           name: 'DynamicContext',
-          message: `failed to find interface for ${label}`,
-        }),
+          message: `failed to find interface for ${label}`
+        })
       );
 
     const f = (data: Data): QuivrResult<Data> => {
@@ -86,7 +86,7 @@ export default class DynamicContext<K> {
     return interfaceObj.parse<QuivrRuntimeError, Data>(f);
   }
 
-  exactMatch(label: K, compareTo: Uint8Array): boolean {
+  exactMatch (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
     if (isLeft(result)) return false;
@@ -94,7 +94,7 @@ export default class DynamicContext<K> {
     return JSON.stringify(result.right?.value) === JSON.stringify(compareTo);
   }
 
-  lessThan(label: K, compareTo: Uint8Array): boolean {
+  lessThan (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
     if (isLeft(result)) return false;
@@ -102,7 +102,7 @@ export default class DynamicContext<K> {
     return result.right.value <= compareTo;
   }
 
-  greaterThan(label: K, compareTo: Uint8Array): boolean {
+  greaterThan (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
     if (isLeft(result)) return false;
@@ -110,7 +110,7 @@ export default class DynamicContext<K> {
     return result.right.value >= compareTo;
   }
 
-  equalTo(label: K, compareTo: Uint8Array): boolean {
+  equalTo (label: K, compareTo: Uint8Array): boolean {
     const result = this.useInterface(label);
 
     if (isLeft(result)) return false;

@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export class Digest {
-  constructor(public readonly bytes: Uint8Array) {}
+  constructor (public readonly bytes: Uint8Array) {}
 
-  static empty(): Digest {
+  static empty (): Digest {
     return new Digest(new Uint8Array(0));
   }
 
-  equals(other: Digest): boolean {
+  equals (other: Digest): boolean {
     return this.bytes.length === other.bytes.length && this.bytes.every((value, index) => value === other.bytes[index]);
   }
 
-  getHashCode(): number {
+  getHashCode (): number {
     return this.bytes.reduce((acc, byte) => acc + byte, 0);
   }
 }
@@ -19,9 +19,9 @@ export class Digest {
 export class Digest32 {
   static readonly size: number = 32;
 
-  private constructor() {}
+  private constructor () {}
 
-  static from(bytes: Uint8Array): any {
+  static from (bytes: Uint8Array): any {
     if (bytes.length !== this.size) {
       return { kind: 'Left', value: new InvalidDigestFailure(`Invalid digest size: ${bytes.length}`) };
     }
@@ -32,9 +32,9 @@ export class Digest32 {
 export class Digest64 {
   static readonly size: number = 64;
 
-  private constructor() {}
+  private constructor () {}
 
-  static from(bytes: Uint8Array): any {
+  static from (bytes: Uint8Array): any {
     if (bytes.length !== this.size) {
       return { kind: 'Left', value: new InvalidDigestFailure(`Invalid digest size: ${bytes.length}`) };
     }
@@ -43,10 +43,7 @@ export class Digest64 {
 }
 
 export class InvalidDigestFailure extends Error {
-  constructor(
-    message?: string,
-    public readonly originalError?: Error,
-  ) {
+  constructor (message?: string, public readonly originalError?: Error) {
     super(message);
     Object.setPrototypeOf(this, new.target.prototype);
   }

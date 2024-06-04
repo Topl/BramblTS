@@ -57,6 +57,7 @@ Uint8Array.prototype.bToNumber = function () {
 };
 
 Uint8Array.prototype.bEquals = function (b: Uint8Array) {
+
   /// TODO: consider using buffer comparison
   if (this.length !== b.length) {
     return false;
@@ -75,14 +76,15 @@ Array.prototype.bSum = function () {
   return this.reduce((a: number, b: number) => a + b, 0);
 };
 
-String.prototype.bToUint8Array = function (): Uint8Array {
+String.prototype.bToUint8Array = function(): Uint8Array {
   return Buffer.from(this);
 };
+
 
 /////// Helper functions ////////
 
 ///TODO: deprecated
-function numberToUint8Array(num: number): Uint8Array {
+function numberToUint8Array (num: number): Uint8Array {
   const buffer = new ArrayBuffer(4);
   const view = new DataView(buffer);
   view.setUint32(0, num, true); // true for little endian
@@ -90,7 +92,7 @@ function numberToUint8Array(num: number): Uint8Array {
 }
 
 ///TODO: deprecated
-function numberToUint8Array2(number: number): Uint8Array {
+function numberToUint8Array2 (number: number): Uint8Array {
   // Determine the byte size needed for the number
   const byteSize = Math.max(Math.ceil(Math.log2(number + 1) / 8), 1);
 
@@ -118,7 +120,7 @@ function numberToUint8Array2(number: number): Uint8Array {
 }
 
 ///TODO: deprecated
-function numberToUint8Array3(num) {
+function numberToUint8Array3 (num) {
   const arr = new Uint8Array(8);
 
   for (let i = 0; i < 8; i++) {
@@ -129,7 +131,7 @@ function numberToUint8Array3(num) {
   return arr;
 }
 
-function numberToUint8Array4(num: number): Uint8Array {
+function numberToUint8Array4 (num: number): Uint8Array {
   // Calculate the number of bytes needed to represent the number
   const length = Math.ceil(Math.log2(num + 1) / 8);
 

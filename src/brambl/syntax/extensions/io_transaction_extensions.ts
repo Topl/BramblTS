@@ -38,17 +38,14 @@ IoTransaction.prototype.withGroupPolicies = function (policyEvent: Datum_GroupPo
   return this;
 };
 
-IoTransaction.prototype.withSeriesPolicies = function (
-  policyEvent: Datum_SeriesPolicy[],
-  clear = false,
-): IoTransaction {
+IoTransaction.prototype.withSeriesPolicies = function (policyEvent: Datum_SeriesPolicy[], clear = false): IoTransaction {
   this.seriesPolicies = clear ? [...policyEvent] : [...this.seriesPolicies, ...policyEvent];
   return this;
 };
 
 IoTransaction.prototype.withMintingStatements = function (
   statement: AssetMintingStatement[],
-  clear = false,
+  clear = false
 ): IoTransaction {
   this.mintingStatements = clear ? [...statement] : [...this.mintingStatements, ...statement];
   return this;

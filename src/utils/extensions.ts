@@ -58,5 +58,5 @@ export function getSublist(array: Uint8Array, start: number, end: number): Uint8
 }
 
 export function toIntList(uint8Array: Uint8Array): number[] {
-  return Array.from(uint8Array);
+    return Array.from(uint8Array);
 }

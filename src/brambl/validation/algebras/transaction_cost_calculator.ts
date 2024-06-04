@@ -1,4 +1,4 @@
-import type { IoTransaction } from 'topl_common';
+import type { IoTransaction } from "topl_common";
 
 export default interface TransactionCostCalculator {
   /**

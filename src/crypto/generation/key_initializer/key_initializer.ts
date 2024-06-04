@@ -43,6 +43,6 @@ export interface KeyInitializer<SK extends SigningKey> {
     options?: {
       language?: Language;
       password?: string;
-    },
+    }
   ): Promise<Either<InitializationFailure, SK>>;
 }

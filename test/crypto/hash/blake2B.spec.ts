@@ -1,5 +1,6 @@
-import { Blake2b256, Blake2b512 } from '@/crypto/hash/blake2B.js';
-import { describe, expect, it, test } from 'vitest';
+import { Blake2b256, Blake2b512 } from "@/crypto/hash/blake2B.js";
+import { describe, expect, it, test } from 'vitest'
+
 
 // Helper function to perform the hash and convert the result to a hex string.
 function doHashCheck(input: string, blake: { hash: (input: Uint8Array) => Uint8Array }): string {

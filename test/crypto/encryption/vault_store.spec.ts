@@ -1,8 +1,9 @@
-import { toLeftE, toRightE } from '@/common/functional/brambl_fp.js';
-import { InvalidMac, Mac, VaultStore } from '@/crypto/crypto.js';
-import { Aes } from '@/crypto/encryption/cipher/aes.js';
-import { SCrypt, SCryptParams } from '@/crypto/encryption/kdf/scrypt.js';
-import { describe, expect, test } from 'vitest';
+import { toLeftE, toRightE } from "@/common/functional/brambl_fp.js";
+import { InvalidMac, Mac, VaultStore } from "@/crypto/crypto.js";
+import { Aes } from "@/crypto/encryption/cipher/aes.js";
+import { SCrypt, SCryptParams } from "@/crypto/encryption/kdf/scrypt.js";
+import { describe, expect, test } from "vitest";
+
 
 function copyWith<T>(original: T, updates: Partial<T>): T {
   return Object.assign({}, original, updates);
@@ -50,14 +51,14 @@ describe('Vault store Spec', () => {
     // VaultStore is corrupted by changing the cipher text
     const decoded1 = VaultStore.decodeCipher(
       copyWith(vaultStore, { cipherText: Uint8Array.from(Buffer.from('this is an invalid cipher text')) }),
-      password,
+      password
     );
     expect(toLeftE(decoded1) instanceof InvalidMac).toBe(true);
 
     // VaultStore is corrupted by changing the mac
     const decoded2 = VaultStore.decodeCipher(
       copyWith(vaultStore, { mac: Uint8Array.from(Buffer.from('this is an invalid mac')) }),
-      password,
+      password
     );
     expect(toLeftE(decoded2) instanceof InvalidMac).toBe(true);
 

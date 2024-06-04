@@ -14,7 +14,7 @@ export default class Sha256DigestInterpreter implements DigestVerifier {
    * @param t DigestVerification object containing the digest and preimage
    * @return The DigestVerification object if the digest is valid, otherwise an error
    */
-  validate(t: DigestVerification): Either<QuivrRuntimeError, DigestVerification> {
+  validate (t: DigestVerification): Either<QuivrRuntimeError, DigestVerification> {
     if (t instanceof DigestVerification) {
       const d = t.digest.value;
       const p = t.preimage.input;

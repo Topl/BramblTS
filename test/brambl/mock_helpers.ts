@@ -73,7 +73,7 @@ import {
   TransactionOutputAddress,
   UnspentTransactionOutput,
   Value,
-  Witness,
+  Witness
 } from 'topl_common';
 
 export const fakeMsgBind = new SignableBytes({ value: new TextEncoder().encode('transaction binding') });
@@ -86,36 +86,36 @@ export const mockMainKeyPair = new ExtendedEd25519().deriveKeyPairFromSeed(new U
 export const mockChildKeyPair = new ExtendedEd25519().deriveKeyPairFromChildPath(mockMainKeyPair.signingKey, [
   new HardenedIndex(mockIndices.x),
   new SoftIndex(mockIndices.y),
-  new SoftIndex(mockIndices.z),
+  new SoftIndex(mockIndices.z)
 ]);
 
 export const mockSigningRoutine = 'ExtendedEd25519';
 
 export const mockSignatureProposition = Proposer.signatureProposer(
   mockSigningRoutine,
-  ProtoConverters.keyPairToProto(mockChildKeyPair).vk,
+  ProtoConverters.keyPairToProto(mockChildKeyPair).vk
 );
 
 export const mockSignature = new Witness({
-  value: new ExtendedEd25519().sign(mockChildKeyPair.signingKey, new Uint8Array(fakeMsgBind.value)),
+  value: new ExtendedEd25519().sign(mockChildKeyPair.signingKey, new Uint8Array(fakeMsgBind.value))
 });
 
 export const mockSignatureProof = Prover.signatureProver(mockSignature, fakeMsgBind);
 
 export const mockPreimage = new Preimage({
   input: new TextEncoder().encode('secret'),
-  salt: new TextEncoder().encode('salt'),
+  salt: new TextEncoder().encode('salt')
 });
 
 export const mockDigestRoutine = 'Blake2b256';
 export const mockSha256DigestRoutine = 'Sha256';
 
 export const mockDigest = new Digest({
-  value: blake2b256.hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt])),
+  value: blake2b256.hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt]))
 });
 
 export const mockSha256Digest = new Digest({
-  value: sha256.hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt])),
+  value: sha256.hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt]))
 });
 
 export const mockSha256DigestProposition = Proposer.digestProposer(mockSha256DigestRoutine, mockSha256Digest);
@@ -138,8 +138,8 @@ export const mockLockedProposition = Proposer.lockedProposer(null);
 export const txDatum = new Datum_IoTransaction({
   event: new Event_IoTransaction({
     schedule: new Schedule({ min: BigInt(0), max: BigInt(Number.MAX_SAFE_INTEGER), timestamp: BigInt(Date.now()) }),
-    metadata: new SmallData(),
-  }),
+    metadata: new SmallData()
+  })
 });
 
 // // Arbitrary Transaction that any new transaction can reference
@@ -158,17 +158,17 @@ export const trivialOutLock = new Lock({
     case: 'predicate',
     value: new Lock_Predicate({
       challenges: [
-        new Challenge({ proposition: { case: 'revealed', value: Proposer.tickProposer(BigInt(5), BigInt(15)) } }),
+        new Challenge({ proposition: { case: 'revealed', value: Proposer.tickProposer(BigInt(5), BigInt(15)) } })
       ],
-      threshold: 1,
-    }),
-  },
+      threshold: 1
+    })
+  }
 });
 
 export const trivialLockAddress = new LockAddress({
   network: 0,
   ledger: 0,
-  id: new LockId({ value: sizedEvidence(trivialOutLock).digest.value }),
+  id: new LockId({ value: sizedEvidence(trivialOutLock).digest.value })
 });
 
 export const inPredicateLockFull = new Lock_Predicate({
@@ -177,9 +177,9 @@ export const inPredicateLockFull = new Lock_Predicate({
     mockDigestProposition,
     mockSignatureProposition,
     mockHeightProposition,
-    mockTickProposition,
-  ].map((p) => new Challenge({ proposition: { case: 'revealed', value: p } })),
-  threshold: 3,
+    mockTickProposition
+  ].map(p => new Challenge({ proposition: { case: 'revealed', value: p } })),
+  threshold: 3
 });
 
 // export const inLockFull = new Lock({
@@ -216,15 +216,15 @@ export const attFull = new Attestation({
     case: 'predicate',
     value: new Attestation_Predicate({
       lock: inPredicateLockFull,
-      responses: Array(inPredicateLockFull.challenges.length).fill(new Proof()),
-    }),
-  },
+      responses: Array(inPredicateLockFull.challenges.length).fill(new Proof())
+    })
+  }
 });
 
 export const inputFull = new SpentTransactionOutput({
   address: dummyTxoAddress,
   attestation: attFull,
-  value: lvlValue,
+  value: lvlValue
 });
 
 export const txFull = new IoTransaction({ inputs: [inputFull], outputs: [output], datum: txDatum });
@@ -238,7 +238,7 @@ export const mockSeriesPolicy = new SeriesPolicy({
   label: 'Mock Series Policy',
   // tokenSupply: null,
   tokenSupply: 0,
-  registrationUtxo: dummyTxoAddress,
+  registrationUtxo: dummyTxoAddress
 });
 
 // export const mockSeriesPolicyImmutable = () => {
@@ -260,26 +260,26 @@ export const mockSeriesPolicy = new SeriesPolicy({
 export const mockGroupPolicy = new GroupPolicy({
   label: 'Mock Group Policy',
   registrationUtxo: dummyTxoAddress,
-  fixedSeries: new SeriesId({ value: new Uint8Array() }),
+  fixedSeries: new SeriesId({ value: new Uint8Array() })
 });
 
 export const toplValue = new Value(
-  new Value({ value: { case: 'topl', value: new Topl({ quantity: quantity, registration: null }) } }),
+  new Value({ value: { case: 'topl', value: new Topl({ quantity: quantity, registration: null }) } })
 );
 
 export const seriesValue = new Value(
   new Value({
     value: {
       case: 'series',
-      value: new Series({ seriesId: mockSeriesPolicy.computeId(), quantity: quantity, tokenSupply: 0 }),
-    },
-  }),
+      value: new Series({ seriesId: mockSeriesPolicy.computeId(), quantity: quantity, tokenSupply: 0 })
+    }
+  })
 );
 
 export const groupValue = new Value(
   new Value({
-    value: { case: 'group', value: new Group({ groupId: mockGroupPolicy.computeId(), quantity: quantity }) },
-  }),
+    value: { case: 'group', value: new Group({ groupId: mockGroupPolicy.computeId(), quantity: quantity }) }
+  })
 );
 
 export const assetGroupSeries = new Value(
@@ -289,10 +289,10 @@ export const assetGroupSeries = new Value(
       value: new Asset({
         groupId: mockGroupPolicy.computeId(),
         seriesId: mockSeriesPolicy.computeId(),
-        quantity: quantity,
-      }),
-    },
-  }),
+        quantity: quantity
+      })
+    }
+  })
 );
 
 // export const assetGroupSeriesImmutable = () => {
