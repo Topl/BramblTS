@@ -1,18 +1,18 @@
 import {
-    Proof,
-    Proof_And,
-    Proof_Digest,
-    Proof_DigitalSignature,
-    Proof_EqualTo,
-    Proof_ExactMatch,
-    Proof_GreaterThan,
-    Proof_HeightRange,
-    Proof_LessThan,
-    Proof_Locked,
-    Proof_Not,
-    Proof_Or,
-    Proof_Threshold,
-    Proof_TickRange
+  Proof,
+  Proof_And,
+  Proof_Digest,
+  Proof_DigitalSignature,
+  Proof_EqualTo,
+  Proof_ExactMatch,
+  Proof_GreaterThan,
+  Proof_HeightRange,
+  Proof_LessThan,
+  Proof_Locked,
+  Proof_Not,
+  Proof_Or,
+  Proof_Threshold,
+  Proof_TickRange
 } from 'topl_common';
 
 /**
@@ -123,7 +123,10 @@ declare module 'topl_common' {
 }
 
 Proof.prototype.isEmpty = function (): boolean {
-  if (this.value === undefined || this.value === null) return true;
+  if (this.value === undefined || this.value === null) {
+    return true;
+  }
+
   switch (this.value.case) {
     case 'locked':
     case 'digest':

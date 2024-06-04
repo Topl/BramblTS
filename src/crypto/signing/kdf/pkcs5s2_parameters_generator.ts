@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as crypto from 'crypto';
-import { type CipherParameters, KeyParameter, ParametersWithIV } from './cipherParameters.js';
+import { type CipherParameters, KeyParameter, ParametersWithIV } from './cipher_parameters.js';
 import * as brambl from './pbe_parameters_generator.js';
 
 interface Mac {

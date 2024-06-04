@@ -57,6 +57,8 @@ Uint8Array.prototype.bToNumber = function () {
 };
 
 Uint8Array.prototype.bEquals = function (b: Uint8Array) {
+
+  /// TODO: consider using buffer comparison
   if (this.length !== b.length) {
     return false;
   }

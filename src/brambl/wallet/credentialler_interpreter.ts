@@ -3,6 +3,7 @@ import { ExtendedEd25519 } from '@/crypto/crypto.js';
 import { Prover, type ValidationError } from '@/quivr4s/quivr.js';
 import {
   Attestation,
+  Attestation_Predicate,
   Indices,
   KeyPair,
   Proof,
@@ -106,9 +107,9 @@ export class CredentiallerInterpreter implements Credentialler {
           const proof = await this.getProof(msg, revealed[i], proofs[i]); // assuming getProof is a method of the same class
           newProofs.push(proof);
         }
-        attestation = new Attestation({
-          value: { case: 'predicate', value: { lock: pred.lock, responses: newProofs } }
-        });
+        attestation = new Attestation().withPredicate(
+          new Attestation_Predicate({ lock: pred.lock, responses: newProofs })
+        );
         break;
       default:
         // TODO: We are not handling other types of Attestations at this moment in time
