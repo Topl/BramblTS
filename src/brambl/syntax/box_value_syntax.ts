@@ -9,58 +9,58 @@ import {
   type QuantityDescriptorType,
   Series,
   Topl,
-  Value
+  Value,
 } from 'topl_common';
 
 export class BoxValueSyntax {
-  static lvlAsBoxVal (lvl: Lvl): Value {
+  static lvlAsBoxVal(lvl: Lvl): Value {
     return new Value({
       value: {
         value: lvl,
-        case: 'lvl'
-      }
+        case: 'lvl',
+      },
     });
   }
 
-  static toplAsBoxVal (topl: Topl): Value {
+  static toplAsBoxVal(topl: Topl): Value {
     return new Value({
       value: {
         value: topl,
-        case: 'topl'
-      }
+        case: 'topl',
+      },
     });
   }
 
-  static groupAsBoxVal (group: Group): Value {
+  static groupAsBoxVal(group: Group): Value {
     return new Value({
       value: {
         value: group,
-        case: 'group'
-      }
+        case: 'group',
+      },
     });
   }
 
-  static seriesAsBoxVal (series: Series): Value {
+  static seriesAsBoxVal(series: Series): Value {
     return new Value({
       value: {
         value: series,
-        case: 'series'
-      }
+        case: 'series',
+      },
     });
   }
 
-  static assetAsBoxVal (asset: Asset): Value {
+  static assetAsBoxVal(asset: Asset): Value {
     return new Value({
       value: {
         value: asset,
-        case: 'asset'
-      }
+        case: 'asset',
+      },
     });
   }
 }
 
 export class ValueToQuantitySyntaxOps {
-  static getQuantity (value: Value): Int128 {
+  static getQuantity(value: Value): Int128 {
     switch (value.value.case) {
       case 'lvl':
       case 'topl':
@@ -75,7 +75,7 @@ export class ValueToQuantitySyntaxOps {
     }
   }
 
-  static setQuantity (value: Value, quantity: Int128): Value {
+  static setQuantity(value: Value, quantity: Int128): Value {
     switch (value.value.case) {
       case 'lvl':
       case 'topl':
@@ -92,7 +92,7 @@ export class ValueToQuantitySyntaxOps {
 }
 
 export class ValueToQuantityDescriptorSyntaxOps {
-  static getQuantityDescriptor (value: Value): QuantityDescriptorType | null {
+  static getQuantityDescriptor(value: Value): QuantityDescriptorType | null {
     if (value.value.case === 'asset') {
       return value.value.value.quantityDescriptor;
     } else {
@@ -101,7 +101,7 @@ export class ValueToQuantityDescriptorSyntaxOps {
   }
 }
 
-export function setFungibilityType (value: Value, type: FungibilityType): Value {
+export function setFungibilityType(value: Value, type: FungibilityType): Value {
   switch (value.value.case) {
     case 'asset':
       value.value.value.fungibility = type;
@@ -116,14 +116,14 @@ export function setFungibilityType (value: Value, type: FungibilityType): Value 
   return value;
 }
 
-export function setQuantityDescriptorType (value: Value, type: QuantityDescriptorType): Value {
+export function setQuantityDescriptorType(value: Value, type: QuantityDescriptorType): Value {
   if (value.value.case !== 'asset') throw new Error('Expected asset');
   value.value.value.quantityDescriptor = type;
   return value;
 }
 
 export class ValueToFungibilitySyntaxOps {
-  static getFungibility (value: Value): FungibilityType | null {
+  static getFungibility(value: Value): FungibilityType | null {
     if (value.value.case === 'asset') {
       return value.value.value.fungibility;
     } else {

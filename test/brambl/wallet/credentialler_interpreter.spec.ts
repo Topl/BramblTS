@@ -12,7 +12,7 @@ import {
   Datum_GroupPolicy,
   Datum_SeriesPolicy,
   Lock_Predicate,
-  Proof
+  Proof,
 } from 'topl_common';
 import { describe, expect, test } from 'vitest';
 import {
@@ -25,7 +25,7 @@ import {
   mockSeriesPolicy,
   mockSha256DigestProposition,
   quantity,
-  txFull
+  txFull,
 } from '../mock_helpers.js';
 import { MockWalletKeyApi } from '../mock_wallet_key_api.js';
 import { MockWalletStateApi } from '../mock_wallet_state_api.js';
@@ -45,24 +45,24 @@ describe('CredentiallerInterpreter', () => {
         new AssetMintingStatement({
           groupTokenUtxo: dummyTxoAddress,
           seriesTokenUtxo: dummyTxoAddress,
-          quantity: quantity
-        })
+          quantity: quantity,
+        }),
       ]);
 
     const provenTx = await new CredentiallerInterpreter(
       walletApi,
       new MockWalletStateApi(),
-      KeyPairSyntax.cryptoToPbKeyPair(mockMainKeyPair)
+      KeyPairSyntax.cryptoToPbKeyPair(mockMainKeyPair),
     ).prove(testTx);
 
     if (provenTx.inputs[0].attestation.value.case !== 'predicate')
       throw new Error('Invalid attestation, not a predicate');
     const provenPredicate = provenTx.inputs[0].attestation.value.value;
     const sameLen = provenPredicate.lock.challenges.length === provenPredicate.responses.length;
-    const nonEmpty = provenPredicate.responses.every(proof => {
+    const nonEmpty = provenPredicate.responses.every((proof) => {
       const x = proof.isEmpty();
       console.log(x);
-      return !(x);
+      return !x;
     });
     expect(sameLen && nonEmpty && provenTx.signable().equals(testTx.signable())).toBe(true);
   });
@@ -71,13 +71,13 @@ describe('CredentiallerInterpreter', () => {
     const provenTx = await new CredentiallerInterpreter(
       walletApi,
       new MockWalletStateApi(),
-      KeyPairSyntax.cryptoToPbKeyPair(mockMainKeyPair)
+      KeyPairSyntax.cryptoToPbKeyPair(mockMainKeyPair),
     ).prove(txFull);
 
     const provenPredicate = provenTx.inputs[0].attestation.value;
     if (provenPredicate.case !== 'predicate') throw new Error('Invalid attestation, not a predicate');
     const sameLen = provenPredicate.value.lock.challenges.length === provenPredicate.value.responses.length;
-    const nonEmpty = provenPredicate.value.responses.every(proof => {
+    const nonEmpty = provenPredicate.value.responses.every((proof) => {
       return !proof.isEmpty();
     });
 
@@ -88,7 +88,7 @@ describe('CredentiallerInterpreter', () => {
     // Secrets are not available for the updated Signature and Digest propositions
     const testSignatureProposition = Proposer.signatureProposer(
       'invalid-routine',
-      KeyPairSyntax.cryptoToPbKeyPair(mockChildKeyPair).vk
+      KeyPairSyntax.cryptoToPbKeyPair(mockChildKeyPair).vk,
     );
     const testDigestProposition = Proposer.digestProposer('invalid-routine', mockDigest);
 
@@ -97,16 +97,16 @@ describe('CredentiallerInterpreter', () => {
         lock: new Lock_Predicate({
           challenges: [
             new Challenge().withRevealed(testSignatureProposition),
-            new Challenge().withRevealed(testDigestProposition)
+            new Challenge().withRevealed(testDigestProposition),
           ],
-          threshold: 2
+          threshold: 2,
         }),
-        responses: [new Proof(), new Proof()]
-      })
+        responses: [new Proof(), new Proof()],
+      }),
     );
 
     const testTx = txFull.clone();
-    testTx.inputs = txFull.inputs.map(stxo => {
+    testTx.inputs = txFull.inputs.map((stxo) => {
       const stxoCopy = stxo.clone();
       stxoCopy.attestation = testAttestation;
       return stxoCopy;
@@ -115,14 +115,14 @@ describe('CredentiallerInterpreter', () => {
     const provenTx = await new CredentiallerInterpreter(
       walletApi,
       new MockWalletStateApi(),
-      KeyPairSyntax.cryptoToPbKeyPair(mockMainKeyPair)
+      KeyPairSyntax.cryptoToPbKeyPair(mockMainKeyPair),
     ).prove(testTx);
 
     const provenPredicate = provenTx.inputs[0].attestation.value;
     if (provenPredicate.case !== 'predicate') throw new Error('Invalid attestation, not a predicate');
     const sameLen = provenPredicate.value.lock.challenges.length === provenPredicate.value.responses.length;
     const correctLen = provenPredicate.value.lock.challenges.length === 2;
-    const allEmpty = provenPredicate.value.responses.every(proof => {
+    const allEmpty = provenPredicate.value.responses.every((proof) => {
       return proof.isEmpty();
     });
 
@@ -167,5 +167,3 @@ describe('CredentiallerInterpreter', () => {
   //   console.log(a);
   // });
 });
-
-

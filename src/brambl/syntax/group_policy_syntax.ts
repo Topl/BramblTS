@@ -1,4 +1,4 @@
-import { Event_GroupPolicy, GroupId} from 'topl_common';
+import { Event_GroupPolicy, GroupId } from 'topl_common';
 import { sha256 } from '../../crypto/crypto.js';
 import { ContainsImmutable } from '../common/contains_immutable.js';
 
@@ -10,15 +10,15 @@ type GroupPolicy = Event_GroupPolicy;
 export class GroupPolicySyntax {
   groupPolicy: GroupPolicy;
 
-  constructor (groupPolicy: GroupPolicy) {
+  constructor(groupPolicy: GroupPolicy) {
     this.groupPolicy = groupPolicy;
   }
 
-  computeId (): GroupId {
+  computeId(): GroupId {
     const ib = ContainsImmutable.groupPolicyEvent(this.groupPolicy).immutableBytes;
     const digest: Buffer = Buffer.from(ib.value);
 
-    const groupId = new GroupId({value: sha256.hash(digest)});
+    const groupId = new GroupId({ value: sha256.hash(digest) });
     return groupId;
   }
 }

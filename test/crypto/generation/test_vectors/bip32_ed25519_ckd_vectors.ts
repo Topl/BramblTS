@@ -31,9 +31,7 @@ export class Bip32Ed25519CkdTestVector {
       }
     });
 
-    const rootVerificationKey = input.rootVerificationKey
-      ?  some(new PublicKey(input.rootVerificationKey))
-      :  none;
+    const rootVerificationKey = input.rootVerificationKey ? some(new PublicKey(input.rootVerificationKey)) : none;
 
     const rootSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(
       Buffer.from(input.rootSecretKey, 'hex'),

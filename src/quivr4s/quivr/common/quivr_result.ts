@@ -1,8 +1,6 @@
 import { left, type Either } from '@/common/functional/brambl_fp.js';
 import { ValidationError, type QuivrRuntimeError } from '../runtime/quivr_runtime_error.js';
 
-
-
 /**
  * A QuivrResult is a type alias for an [Either] of [QuivrRunTimeError] and [T]
  */
@@ -18,4 +16,3 @@ export const quivrEvaluationAuthorizationFailure = <T>(proof: unknown, propositi
       message: `(${proof.toString()}, ${proposition.toString()})`,
     }),
   );
-

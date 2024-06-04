@@ -2,14 +2,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import  { none, type Option, some } from '@/common/functional/brambl_fp.js';
+import { none, type Option, some } from '@/common/functional/brambl_fp.js';
 import { Bip32Index, HardenedIndex, SoftIndex } from '@/crypto/generation/bip32_index.js';
 import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
 import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
 import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
 import { PublicKey, SecretKey } from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
-
-
 
 export function hexToUint8List(hex: string): Uint8Array {
   const hexString = hex.trim();
@@ -83,7 +81,7 @@ export class CkdEd25519TestVector {
     }
 
     const rootSK = new ExtendedEd25519Initializer(new ExtendedEd25519()).fromBytes(hexToUint8List(rSkString));
-    
+
     // output
     const cSkString = output['childSecretKey'] as string;
     const cVkString = output['childVerificationKey'] as string;

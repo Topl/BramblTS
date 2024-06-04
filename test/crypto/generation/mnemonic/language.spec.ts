@@ -12,7 +12,7 @@ import {
   Language,
   LanguageWordList,
   Portuguese,
-  Spanish
+  Spanish,
 } from '@/crypto/generation/mnemonic/language.js';
 import { Phrase } from '@/crypto/generation/mnemonic/phrase.js';
 import { describe, expect, test } from 'vitest';
@@ -29,7 +29,7 @@ describe('Language Spec Test Vectors', async () => {
     new Italian(),
     new French(),
     new Japanese(),
-    new Korean()
+    new Korean(),
   ];
 
   for (const language of languages) {

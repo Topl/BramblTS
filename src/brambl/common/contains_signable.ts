@@ -4,22 +4,22 @@ import { ContainsImmutable } from './contains_immutable.js';
 export default class ContainsSignable {
   readonly signableBytes: SignableBytes;
 
-  constructor (signableBytes: SignableBytes) {
+  constructor(signableBytes: SignableBytes) {
     this.signableBytes = signableBytes;
   }
 
-  static empty (): ContainsSignable {
+  static empty(): ContainsSignable {
     return new ContainsSignable(new SignableBytes());
   }
 
-  static immutable (bytes: ImmutableBytes): ContainsSignable {
+  static immutable(bytes: ImmutableBytes): ContainsSignable {
     return new ContainsSignable(new SignableBytes(bytes));
   }
 
-  static ioTransaction (iotx: IoTransaction): ContainsSignable {
+  static ioTransaction(iotx: IoTransaction): ContainsSignable {
     /// Strips the proofs from a SpentTransactionOutput.
     /// This is needed because the proofs are not part of the transaction's signable bytes
-    function stripInput (stxo: SpentTransactionOutput): SpentTransactionOutput {
+    function stripInput(stxo: SpentTransactionOutput): SpentTransactionOutput {
       const stripped = stxo.clone();
 
       const attestation = stxo.attestation.value;
@@ -38,7 +38,6 @@ export default class ContainsSignable {
     return ContainsSignable.immutable(ContainsImmutable.apply(updatedInputs).immutableBytes);
   }
 }
-
 
 /// experimental extensions via typescript module augmentation
 declare module 'topl_common' {

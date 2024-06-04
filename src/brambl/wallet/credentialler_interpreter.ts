@@ -13,7 +13,7 @@ import {
   Witness,
   type IoTransaction,
   type Proposition,
-  type SignableBytes
+  type SignableBytes,
 } from 'topl_common';
 import type { Context } from '../context.js';
 import type { WalletStateAlgebra } from '../data_api/wallet_state_algebra.js';
@@ -30,7 +30,7 @@ export class CredentiallerInterpreter implements Credentialler {
   readonly walletStateApi: WalletStateAlgebra;
   readonly mainKey: KeyPair;
 
-  constructor (walletApi: WalletApi, walletStateApi: WalletStateAlgebra, mainKey: KeyPair) {
+  constructor(walletApi: WalletApi, walletStateApi: WalletStateAlgebra, mainKey: KeyPair) {
     if (!(mainKey.vk.vk.case === 'extendedEd25519')) {
       throw new Error('mainKey must be an extended Ed25519 key');
     }
@@ -41,7 +41,7 @@ export class CredentiallerInterpreter implements Credentialler {
     this.walletStateApi = walletStateApi;
   }
 
-  async prove (unprovenTx: IoTransaction): Promise<IoTransaction> {
+  async prove(unprovenTx: IoTransaction): Promise<IoTransaction> {
     const sig = unprovenTx.signable();
     const provenTx = unprovenTx.clone(); // deep copy
     provenTx.inputs = [];
@@ -55,14 +55,14 @@ export class CredentiallerInterpreter implements Credentialler {
     return provenTx;
   }
 
-  async validate (tx: IoTransaction, ctx: Context): Promise<ValidationError[]> {
+  async validate(tx: IoTransaction, ctx: Context): Promise<ValidationError[]> {
     /// TODO evaluate do notation vs standard ops
     /// check for readability
 
     const syntaxErrors = pipe(
       TransactionSyntaxInterpreter.validate(tx),
       eitherOps.swap,
-      eitherOps.getOrElse((): TransactionSyntaxError[] => [])
+      eitherOps.getOrElse((): TransactionSyntaxError[] => []),
     );
 
     // const syntaxEval = TransactionSyntaxInterpreter.validate(tx);
@@ -74,8 +74,8 @@ export class CredentiallerInterpreter implements Credentialler {
     const authErrors = pipe(
       TransactionAuthorizationInterpreter.validate(ctx, tx),
       eitherOps.swap,
-      eitherOps.map(e => [e]),
-      eitherOps.getOrElse((): TransactionAuthorizationError[] => [])
+      eitherOps.map((e) => [e]),
+      eitherOps.getOrElse((): TransactionAuthorizationError[] => []),
     );
 
     // const authEval = TransactionAuthorizationInterpreter.validate(ctx, tx);
@@ -84,13 +84,13 @@ export class CredentiallerInterpreter implements Credentialler {
     return [...syntaxErrors, ...authErrors] as ValidationError[];
   }
 
-  async proveAndValidate (unprovenTx: IoTransaction, ctx: Context): Promise<Either<ValidationError[], IoTransaction>> {
+  async proveAndValidate(unprovenTx: IoTransaction, ctx: Context): Promise<Either<ValidationError[], IoTransaction>> {
     const provenTx = await this.prove(unprovenTx);
     const vErrors = await this.validate(provenTx, ctx);
     return vErrors.length === 0 ? right(provenTx) : left(vErrors);
   }
 
-  async proveInput (input: SpentTransactionOutput, msg: SignableBytes): Promise<SpentTransactionOutput> {
+  async proveInput(input: SpentTransactionOutput, msg: SignableBytes): Promise<SpentTransactionOutput> {
     let attestation = input.attestation.clone();
 
     switch (
@@ -100,7 +100,7 @@ export class CredentiallerInterpreter implements Credentialler {
         const pred = attestation.value.value;
         const challenges = pred.lock.challenges;
         const proofs = pred.responses;
-        const revealed = challenges.map(e => e.getRevealed());
+        const revealed = challenges.map((e) => e.getRevealed());
 
         const newProofs: Proof[] = [];
         for (let i = 0; i < revealed.length; i++) {
@@ -108,7 +108,7 @@ export class CredentiallerInterpreter implements Credentialler {
           newProofs.push(proof);
         }
         attestation = new Attestation().withPredicate(
-          new Attestation_Predicate({ lock: pred.lock, responses: newProofs })
+          new Attestation_Predicate({ lock: pred.lock, responses: newProofs }),
         );
         break;
       default:
@@ -119,7 +119,7 @@ export class CredentiallerInterpreter implements Credentialler {
     return new SpentTransactionOutput({
       attestation,
       address: input.address,
-      value: input.value
+      value: input.value,
     });
   }
 
@@ -140,7 +140,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param existingProof Existing proof of the proposition
    * @return The Proof
    */
-  private async getProof (msg: SignableBytes, prop: Proposition, existingProof: Proof): Promise<Proof> {
+  private async getProof(msg: SignableBytes, prop: Proposition, existingProof: Proof): Promise<Proof> {
     switch (prop.value.case) {
       case 'locked':
         return this.getLockedProof(existingProof, msg);
@@ -174,7 +174,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param _msg           Signable bytes to bind to the proof
    * @return The Proof
    */
-  private getLockedProof (existingProof: Proof, _msg: SignableBytes): Proof {
+  private getLockedProof(existingProof: Proof, _msg: SignableBytes): Proof {
     return existingProof.value.case === 'locked' ? existingProof : Prover.lockedProver();
   }
 
@@ -187,7 +187,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param msg           Signable bytes to bind to the proof
    * @return The Proof
    */
-  private getHeightProof (existingProof: Proof, msg: SignableBytes): Proof {
+  private getHeightProof(existingProof: Proof, msg: SignableBytes): Proof {
     return existingProof.value.case === 'heightRange' ? existingProof : Prover.heightProver(msg);
   }
 
@@ -200,7 +200,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param msg           Signable bytes to bind to the proof
    * @return The Proof
    */
-  private getTickProof (existingProof: Proof, msg: SignableBytes): Proof {
+  private getTickProof(existingProof: Proof, msg: SignableBytes): Proof {
     return existingProof.value.case === 'tickRange' ? existingProof : Prover.tickProver(msg);
   }
 
@@ -215,7 +215,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param digest        The Digest Proposition to prove
    * @return The Proof
    */
-  private async getDigestProof (existingProof: Proof, msg: SignableBytes, digest: Proposition_Digest): Promise<Proof> {
+  private async getDigestProof(existingProof: Proof, msg: SignableBytes, digest: Proposition_Digest): Promise<Proof> {
     if (existingProof.value.case === 'digest') {
       return existingProof;
     } else {
@@ -235,10 +235,10 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param signature     The Signature Proposition to prove
    * @return The Proof
    */
-  private async getSignatureProof (
+  private async getSignatureProof(
     existingProof: Proof,
     msg: SignableBytes,
-    signature: Proposition_DigitalSignature
+    signature: Proposition_DigitalSignature,
   ): Promise<Proof> {
     if (existingProof.value.case === 'digitalSignature') {
       return existingProof;
@@ -260,7 +260,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param msg     Signable bytes to bind to the proof
    * @return The Proof
    */
-  private async getSignatureProofForRoutine (routine: string, idx: Indices, msg: SignableBytes): Promise<Proof> {
+  private async getSignatureProofForRoutine(routine: string, idx: Indices, msg: SignableBytes): Promise<Proof> {
     if (routine === 'ExtendedEd25519') {
       const keyPair = KeyPairSyntax.pbKeyPairToCryptoKeyPair(await this.walletApi.deriveChildKeys(this.mainKey, idx));
       const signed = new ExtendedEd25519().sign(keyPair.signingKey, msg.value);
@@ -280,7 +280,7 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param innerProposition  The inner Proposition contained in the Not Proposition to prove
    * @return The Proof
    */
-  private async getNotProof (existingProof: Proof, msg: SignableBytes, innerProposition: Proposition): Promise<Proof> {
+  private async getNotProof(existingProof: Proof, msg: SignableBytes, innerProposition: Proposition): Promise<Proof> {
     const innerProof = existingProof.value.case === 'not' ? existingProof.value.value.proof : new Proof();
     const proof = await this.getProof(msg, innerProposition, innerProof);
     return Prover.notProver(proof, msg);
@@ -297,11 +297,11 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param rightProposition An inner Proposition contained in the And Proposition to prove
    * @return The Proof
    */
-  private async getAndProof (
+  private async getAndProof(
     existingProof: Proof,
     msg: SignableBytes,
     leftProposition: Proposition,
-    rightProposition: Proposition
+    rightProposition: Proposition,
   ): Promise<Proof> {
     let leftProof: Proof;
     let rightProof: Proof;
@@ -314,7 +314,7 @@ export class CredentiallerInterpreter implements Credentialler {
     }
     const [newLeftProof, newRightProof] = await Promise.all([
       this.getProof(msg, leftProposition, leftProof),
-      this.getProof(msg, rightProposition, rightProof)
+      this.getProof(msg, rightProposition, rightProof),
     ]);
     return Prover.andProver(newLeftProof, newRightProof, msg);
   }
@@ -330,11 +330,11 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param rightProposition An inner Proposition contained in the Or Proposition to prove
    * @return The Proof
    */
-  private async getOrProof (
+  private async getOrProof(
     existingProof: Proof,
     msg: SignableBytes,
     leftProposition: Proposition,
-    rightProposition: Proposition
+    rightProposition: Proposition,
   ): Promise<Proof> {
     let leftProof: Proof;
     let rightProof: Proof;
@@ -347,7 +347,7 @@ export class CredentiallerInterpreter implements Credentialler {
     }
     const [newLeftProof, newRightProof] = await Promise.all([
       this.getProof(msg, leftProposition, leftProof),
-      this.getProof(msg, rightProposition, rightProof)
+      this.getProof(msg, rightProposition, rightProof),
     ]);
     return Prover.orProver(newLeftProof, newRightProof, msg);
   }
@@ -362,10 +362,10 @@ export class CredentiallerInterpreter implements Credentialler {
    * @param innerPropositions Inner Propositions contained in the Threshold Proposition to prove
    * @return The Proof
    */
-  private async getThresholdProof (
+  private async getThresholdProof(
     existingProof: Proof,
     msg: SignableBytes,
-    innerPropositions: Proposition[]
+    innerPropositions: Proposition[],
   ): Promise<Proof> {
     let responses: Proof[];
     if (existingProof.value.case === 'threshold') {
@@ -374,7 +374,7 @@ export class CredentiallerInterpreter implements Credentialler {
       responses = Array(innerPropositions.length).fill(new Proof());
     }
     const proofs = await Promise.all(
-      innerPropositions.map((prop, index) => this.getProof(msg, prop, responses[index]))
+      innerPropositions.map((prop, index) => this.getProof(msg, prop, responses[index])),
     );
     return Prover.thresholdProver(proofs, msg);
   }

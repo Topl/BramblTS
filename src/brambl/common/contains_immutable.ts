@@ -97,7 +97,7 @@ import {
   UpdateProposal,
   Value,
   VerificationKey,
-  Witness
+  Witness,
 } from 'topl_common';
 import { isFungibilityType, isOptionContainsImmutable, isQuantityDescriptorType } from '../utils/guard.js';
 import { Identifier } from './tags.js';
@@ -108,13 +108,13 @@ import { Identifier } from './tags.js';
 export class ContainsImmutable {
   readonly immutableBytes: ImmutableBytes;
 
-  constructor (immutableBytes: ImmutableBytes) {
+  constructor(immutableBytes: ImmutableBytes) {
     this.immutableBytes = immutableBytes;
   }
 
   ///factories follow
 
-  static empty (): ContainsImmutable {
+  static empty(): ContainsImmutable {
     /// base function, lets not use extension methods here to prevent cyclic dependencies
     return new ContainsImmutable(new ImmutableBytes());
   }
@@ -125,53 +125,53 @@ export class ContainsImmutable {
    * @param uInt8Array - The `Uint8Array` to create the `ContainsImmutable` instance from.
    * @returns A new `ContainsImmutable` instance.
    */
-  static uInt8Array (uInt8Array: Uint8Array): ContainsImmutable {
+  static uInt8Array(uInt8Array: Uint8Array): ContainsImmutable {
     /// base function, lets not use extension methods here to prevent cyclic dependencies
     return new ContainsImmutable(_Uint8ArrayToImmutableBytes(uInt8Array));
   }
 
-  static number (i: number): ContainsImmutable {
-    if (typeof i === 'undefined')  throw Error("Number passed is undefined")
+  static number(i: number): ContainsImmutable {
+    if (typeof i === 'undefined') throw Error('Number passed is undefined');
     const x = i ?? 0;
     const immutableBytes = new ImmutableBytes({ value: x.bToUint8Array() });
     return immutableBytes.immutable();
   }
 
-  static string (str: string): ContainsImmutable {
+  static string(str: string): ContainsImmutable {
     const encoder = new TextEncoder();
     const uint8Array = encoder.encode(str);
     const immutableBytes = new ImmutableBytes({ value: uint8Array });
     return immutableBytes.immutable();
   }
 
-  static byteString (byteString: ByteString): ContainsImmutable {
+  static byteString(byteString: ByteString): ContainsImmutable {
     const immutableBytes = new ImmutableBytes({ value: byteString.value });
     return immutableBytes.immutable();
   }
 
-  static bigInt (i: bigint | bigint): ContainsImmutable {
+  static bigInt(i: bigint | bigint): ContainsImmutable {
     const value = i instanceof BigInt ? i.valueOf() : i;
     const x = bigIntToUint8Array(value);
     return x.bImmutable();
   }
 
-  static int128 (i: Int128): ContainsImmutable {
+  static int128(i: Int128): ContainsImmutable {
     return i.value.bImmutable();
   }
 
-  static option (i: Option<ContainsImmutable>): ContainsImmutable {
+  static option(i: Option<ContainsImmutable>): ContainsImmutable {
     return getOrElse(() => this.empty())(i);
   }
 
-  static smallData (i: SmallData): ContainsImmutable {
+  static smallData(i: SmallData): ContainsImmutable {
     return i.value.bImmutable();
   }
 
-  static root (i: Root): ContainsImmutable {
+  static root(i: Root): ContainsImmutable {
     return i.value.bImmutable();
   }
 
-  static struct (i: Struct): ContainsImmutable {
+  static struct(i: Struct): ContainsImmutable {
     // not sure if this is the correct way to handle this
     return i.fields.values.toBinary().bImmutable();
   }
@@ -182,7 +182,7 @@ export class ContainsImmutable {
    * @returns The corresponding ContainsImmutable object.
    * @throws Error if the verification key is invalid.
    */
-  static verificationKey (vk: VerificationKey): ContainsImmutable {
+  static verificationKey(vk: VerificationKey): ContainsImmutable {
     switch (vk.vk.case) {
       case 'ed25519':
         return this.ed25519VerificationKey(vk.vk.value);
@@ -193,19 +193,19 @@ export class ContainsImmutable {
     }
   }
 
-  static ed25519VerificationKey (vk: Ed25519Vk): ContainsImmutable {
+  static ed25519VerificationKey(vk: Ed25519Vk): ContainsImmutable {
     return vk.value.bImmutable();
   }
 
-  static extendedEd25519VerificationKey (vk: ExtendedEd25519Vk): ContainsImmutable {
+  static extendedEd25519VerificationKey(vk: ExtendedEd25519Vk): ContainsImmutable {
     return vk.vk.value.bImmutable().add(vk.chainCode.bImmutable());
   }
 
-  static witness (w: Witness): ContainsImmutable {
+  static witness(w: Witness): ContainsImmutable {
     return w.value.bImmutable();
   }
 
-  static datum (d: Datum): ContainsImmutable {
+  static datum(d: Datum): ContainsImmutable {
     switch (d.value.case) {
       case 'eon':
         return this.eonDatum(d.value.value);
@@ -226,35 +226,35 @@ export class ContainsImmutable {
     }
   }
 
-  static eonDatum (eon: Datum_Eon): ContainsImmutable {
+  static eonDatum(eon: Datum_Eon): ContainsImmutable {
     return this.eonEvent(eon.event);
   }
 
-  static eraDatum (era: Datum_Era): ContainsImmutable {
+  static eraDatum(era: Datum_Era): ContainsImmutable {
     return this.eraEvent(era.event);
   }
 
-  static epochDatum (epoch: Datum_Epoch): ContainsImmutable {
+  static epochDatum(epoch: Datum_Epoch): ContainsImmutable {
     return this.epochEvent(epoch.event);
   }
 
-  static headerDatum (header: Datum_Header): ContainsImmutable {
+  static headerDatum(header: Datum_Header): ContainsImmutable {
     return this.headerEvent(header.event);
   }
 
-  static ioTransactionDatum (ioTransaction: Datum_IoTransaction): ContainsImmutable {
+  static ioTransactionDatum(ioTransaction: Datum_IoTransaction): ContainsImmutable {
     return this.iotxEventImmutable(ioTransaction.event);
   }
 
-  static groupPolicyDatum (groupPolicy: Datum_GroupPolicy): ContainsImmutable {
+  static groupPolicyDatum(groupPolicy: Datum_GroupPolicy): ContainsImmutable {
     return this.groupPolicyEvent(groupPolicy.event);
   }
 
-  static seriesPolicyDatum (seriesPolicy: Datum_SeriesPolicy): ContainsImmutable {
+  static seriesPolicyDatum(seriesPolicy: Datum_SeriesPolicy): ContainsImmutable {
     return this.seriesPolicyEvent(seriesPolicy.event);
   }
 
-  static ioTransaction (iotx: IoTransaction): ContainsImmutable {
+  static ioTransaction(iotx: IoTransaction): ContainsImmutable {
     return this.list(iotx.inputs)
       .add(this.list(iotx.outputs))
       .add(this.ioTransactionDatum(iotx.datum))
@@ -262,7 +262,7 @@ export class ContainsImmutable {
       .add(this.list(iotx.seriesPolicies));
   }
 
-  static x (iotx: IoTransaction): ContainsImmutable {
+  static x(iotx: IoTransaction): ContainsImmutable {
     return this.list(iotx.inputs)
       .add(this.list(iotx.outputs))
       .add(this.ioTransactionDatum(iotx.datum))
@@ -270,25 +270,25 @@ export class ContainsImmutable {
       .add(this.list(iotx.seriesPolicies));
   }
 
-  static iotxSchedule (schedule: Schedule): ContainsImmutable {
+  static iotxSchedule(schedule: Schedule): ContainsImmutable {
     return this.bigInt(schedule.min).add(this.bigInt(schedule.max));
   }
 
-  static spentOutput (stxo: SpentTransactionOutput): ContainsImmutable {
+  static spentOutput(stxo: SpentTransactionOutput): ContainsImmutable {
     return this.transactionOutputAddress(stxo.address)
       .add(this.attestation(stxo.attestation))
       .add(this.value(stxo.value));
   }
 
-  static unspentOutput (utxo: UnspentTransactionOutput): ContainsImmutable {
+  static unspentOutput(utxo: UnspentTransactionOutput): ContainsImmutable {
     return this.lockAddress(utxo.address).add(this.value(utxo.value));
   }
 
-  static box (box: Box): ContainsImmutable {
+  static box(box: Box): ContainsImmutable {
     return this.lock(box.lock).add(this.value(box.value));
   }
 
-  static value (v: Value): ContainsImmutable {
+  static value(v: Value): ContainsImmutable {
     switch (v.value.case) {
       case 'lvl':
         return this.lvlValue(v.value.value);
@@ -307,15 +307,15 @@ export class ContainsImmutable {
     }
   }
 
-  static lvlValue (v: Lvl): ContainsImmutable {
+  static lvlValue(v: Lvl): ContainsImmutable {
     return this.int128(v.quantity);
   }
 
-  static toplValue (v: Topl): ContainsImmutable {
+  static toplValue(v: Topl): ContainsImmutable {
     return this.int128(v.quantity).add(this.stakingRegistration(v.registration));
   }
 
-  static assetValue (asset: Asset): ContainsImmutable {
+  static assetValue(asset: Asset): ContainsImmutable {
     return this.groupIdentifier(asset.groupId)
       .add(this.seriesIdValue(asset.seriesId))
       .add(this.int128(asset.quantity))
@@ -327,7 +327,7 @@ export class ContainsImmutable {
       .add(asset.commitment.bImmutable());
   }
 
-  static seriesValue (s: Series): ContainsImmutable {
+  static seriesValue(s: Series): ContainsImmutable {
     return this.seriesIdValue(s.seriesId)
       .add(this.int128(s.quantity))
       .add(s.tokenSupply.bImmutable())
@@ -335,20 +335,20 @@ export class ContainsImmutable {
       .add(this.fungibility(s.fungibility));
   }
 
-  static groupValue (g: Group): ContainsImmutable {
+  static groupValue(g: Group): ContainsImmutable {
     return this.groupIdentifier(g.groupId).add(this.int128(g.quantity)).add(this.seriesIdValue(g.fixedSeries));
   }
 
-  static ratio (r: Ratio): ContainsImmutable {
+  static ratio(r: Ratio): ContainsImmutable {
     return this.int128(r.numerator).add(this.int128(r.denominator));
   }
 
   //TODO: get google protos
-  static duration (d: Duration): ContainsImmutable {
+  static duration(d: Duration): ContainsImmutable {
     return this.bigInt(d.seconds).add(d.nanos.bImmutable());
   }
 
-  static updateProposal (up: UpdateProposal): ContainsImmutable {
+  static updateProposal(up: UpdateProposal): ContainsImmutable {
     return this.string(up.label)
       .add(this.ratio(up.fEffective))
       .add(up.vrfLddCutoff.bImmutable())
@@ -363,51 +363,51 @@ export class ContainsImmutable {
       .add(up.kesKeyMinutes.bImmutable());
   }
 
-  static fungibility (f: FungibilityType): ContainsImmutable {
+  static fungibility(f: FungibilityType): ContainsImmutable {
     return f.bImmutable();
   }
 
-  static quantityDescriptor (qdt: QuantityDescriptorType): ContainsImmutable {
+  static quantityDescriptor(qdt: QuantityDescriptorType): ContainsImmutable {
     return qdt.bImmutable();
   }
 
-  static stakingAddress (v: StakingAddress): ContainsImmutable {
+  static stakingAddress(v: StakingAddress): ContainsImmutable {
     return v.value.bImmutable();
   }
 
-  static evidence (e: Evidence): ContainsImmutable {
+  static evidence(e: Evidence): ContainsImmutable {
     return this.digest(e.digest);
   }
 
-  static digest (d: Digest): ContainsImmutable {
+  static digest(d: Digest): ContainsImmutable {
     return d.value.bImmutable();
   }
 
-  static preimage (pre: Preimage): ContainsImmutable {
+  static preimage(pre: Preimage): ContainsImmutable {
     return pre.input.bImmutable().add(pre.salt.bImmutable());
   }
 
-  static accumulatorRoot32Identifier (id: AccumulatorRootId): ContainsImmutable {
+  static accumulatorRoot32Identifier(id: AccumulatorRootId): ContainsImmutable {
     return this.string(Identifier.accumulatorRoot32).add(id.value.bImmutable());
   }
 
-  static boxLock32Identifier (id: LockId): ContainsImmutable {
+  static boxLock32Identifier(id: LockId): ContainsImmutable {
     return this.string(Identifier.lock32).add(id.value.bImmutable());
   }
 
-  static transactionIdentifier (id: TransactionId): ContainsImmutable {
+  static transactionIdentifier(id: TransactionId): ContainsImmutable {
     return this.string(Identifier.ioTransaction32).add(id.value.bImmutable());
   }
 
-  static groupIdentifier (id: GroupId): ContainsImmutable {
+  static groupIdentifier(id: GroupId): ContainsImmutable {
     return this.string(Identifier.group32).add(id.value.bImmutable());
   }
 
-  static seriesIdValue (sid: SeriesId): ContainsImmutable {
+  static seriesIdValue(sid: SeriesId): ContainsImmutable {
     return this.string(Identifier.series32).add(sid.value.bImmutable());
   }
 
-  static transactionOutputAddress (v: TransactionOutputAddress): ContainsImmutable {
+  static transactionOutputAddress(v: TransactionOutputAddress): ContainsImmutable {
     return v.network
       .bImmutable()
       .add(v.ledger.bImmutable())
@@ -415,38 +415,38 @@ export class ContainsImmutable {
       .add(this.transactionIdentifier(v.id));
   }
 
-  static lockAddress (v: LockAddress): ContainsImmutable {
+  static lockAddress(v: LockAddress): ContainsImmutable {
     return v.network.bImmutable().add(v.ledger.bImmutable()).add(this.boxLock32Identifier(v.id));
   }
 
-  static signatureKesSum (v: SignatureKesSum): ContainsImmutable {
+  static signatureKesSum(v: SignatureKesSum): ContainsImmutable {
     return v.verificationKey.bImmutable().add(v.signature.bImmutable()).add(this.list(v.witness));
   }
 
-  static signatureKesProduct (v: SignatureKesProduct): ContainsImmutable {
+  static signatureKesProduct(v: SignatureKesProduct): ContainsImmutable {
     return this.signatureKesSum(v.superSignature).add(this.signatureKesSum(v.subSignature)).add(v.subRoot.bImmutable());
   }
 
-  static stakingRegistration (v: StakingRegistration): ContainsImmutable {
+  static stakingRegistration(v: StakingRegistration): ContainsImmutable {
     return this.signatureKesProduct(v.signature).add(this.stakingAddress(v.address));
   }
 
-  static predicateLock (predicate: Lock_Predicate): ContainsImmutable {
+  static predicateLock(predicate: Lock_Predicate): ContainsImmutable {
     return predicate.threshold.bImmutable().add(this.list(predicate.challenges));
   }
 
-  static imageLock (image: Lock_Image): ContainsImmutable {
+  static imageLock(image: Lock_Image): ContainsImmutable {
     return image.threshold.bImmutable().add(this.list(image.leaves));
   }
 
-  static commitmentLock (commitment: Lock_Commitment): ContainsImmutable {
+  static commitmentLock(commitment: Lock_Commitment): ContainsImmutable {
     return commitment.threshold
       .bImmutable()
       .add(commitment.root.value.length.bImmutable())
       .add(this.accumulatorRoot32Identifier(commitment.root));
   }
 
-  static lock (lock: Lock): ContainsImmutable {
+  static lock(lock: Lock): ContainsImmutable {
     switch (lock.value.case) {
       case 'predicate':
         return this.predicateLock(lock.value.value);
@@ -459,21 +459,21 @@ export class ContainsImmutable {
     }
   }
 
-  static predicateAttestation (attestation: Attestation_Predicate): ContainsImmutable {
+  static predicateAttestation(attestation: Attestation_Predicate): ContainsImmutable {
     return this.predicateLock(attestation.lock).add(this.list(attestation.responses));
   }
 
-  static imageAttestation (attestation: Attestation_Image): ContainsImmutable {
+  static imageAttestation(attestation: Attestation_Image): ContainsImmutable {
     return this.imageLock(attestation.lock).add(this.list(attestation.known)).add(this.list(attestation.responses));
   }
 
-  static commitmentAttestation (attestation: Attestation_Commitment): ContainsImmutable {
+  static commitmentAttestation(attestation: Attestation_Commitment): ContainsImmutable {
     return this.commitmentLock(attestation.lock)
       .add(this.list(attestation.known))
       .add(this.list(attestation.responses));
   }
 
-  static attestation (attestation: Attestation): ContainsImmutable {
+  static attestation(attestation: Attestation): ContainsImmutable {
     switch (attestation.value.case) {
       case 'predicate':
         return this.predicateAttestation(attestation.value.value);
@@ -486,7 +486,7 @@ export class ContainsImmutable {
     }
   }
 
-  static transactionInputAddressContains (address: TransactionInputAddress): ContainsImmutable {
+  static transactionInputAddressContains(address: TransactionInputAddress): ContainsImmutable {
     return address.network
       .bImmutable()
       .add(address.ledger.bImmutable())
@@ -495,11 +495,11 @@ export class ContainsImmutable {
   }
 
   /// TODO: add Challenge PreviousProp
-  static previousPropositionChallengeContains (p: Challenge_PreviousProposition): ContainsImmutable {
+  static previousPropositionChallengeContains(p: Challenge_PreviousProposition): ContainsImmutable {
     return this.transactionInputAddressContains(p.address).add(p.index.bImmutable());
   }
 
-  static challengeContains (c: Challenge): ContainsImmutable {
+  static challengeContains(c: Challenge): ContainsImmutable {
     switch (c.proposition.case) {
       case 'revealed':
         return this.proposition(c.proposition.value);
@@ -510,33 +510,33 @@ export class ContainsImmutable {
     }
   }
 
-  static eonEvent (event: Event_Eon): ContainsImmutable {
+  static eonEvent(event: Event_Eon): ContainsImmutable {
     return this.bigInt(event.beginSlot).add(this.bigInt(event.height));
   }
 
-  static eraEvent (event: Event_Era): ContainsImmutable {
+  static eraEvent(event: Event_Era): ContainsImmutable {
     return this.bigInt(event.beginSlot).add(this.bigInt(event.height));
   }
 
-  static epochEvent (event: Event_Epoch): ContainsImmutable {
+  static epochEvent(event: Event_Epoch): ContainsImmutable {
     return this.bigInt(event.beginSlot).add(this.bigInt(event.height));
   }
 
-  static headerEvent (event: Event_Header): ContainsImmutable {
+  static headerEvent(event: Event_Header): ContainsImmutable {
     return this.bigInt(event.height);
   }
 
-  static iotxEventImmutable (event: Event_IoTransaction): ContainsImmutable {
+  static iotxEventImmutable(event: Event_IoTransaction): ContainsImmutable {
     return this.iotxSchedule(event.schedule).add(this.smallData(event.metadata));
   }
 
-  static groupPolicyEvent (eg: Event_GroupPolicy): ContainsImmutable {
+  static groupPolicyEvent(eg: Event_GroupPolicy): ContainsImmutable {
     return this.string(eg.label)
       .add(this.seriesIdValue(eg.fixedSeries))
       .add(this.transactionOutputAddress(eg.registrationUtxo));
   }
 
-  static seriesPolicyEvent (es: Event_SeriesPolicy): ContainsImmutable {
+  static seriesPolicyEvent(es: Event_SeriesPolicy): ContainsImmutable {
     if (
       typeof es === 'undefined' ||
       typeof es.tokenSupply === 'undefined' ||
@@ -553,7 +553,7 @@ export class ContainsImmutable {
       .add(this.quantityDescriptor(es.quantityDescriptor));
   }
 
-  static eventImmutable (event: Event): ContainsImmutable {
+  static eventImmutable(event: Event): ContainsImmutable {
     switch (event.value.case) {
       case 'eon':
         return this.eonEvent(event.value.value);
@@ -574,117 +574,117 @@ export class ContainsImmutable {
     }
   }
 
-  static txBind (txBind: TxBind): ContainsImmutable {
+  static txBind(txBind: TxBind): ContainsImmutable {
     return txBind.value.bImmutable();
   }
 
-  static locked (_: Proposition_Locked): ContainsImmutable {
+  static locked(_: Proposition_Locked): ContainsImmutable {
     return this.string(Tokens.locked);
   }
 
-  static lockedProof (_: Proof_Locked): ContainsImmutable {
+  static lockedProof(_: Proof_Locked): ContainsImmutable {
     return this.empty();
   }
 
-  static digestProposition (p: Proposition_Digest): ContainsImmutable {
+  static digestProposition(p: Proposition_Digest): ContainsImmutable {
     return this.string(Tokens.digest).add(this.string(p.routine)).add(this.digest(p.digest));
   }
 
-  static digestProof (p: Proof_Digest): ContainsImmutable {
+  static digestProof(p: Proof_Digest): ContainsImmutable {
     return this.txBind(p.transactionBind).add(this.preimage(p.preimage));
   }
 
-  static signature (p: Proposition_DigitalSignature): ContainsImmutable {
+  static signature(p: Proposition_DigitalSignature): ContainsImmutable {
     return this.string(Tokens.digitalSignature)
       .add(this.string(p.routine))
       .add(this.verificationKey(p.verificationKey));
   }
 
-  static signatureProof (p: Proof_DigitalSignature): ContainsImmutable {
+  static signatureProof(p: Proof_DigitalSignature): ContainsImmutable {
     return this.txBind(p.transactionBind).add(this.witness(p.witness));
   }
 
-  static heightRange (p: Proposition_HeightRange): ContainsImmutable {
+  static heightRange(p: Proposition_HeightRange): ContainsImmutable {
     return this.string(Tokens.heightRange).add(this.string(p.chain)).add(this.bigInt(p.min)).add(this.bigInt(p.max));
   }
 
-  static heightRangeProof (p: Proof_HeightRange): ContainsImmutable {
+  static heightRangeProof(p: Proof_HeightRange): ContainsImmutable {
     return this.txBind(p.transactionBind);
   }
 
-  static tickRange (p: Proposition_TickRange): ContainsImmutable {
+  static tickRange(p: Proposition_TickRange): ContainsImmutable {
     return this.string(Tokens.tickRange).add(this.bigInt(p.min)).add(this.bigInt(p.max));
   }
 
-  static tickRangeProof (p: Proof_TickRange): ContainsImmutable {
+  static tickRangeProof(p: Proof_TickRange): ContainsImmutable {
     return this.txBind(p.transactionBind);
   }
 
-  static exactMatch (p: Proposition_ExactMatch): ContainsImmutable {
+  static exactMatch(p: Proposition_ExactMatch): ContainsImmutable {
     return this.string(Tokens.exactMatch).add(this.string(p.location)).add(p.compareTo.bImmutable());
   }
 
-  static exactMatchProof (p: Proof_ExactMatch): ContainsImmutable {
+  static exactMatchProof(p: Proof_ExactMatch): ContainsImmutable {
     return this.txBind(p.transactionBind);
   }
 
-  static lessThan (p: Proposition_LessThan): ContainsImmutable {
+  static lessThan(p: Proposition_LessThan): ContainsImmutable {
     return this.string(Tokens.lessThan).add(this.string(p.location)).add(this.int128(p.compareTo));
   }
 
-  static lessThanProof (p: Proof_LessThan): ContainsImmutable {
+  static lessThanProof(p: Proof_LessThan): ContainsImmutable {
     return this.txBind(p.transactionBind);
   }
 
-  static greaterThan (p: Proposition_GreaterThan): ContainsImmutable {
+  static greaterThan(p: Proposition_GreaterThan): ContainsImmutable {
     return this.string(Tokens.greaterThan).add(this.string(p.location)).add(this.int128(p.compareTo));
   }
 
-  static greaterThanProof (p: Proof_GreaterThan): ContainsImmutable {
+  static greaterThanProof(p: Proof_GreaterThan): ContainsImmutable {
     return this.txBind(p.transactionBind);
   }
 
-  static equalTo (p: Proposition_EqualTo): ContainsImmutable {
+  static equalTo(p: Proposition_EqualTo): ContainsImmutable {
     return this.string(Tokens.equalTo).add(this.string(p.location)).add(this.int128(p.compareTo));
   }
 
-  static equalToProof (p: Proof_EqualTo): ContainsImmutable {
+  static equalToProof(p: Proof_EqualTo): ContainsImmutable {
     return this.txBind(p.transactionBind);
   }
 
-  static threshold (p: Proposition_Threshold): ContainsImmutable {
+  static threshold(p: Proposition_Threshold): ContainsImmutable {
     return this.string(Tokens.threshold).add(p.threshold.bImmutable()).add(this.list(p.challenges));
   }
 
-  static thresholdProof (p: Proof_Threshold): ContainsImmutable {
+  static thresholdProof(p: Proof_Threshold): ContainsImmutable {
     return this.txBind(p.transactionBind).add(this.list(p.responses));
   }
 
-  static not (p: Proposition_Not): ContainsImmutable {
+  static not(p: Proposition_Not): ContainsImmutable {
     return this.string(Tokens.not).add(this.proposition(p.proposition));
   }
 
-  static notProof (p: Proof_Not): ContainsImmutable {
+  static notProof(p: Proof_Not): ContainsImmutable {
     return this.txBind(p.transactionBind).add(this.proof(p.proof));
   }
 
-  static and (p: Proposition_And): ContainsImmutable {
+  static and(p: Proposition_And): ContainsImmutable {
     return this.string(Tokens.and).add(this.proposition(p.left)).add(this.proposition(p.right));
   }
 
-  static andProof (p: Proof_And): ContainsImmutable {
+  static andProof(p: Proof_And): ContainsImmutable {
     return this.txBind(p.transactionBind).add(this.proof(p.left)).add(this.proof(p.right));
   }
 
-  static or (p: Proposition_Or): ContainsImmutable {
+  static or(p: Proposition_Or): ContainsImmutable {
     return this.string(Tokens.or).add(this.proposition(p.left)).add(this.proposition(p.right));
   }
 
-  static orProof (p: Proof_Or): ContainsImmutable {
+  static orProof(p: Proof_Or): ContainsImmutable {
     return this.txBind(p.transactionBind).add(this.proof(p.left)).add(this.proof(p.right));
   }
 
-  static proposition (p: Proposition): ContainsImmutable {
+  static proposition(p: Proposition): ContainsImmutable {
     switch (p.value.case) {
       case 'locked':
         return this.locked(p.value.value);
@@ -717,7 +717,7 @@ export class ContainsImmutable {
     }
   }
 
-  static proof (p: Proof): ContainsImmutable {
+  static proof(p: Proof): ContainsImmutable {
     switch (p.value.case) {
       case 'locked':
         return this.lockedProof(p.value.value);
@@ -750,7 +750,7 @@ export class ContainsImmutable {
     }
   }
 
-  static list (list: any[]): ContainsImmutable {
+  static list(list: any[]): ContainsImmutable {
     return list.reduce((acc: ContainsImmutable, entry: any, index: number) => {
       const intResult = ContainsImmutable.number(index);
       const applyResult = ContainsImmutable.apply(entry);
@@ -766,7 +766,7 @@ export class ContainsImmutable {
   /// primarily implemented for the List function
   /// dart does not support proper type checking in switch statements
   /// ergo: A horrible if/else chain
-  static apply (type: any): ContainsImmutable {
+  static apply(type: any): ContainsImmutable {
     if (type instanceof ContainsImmutable) {
       return type;
     } else if (type instanceof ImmutableBytes) {
@@ -1001,7 +1001,7 @@ export class ContainsImmutable {
   }
 
   /// primitive apply method
-  static applyOld (t: any): ContainsImmutable {
+  static applyOld(t: any): ContainsImmutable {
     if (t instanceof ContainsImmutable) {
       return t;
     }
@@ -1022,20 +1022,20 @@ export class ContainsImmutable {
    * @param b - The `ContainsImmutable` object to be added.
    * @returns A new `ContainsImmutable` instance with the added object.
    */
-  add (b: ContainsImmutable): ContainsImmutable {
+  add(b: ContainsImmutable): ContainsImmutable {
     return _addContainsImmutable(this, b);
   }
 }
 
 // private operations
-function _addImmutableBytes (a: ImmutableBytes, b: ImmutableBytes): ImmutableBytes {
+function _addImmutableBytes(a: ImmutableBytes, b: ImmutableBytes): ImmutableBytes {
   const mergedArray = new Uint8Array(a.value.length + b.value.length);
   mergedArray.set(a.value);
   mergedArray.set(b.value, a.value.length);
   return new ImmutableBytes({ value: mergedArray });
 }
 
-function _addContainsImmutable (a: ContainsImmutable, b: ContainsImmutable): ContainsImmutable {
+function _addContainsImmutable(a: ContainsImmutable, b: ContainsImmutable): ContainsImmutable {
   return new ContainsImmutable(_addImmutableBytes(a.immutableBytes, b.immutableBytes));
 }
 
@@ -1046,7 +1046,7 @@ function _addContainsImmutable (a: ContainsImmutable, b: ContainsImmutable): Con
  * @param uInt8Array - The Uint8Array to convert.
  * @returns An ImmutableBytes object.
  */
-function _Uint8ArrayToImmutableBytes (uInt8Array: Uint8Array): ImmutableBytes {
+function _Uint8ArrayToImmutableBytes(uInt8Array: Uint8Array): ImmutableBytes {
   return new ImmutableBytes({ value: uInt8Array });
 }
 

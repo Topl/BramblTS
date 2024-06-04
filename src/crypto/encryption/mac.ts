@@ -1,8 +1,8 @@
-import { Blake2b256 } from "../hash/blake2B.js";
+import { Blake2b256 } from '../hash/blake2B.js';
 
 /**
  * Message authentication codes (MACs) are used to verify the integrity of data.
- * 
+ *
  * @see [https://en.wikipedia.org/wiki/Message_authentication_code]
  */
 export class Mac {
@@ -12,7 +12,7 @@ export class Mac {
    * Create MAC for a KeyFile.
    * The KeyFile MAC is used to verify the integrity of the cipher text and derived key.
    * It is calculated by hashing the last 16 bytes of the derived key + cipher text.
-   * 
+   *
    * @param derivedKey the derived key
    * @param cipherText the cipher text
    * @returns MAC
@@ -28,12 +28,12 @@ export class Mac {
 
   /**
    * Validate the MAC against a provided, expected, MAC.
-   * 
+   *
    * The main use case for this is to verify the integrity of decrypting a VaultStore. If the wrong password was
    * supplied during decryption, the MAC will not match the expectedMac (stored in the VaultStore).
-   * 
+   *
    * Provide either a MAC value or a Uint8List.
-   * 
+   *
    * @param expectedMac the expected MAC value or
    * @param expectedMacList the expected MAC value
    * @returns `true` if this MAC matches the expectedMac, false otherwise
@@ -58,7 +58,7 @@ export class Mac {
 
   /**
    * Compares two Uint8Array instances for equality.
-   * 
+   *
    * @param a First array
    * @param b Second array
    * @returns `true` if arrays are equal, `false` otherwise

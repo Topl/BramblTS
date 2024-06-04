@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type Either, left, right } from "@/common/functional/brambl_fp.js";
-import { Json } from "@/utils/json.js";
-import { Cipher } from "./cipher/cipher.js";
-import { Kdf } from "./kdf/kdf.js";
-import { Mac } from "./mac.js";
-
+import { type Either, left, right } from '@/common/functional/brambl_fp.js';
+import { Json } from '@/utils/json.js';
+import { Cipher } from './cipher/cipher.js';
+import { Kdf } from './kdf/kdf.js';
+import { Mac } from './mac.js';
 
 /**
  * A VaultStore is a JSON encodable object that contains the KDF and Cipher necessary to decrypt the cipher text.
@@ -19,7 +18,7 @@ export class VaultStore {
 
   /**
    * Constructs a VaultStore object.
-   * 
+   *
    * @param kdf the associated KDF
    * @param cipher the associated Cipher
    * @param cipherText cipher text
@@ -52,7 +51,7 @@ export class VaultStore {
 
   /**
    * Converts the VaultStore instance to a JSON object.
-   * 
+   *
    * @returns JSON representation of the VaultStore.
    */
   toJson(): { [key: string]: any } {
@@ -66,7 +65,7 @@ export class VaultStore {
 
   /**
    * Decodes the cipher text of a VaultStore.
-   * 
+   *
    * @param vaultStore the VaultStore
    * @param password the password to decrypt the cipher text
    * @returns Either an Error or the decrypted data
@@ -83,8 +82,6 @@ export class VaultStore {
       return left(new Error(`Error decoding cipher: ${e}`));
     }
   }
-
-  
 }
 
 abstract class InvalidVaultStoreFailure extends Error {}

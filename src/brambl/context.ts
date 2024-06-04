@@ -17,15 +17,15 @@ export class Context extends DynamicContext<string> {
   readonly curTick: bigint;
   readonly heightDatums: (label: string) => Option<Datum>;
 
-  constructor (tx: IoTransaction, curTick: number, heightDatums: (label: string) => Option<Datum>) {
+  constructor(tx: IoTransaction, curTick: number, heightDatums: (label: string) => Option<Datum>) {
     // Setup "overrides"
     const hashingRoutines: Map<string, DigestVerifier> = new Map<string, DigestVerifier>([
       ['Blake2b256', new Blake2b256DigestInterpreter()],
-      ['Sha256', new Sha256DigestInterpreter()]
+      ['Sha256', new Sha256DigestInterpreter()],
     ]);
 
     const signingRoutines: Map<string, SignatureVerifier> = new Map<string, SignatureVerifier>([
-      ['ExtendedEd25519', new ExtendedEd25519SignatureInterpreter()]
+      ['ExtendedEd25519', new ExtendedEd25519SignatureInterpreter()],
     ]);
 
     const interfaces: Map<string, ParsableDataInterface> = new Map<string, ParsableDataInterface>();
@@ -37,7 +37,7 @@ export class Context extends DynamicContext<string> {
     const datums: (k: string) => Option<Datum> = heightDatums;
 
     const heightOf: (label: string) => Option<bigint> = (label: string) => {
-      return optionOps.flatMap(heightDatums(label), datum => {
+      return optionOps.flatMap(heightDatums(label), (datum) => {
         switch (datum.value.case) {
           case 'header':
             return some(datum.value.value.event.height);

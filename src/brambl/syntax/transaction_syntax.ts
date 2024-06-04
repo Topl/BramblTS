@@ -5,7 +5,7 @@ import ContainsSignable from '../common/contains_signable.js';
 export default class TransactionSyntax {
   readonly transaction: IoTransaction;
 
-  constructor (transaction: IoTransaction) {
+  constructor(transaction: IoTransaction) {
     this.transaction = transaction;
   }
 
@@ -15,12 +15,12 @@ export default class TransactionSyntax {
    * Otherwise, a new ID is computed (but not saved in the Transaction).
    */
 
-  get id (): TransactionId {
+  get id(): TransactionId {
     return this.transaction.transactionId !== null ? this.transaction.transactionId : this.computeId();
   }
 
   // Computes what the ID _should_ be for this Transaction.
-  computeId (): TransactionId {
+  computeId(): TransactionId {
     const signable = ContainsSignable.ioTransaction(this.transaction).signableBytes;
     const immutable = new ImmutableBytes({ value: signable.value });
     const ce = ContainsEvidence.blake2bEvidenceFromImmutable(immutable);
@@ -28,13 +28,13 @@ export default class TransactionSyntax {
   }
 
   // Compute a new ID and return a copy of this Transaction with the new ID embedded.
-  embedId (): IoTransaction {
+  embedId(): IoTransaction {
     this.transaction.transactionId = this.computeId();
     return this.transaction;
   }
 
   // Returns true if this Transaction contains a valid embedded ID.
-  containsValidId (): boolean {
+  containsValidId(): boolean {
     if (this.transaction.transactionId === null) {
       return false;
     }

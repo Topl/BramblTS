@@ -12,7 +12,7 @@ import {
   Proof_Not,
   Proof_Or,
   Proof_Threshold,
-  Proof_TickRange
+  Proof_TickRange,
 } from 'topl_common';
 
 /**

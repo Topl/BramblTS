@@ -46,23 +46,23 @@ export class SHA256 extends SHA {
   digest = crypto.createHash('sha256');
   hashDigest!: Uint8Array;
 
-  algorithmName (): string {
+  algorithmName(): string {
     return 'SHA-256';
   }
 
-  digestSize (): number {
+  digestSize(): number {
     return 32;
   }
 
-  updateByte (inp: Uint8Array): void {
+  updateByte(inp: Uint8Array): void {
     this.digest.update(inp);
   }
 
-  update (inp: Uint8Array, inpOff: number, len: number): void {
+  update(inp: Uint8Array, inpOff: number, len: number): void {
     this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
-  doFinal (out: Uint8Array, inp: number): number {
+  doFinal(out: Uint8Array, inp: number): number {
     const hashBuffer = this.digest.digest();
 
     hashBuffer.copy(out, inp);
@@ -71,14 +71,14 @@ export class SHA256 extends SHA {
     return out.length;
   }
 
-  hash (bytes: Uint8Array): Uint8Array {
+  hash(bytes: Uint8Array): Uint8Array {
     const out = new Uint8Array(this.digestSize());
     this.update(bytes, 0, bytes.length);
     this.doFinal(out, 0);
     return out;
   }
 
-  hashComplex (options: { prefix?: number; messages: Message[] }): Digest {
+  hashComplex(options: { prefix?: number; messages: Message[] }): Digest {
     let input: Uint8Array[] = [];
     if (options.prefix !== undefined) {
       input.push(new Uint8Array([options.prefix]));
@@ -86,7 +86,7 @@ export class SHA256 extends SHA {
     input = input.concat(options.messages);
 
     const flattened: number[] = [];
-    input.forEach(arr => {
+    input.forEach((arr) => {
       flattened.push(...arr);
     });
 
@@ -109,23 +109,23 @@ export class SHA512 extends SHA {
   digest = crypto.createHash('sha512');
   hashDigest!: Uint8Array;
 
-  algorithmName (): string {
+  algorithmName(): string {
     return 'SHA-512';
   }
 
-  digestSize (): number {
+  digestSize(): number {
     return 64;
   }
 
-  updateByte (inp: Uint8Array): void {
+  updateByte(inp: Uint8Array): void {
     this.digest.update(inp);
   }
 
-  update (inp: Uint8Array, inpOff: number, len: number): void {
+  update(inp: Uint8Array, inpOff: number, len: number): void {
     this.updateByte(inp.slice(inpOff, inpOff + len));
   }
 
-  doFinal (out: Uint8Array, inp: number): number {
+  doFinal(out: Uint8Array, inp: number): number {
     const hashBuffer = this.digest.digest();
 
     hashBuffer.copy(out, inp);
@@ -134,14 +134,14 @@ export class SHA512 extends SHA {
     return out.length;
   }
 
-  hash (bytes: Uint8Array): Uint8Array {
+  hash(bytes: Uint8Array): Uint8Array {
     const out = new Uint8Array(this.digestSize());
     this.update(bytes, 0, bytes.length);
     this.doFinal(out, 0);
     return out;
   }
 
-  hashComplex (options: { prefix?: number; messages: Message[] }): Digest {
+  hashComplex(options: { prefix?: number; messages: Message[] }): Digest {
     let input: Uint8Array[] = [];
     if (options.prefix !== undefined) {
       input.push(new Uint8Array([options.prefix]));
@@ -149,7 +149,7 @@ export class SHA512 extends SHA {
     input = input.concat(options.messages);
 
     const flattened: number[] = [];
-    input.forEach(arr => {
+    input.forEach((arr) => {
       flattened.push(...arr);
     });
 

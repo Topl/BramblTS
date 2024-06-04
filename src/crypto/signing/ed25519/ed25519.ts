@@ -9,7 +9,7 @@ import * as spec from './ed25519_spec.js';
 export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
   public impl: EdDSAEd25519;
 
-  constructor () {
+  constructor() {
     super(spec.Ed25519Spec.seedLength);
     this.impl = new EdDSAEd25519();
   }
@@ -22,7 +22,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
    * @param message The message to sign.
    * @returns The signature.
    */
-  sign (privateKey: spec.SecretKey, message: Uint8Array): Uint8Array {
+  sign(privateKey: spec.SecretKey, message: Uint8Array): Uint8Array {
     const sig = new Uint8Array(spec.Ed25519Spec.signatureLength);
     this.impl.sign({
       sk: privateKey.bytes,
@@ -31,7 +31,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
       messageOffset: 0,
       messageLength: message.length,
       signature: sig,
-      signatureOffset: 0
+      signatureOffset: 0,
     });
     return sig;
   }
@@ -45,7 +45,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
    * @param publicKey The public key used for verification.
    * @returns True if the signature is verified; otherwise false.
    */
-  verify (signature: Uint8Array, message: Uint8Array, publicKey: spec.PublicKey): boolean {
+  verify(signature: Uint8Array, message: Uint8Array, publicKey: spec.PublicKey): boolean {
     const sigByteArray = signature;
     const vkByteArray = publicKey.bytes;
     const msgByteArray = message;
@@ -59,7 +59,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
         pkOffset: 0,
         message: msgByteArray,
         messageOffset: 0,
-        messageLength: msgByteArray.length
+        messageLength: msgByteArray.length,
       })
     );
   }
@@ -70,7 +70,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
    * @param secretKey The secret key.
    * @returns The public verification key.
    */
-  getVerificationKey (secretKey: spec.SecretKey): spec.PublicKey {
+  getVerificationKey(secretKey: spec.SecretKey): spec.PublicKey {
     const pkBytes = new Uint8Array(spec.Ed25519Spec.publicKeyLength);
     this.impl.generatePublicKey(secretKey.bytes, 0, pkBytes, 0);
     return new spec.PublicKey(pkBytes);
@@ -82,7 +82,7 @@ export class Ed25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.P
    * @param seed The seed used for key derivation.
    * @returns The secret signing key.
    */
-  deriveSecretKeyFromSeed (seed: Uint8Array): spec.SecretKey {
+  deriveSecretKeyFromSeed(seed: Uint8Array): spec.SecretKey {
     if (seed.length < spec.Ed25519Spec.seedLength) {
       throw new Error(`Invalid seed length. Expected: ${spec.Ed25519Spec.seedLength}, Received: ${seed.length}`);
     }

@@ -5,21 +5,20 @@ import { describe, test, expect } from 'vitest';
 import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
 import * as xspec from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
 
-
 describe('Key Initializer spec', () => {
   for (const x of keyInitializerTestVectors) {
     const vector: KeyInitializerVector = KeyInitializerVector.fromJson(x);
 
     test(`Generate 96 byte seed from mnemonic: ${vector.mnemonic} + password: ${vector.password}`, async () => {
       const ed25519SkRes = await new Ed25519Initializer(new Ed25519()).fromMnemonicString(vector.mnemonic, {
-        password: vector.password
+        password: vector.password,
       });
       if (isLeft(ed25519SkRes)) throw new Error('Failed to generate Ed25519 key');
       const ed25519Sk = ed25519SkRes.right as spec.SecretKey;
 
       const extendedEd25519SkRes = await new ExtendedEd25519Initializer(new ExtendedEd25519()).fromMnemonicString(
         vector.mnemonic,
-        { password: vector.password }
+        { password: vector.password },
       );
       if (isLeft(extendedEd25519SkRes)) throw new Error('Failed to generate ExtendedEd25519 key');
       const extendedEd25519Sk = extendedEd25519SkRes.right as xspec.SecretKey;

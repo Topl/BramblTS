@@ -8,13 +8,11 @@
 // import { Generators } from '../helpers/generators';
 // import { ed25519TestVectors, parseVector } from './test_vectors/ed25519_vectors';
 
-import { Ed25519, Entropy, KeyPair } from "@/crypto/crypto.js";
-import { SecretKey, PublicKey } from "@/crypto/signing/ed25519/ed25519_spec.js";
-import { Generators } from "../helpers/generators.js";
-import { ed25519TestVectors, parseVector } from "./test_vectors/ed25519_vectors.js";
-import { describe, test, expect } from "vitest";
-
-
+import { Ed25519, Entropy, KeyPair } from '@/crypto/crypto.js';
+import { SecretKey, PublicKey } from '@/crypto/signing/ed25519/ed25519_spec.js';
+import { Generators } from '../helpers/generators.js';
+import { ed25519TestVectors, parseVector } from './test_vectors/ed25519_vectors.js';
+import { describe, test, expect } from 'vitest';
 
 // // interface TestVector {
 // //   description: string;
@@ -145,7 +143,6 @@ describe('Ed25519 Topl test vectors', () => {
       verificationKey: string,
       signature: string,
     ): [Uint8Array, Uint8Array, Uint8Array, Uint8Array] => {
-
       return [
         Uint8Array.from(Buffer.from(secretKey, 'hex')),
         Uint8Array.from(Buffer.from(message, 'hex')),
@@ -167,7 +164,7 @@ describe('Ed25519 Topl test vectors', () => {
         expect(Buffer.from(verifyKey.bytes).toString('hex')).toEqual(Buffer.from(vk).toString('hex'));
 
         const resultSignature = ed25519.sign(signingKey, m);
-        
+
         expect(Buffer.from(resultSignature).toString('hex')).toEqual(Buffer.from(sig).toString('hex'));
       });
     });

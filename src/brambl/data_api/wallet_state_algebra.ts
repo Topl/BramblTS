@@ -1,11 +1,12 @@
 import { LockTemplate } from '../builders/locks/lock_template.js';
-import  {   
-    Indices,
-    Lock_Predicate,
-    KeyPair,
-    Preimage,
-    Proposition_Digest,
-    Proposition_DigitalSignature, } from 'topl_common';
+import {
+  Indices,
+  Lock_Predicate,
+  KeyPair,
+  Preimage,
+  Proposition_Digest,
+  Proposition_DigitalSignature,
+} from 'topl_common';
 
 /**
  * Defines a data API for storing and retrieving wallet interaction.
@@ -67,7 +68,7 @@ export abstract class WalletStateAlgebra {
     lockAddress: string,
     routine: string | null,
     vk: string | null,
-    indices: Indices
+    indices: Indices,
   ): Promise<void>;
 
   /**
@@ -82,7 +83,7 @@ export abstract class WalletStateAlgebra {
   abstract getCurrentIndicesForFunds(
     fellowship: string,
     template: string,
-    someInteraction: number | null
+    someInteraction: number | null,
   ): Promise<Indices | null>;
 
   /**
@@ -121,7 +122,7 @@ export abstract class WalletStateAlgebra {
   abstract validateCurrentIndicesForFunds(
     fellowship: string,
     template: string,
-    someInteraction: number | null
+    someInteraction: number | null,
   ): Promise<Indices | null>; // replace null with the type of ValidatedNel
 
   /**
@@ -139,7 +140,7 @@ export abstract class WalletStateAlgebra {
    * @param indices The indices to get the lock predicate for
    * @return The lock predicate for the given indices if possible. Else None
    */
-  abstract  getLockByIndex(indices: Indices): Promise<Lock_Predicate | null>;
+  abstract getLockByIndex(indices: Indices): Promise<Lock_Predicate | null>;
 
   /**
    * Get the lock predicate associated to the given lockAddress.

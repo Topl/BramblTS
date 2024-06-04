@@ -10,14 +10,14 @@ export enum PhraseFailureType {
   InvalidWords,
   InvalidChecksum,
   InvalidEntropyLength,
-  WordListFailure
+  WordListFailure,
 }
 
-function _byteTo8BitString (byte: number): string {
+function _byteTo8BitString(byte: number): string {
   return byte.toString(2).padStart(8, '0');
 }
 
-function _intTo11BitString (value: number): string {
+function _intTo11BitString(value: number): string {
   return value.toString(2).padStart(11, '0');
 }
 
@@ -26,15 +26,15 @@ export class Phrase {
   size: MnemonicSize;
   languageWords: LanguageWordList;
 
-  constructor (props: { value: string[]; size: MnemonicSize; languageWords: LanguageWordList }) {
+  constructor(props: { value: string[]; size: MnemonicSize; languageWords: LanguageWordList }) {
     this.value = props.value;
     this.size = props.size;
     this.languageWords = props.languageWords;
   }
 
-  static async validated ({
+  static async validated({
     words,
-    language
+    language,
   }: {
     words: string;
     language: Language;
@@ -47,7 +47,7 @@ export class Phrase {
 
     const wordList = wordListResult.right!;
 
-    const wordCount = words.split(' ').filter(w => w !== '').length;
+    const wordCount = words.split(' ').filter((w) => w !== '').length;
     const sizeResult = MnemonicSize.fromNumberOfWords(wordCount);
 
     if (isLeft(sizeResult)) {
@@ -55,22 +55,22 @@ export class Phrase {
     }
 
     const size = sizeResult.right!;
-    
+
     const phrase: Phrase = {
       value: words
         .toLowerCase()
         .trim() /// Port Note: Extra trim because the carriage returns end up returning an extra whitespace character.
         .split(/\s+/)
-        .map(w => w.trim()),
+        .map((w) => w.trim()),
       size,
-      languageWords: wordList
+      languageWords: wordList,
     };
 
     if (phrase.value.length !== phrase.size.wordLength) {
       return left(PhraseFailure.invalidWordLength(words));
     }
 
-    if (!phrase.value.every(word => wordList.value.includes(word))) {
+    if (!phrase.value.every((word) => wordList.value.includes(word))) {
       return left(PhraseFailure.invalidWords(words));
     }
 
@@ -80,7 +80,7 @@ export class Phrase {
     return checksumFromPhrase === checksumFromSha256 ? right(phrase) : left(PhraseFailure.invalidChecksum(words));
   }
 
-  static _calculateChecksum (entropyBinaryString: string, size: MnemonicSize): string {
+  static _calculateChecksum(entropyBinaryString: string, size: MnemonicSize): string {
     const byteLength = 8;
 
     const entropyBits = entropyBinaryString.substring(0, size.entropyLength);
@@ -104,10 +104,10 @@ export class Phrase {
     return checksumBinaryString;
   }
 
-  static async fromEntropy ({
+  static async fromEntropy({
     entropy,
     size,
-    language
+    language,
   }: {
     entropy: Entropy;
     size: MnemonicSize;
@@ -140,14 +140,14 @@ export class Phrase {
     return right({
       value: phraseWords,
       size: size,
-      languageWords: wordList
+      languageWords: wordList,
     });
   }
 
-  static toBinaryString (phrase: Phrase): [string, string] {
+  static toBinaryString(phrase: Phrase): [string, string] {
     const wordList = phrase.languageWords.value;
     const binaryString = phrase.value
-      .map(word => wordList.indexOf(word))
+      .map((word) => wordList.indexOf(word))
       .map(_intTo11BitString)
       .join('');
     const entropyBinaryString = binaryString.slice(0, phrase.size.entropyLength);
@@ -161,31 +161,31 @@ export class PhraseFailure implements Error {
   readonly message: string;
   readonly type: PhraseFailureType;
 
-  constructor (type: PhraseFailureType, message?: string) {
+  constructor(type: PhraseFailureType, message?: string) {
     this.type = type;
     this.message = message;
   }
-  static invalidWordLength (context?: string): PhraseFailure {
+  static invalidWordLength(context?: string): PhraseFailure {
     return new PhraseFailure(PhraseFailureType.InvalidWordLength, context);
   }
 
-  static invalidWords (context?: string): PhraseFailure {
+  static invalidWords(context?: string): PhraseFailure {
     return new PhraseFailure(PhraseFailureType.InvalidWords, context);
   }
 
-  static invalidChecksum (context?: string): PhraseFailure {
+  static invalidChecksum(context?: string): PhraseFailure {
     return new PhraseFailure(PhraseFailureType.InvalidChecksum, context);
   }
 
-  static invalidEntropyLength (context?: string): PhraseFailure {
+  static invalidEntropyLength(context?: string): PhraseFailure {
     return new PhraseFailure(PhraseFailureType.InvalidEntropyLength, context);
   }
 
-  static wordListFailure (context?: string): PhraseFailure {
+  static wordListFailure(context?: string): PhraseFailure {
     return new PhraseFailure(PhraseFailureType.InvalidEntropyLength, context);
   }
 
-  toString (): string {
+  toString(): string {
     return `PhraseFailure{message: ${this.message}, type: ${this.type}}`;
   }
 }

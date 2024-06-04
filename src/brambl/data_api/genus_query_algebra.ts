@@ -1,11 +1,5 @@
 import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect';
-import {
-  LockAddress,
-  QueryByLockAddressRequest,
-  TransactionService,
-  Txo,
-  TxoState,
-} from 'topl_common';
+import { LockAddress, QueryByLockAddressRequest, TransactionService, Txo, TxoState } from 'topl_common';
 
 /**
  * Defines a Genus Query API for interacting with a Genus node.
@@ -23,13 +17,13 @@ export interface GenusQueryAlgebraDefinition {
 export class GenusQueryAlgebra implements GenusQueryAlgebraDefinition {
   private client: PromiseClient<typeof TransactionService>;
 
-  constructor (transport: Transport) {
+  constructor(transport: Transport) {
     this.client = createPromiseClient(TransactionService, transport);
   }
 
-  async queryUtxo (fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]> {
+  async queryUtxo(fromAddress: LockAddress, txoState?: TxoState): Promise<Txo[]> {
     const response = await this.client.getTxosByLockAddress(
-      new QueryByLockAddressRequest({ address: fromAddress, state: txoState ?? TxoState.UNSPENT })
+      new QueryByLockAddressRequest({ address: fromAddress, state: txoState ?? TxoState.UNSPENT }),
     );
     return response.Txos;
   }

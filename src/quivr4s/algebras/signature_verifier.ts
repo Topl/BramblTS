@@ -5,12 +5,12 @@ import type { QuivrRuntimeError } from '../quivr/runtime/quivr_runtime_error.js'
 
 export default class SignatureVerifier extends ContextlessValidation<QuivrRuntimeError, SignatureVerification> {
   protected f?: (t: SignatureVerification) => Either<QuivrRuntimeError, SignatureVerification>;
-  constructor (f?: (t: SignatureVerification) => Either<QuivrRuntimeError, SignatureVerification>) {
+  constructor(f?: (t: SignatureVerification) => Either<QuivrRuntimeError, SignatureVerification>) {
     super();
     this.f = f;
   }
 
-  override validate (t: SignatureVerification): Either<QuivrRuntimeError, SignatureVerification> {
+  override validate(t: SignatureVerification): Either<QuivrRuntimeError, SignatureVerification> {
     return this.f(t);
   }
 }

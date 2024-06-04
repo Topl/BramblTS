@@ -10,14 +10,14 @@ import { Params, type Kdf } from './kdf.js';
 class SCrypt implements Kdf {
   readonly params: SCryptParams;
 
-  constructor (params: SCryptParams) {
+  constructor(params: SCryptParams) {
     this.params = params;
   }
 
   /**
    * Create a SCrypt with generated salt.
    */
-  static withGeneratedSalt (): SCrypt {
+  static withGeneratedSalt(): SCrypt {
     return new SCrypt(SCryptParams.withGeneratedSalt());
   }
 
@@ -25,7 +25,7 @@ class SCrypt implements Kdf {
    * Create an SCrypt instance from a JSON object.
    * @param json JSON object with SCrypt parameters.
    */
-  static fromJson (json: { [key: string]: any }): SCrypt {
+  static fromJson(json: { [key: string]: any }): SCrypt {
     const params = SCryptParams.fromJson(json);
     return new SCrypt(params);
   }
@@ -35,7 +35,7 @@ class SCrypt implements Kdf {
    * @param secret Secret to derive key from.
    * @returns Derived key.
    */
-  deriveKey (secret: Uint8Array): Buffer {
+  deriveKey(secret: Uint8Array): Buffer {
     const options = new _scryptOptions(this.params.n, this.params.r, this.params.p);
     return scryptSync(secret, this.params.salt, this.params.dkLen, options.toInterface());
   }
@@ -44,7 +44,7 @@ class SCrypt implements Kdf {
    * Generate a random initialization vector.
    * @returns Randomly generated salt.
    */
-  static generateSalt (): Buffer {
+  static generateSalt(): Buffer {
     return randomBytes(32);
   }
 
@@ -52,7 +52,7 @@ class SCrypt implements Kdf {
    * Converts SCrypt instance to a JSON object.
    * @returns JSON representation of the SCrypt instance.
    */
-  toJson (): { [key: string]: any } {
+  toJson(): { [key: string]: any } {
     return { kdf: this.params.kdf, ...this.params.toJson() };
   }
 }
@@ -75,7 +75,7 @@ class SCryptParams implements Params {
    * @param p Parallelization parameter. Must be a positive integer less than or equal to Integer.MAX_VALUE / (128 * r * 8). Defaults to 1.
    * @param dkLen Length of derived key. Defaults to 32.
    */
-  constructor (salt: Uint8Array, n: number = 262144, r: number = 8, p: number = 1, dkLen: number = 32) {
+  constructor(salt: Uint8Array, n: number = 262144, r: number = 8, p: number = 1, dkLen: number = 32) {
     this.salt = salt;
     this.n = n;
     this.r = r;
@@ -86,7 +86,7 @@ class SCryptParams implements Params {
   /**
    * Create SCryptParams with generated salt.
    */
-  static withGeneratedSalt (): SCryptParams {
+  static withGeneratedSalt(): SCryptParams {
     return new SCryptParams(SCrypt.generateSalt());
   }
 
@@ -94,7 +94,7 @@ class SCryptParams implements Params {
    * Create SCryptParams from a JSON object.
    * @param json JSON object with SCrypt parameters.
    */
-  static fromJson (json: { [key: string]: any }): SCryptParams {
+  static fromJson(json: { [key: string]: any }): SCryptParams {
     const saltUint8Array = Json.decodeUint8List(json['salt']);
     const salt = Buffer.from(saltUint8Array);
     const n = json['n'];
@@ -108,7 +108,7 @@ class SCryptParams implements Params {
    * Get the key derivation function name.
    * @returns Name of the key derivation function.
    */
-  get kdf (): string {
+  get kdf(): string {
     return 'scrypt';
   }
 
@@ -116,13 +116,13 @@ class SCryptParams implements Params {
    * Converts SCryptParams to a JSON object.
    * @returns JSON representation of the SCrypt parameters.
    */
-  toJson (): { [key: string]: any } {
+  toJson(): { [key: string]: any } {
     return {
       salt: Json.encodeUint8List(this.salt),
       n: this.n,
       r: this.r,
       p: this.p,
-      dkLen: this.dkLen
+      dkLen: this.dkLen,
     };
   }
 }
@@ -134,7 +134,7 @@ class _scryptOptions {
   p: number;
   maxmem: number;
 
-  constructor (N: number, r: number, p: number) {
+  constructor(N: number, r: number, p: number) {
     this.N = N;
     this.r = r;
     this.p = p;
@@ -150,15 +150,14 @@ class _scryptOptions {
    * Converts _scryptOptions to a JSON object.
    * @returns JSON representation of the _scryptOptions instance.
    */
-  toInterface () {
+  toInterface() {
     return {
       N: this.N,
       r: this.r,
       p: this.p,
-      maxmem: this.maxmem
+      maxmem: this.maxmem,
     };
   }
 }
 
 export { SCrypt, SCryptParams };
-

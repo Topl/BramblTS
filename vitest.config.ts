@@ -6,15 +6,15 @@ export default defineConfig({
   plugins: [tsconfigPaths()],
   resolve: {
     alias: {
-      '@/': new URL('./src/', import.meta.url).pathname, 
+      '@/': new URL('./src/', import.meta.url).pathname,
     },
   },
   test: {
     // alias: {
-    //   '@/': new URL('./src/', import.meta.url).pathname, 
+    //   '@/': new URL('./src/', import.meta.url).pathname,
     // },
     // reporters: ["default"],
-    root: resolve(__dirname, ""),
+    root: resolve(__dirname, ''),
     setupFiles: [
       /// Required for Module augmentation to work (Fixes "TypeError (intermediate value).methodName is not a function")"
       'src/common/functional/brambl_fp.ts',
@@ -37,5 +37,4 @@ export default defineConfig({
     ],
     // testTimeout: 100000, // TODO remove after debugging
   },
-
 });

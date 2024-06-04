@@ -1,4 +1,3 @@
-
 import { Aes } from '@/crypto/encryption/cipher/aes.js';
 import { equals, padArray } from '@/utils/extensions.js';
 import { describe, test, expect } from 'vitest';
@@ -6,7 +5,10 @@ import { hexToUint8List } from '../../signing/test_vectors/ckd_ed25519_vectors.j
 
 // Converts a string to a hexadecimal string representation
 function stringToHex(str) {
-  return str.split('').map((c) => c.charCodeAt(0).toString(16).padStart(2, '0')).join('');
+  return str
+    .split('')
+    .map((c) => c.charCodeAt(0).toString(16).padStart(2, '0'))
+    .join('');
 }
 
 describe('Aes Spec', () => {

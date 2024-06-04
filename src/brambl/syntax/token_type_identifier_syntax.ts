@@ -5,11 +5,11 @@ import { has } from '../utils/extensions.js';
 
 // TypeScript does not support extension methods directly. We can use static methods in a class instead.
 export default class TokenTypeIdentifier {
-  static toTypeIdentifierSyntaxOps (value: Value): ValueToTypeIdentifierSyntaxOps {
+  static toTypeIdentifierSyntaxOps(value: Value): ValueToTypeIdentifierSyntaxOps {
     return new ValueToTypeIdentifierSyntaxOps(value);
   }
 
-  static typeIdentifier (value: Value): ValueTypeIdentifier {
+  static typeIdentifier(value: Value): ValueTypeIdentifier {
     return TokenTypeIdentifier.toTypeIdentifierSyntaxOps(value).typeIdentifier;
   }
 }
@@ -17,11 +17,11 @@ export default class TokenTypeIdentifier {
 class ValueToTypeIdentifierSyntaxOps {
   value: Value;
 
-  constructor (value: Value) {
+  constructor(value: Value) {
     this.value = value;
   }
 
-  get typeIdentifier (): ValueTypeIdentifier {
+  get typeIdentifier(): ValueTypeIdentifier {
     switch (this.value.value.case) {
       case 'lvl':
         return new LvlType();
@@ -79,7 +79,7 @@ class LvlType implements ValueTypeIdentifier {}
 class ToplType implements ValueTypeIdentifier {
   readonly stakingRegistration?: StakingRegistration;
 
-  constructor (stakingRegistration?: StakingRegistration) {
+  constructor(stakingRegistration?: StakingRegistration) {
     this.stakingRegistration = stakingRegistration;
   }
 }
@@ -87,7 +87,7 @@ class ToplType implements ValueTypeIdentifier {
 class GroupType implements ValueTypeIdentifier {
   readonly groupId: GroupId;
 
-  constructor (groupId: GroupId) {
+  constructor(groupId: GroupId) {
     this.groupId = groupId;
   }
 }
@@ -95,7 +95,7 @@ class GroupType implements ValueTypeIdentifier {
 class SeriesType implements ValueTypeIdentifier {
   readonly seriesId: SeriesId;
 
-  constructor (seriesId: SeriesId) {
+  constructor(seriesId: SeriesId) {
     this.seriesId = seriesId;
   }
 }
@@ -104,7 +104,7 @@ class AssetType implements ValueTypeIdentifier {
   readonly groupIdOrAlloy: ByteString;
   readonly seriesIdOrAlloy: ByteString;
 
-  constructor (groupIdOrAlloy: ByteString, seriesIdOrAlloy: ByteString) {
+  constructor(groupIdOrAlloy: ByteString, seriesIdOrAlloy: ByteString) {
     this.groupIdOrAlloy = groupIdOrAlloy;
     this.seriesIdOrAlloy = seriesIdOrAlloy;
   }
@@ -113,10 +113,9 @@ class AssetType implements ValueTypeIdentifier {
 /// An unknown value type. This is useful for when new types are added to the ecosystem and the SDK is not updated yet.
 class UnknownType implements ValueTypeIdentifier {}
 
-export function asByteString (bytes: Uint8Array): ByteString {
+export function asByteString(bytes: Uint8Array): ByteString {
   return ByteString.fromUint8Array(bytes);
 }
-
 
 /// experimental extensions via typescript module augmentation
 declare module 'topl_common' {

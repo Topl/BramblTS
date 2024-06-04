@@ -7,14 +7,14 @@ import type ParsableDataInterface from '@/quivr4s/quivr/common/parsable_data_int
 import DynamicContext from '@/quivr4s/quivr/runtime/dynamic_context.js';
 import type { QuivrRuntimeError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
 import {
-    Datum,
-    Datum_Header,
-    DigestVerification,
-    Event_Header,
-    Proof,
-    Proposition,
-    SignableBytes,
-    SignatureVerification
+  Datum,
+  Datum_Header,
+  DigestVerification,
+  Event_Header,
+  Proof,
+  Proposition,
+  SignableBytes,
+  SignatureVerification,
 } from 'topl_common';
 import { VerySecureSignatureRoutine } from './very_secure_signature_routine.js';
 
@@ -27,11 +27,11 @@ export class MockHelpers {
 
   static signableBytes = new SignableBytes({ value: 'someSignableBytes'.bToUint8Array() });
 
-  static dynamicContext (proposition: Proposition, proof: Proof) {
+  static dynamicContext(proposition: Proposition, proof: Proof) {
     const header = new Datum().withHeader(
       new Datum_Header({
-        event: new Event_Header({ height: BigInt(999) })
-      })
+        event: new Event_Header({ height: BigInt(999) }),
+      }),
     );
 
     const mapOfDatums: Map<string, Datum> = new Map([['height', header]]);
@@ -47,8 +47,8 @@ export class MockHelpers {
             return left(
               ValidationError.messageAuthorizationFailure({
                 name: 'VerySecureSignatureRoutine',
-                message: `Verification failed ${proof}`
-              })
+                message: `Verification failed ${proof}`,
+              }),
             );
           }
         default:
@@ -57,7 +57,7 @@ export class MockHelpers {
     };
 
     const mapOfSigningRoutines: Map<string, SignatureVerifier> = new Map([
-      [MockHelpers.signatureString, new SignatureVerifier(signatureVerifier)]
+      [MockHelpers.signatureString, new SignatureVerifier(signatureVerifier)],
     ]);
 
     const digestVerifier = (t: DigestVerification): Either<QuivrRuntimeError, DigestVerification> => {
@@ -70,7 +70,7 @@ export class MockHelpers {
     };
 
     const mapOfHashingRoutine: Map<string, DigestVerifier> = new Map([
-      [MockHelpers.hashString, new DigestVerifier(digestVerifier)]
+      [MockHelpers.hashString, new DigestVerifier(digestVerifier)],
     ]);
 
     const currentTick = BigInt(999);
@@ -100,7 +100,7 @@ export class MockHelpers {
       mapOfHashingRoutine,
       MockHelpers.signableBytes,
       currentTick,
-      heightOf
+      heightOf,
     );
   }
 }

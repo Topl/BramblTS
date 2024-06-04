@@ -84,7 +84,14 @@ export class LanguageWordList {
 
   static async validated(language: Language): Promise<Either<ValidationFailure, LanguageWordList>> {
     try {
-      const file = path.resolve(__dirname, '..', '..','..', '..', `assets/${language.wordlistDirectory}/${language.filePath}`);
+      const file = path.resolve(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        `assets/${language.wordlistDirectory}/${language.filePath}`,
+      );
       const content = await fs.readFile(file, 'utf-8');
       const words = content.replace(/\r/g, '').split('\n'); // Port Note: Replace to remove /r carriage returns which mess up future logic
 

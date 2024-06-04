@@ -1,8 +1,6 @@
 import { BytesValue } from 'topl_common'; // Adjust import based on actual location
 import { Buffer } from 'buffer';
 
-
-
 /// A class that represents a sequence of bytes. uses [Buffer] under the hood as an extension of [Uint8Array]
 export class ByteString {
   private _bytes: Buffer;

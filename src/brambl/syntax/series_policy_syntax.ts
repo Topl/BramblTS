@@ -9,12 +9,12 @@ type SeriesPolicy = Event_SeriesPolicy;
 export class SeriesPolicySyntax {
   seriesPolicy: SeriesPolicy;
 
-  constructor (seriesPolicy: SeriesPolicy) {
+  constructor(seriesPolicy: SeriesPolicy) {
     this.seriesPolicy = seriesPolicy;
   }
 
   /// Computes the [GroupId] of the [GroupPolicy].
-  computeId (): SeriesId {
+  computeId(): SeriesId {
     const digest = ContainsImmutable.seriesPolicyEvent(this.seriesPolicy).immutableBytes.value;
     const sha256 = new SHA256().hash(digest);
     return new SeriesId({ value: sha256 });

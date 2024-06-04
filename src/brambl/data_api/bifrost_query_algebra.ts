@@ -9,7 +9,7 @@ import {
   NodeRpc,
   SynchronizationTraversalReq,
   SynchronizationTraversalRes,
-  TransactionId
+  TransactionId,
 } from 'topl_common';
 
 /**
@@ -44,7 +44,6 @@ export abstract class BifrostQueryAlgebra {
    */
   abstract fetchTransaction(txId: TransactionId): Promise<Option<IoTransaction>>;
 
-
   /**
    * Broadcasts a transaction to the network.
    * @param tx The transaction to broadcast.
@@ -66,50 +65,49 @@ export abstract class BifrostQueryAlgebra {
    */
   abstract fetchBlockHeader(blockId: BlockId): Promise<BlockHeader>;
 
-    /**
+  /**
    * Retrieve an iterator of changes to the canonical head of the chain.
    * @return an iterator of changes to the chain tip
    */
-    abstract synchronizationTraversal(): Promise<AsyncIterable<SynchronizationTraversalRes>>;
+  abstract synchronizationTraversal(): Promise<AsyncIterable<SynchronizationTraversalRes>>;
 }
 
 // Todo error handling
 export class BifrostQueryInterpreter implements BifrostQueryAlgebra {
   private client: PromiseClient<typeof NodeRpc>;
 
-  constructor (transport: Transport) {
+  constructor(transport: Transport) {
     this.client = createPromiseClient(NodeRpc, transport);
   }
 
-
-  async fetchBlockBody (blockId: BlockId): Promise<BlockBody> {
+  async fetchBlockBody(blockId: BlockId): Promise<BlockBody> {
     return (await this.client.fetchBlockBody({ blockId })).body;
   }
 
-  async fetchBlockHeader (blockId: BlockId): Promise<BlockHeader> {
+  async fetchBlockHeader(blockId: BlockId): Promise<BlockHeader> {
     return (await this.client.fetchBlockHeader({ blockId })).header;
   }
 
-  async fetchTransaction (transactionId: TransactionId): Promise<Option<IoTransaction>> {
+  async fetchTransaction(transactionId: TransactionId): Promise<Option<IoTransaction>> {
     const response = await this.client.fetchTransaction({ transactionId });
     return fromNullable(response.transaction);
   }
 
-  async blockByDepth (depth: bigint): Promise<Option<[BlockId, BlockHeader, BlockBody, IoTransaction[]]>> {
+  async blockByDepth(depth: bigint): Promise<Option<[BlockId, BlockHeader, BlockBody, IoTransaction[]]>> {
     const req = await this.blockByHeight(depth);
     if (isSome(req)) {
       const blockId = req.value[0];
 
       const [blockHeader, blockBody] = await Promise.all([
         this.client.fetchBlockHeader({ blockId }),
-        this.client.fetchBlockBody({ blockId })
+        this.client.fetchBlockBody({ blockId }),
       ]);
 
       const transactions = await Promise.all(
-        blockBody.body.transactionIds.map(txId => {
+        blockBody.body.transactionIds.map((txId) => {
           return this.client.fetchTransaction({ transactionId: txId });
-        })
-      ).then(txs => txs.map(tx => tx.transaction));
+        }),
+      ).then((txs) => txs.map((tx) => tx.transaction));
 
       return option.some([blockId, blockHeader.header, blockBody.body, transactions]);
     }
@@ -122,36 +120,36 @@ export class BifrostQueryInterpreter implements BifrostQueryAlgebra {
   }
 
   // better error handling
-  async blockById (blockId: BlockId): Promise<Option<[BlockId, BlockHeader, BlockBody, IoTransaction[]]>> {
+  async blockById(blockId: BlockId): Promise<Option<[BlockId, BlockHeader, BlockBody, IoTransaction[]]>> {
     const blockBody = await this.client.fetchBlockBody({ blockId });
     const blockHeader = await this.client.fetchBlockHeader({ blockId });
     const transactions = await Promise.all(
-      blockBody.body.transactionIds.map(txId => {
+      blockBody.body.transactionIds.map((txId) => {
         return this.client.fetchTransaction({ transactionId: txId });
-      })
-    ).then(txs => txs.map(tx => tx.transaction));
+      }),
+    ).then((txs) => txs.map((tx) => tx.transaction));
 
     return option.some([blockId, blockHeader.header, blockBody.body, transactions]);
   }
 
-  async blockByHeight (height: bigint): Promise<Option<[BlockId, BlockHeader, BlockBody, IoTransaction[]]>> {
+  async blockByHeight(height: bigint): Promise<Option<[BlockId, BlockHeader, BlockBody, IoTransaction[]]>> {
     const blockId = (await this.client.fetchBlockIdAtHeight({ height })).blockId;
 
     const [blockHeader, blockBody] = await Promise.all([
       this.client.fetchBlockHeader({ blockId }),
-      this.client.fetchBlockBody({ blockId })
+      this.client.fetchBlockBody({ blockId }),
     ]);
 
     const transactions = await Promise.all(
-      blockBody.body.transactionIds.map(txId => {
+      blockBody.body.transactionIds.map((txId) => {
         return this.client.fetchTransaction({ transactionId: txId });
-      })
-    ).then(txs => txs.map(tx => tx.transaction));
+      }),
+    ).then((txs) => txs.map((tx) => tx.transaction));
 
     return option.some([blockId, blockHeader.header, blockBody.body, transactions]);
   }
 
-  async broadcastTransaction (transaction: IoTransaction): Promise<Option<TransactionId>> {
+  async broadcastTransaction(transaction: IoTransaction): Promise<Option<TransactionId>> {
     const response = await this.client.broadcastTransaction({ transaction });
     return response !== null ? option.some(transaction.computeId().transactionId) : option.none;
   }

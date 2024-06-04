@@ -651,7 +651,7 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   t = a8 + (c3 - a3);
   z8 = t & M26;
   t >>= BigInt(26);
-  t += (c4 - a4) - b4;
+  t += c4 - a4 - b4;
   z9 = t & M25;
   t >>= BigInt(25);
   t = a0 + (t + c5 - a5) * BigInt(38);

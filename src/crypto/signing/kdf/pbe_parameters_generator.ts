@@ -13,7 +13,7 @@ export abstract class PBEParametersGenerator {
 
   /**
    * Initialise the PBE generator.
-   * 
+   *
    * @param password - The password converted into bytes.
    * @param salt - The salt to be mixed with the password.
    * @param iterationCount - The number of iterations the "mixing" function is to be applied for.
@@ -26,7 +26,7 @@ export abstract class PBEParametersGenerator {
 
   /**
    * Generate derived parameters for a key of length keySize.
-   * 
+   *
    * @param keySize - The length, in bits, of the key required.
    */
   abstract generateDerivedParameters(keySize: number): CipherParameters;
@@ -34,7 +34,7 @@ export abstract class PBEParametersGenerator {
   /**
    * Generate derived parameters for a key of length keySize, and
    * an initialisation vector (IV) of length ivSize.
-   * 
+   *
    * @param keySize - The length, in bits, of the key required.
    * @param ivSize - The length, in bits, of the iv required.
    */
@@ -43,7 +43,7 @@ export abstract class PBEParametersGenerator {
   /**
    * Generate derived parameters for a key of length keySize, specifically
    * for use with a MAC.
-   * 
+   *
    * @param keySize - The length, in bits, of the key required.
    */
   abstract generateDerivedMacParameters(keySize: number): CipherParameters;
@@ -51,7 +51,7 @@ export abstract class PBEParametersGenerator {
   /**
    * Converts a password to a byte array according to the scheme in
    * PKCS5 (ascii, no padding).
-   * 
+   *
    * @param password - A character array representing the password.
    */
   static pkcs5PasswordToBytes(password: string | null): Uint8Array {
@@ -72,7 +72,7 @@ export abstract class PBEParametersGenerator {
   /**
    * Converts a password to a byte array according to the scheme in
    * PKCS5 (UTF-8, no padding).
-   * 
+   *
    * @param password - A character array representing the password.
    */
   static pkcs5PasswordToUTF8Bytes(password: string): Uint8Array {
@@ -87,7 +87,7 @@ export abstract class PBEParametersGenerator {
   /**
    * Converts a password to a byte array according to the scheme in
    * PKCS12 (unicode, big endian, 2 zero pad bytes at the end).
-   * 
+   *
    * @param password - A character array representing the password.
    */
   static pkcs12PasswordToBytes(password: string | null): Uint8Array {

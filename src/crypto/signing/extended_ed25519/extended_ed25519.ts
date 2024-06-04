@@ -6,7 +6,7 @@ import {
   fromLittleEndian,
   getSublist,
   padArray,
-  uint8ListFromBytes
+  uint8ListFromBytes,
 } from '../../../utils/extensions.js';
 import { Ed25519Spec, PublicKey } from '../ed25519/ed25519_spec.js';
 import { PointAccum, PointExt } from '../eddsa/ec.js';
@@ -18,7 +18,7 @@ import * as spec from './extended_ed25519_spec.js';
 export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey, spec.PublicKey> {
   public impl = new eddsa.Ed25519();
 
-  constructor () {
+  constructor() {
     super(spec.ExtendedEd25519Spec.seedLength);
   }
 
@@ -31,7 +31,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {Uint8Array} message - A message that the signature will be generated for.
    * @returns {Uint8Array} - The signature.
    */
-  sign (privateKey: spec.SecretKey, message: Uint8Array): Uint8Array {
+  sign(privateKey: spec.SecretKey, message: Uint8Array): Uint8Array {
     const resultSig = new Uint8Array(spec.ExtendedEd25519Spec.signatureLength);
     const pk = new Uint8Array(spec.ExtendedEd25519Spec.publicKeyLength);
     const ctx = new Uint8Array(0);
@@ -57,7 +57,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {PublicKey} verifyKey - The key to use for verification.
    * @returns {Promise<boolean>} - True if the signature is verified; otherwise false.
    */
-  async verifyWithEd25519Pk (signature: Uint8Array, message: Uint8Array, verifyKey: PublicKey): Promise<boolean> {
+  async verifyWithEd25519Pk(signature: Uint8Array, message: Uint8Array, verifyKey: PublicKey): Promise<boolean> {
     if (signature.length !== Ed25519Spec.signatureLength) {
       return false;
     }
@@ -72,7 +72,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
       pkOffset: 0,
       message: message,
       messageOffset: 0,
-      messageLength: message.length
+      messageLength: message.length,
     });
   }
 
@@ -86,7 +86,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {spec.PublicKey} verifyKey - The key to use for verification.
    * @returns {boolean} - True if the signature is verified; otherwise false.
    */
-  verify (signature: Uint8Array, message: Uint8Array, verifyKey: spec.PublicKey): boolean {
+  verify(signature: Uint8Array, message: Uint8Array, verifyKey: spec.PublicKey): boolean {
     if (signature.length != spec.ExtendedEd25519Spec.signatureLength) {
       return false;
     }
@@ -101,7 +101,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
       pkOffset: 0,
       message: message,
       messageOffset: 0,
-      messageLength: message.length
+      messageLength: message.length,
     });
   }
 
@@ -114,7 +114,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {Bip32Index} index - The index of the key to derive.
    * @returns {spec.SecretKey} - An extended secret key.
    */
-  deriveChildSecretKey (secretKey: spec.SecretKey, index: Bip32Index): spec.SecretKey {
+  deriveChildSecretKey(secretKey: spec.SecretKey, index: Bip32Index): spec.SecretKey {
     // Get the left and right numbers from the secret key
     const lNum = spec.ExtendedEd25519Spec.leftNumber(secretKey);
     const rNum = spec.ExtendedEd25519Spec.rightNumber(secretKey);
@@ -166,10 +166,10 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {SoftIndex} index - Soft index for deriving the child key.
    * @returns {spec.PublicKey} - A new `PublicKey` object representing the derived child public key.
    */
-  deriveChildVerificationKey (verificationKey: spec.PublicKey, index: SoftIndex): spec.PublicKey {
+  deriveChildVerificationKey(verificationKey: spec.PublicKey, index: SoftIndex): spec.PublicKey {
     const z = spec.ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,
-      new Uint8Array([0x02, ...verificationKey.vk.bytes, ...index.bytes])
+      new Uint8Array([0x02, ...verificationKey.vk.bytes, ...index.bytes]),
     );
 
     // Extract the first 28 bytes of the HMAC-SHA-512 output as zL.
@@ -197,7 +197,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
 
     const nextChainCode = spec.ExtendedEd25519Spec.hmac512WithKey(
       verificationKey.chainCode,
-      new Uint8Array([0x03, ...verificationKey.vk.bytes, ...index.bytes])
+      new Uint8Array([0x03, ...verificationKey.vk.bytes, ...index.bytes]),
     ).slice(32, 64);
 
     // Return the next public key and chain code as a PublicKey object.
@@ -212,7 +212,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {spec.SecretKey} secretKey - The secret key.
    * @returns {spec.PublicKey} - The public verification key.
    */
-  getVerificationKey (secretKey: spec.SecretKey): spec.PublicKey {
+  getVerificationKey(secretKey: spec.SecretKey): spec.PublicKey {
     const pk = new Uint8Array(spec.ExtendedEd25519Spec.publicKeyLength);
     this.impl.scalarMultBaseEncoded(secretKey.leftKey, pk, 0);
 
@@ -228,10 +228,10 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {Uint8Array} seed - The seed.
    * @returns {spec.SecretKey} - The secret signing key.
    */
-  deriveSecretKeyFromSeed (seed: Uint8Array): spec.SecretKey {
+  deriveSecretKeyFromSeed(seed: Uint8Array): spec.SecretKey {
     if (seed.length !== spec.ExtendedEd25519Spec.seedLength) {
       throw new Error(
-        `Invalid seed length. Expected: ${spec.ExtendedEd25519Spec.seedLength}, Received: ${seed.length}`
+        `Invalid seed length. Expected: ${spec.ExtendedEd25519Spec.seedLength}, Received: ${seed.length}`,
       );
     }
     return spec.ExtendedEd25519Spec.clampBits(seed);
@@ -246,7 +246,7 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {Bip32Index[]} indices - List of indices representing the path of the key to derive.
    * @returns {spec.SecretKey} - An extended secret key.
    */
-  deriveSecretKeyFromChildPath (secretKey: spec.SecretKey, indices: Bip32Index[]): spec.SecretKey {
+  deriveSecretKeyFromChildPath(secretKey: spec.SecretKey, indices: Bip32Index[]): spec.SecretKey {
     if (indices.length === 1) {
       return this.deriveChildSecretKey(secretKey, indices[0]);
     } else {
@@ -263,9 +263,9 @@ export class ExtendedEd25519 extends EllipticCurveSignatureScheme<spec.SecretKey
    * @param {Bip32Index[]} indices - List of indices representing the path of the key pair to derive.
    * @returns {KeyPair<spec.SecretKey, spec.PublicKey>} - The key pair.
    */
-  deriveKeyPairFromChildPath (
+  deriveKeyPairFromChildPath(
     secretKey: spec.SecretKey,
-    indices: Bip32Index[]
+    indices: Bip32Index[],
   ): KeyPair<spec.SecretKey, spec.PublicKey> {
     const derivedSecretKey = this.deriveSecretKeyFromChildPath(secretKey, indices);
     const derivedPublicKey = this.getVerificationKey(derivedSecretKey);

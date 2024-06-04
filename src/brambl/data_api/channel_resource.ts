@@ -16,10 +16,9 @@ interface TransportResource {
   transportResource(address: string, port: number, useHttpGet: boolean): Transport;
 }
 
-
 /**
  * Represents a transport resource that provides a method to establish a channel connection.
- * 
+ *
  */
 export const TransportResource: TransportResource = {
   transportResource: (address: string, port: number, secureConnection: boolean = false): Transport => {
@@ -28,10 +27,10 @@ export const TransportResource: TransportResource = {
       useBinaryFormat: secureConnection,
       // By default, all requests use POST. Set this option to true to use GET
       // for side-effect free RPCs.
-      useHttpGet: false
+      useHttpGet: false,
     });
     return transport;
-  }
+  },
 };
 
 /**
@@ -67,7 +66,7 @@ export const RpcChannelResource: RpcChannelResource = {
         const channel = new Channel(
           `${address}:${port}`,
           channelCredentials,
-          undefined // TODO figure out how grpc works with channel options
+          undefined, // TODO figure out how grpc works with channel options
         );
 
         resolve(channel);
@@ -77,5 +76,5 @@ export const RpcChannelResource: RpcChannelResource = {
     });
 
     return channelPromise;
-  }
+  },
 };

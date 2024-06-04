@@ -10,7 +10,7 @@ abstract class Blake2b extends Hash {
   abstract override hash(bytes: Uint8Array): Uint8Array;
   abstract override hashComplex(options: { prefix?: number; messages: Message[] }): Digest;
 }
-Digest
+Digest;
 
 /**
  * A 256-bit (32-byte) implementation of Blake2b.

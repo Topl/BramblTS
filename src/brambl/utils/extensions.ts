@@ -1,6 +1,5 @@
 /// class made to emulate some dart and scala extension methods, somehow feels like a meme..
 
-
 /**
  * Checks if an object has a specific property.
  *
@@ -8,7 +7,7 @@
  * @param prop - The property to check for.
  * @returns A boolean indicating whether the object has the specified property.
  */
-export function hasProperty<T> (obj: T, prop: keyof T): boolean {
+export function hasProperty<T>(obj: T, prop: keyof T): boolean {
   return obj.hasOwnProperty(prop);
 }
 
@@ -18,15 +17,15 @@ export function hasProperty<T> (obj: T, prop: keyof T): boolean {
  * @param value - The value to check.
  * @returns `true` if the value is not null or undefined, `false` otherwise.
  */
-export function has (value: any): boolean {
+export function has(value: any): boolean {
   return isNotNull(value);
 }
 
-export function isNotNull<T> (value: T | null): boolean {
+export function isNotNull<T>(value: T | null): boolean {
   return value !== null;
 }
 
-export function isNull<T> (value: T | null): boolean {
+export function isNull<T>(value: T | null): boolean {
   return value === null;
 }
 
@@ -35,8 +34,8 @@ export function isNull<T> (value: T | null): boolean {
  * @param values - The values to check.
  * @returns `true` if any of the values are null, `false` otherwise.
  */
-export function areAnyNull (...values: Array<any>): boolean {
-  return values.some(value => value === null);
+export function areAnyNull(...values: Array<any>): boolean {
+  return values.some((value) => value === null);
 }
 
 /**
@@ -44,19 +43,19 @@ export function areAnyNull (...values: Array<any>): boolean {
  * @param values - The values to check.
  * @returns `true` if all of the values are not null, `false` otherwise.
  */
-export function areAllNotNull (...values: Array<any>): boolean {
-  return values.every(value => value !== null);
+export function areAllNotNull(...values: Array<any>): boolean {
+  return values.every((value) => value !== null);
 }
 
 export class Uint8ArrayUtils {
-  static add (a: Uint8Array, b: Uint8Array): Uint8Array {
+  static add(a: Uint8Array, b: Uint8Array): Uint8Array {
     const result = new Uint8Array(a.length + b.length);
     result.set(a, 0);
     result.set(b, a.length);
     return result;
   }
 
-  static equals (a: Uint8Array, b: Uint8Array): boolean {
+  static equals(a: Uint8Array, b: Uint8Array): boolean {
     if (a.length !== b.length) return false;
     for (let i = 0; i < a.length; i++) {
       if (a[i] !== b[i]) return false;
@@ -65,22 +64,21 @@ export class Uint8ArrayUtils {
   }
 
   // TODO figure out which version to use, buffer not available in all environments
-  static toBigInt (a: Uint8Array): bigint {
+  static toBigInt(a: Uint8Array): bigint {
     return BigInt('0x' + Buffer.from(a).toString('hex'));
   }
 
-  static toBigInt2 (a: Uint8Array): bigint {
-      const hex = Array.from(a)
-        .map(b => b.toString(16).padStart(2, '0'))
-        .join('');
-      return BigInt(`0x${hex}`);
-    }
+  static toBigInt2(a: Uint8Array): bigint {
+    const hex = Array.from(a)
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+    return BigInt(`0x${hex}`);
+  }
 }
-
 
 class bigIntExtensions {
   // WARNING: does not handle negatives!
-  static toUint8Array (n: bigint): Uint8Array {
+  static toUint8Array(n: bigint): Uint8Array {
     const hex = n.toString(16);
     const len = hex.length;
     const u8 = new Uint8Array(len / 2);
@@ -90,4 +88,3 @@ class bigIntExtensions {
     return u8;
   }
 }
-

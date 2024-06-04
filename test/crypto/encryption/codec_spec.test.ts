@@ -1,12 +1,11 @@
-import { VaultStore } from "@/crypto/crypto.js";
-import { AesParams, Aes } from "@/crypto/encryption/cipher/aes.js";
-import { Kdf } from "@/crypto/encryption/kdf/kdf.js";
-import { SCrypt, SCryptParams } from "@/crypto/encryption/kdf/scrypt.js";
-import { Json } from "@/utils/json.js";
-import { describe, test, expect } from "vitest";
-import { Cipher } from "@/crypto/encryption/cipher/cipher.js";
-import { isLeft, toRightE } from "@/common/functional/brambl_fp.js";
-
+import { VaultStore } from '@/crypto/crypto.js';
+import { AesParams, Aes } from '@/crypto/encryption/cipher/aes.js';
+import { Kdf } from '@/crypto/encryption/kdf/kdf.js';
+import { SCrypt, SCryptParams } from '@/crypto/encryption/kdf/scrypt.js';
+import { Json } from '@/utils/json.js';
+import { describe, test, expect } from 'vitest';
+import { Cipher } from '@/crypto/encryption/cipher/cipher.js';
+import { isLeft, toRightE } from '@/common/functional/brambl_fp.js';
 
 describe('Codec Spec', () => {
   test('AES Params > Encode and Decode', () => {
