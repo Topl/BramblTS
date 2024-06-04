@@ -1,5 +1,5 @@
 // import { v4 as uuidv4 } from 'uuid';
-import { isLeft, left, right, type Either } from '@/common/functional/either.js';
+import { isLeft, left, right, type Either } from '@/common/functional/brambl_fp.js';
 import { randomBytes } from 'crypto';
 import { English, Language } from './language.js';
 import { MnemonicSize } from './mnemonic.js';

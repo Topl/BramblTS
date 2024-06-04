@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { isLeft, left, right, type Either } from '../../../common/functional/either.js';
+import { isLeft, left, right, type Either } from '../../../common/functional/brambl_fp.js';
 import { SHA256 } from '../../../crypto/hash/sha.js';
 import { Entropy } from './entropy.js';
 import { Language, LanguageWordList } from './language.js';

@@ -1,7 +1,7 @@
 import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
 import * as x_spec from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';
 
-import { optionOps, pipe } from '@/common/functional/either.js';
+import { optionOps, pipe } from '@/common/functional/brambl_fp.js';
 import { Entropy, ExtendedEd25519, KeyPair, SoftIndex } from '@/crypto/crypto.js';
 import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
 import { hexToUint8Array, hexToUint8ArrayFor32 } from '../generation/test_vectors/key_initializer_vectors.js';

@@ -1,6 +1,6 @@
 // A Verification Context opinionated to the Topl context.
 
-import { none, optionOps, some, type Option } from '@/common/functional/either.js';
+import { none, optionOps, some, type Option } from '@/common/functional/brambl_fp.js';
 import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
 import type SignatureVerifier from '@/quivr4s/algebras/signature_verifier.js';
 import type ParsableDataInterface from '@/quivr4s/quivr/common/parsable_data_interface.js';

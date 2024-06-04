@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type Either, left, right } from "@/common/functional/either.js";
+import { type Either, left, right } from "@/common/functional/brambl_fp.js";
 import { Json } from "@/utils/json.js";
 import { Cipher } from "./cipher/cipher.js";
 import { Kdf } from "./kdf/kdf.js";

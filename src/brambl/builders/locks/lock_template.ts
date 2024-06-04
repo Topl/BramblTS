@@ -1,4 +1,4 @@
-import { type Either, flatMap, left, right } from '@/common/functional/either.js';
+import { type Either, flatMap, left, right } from '@/common/functional/brambl_fp.js';
 import { Challenge, Lock, Lock_Predicate, Proposition_Threshold, VerificationKey } from 'topl_common';
 import { BuilderError } from '../builder_error.js';
 import { PropositionTemplate, ThresholdTemplate } from './proposition_template.js';

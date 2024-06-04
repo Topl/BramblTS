@@ -12,7 +12,7 @@ import  {
  */
 
 /// new, chose interface because of easier exports
-export interface WalletStateAlgebra {
+export abstract class WalletStateAlgebra {
   /**
    * Initialize the wallet interaction with the given key pair
    *
@@ -20,7 +20,7 @@ export interface WalletStateAlgebra {
    * @param ledgerId The ledger id to initialize the wallet interaction with
    * @param mainKey The Topl Main verification key to initialize the wallet interaction with
    */
-  initWalletState(networkId: number, ledgerId: number, mainKey: KeyPair): Promise<void>;
+  abstract initWalletState(networkId: number, ledgerId: number, mainKey: KeyPair): Promise<void>;
 
   /**
    * Get the indices associated to a signature proposition
@@ -28,7 +28,7 @@ export interface WalletStateAlgebra {
    * @param signatureProposition The signature proposition to get the indices for
    * @return The indices associated to the signature proposition if it exists. Else None
    */
-  getIndicesBySignature(signatureProposition: Proposition_DigitalSignature): Promise<Indices | null>;
+  abstract getIndicesBySignature(signatureProposition: Proposition_DigitalSignature): Promise<Indices | null>;
 
   /**
    * Get the preimage secret associated to a digest proposition.
@@ -36,7 +36,7 @@ export interface WalletStateAlgebra {
    * @param digestProposition The Digest Proposition for which to retrieve the preimage secret for
    * @return The preimage secret associated to the Digest Proposition if it exists. Else None
    */
-  getPreimage(digestProposition: Proposition_Digest): Promise<Preimage | null>;
+  abstract getPreimage(digestProposition: Proposition_Digest): Promise<Preimage | null>;
 
   /**
    * Add a preimage secret associated to a digest proposition.
@@ -44,14 +44,14 @@ export interface WalletStateAlgebra {
    * @param preimage The preimage secret to add
    * @param digest The digest proposition for which the preimage is derived from.
    */
-  addPreimage(preimage: Preimage, digest: Proposition_Digest): Promise<void>;
+  abstract addPreimage(preimage: Preimage, digest: Proposition_Digest): Promise<void>;
 
   /**
    * Get the current address for the wallet interaction
    *
    * @return The current address of the wallet interaction as a string in base58 encoding
    */
-  getCurrentAddress(): Promise<string>;
+  abstract getCurrentAddress(): Promise<string>;
 
   /**
    * Update the wallet interaction with a new set of Predicate Lock, Lock Address, and their associated Indices
@@ -62,7 +62,7 @@ export interface WalletStateAlgebra {
    * @param vk             The verification key to add to the wallet interaction
    * @param indices        The indices to add to the wallet interaction
    */
-  updateWalletState(
+  abstract updateWalletState(
     lockPredicate: string,
     lockAddress: string,
     routine: string | null,
@@ -79,7 +79,7 @@ export interface WalletStateAlgebra {
    *                  and template pair will be used
    * @return The indices for the given fellowship, template and optional interaction if possible. Else None
    */
-  getCurrentIndicesForFunds(
+  abstract getCurrentIndicesForFunds(
     fellowship: string,
     template: string,
     someInteraction: number | null
@@ -93,7 +93,7 @@ export interface WalletStateAlgebra {
    * @return The list of interactions for the given fellowship and template if possible.
    * If the fellowship or template do not exist it will return None.
    */
-  getInteractionList(fellowship: string, template: string): Promise<Array<[Indices, string]> | null>;
+  abstract getInteractionList(fellowship: string, template: string): Promise<Array<[Indices, string]> | null>;
 
   /**
    * Set the current interaction for the given fellowship and template.
@@ -106,7 +106,7 @@ export interface WalletStateAlgebra {
    * @param interaction The interaction index to set the current interaction to
    * @return The indices for the given fellowship, template and interaction. If the interaction is not valid, None.
    */
-  setCurrentIndices(fellowship: string, template: string, interaction: number): Promise<Indices | null>;
+  abstract setCurrentIndices(fellowship: string, template: string, interaction: number): Promise<Indices | null>;
 
   /**
    * Validate that the supplied fellowship, template and optional interaction exist and are associated with each other in the
@@ -118,7 +118,7 @@ export interface WalletStateAlgebra {
    *                  and template pair will be used
    * @return The indices for the given fellowship, template and optional interaction if valid. If not, the relevant errors
    */
-  validateCurrentIndicesForFunds(
+  abstract validateCurrentIndicesForFunds(
     fellowship: string,
     template: string,
     someInteraction: number | null
@@ -131,7 +131,7 @@ export interface WalletStateAlgebra {
    * @param template A String label of the template to get the next indices for
    * @return The next indices for the given fellowship and template if possible. Else None
    */
-  getNextIndicesForFunds(fellowship: string, template: string): Promise<Indices | null>;
+  abstract getNextIndicesForFunds(fellowship: string, template: string): Promise<Indices | null>;
 
   /**
    * Get the lock predicate associated to the given indices
@@ -139,7 +139,7 @@ export interface WalletStateAlgebra {
    * @param indices The indices to get the lock predicate for
    * @return The lock predicate for the given indices if possible. Else None
    */
-  getLockByIndex(indices: Indices): Promise<Lock_Predicate | null>;
+  abstract  getLockByIndex(indices: Indices): Promise<Lock_Predicate | null>;
 
   /**
    * Get the lock predicate associated to the given lockAddress.
@@ -147,7 +147,7 @@ export interface WalletStateAlgebra {
    * @param lockAddress The lockAddress for which we are retrieving the lock for
    * @return The lock predicate for the lockAddress if possible. Else None
    */
-  getLockByAddress(lockAddress: string): Promise<Lock_Predicate | null>;
+  abstract getLockByAddress(lockAddress: string): Promise<Lock_Predicate | null>;
 
   /**
    * Get the lock address associated to the given fellowship, template and optional interaction
@@ -158,7 +158,7 @@ export interface WalletStateAlgebra {
    *                  given fellowship and template pair will be used
    * @return The lock address for the given indices if possible. Else None
    */
-  getAddress(fellowship: string, template: string, someInteraction: number | null): Promise<string | null>;
+  abstract getAddress(fellowship: string, template: string, someInteraction: number | null): Promise<string | null>;
 
   /**
    * Add a new entry of fellow verification keys to the wallet interaction's cartesian indexing. Entities are at a pair of
@@ -169,7 +169,7 @@ export interface WalletStateAlgebra {
    * @param template A String label of the template to associate the new verification keys with
    * @param fellows The list of Verification Keys in base58 format to add
    */
-  addEntityVks(fellowship: string, template: string, fellows: string[]): Promise<void>;
+  abstract addEntityVks(fellowship: string, template: string, fellows: string[]): Promise<void>;
 
   /**
    * Get the list of verification keys associated to the given pair of fellowship and template
@@ -178,7 +178,7 @@ export interface WalletStateAlgebra {
    * @returns The list of verification keys in base58 format associated to the given fellowship and template if possible.
    *          Else None. It is possible that the list of fellows is empty.
    */
-  getEntityVks(fellowship: string, template: string): Promise<string[] | null>;
+  abstract getEntityVks(fellowship: string, template: string): Promise<string[] | null>;
 
   /**
    * Add a new lock template entry to the wallet interaction's cartesian indexing. Lock templates are at the y (template)
@@ -188,7 +188,7 @@ export interface WalletStateAlgebra {
    * @param template   A String label of the template to associate the new lockTemplate entry with
    * @param lockTemplate The list of Lock Templates of the lock templates to add to the new Entries entry
    */
-  addNewLockTemplate(template: string, lockTemplate: LockTemplate): Promise<void>;
+  abstract addNewLockTemplate(template: string, lockTemplate: LockTemplate): Promise<void>;
 
   /**
    * Get the lock template associated to the given template
@@ -196,7 +196,7 @@ export interface WalletStateAlgebra {
    * @param template - A String label of the template to get the lock template for
    * @returns The lock template associated to the given template if possible. Else None.
    */
-  getLockTemplate(template: string): Promise<LockTemplate | null>;
+  abstract getLockTemplate(template: string): Promise<LockTemplate | null>;
 
   /**
    * Using the template associated the given template, the verification keys associated to the fellowship and template pair,
@@ -207,5 +207,5 @@ export interface WalletStateAlgebra {
    * @param nextInteraction - The z index interaction to build the lock for
    * @returns A built lock, if possible. Else none
    */
-  getLock(fellowship: string, template: string, nextInteraction: number): Promise<Lock | null>;
+  abstract getLock(fellowship: string, template: string, nextInteraction: number): Promise<Lock | null>;
 }

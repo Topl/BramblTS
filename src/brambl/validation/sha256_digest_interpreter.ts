@@ -1,4 +1,4 @@
-import { left, right, type Either } from '@/common/functional/either.js';
+import { left, right, type Either } from '@/common/functional/brambl_fp.js';
 import { SHA256 } from '@/crypto/hash/sha.js';
 import { DigestVerification } from 'topl_common';
 import { Uint8ArrayUtils } from '../utils/extensions.js';

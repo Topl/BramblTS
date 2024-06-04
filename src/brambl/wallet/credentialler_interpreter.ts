@@ -68,6 +68,9 @@ export class CredentiallerInterpreter implements Credentialler {
     // const syntaxEval = TransactionSyntaxInterpreter.validate(tx);
     // const syntaxErrors = isLeft(syntaxEval) ? syntaxEval.left : [];
 
+    // const authErrors = []
+
+    // TODO: fix
     const authErrors = pipe(
       TransactionAuthorizationInterpreter.validate(ctx, tx),
       eitherOps.swap,

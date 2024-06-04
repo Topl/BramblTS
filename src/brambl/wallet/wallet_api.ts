@@ -1,5 +1,4 @@
-import { unit, type Unit } from '@/common/functional.js';
-import { isLeft, left, right, type Either } from '@/common/functional/either.js';
+import { isLeft, left, right, unit, type Either, type Unit } from '@/common/functional/brambl_fp.js';
 import {
     Entropy,
     ExtendedEd25519,

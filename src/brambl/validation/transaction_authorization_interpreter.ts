@@ -1,4 +1,4 @@
-import { array, either, left, pipe, right, zip, type Either } from '@/common/functional/either.js';
+import { array, either, left, pipe, right, zip, type Either } from '@/common/functional/brambl_fp.js';
 import { Verifier, type QuivrRuntimeError } from '@/quivr4s/quivr.js';
 import type DynamicContext from '@/quivr4s/quivr/runtime/dynamic_context.js';
 import type { AccumulatorRootId, IoTransaction, LockId, Proof, Proposition } from 'topl_common';

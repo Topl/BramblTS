@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createHash } from 'crypto';
 import { promises as fs } from 'fs';
-import { left, right, type Either } from '../../../common/functional/either.js';
+import { left, right, type Either } from '../../../common/functional/brambl_fp.js';
 import path from 'path';
 
 export abstract class Language {

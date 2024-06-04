@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import  { none, type Option, some } from '@/common/functional/either.js';
+import  { none, type Option, some } from '@/common/functional/brambl_fp.js';
 import { Bip32Index, HardenedIndex, SoftIndex } from '@/crypto/generation/bip32_index.js';
 import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
 import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';

@@ -1,4 +1,4 @@
-import { isLeft, left, right, type Either } from '@/common/functional/either.js';
+import { isLeft, left, right, type Either } from '@/common/functional/brambl_fp.js';
 import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
 import { SigningKey } from '@/crypto/signing/signing.js';
 import { v4 as uuidv4 } from 'uuid';

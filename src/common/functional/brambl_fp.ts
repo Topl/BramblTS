@@ -1,8 +1,8 @@
-import { isLeft, isRight, type Either } from 'fp-ts/lib/Either.js';
+import { isLeft, isRight, type Either } from 'fp-ts/lib/either.js';
 import type { LazyArg } from 'fp-ts/lib/function.js';
 import { type Option } from 'fp-ts/Option';
 
-export { flatMap, isLeft, isRight, left, right, type Either } from 'fp-ts/lib/Either.js';
+export { flatMap, isLeft, isRight, left, right, type Either } from 'fp-ts/lib/either.js';
 
 export { zip } from 'fp-ts/lib/Array.js';
 
@@ -11,6 +11,27 @@ export { pipe } from 'fp-ts/lib/function.js';
 export type { NonEmptyArray } from 'fp-ts/lib/NonEmptyArray.js';
 export { fromNullable, none, some, type Option } from 'fp-ts/Option';
 export type { Task } from 'fp-ts/Task';
+
+
+/**
+ * Custom functional interpretation with the help of fp-ts
+ */
+
+
+/**
+ * `Unit` is a type that represents the absence of a meaningful value.
+ * It is similar to the `Unit` type in Scala
+ * 
+ * In TypeScript, we don't have an exact equivalent of Scala's `Unit`. 
+ * The closest we can get is `void`, but `void` is not a real type and it can't be used in the same way as `Unit`.
+ * So, we define `Unit` as an empty object type, which can only have one value, an empty object `{}`.
+ * This allows us to use `Unit` in a similar way as in Scala, for methods that don't return a meaningful value.
+ */
+export type Unit = {};
+
+// Create a constant value named unit
+export const unit: Unit = {};
+
 
 /// custom functions to align with dart code
 
@@ -78,4 +99,4 @@ export function getOrThrowEitherLeft<A, E> (
 export const toLeftE = getOrThrowEitherLeft;
 
 /// experimental extensions via typescript module augmentation
-declare module 'fp-ts' {}
+// declare module 'fp-ts' {} // Union types make things complicated..

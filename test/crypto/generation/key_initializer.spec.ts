@@ -1,4 +1,4 @@
-import { isLeft } from '@/common/functional/either.js';
+import { isLeft } from '@/common/functional/brambl_fp.js';
 import { Ed25519, Ed25519Initializer, ExtendedEd25519, ExtendedEd25519Initializer } from '@/crypto/crypto.js';
 import { keyInitializerTestVectors, KeyInitializerVector } from './test_vectors/key_initializer_vectors.js';
 import { describe, test, expect } from 'vitest';

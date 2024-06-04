@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { none, some, type Option } from '@/common/functional/either.js';
+import { none, some, type Option } from '@/common/functional/brambl_fp.js';
 import { Bip32Index, HardenedIndex, SoftIndex } from '@/crypto/generation/bip32_index.js';
 import { ExtendedEd25519Initializer } from '@/crypto/generation/key_initializer/extended_ed25519_initializer.js';
 import { PublicKey } from '@/crypto/signing/ed25519/ed25519_spec.js';

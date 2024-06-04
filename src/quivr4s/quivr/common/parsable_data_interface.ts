@@ -1,4 +1,4 @@
-import type { Either } from '@/common/functional/either.js';
+import type { Either } from '@/common/functional/brambl_fp.js';
 import { Data } from 'topl_common';
 
 /// Provides Digest verification for use in a Dynamic Context

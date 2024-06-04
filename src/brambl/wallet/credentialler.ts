@@ -1,4 +1,4 @@
-import type { Either } from '@/common/functional/either.js';
+import type { Either } from '@/common/functional/brambl_fp.js';
 import type { ValidationError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
 import { Context } from 'brambl/context.js';
 import type { IoTransaction } from 'topl_common';

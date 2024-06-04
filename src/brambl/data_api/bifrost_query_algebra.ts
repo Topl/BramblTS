@@ -1,4 +1,4 @@
-import { fromNullable, option, type Option } from '@/common/functional/either.js';
+import { fromNullable, option, type Option } from '@/common/functional/brambl_fp.js';
 import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect';
 import { isSome, none } from 'fp-ts/lib/Option.js';
 import {

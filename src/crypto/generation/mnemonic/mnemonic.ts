@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { left, right, type Either } from '../../../common/functional/either.js';
+import { left, right, type Either } from '../../../common/functional/brambl_fp.js';
 import { PhraseFailure, PhraseFailureType } from './phrase.js';
 
 /**

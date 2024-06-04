@@ -1,4 +1,4 @@
-import { isRight, toRightE } from '@/common/functional/either.js';
+import { isRight, toRightE } from '@/common/functional/brambl_fp.js';
 import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
 import { v4 as uuidv4 } from 'uuid';
 import { describe, expect, test } from 'vitest';

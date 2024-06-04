@@ -1,4 +1,4 @@
-import type { Either } from '@/common/functional/either.js';
+import type { Either } from '@/common/functional/brambl_fp.js';
 
 export default abstract class ContextualValidation<E, T, Context> {
   /**

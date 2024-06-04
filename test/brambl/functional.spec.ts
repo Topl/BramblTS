@@ -1,4 +1,4 @@
-import { getOrThrowOption, getOrThrowEither, none, some, right, left } from "@/common/functional/either.js";
+import { getOrThrowOption, getOrThrowEither, none, some, right, left } from "@/common/functional/brambl_fp.js";
 import { describe, test, expect } from "vitest";
 
 

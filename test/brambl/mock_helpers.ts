@@ -39,74 +39,100 @@
 // } from 'topl_common';
 
 import { sizedEvidence } from '@/brambl/common/contains_evidence.js';
+import { ProtoConverters } from '@/brambl/utils/proto_converters.js';
+import { blake2b256, ExtendedEd25519, HardenedIndex, sha256, SoftIndex } from '@/crypto/crypto.js';
+import { Proposer, Prover } from '@/quivr4s/quivr.js';
 import {
   Asset,
-    Datum_IoTransaction,
-    Event_IoTransaction,
-    Group,
-    Event_GroupPolicy as GroupPolicy,
-    Int128,
-    IoTransaction,
-    Schedule,
-    Series,
-    SeriesId,
-    Event_SeriesPolicy as SeriesPolicy,
-    SmallData,
-    Topl,
-    TransactionId,
-    TransactionOutputAddress,
-    Value
+  Attestation,
+  Attestation_Predicate,
+  Challenge,
+  Datum_IoTransaction,
+  Digest,
+  Event_IoTransaction,
+  Group,
+  Event_GroupPolicy as GroupPolicy,
+  Indices,
+  Int128,
+  IoTransaction,
+  Lock,
+  Lock_Predicate,
+  LockAddress,
+  LockId,
+  Preimage,
+  Proof,
+  Schedule,
+  Series,
+  SeriesId,
+  Event_SeriesPolicy as SeriesPolicy,
+  SignableBytes,
+  SmallData,
+  SpentTransactionOutput,
+  Topl,
+  TransactionId,
+  TransactionOutputAddress,
+  UnspentTransactionOutput,
+  Value,
+  Witness
 } from 'topl_common';
 
-// const fakeMsgBind = new SignableBytes({ value: new TextEncoder().encode('transaction binding') });
+export const fakeMsgBind = new SignableBytes({ value: new TextEncoder().encode('transaction binding') });
 
-// const mockIndices = { x: 0, y: 0, z: 0 };
+export const mockIndices = new Indices({ x: 0, y: 0, z: 0 });
 
-// // Hardcoding ExtendedEd25519
-// export const mockMainKeyPair = new ExtendedEd25519().deriveKeyPairFromSeed(new Uint8Array(96).fill(0));
+// Hardcoding ExtendedEd25519
+export const mockMainKeyPair = new ExtendedEd25519().deriveKeyPairFromSeed(new Uint8Array(96).fill(0));
 
-// export const mockChildKeyPair = new ExtendedEd25519().deriveKeyPairFromChildPath(mockMainKeyPair.signingKey, [
-//   new HardenedIndex(mockIndices.x),
-//   new SoftIndex(mockIndices.y),
-//   new SoftIndex(mockIndices.z)
-// ]);
+export const mockChildKeyPair = new ExtendedEd25519().deriveKeyPairFromChildPath(mockMainKeyPair.signingKey, [
+  new HardenedIndex(mockIndices.x),
+  new SoftIndex(mockIndices.y),
+  new SoftIndex(mockIndices.z)
+]);
 
-// export const mockSigningRoutine = 'ExtendedEd25519';
+export const mockSigningRoutine = 'ExtendedEd25519';
 
-// export const mockSignatureProposition = Proposer.signatureProposer(
-//   mockSigningRoutine,
-//   ProtoConverters.keyPairToProto(mockChildKeyPair).vk
-// );
+export const mockSignatureProposition = Proposer.signatureProposer(
+  mockSigningRoutine,
+  ProtoConverters.keyPairToProto(mockChildKeyPair).vk
+);
 
-// export const mockSignature = new Witness({
-//   value: new ExtendedEd25519().sign(mockChildKeyPair.signingKey, new Uint8Array(fakeMsgBind.value))
-// });
+export const mockSignature = new Witness({
+  value: new ExtendedEd25519().sign(mockChildKeyPair.signingKey, new Uint8Array(fakeMsgBind.value))
+});
 
-// export const mockSignatureProof = Prover.signatureProver(mockSignature, fakeMsgBind);
+export const mockSignatureProof = Prover.signatureProver(mockSignature, fakeMsgBind);
 
-// export const mockPreimage = new Preimage({
-//   input: new TextEncoder().encode('secret'),
-//   salt: new TextEncoder().encode('salt')
-// });
+export const mockPreimage = new Preimage({
+  input: new TextEncoder().encode('secret'),
+  salt: new TextEncoder().encode('salt')
+});
 
-// export const mockDigestRoutine = 'Blake2b256';
+export const mockDigestRoutine = 'Blake2b256';
+export const mockSha256DigestRoutine = 'Sha256';
 
-// export const mockDigest = new Digest({
-//   value: new Blake2b256().hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt]))
-// });
-// export const mockDigestProposition = Proposer.digestProposer(mockDigestRoutine, mockDigest);
-// export const mockDigestProof = Prover.digestProver(mockPreimage, fakeMsgBind);
+export const mockDigest = new Digest({
+  value: blake2b256.hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt]))
+});
 
-// export const mockMin = BigInt(0);
-// export const mockMax = BigInt(100);
-// export const mockChain = 'header';
-// export const mockTickProposition = Proposer.tickProposer(mockMin, mockMax);
-// export const mockTickProof = Prover.tickProver(fakeMsgBind);
+export const mockSha256Digest = new Digest({
+  value: sha256.hash(new Uint8Array([...mockPreimage.input, ...mockPreimage.salt]))
+});
 
-// export const mockHeightProposition = Proposer.heightProposer(mockChain, mockMin, mockMax);
-// export const mockHeightProof = Prover.heightProver(fakeMsgBind);
+export const mockSha256DigestProposition = Proposer.digestProposer(mockSha256DigestRoutine, mockSha256Digest);
 
-// export const mockLockedProposition = Proposer.lockedProposer(null);
+export const mockDigestProposition = Proposer.digestProposer(mockDigestRoutine, mockDigest);
+export const mockDigestProof = Prover.digestProver(mockPreimage, fakeMsgBind);
+
+export const mockMin = BigInt(0);
+export const mockMax = BigInt(100);
+export const mockChain = 'header';
+export const mockTickProposition = Proposer.tickProposer(mockMin, mockMax);
+export const mockTickProof = Prover.tickProver(fakeMsgBind);
+
+export const mockHeightProposition = Proposer.heightProposer(mockChain, mockMin, mockMax);
+export const mockHeightProof = Prover.heightProver(fakeMsgBind);
+
+export const mockLockedProposition = Proposer.lockedProposer(null);
 // export const mockLockedProof = Prover.lockedProver();
 
 export const txDatum = new Datum_IoTransaction({
@@ -127,34 +153,34 @@ export const quantity = new Int128({ value: Uint8Array.of(1) });
 
 export const lvlValue = new Value({ value: { case: 'lvl', value: { quantity: quantity } } });
 
-// export const trivialOutLock = new Lock({
-//   value: {
-//     case: 'predicate',
-//     value: new Lock_Predicate({
-//       challenges: [
-//         new Challenge({ proposition: { case: 'revealed', value: Proposer.tickProposer(BigInt(5), BigInt(15)) } })
-//       ],
-//       threshold: 1
-//     })
-//   }
-// });
+export const trivialOutLock = new Lock({
+  value: {
+    case: 'predicate',
+    value: new Lock_Predicate({
+      challenges: [
+        new Challenge({ proposition: { case: 'revealed', value: Proposer.tickProposer(BigInt(5), BigInt(15)) } })
+      ],
+      threshold: 1
+    })
+  }
+});
 
-// export const trivialLockAddress = new LockAddress({
-//   network: 0,
-//   ledger: 0,
-//   id: new LockId({ value: sizedEvidence(trivialOutLock).digest.value })
-// });
+export const trivialLockAddress = new LockAddress({
+  network: 0,
+  ledger: 0,
+  id: new LockId({ value: sizedEvidence(trivialOutLock).digest.value })
+});
 
-// export const inPredicateLockFull = new Lock_Predicate({
-//   challenges: [
-//     mockLockedProposition,
-//     mockDigestProposition,
-//     mockSignatureProposition,
-//     mockHeightProposition,
-//     mockTickProposition
-//   ].map(p => new Challenge({ proposition: { case: 'revealed', value: p } })),
-//   threshold: 3
-// });
+export const inPredicateLockFull = new Lock_Predicate({
+  challenges: [
+    mockLockedProposition,
+    mockDigestProposition,
+    mockSignatureProposition,
+    mockHeightProposition,
+    mockTickProposition
+  ].map(p => new Challenge({ proposition: { case: 'revealed', value: p } })),
+  threshold: 3
+});
 
 // export const inLockFull = new Lock({
 //   value: {
@@ -181,27 +207,27 @@ export const lvlValue = new Value({ value: { case: 'lvl', value: { quantity: qua
 //   }
 // });
 
-// export const output = new UnspentTransactionOutput({ address: trivialLockAddress, value: lvlValue });
+export const output = new UnspentTransactionOutput({ address: trivialLockAddress, value: lvlValue });
 
 // export const fullOutput = new UnspentTransactionOutput({ address: inLockFullAddress, value: lvlValue });
 
-// export const attFull = new Attestation({
-//   value: {
-//     case: 'predicate',
-//     value: new Attestation_Predicate({
-//       lock: inPredicateLockFull,
-//       responses: Array(inPredicateLockFull.challenges.length).fill(new Proof())
-//     })
-//   }
-// });
+export const attFull = new Attestation({
+  value: {
+    case: 'predicate',
+    value: new Attestation_Predicate({
+      lock: inPredicateLockFull,
+      responses: Array(inPredicateLockFull.challenges.length).fill(new Proof())
+    })
+  }
+});
 
-// export const inputFull = new SpentTransactionOutput({
-//   address: dummyTxoAddress,
-//   attestation: attFull,
-//   value: lvlValue
-// });
+export const inputFull = new SpentTransactionOutput({
+  address: dummyTxoAddress,
+  attestation: attFull,
+  value: lvlValue
+});
 
-// export const txFull = new IoTransaction({ inputs: [inputFull], outputs: [output], datum: txDatum });
+export const txFull = new IoTransaction({ inputs: [inputFull], outputs: [output], datum: txDatum });
 
 // export const mockVks = [
 //   mockChildKeyPair.verificationKey,

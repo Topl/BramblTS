@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { getOrThrowEither } from '@/common/functional/either.js';
+import { getOrThrowEither } from '@/common/functional/brambl_fp.js';
 import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
 
 export class EntropyToSeedVector {

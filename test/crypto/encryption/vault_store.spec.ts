@@ -1,4 +1,4 @@
-import { toLeftE, toRightE } from "@/common/functional/either.js";
+import { toLeftE, toRightE } from "@/common/functional/brambl_fp.js";
 import { InvalidMac, Mac, VaultStore } from "@/crypto/crypto.js";
 import { Aes } from "@/crypto/encryption/cipher/aes.js";
 import { SCrypt, SCryptParams } from "@/crypto/encryption/kdf/scrypt.js";
@@ -39,7 +39,6 @@ describe('Vault store Spec', () => {
     const vaultStore = generateVaultStore(sensitiveInformation, password);
 
     const decoded = VaultStore.decodeCipher(vaultStore, Uint8Array.from(Buffer.from('this is a different password')));
-    const decodedValue = toLeftE(decoded);
 
     expect(toLeftE(decoded) instanceof InvalidMac).toBe(true);
   });

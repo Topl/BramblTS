@@ -1,4 +1,4 @@
-import { isLeft, left, right, type Either, type Option } from '@/common/functional/either.js';
+import { isLeft, left, right, type Either, type Option } from '@/common/functional/brambl_fp.js';
 import { Data, Datum, DigestVerification, SignableBytes, SignatureVerification } from 'topl_common';
 
 import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';

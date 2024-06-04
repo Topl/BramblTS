@@ -1,4 +1,4 @@
-import { left, type Either } from '@/common/functional/either.js';
+import { left, type Either } from '@/common/functional/brambl_fp.js';
 import { ValidationError, type QuivrRuntimeError } from '../runtime/quivr_runtime_error.js';
 
 

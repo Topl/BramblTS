@@ -1,9 +1,9 @@
 import { Blake2b256 } from '@/crypto/hash/blake2B.js';
 import { DigestVerification } from 'topl_common';
 import { Uint8ArrayUtils } from '../utils/extensions.js';
-import { left, right, type Either } from 'fp-ts/lib/Either.js';
 import { ValidationError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
 import type DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
+import { left, right, type Either } from '@/common/functional/brambl_fp.js';
 
 /**
  * Validates that a Blake2b256 digest is valid.

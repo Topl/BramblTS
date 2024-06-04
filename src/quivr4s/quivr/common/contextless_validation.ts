@@ -1,4 +1,4 @@
-import type { Either } from '@/common/functional/either.js';
+import type { Either } from '@/common/functional/brambl_fp.js';
 
 /**
  * A validation that can be performed without any context.

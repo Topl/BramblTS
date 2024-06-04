@@ -1,4 +1,4 @@
-import { left, right, type Either } from '@/common/functional/either.js';
+import { left, right, type Either } from '@/common/functional/brambl_fp.js';
 import base58Check from 'bs58check';
 import { LockAddress, LockId } from 'topl_common';
 import { EncodingError, InvalidChecksum } from '../utils/encoding.js';

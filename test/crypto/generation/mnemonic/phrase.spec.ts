@@ -1,4 +1,4 @@
-import { isLeft, isRight } from "@/common/functional/either.js";
+import { isLeft, isRight } from "@/common/functional/brambl_fp.js";
 import { Entropy } from "@/crypto/generation/mnemonic/entropy.js";
 import { English } from "@/crypto/generation/mnemonic/language.js";
 import { MnemonicSize } from "@/crypto/generation/mnemonic/mnemonic.js";

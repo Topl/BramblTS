@@ -1,5 +1,3 @@
-import { unit, type Unit } from '@/common/functional.js';
-import { isLeft, left, right, type Either } from 'fp-ts/lib/Either.js';
 import {
   AssetMintingStatement,
   FungibilityType,
@@ -31,6 +29,7 @@ import {
   NonPositiveOutputValue,
   TransactionSyntaxError
 } from './transaction_syntax_error.js';
+import { isLeft, left, right, unit, type Either, type Unit } from '@/common/functional/brambl_fp.js';
 
 class TransactionSyntaxValidators {
   static readonly MaxDataLength = 15360;

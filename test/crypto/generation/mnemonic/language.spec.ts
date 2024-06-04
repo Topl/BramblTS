@@ -1,4 +1,4 @@
-import { isRight } from '@/common/functional/either.js';
+import { isRight } from '@/common/functional/brambl_fp.js';
 import { Entropy } from '@/crypto/generation/mnemonic/entropy.js';
 import {
   ChineseSimplified,

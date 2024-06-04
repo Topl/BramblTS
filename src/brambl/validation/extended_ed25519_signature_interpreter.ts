@@ -1,4 +1,4 @@
-import { left, right, type Either } from '@/common/functional/either.js';
+import { left, right, type Either } from '@/common/functional/brambl_fp.js';
 import * as spec from '@/crypto/signing/ed25519/ed25519_spec.js';
 import { ExtendedEd25519 } from '@/crypto/signing/extended_ed25519/extended_ed25519.js';
 import * as xspec from '@/crypto/signing/extended_ed25519/extended_ed25519_spec.js';

@@ -1,4 +1,4 @@
-import { isLeft, left, right, type Either } from '@/common/functional/either.js';
+import { isLeft, left, right, unit, type Either, type Unit } from '@/common/functional/brambl_fp.js';
 import {
   Attestation,
   Attestation_Predicate,
@@ -26,7 +26,6 @@ import {
   UnspentTransactionOutput,
   Value
 } from 'topl_common';
-import { unit, type Unit } from '../../common/functional.js';
 import { AddressCodecs } from '../codecs/address_codec.js';
 import { ContainsEvidence } from '../common/contains_evidence.js';
 import { GroupPolicySyntax } from '../syntax/group_policy_syntax.js';

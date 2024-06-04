@@ -5,7 +5,7 @@ import { Entropy } from '../mnemonic/entropy.js';
 import { English, Language } from '../mnemonic/language.js';
 import * as ed25519_spec from './../../signing/ed25519/ed25519_spec.js';
 import { InitializationFailure } from './initialization_failure.js';
-import { isLeft, left, right, type Either } from '@/common/functional/either.js';
+import { isLeft, left, right, type Either } from '@/common/functional/brambl_fp.js';
 import type { KeyInitializer } from './key_initializer.js';
 
 export class Ed25519Initializer implements KeyInitializer<SigningKey> {
