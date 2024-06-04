@@ -44,7 +44,7 @@ export class TransactionCostCalculatorInterpreter implements TransactionCostCalc
    * @returns a cost, represented as a number
    */
   private transactionInputCost (input: SpentTransactionOutput): number {
-    var cost = this.transactionCostConfig.inputCost;
+    let cost = this.transactionCostConfig.inputCost;
 
     switch (input.attestation.value.case) {
       case 'predicate':

@@ -14,7 +14,7 @@ import type SignatureVerifier from '@/quivr4s/algebras/signature_verifier.js';
 // signableBytes, currentTick and the datums are dynamic
 export class Context extends DynamicContext<string> {
   readonly tx: IoTransaction;
-  readonly curTick: BigInt;
+  readonly curTick: bigint;
   readonly heightDatums: (label: string) => Option<Datum>;
 
   constructor (tx: IoTransaction, curTick: number, heightDatums: (label: string) => Option<Datum>) {
@@ -34,7 +34,7 @@ export class Context extends DynamicContext<string> {
 
     const currentTick: bigint = BigInt(curTick);
 
-    const datums: (k: String) => Option<Datum> = heightDatums;
+    const datums: (k: string) => Option<Datum> = heightDatums;
 
     const heightOf: (label: string) => Option<bigint> = (label: string) => {
       return optionOps.flatMap(heightDatums(label), datum => {

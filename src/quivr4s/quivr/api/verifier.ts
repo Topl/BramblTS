@@ -45,7 +45,7 @@ export class Verifier {
     tag: string,
     proof: Proof,
     proofTxBind: TxBind,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const sb = context.signableBytes;
     const merge = new Uint8Array([...Buffer.from(tag, 'utf8'), ...sb.value]);
@@ -93,7 +93,7 @@ export class Verifier {
   static verifyDigest (
     proposition: Proposition_Digest,
     proof: Proof_Digest,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({
       value: { case: 'digest', value: proposition }
@@ -122,7 +122,7 @@ export class Verifier {
   static verifySignature (
     proposition: Proposition_DigitalSignature,
     proof: Proof_DigitalSignature,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({
       value: { case: 'digitalSignature', value: proposition }
@@ -155,7 +155,7 @@ export class Verifier {
   static verifyHeightRange (
     proposition: Proposition_HeightRange,
     proof: Proof_HeightRange,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'heightRange', value: proposition } });
 
@@ -193,7 +193,7 @@ export class Verifier {
   static verifyTickRange (
     proposition: Proposition_TickRange,
     proof: Proof_TickRange,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'tickRange', value: proposition } });
 
@@ -226,7 +226,7 @@ export class Verifier {
   static verifyExactMatch (
     proposition: Proposition_ExactMatch,
     proof: Proof_ExactMatch,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'exactMatch', value: proposition } });
 
@@ -253,7 +253,7 @@ export class Verifier {
   static verifyLessThan (
     proposition: Proposition_LessThan,
     proof: Proof_LessThan,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'lessThan', value: proposition } });
 
@@ -280,7 +280,7 @@ export class Verifier {
   static verifyGreaterThan (
     proposition: Proposition_GreaterThan,
     proof: Proof_GreaterThan,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'greaterThan', value: proposition } });
 
@@ -307,7 +307,7 @@ export class Verifier {
   static verifyEqualTo (
     proposition: Proposition_EqualTo,
     proof: Proof_EqualTo,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'equalTo', value: proposition } });
 
@@ -334,7 +334,7 @@ export class Verifier {
   static verifyThreshold (
     proposition: Proposition_Threshold,
     proof: Proof_Threshold,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'threshold', value: proposition } });
 
@@ -383,7 +383,7 @@ export class Verifier {
   static verifyNot (
     proposition: Proposition_Not,
     proof: Proof_Not,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'not', value: proposition } });
 
@@ -407,7 +407,7 @@ export class Verifier {
   static verifyAnd (
     proposition: Proposition_And,
     proof: Proof_And,
-    context: DynamicContext<String>
+    context: DynamicContext<string>
   ): QuivrResult<boolean> {
     const wrappedProposition: Proposition = new Proposition({ value: { case: 'and', value: proposition } });
 
@@ -430,7 +430,7 @@ export class Verifier {
     return quivrEvaluationAuthorizationFailure(wrappedProposition, wrappedProof);
   }
 
-  static verifyOr (proposition: Proposition_Or, proof: Proof_Or, context: DynamicContext<String>): QuivrResult<boolean> {
+  static verifyOr (proposition: Proposition_Or, proof: Proof_Or, context: DynamicContext<string>): QuivrResult<boolean> {
     // const wrappedProposition: Proposition = new Proposition({value: { case: 'or', value: proposition}});
 
     const wrappedProof: Proof = new Proof({
@@ -447,7 +447,7 @@ export class Verifier {
     return rightResult;
   }
 
-  static verify (proposition: Proposition, proof: Proof, context: DynamicContext<String>): QuivrResult<boolean> {
+  static verify (proposition: Proposition, proof: Proof, context: DynamicContext<string>): QuivrResult<boolean> {
     // note: good candidate for patternmatching, but can't figure out how protobuf-es handles the type matching in that case
     if (proposition.value.case === 'locked' && proof.value.case === 'locked') {
       return Verifier.verifyLocked();

@@ -589,7 +589,7 @@ export function sqr(x: Int32Array, z: Int32Array): void {
   let a1 = x0 * x1_2;
   let a2 = x0 * x2_2 + x1 * x1;
   let a3 = x1_2 * x2_2 + x0 * x3_2;
-  let a4 = x2 * x2_2 + x0 * x4_2 + x1 * x3_2;
+  const a4 = x2 * x2_2 + x0 * x4_2 + x1 * x3_2;
   let a5 = x1_2 * x4_2 + x2_2 * x3_2;
   let a6 = x2_2 * x4_2 + x3 * x3;
   let a7 = x3 * x4_2;

@@ -138,7 +138,7 @@ class TransactionSyntaxValidators {
   /**
    * Verify that the transaction has sufficient funds to cover the outputs
    */
-  private static getQuantity (value: Value): BigInt {
+  private static getQuantity (value: Value): bigint {
     /// TODO: update this code segment with improvement
     // return value.quantity().bAsBigInt();
 
