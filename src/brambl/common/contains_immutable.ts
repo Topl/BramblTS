@@ -149,7 +149,7 @@ export class ContainsImmutable {
     return immutableBytes.immutable();
   }
 
-  static bigInt (i: bigint | bigint): ContainsImmutable {
+  static bigInt (i: bigint | BigInt): ContainsImmutable {
     const value = i instanceof BigInt ? i.valueOf() : i;
     const x = bigIntToUint8Array(value);
     return x.bImmutable();

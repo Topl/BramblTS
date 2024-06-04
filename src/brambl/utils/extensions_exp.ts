@@ -11,7 +11,7 @@ declare global {
     /**
      * Returns the number as a string.
      */
-    bramblTestingOverride?(): string;
+    bramblTestingOverride?(): String;
     /**
      * Converts a number to a Uint8Array.
      */
@@ -85,8 +85,8 @@ String.prototype.bToUint8Array = function(): Uint8Array {
 
 ///TODO: deprecated
 function numberToUint8Array (num: number): Uint8Array {
-  const buffer = new ArrayBuffer(4);
-  const view = new DataView(buffer);
+  let buffer = new ArrayBuffer(4);
+  let view = new DataView(buffer);
   view.setUint32(0, num, true); // true for little endian
   return new Uint8Array(buffer);
 }
@@ -121,7 +121,7 @@ function numberToUint8Array2 (number: number): Uint8Array {
 
 ///TODO: deprecated
 function numberToUint8Array3 (num) {
-  const arr = new Uint8Array(8);
+  let arr = new Uint8Array(8);
 
   for (let i = 0; i < 8; i++) {
     arr[i] = num % 256;
@@ -136,7 +136,7 @@ function numberToUint8Array4 (num: number): Uint8Array {
   const length = Math.ceil(Math.log2(num + 1) / 8);
 
   // Create a Uint8Array of the required length
-  const arr = new Uint8Array(length);
+  let arr = new Uint8Array(length);
 
   // Fill the Uint8Array with the bytes of the number
   for (let i = 0; i < length; i++) {

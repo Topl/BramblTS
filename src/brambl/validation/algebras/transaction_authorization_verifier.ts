@@ -5,4 +5,4 @@ import type ContextualValidation from '@/quivr4s/quivr/common/contextual_validat
 
 
 export default interface TransactionAuthorizationVerifier
-  extends ContextualValidation<TransactionAuthorizationError, IoTransaction, DynamicContext<string>> {}
+  extends ContextualValidation<TransactionAuthorizationError, IoTransaction, DynamicContext<String>> {}
