@@ -1,8 +1,6 @@
-import { eitherOps, pipe } from '@/common/functional/either.js';
 import { eitherOps, left, pipe, right, type Either } from '@/common/functional/brambl_fp.js';
 import { ExtendedEd25519 } from '@/crypto/crypto.js';
 import { Prover, type ValidationError } from '@/quivr4s/quivr.js';
-import { left, right, type Either } from 'fp-ts/lib/Either.js';
 import {
   Attestation,
   Indices,
