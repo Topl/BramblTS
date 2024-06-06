@@ -33,11 +33,11 @@ import {
 } from 'topl_common';
 import { type QuivrResult, quivrEvaluationAuthorizationFailure } from '../common/quivr_result.js';
 
+import { blake2b256 } from '@/crypto/crypto.js';
 import { Tokens } from '../../tokens.js';
 import { arraysEqual } from '../../utils/list_utils.js';
 import type DynamicContext from '../runtime/dynamic_context.js';
 import { ValidationError } from '../runtime/quivr_runtime_error.js';
-import { blake2b256 } from '@/crypto/crypto.js';
 
 export class Verifier {
   /// Will return [QuivrResult] Left => [QuivrRuntimeError.messageAuthorizationFailure] if the proof is invalid.
@@ -103,7 +103,6 @@ export class Verifier {
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.digest, wrappedProof, proof.transactionBind, context);
-
 
     if (either.isLeft(messageResult)) return messageResult;
 
@@ -430,20 +429,31 @@ export class Verifier {
   }
 
   static verifyOr (proposition: Proposition_Or, proof: Proof_Or, context: DynamicContext<String>): QuivrResult<boolean> {
-    // const wrappedProposition: Proposition = new Proposition({value: { case: 'or', value: proposition}});
+    const wrappedProposition: Proposition = new Proposition({ value: { case: 'or', value: proposition } });
 
     const wrappedProof: Proof = new Proof({
       value: { case: 'or', value: proof }
     });
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.or, wrappedProof, proof.transactionBind, context);
-    if (either.isLeft(messageResult)) return either.left(messageResult.left);
-
     const leftResult = Verifier.verify(proposition.left, proof.left, context);
-    if (either.isRight(leftResult)) either.right(true);
-
     const rightResult = Verifier.verify(proposition.right, proof.right, context);
-    return rightResult;
+
+    if (either.isRight(messageResult)) {
+      if (either.isRight(leftResult) || either.isRight(rightResult)) {
+        return either.right(true);
+      }
+    }
+
+    if (either.isLeft(leftResult) && either.isRight(rightResult)) {
+      return leftResult;
+    }
+
+    if (either.isRight(leftResult) && either.isLeft(rightResult)) {
+      return rightResult;
+    }
+
+    return quivrEvaluationAuthorizationFailure(wrappedProof, wrappedProposition);
   }
 
   static verify (proposition: Proposition, proof: Proof, context: DynamicContext<String>): QuivrResult<boolean> {
