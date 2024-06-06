@@ -1,5 +1,5 @@
 import { left, none, right, some, type Either, type Option } from '@/common/functional/brambl_fp.js';
-import { blake2b512 } from '@/crypto/crypto.js';
+import { blake2b256, blake2b512 } from '@/crypto/crypto.js';
 import DigestVerifier from '@/quivr4s/algebras/digest_verifer.js';
 import SignatureVerifier from '@/quivr4s/algebras/signature_verifier.js';
 import { ValidationError } from '@/quivr4s/quivr.js';
@@ -7,23 +7,24 @@ import type ParsableDataInterface from '@/quivr4s/quivr/common/parsable_data_int
 import DynamicContext from '@/quivr4s/quivr/runtime/dynamic_context.js';
 import type { QuivrRuntimeError } from '@/quivr4s/quivr/runtime/quivr_runtime_error.js';
 import {
-    Datum,
-    Datum_Header,
-    DigestVerification,
-    Event_Header,
-    Proof,
-    Proposition,
-    SignableBytes,
-    SignatureVerification
+  Datum,
+  Datum_Header,
+  DigestVerification,
+  Event_Header,
+  Proof,
+  Proposition,
+  SignableBytes,
+  SignatureVerification
 } from 'topl_common';
 import { VerySecureSignatureRoutine } from './very_secure_signature_routine.js';
 
 export class MockHelpers {
   static heightString = 'height';
-  static signatureString = 'verySecure';
+  static signatureString = 'VerySecure';
   static hashString = 'blake2b256';
   static saltString = 'I am a digest';
   static preimageString = 'I am a preimage';
+  static wrongPreimageString = 'I am a wrong preimage';
 
   static signableBytes = new SignableBytes({ value: 'someSignableBytes'.bToUint8Array() });
 
@@ -61,7 +62,7 @@ export class MockHelpers {
     ]);
 
     const digestVerifier = (t: DigestVerification): Either<QuivrRuntimeError, DigestVerification> => {
-      const test = blake2b512.hash(Buffer.from([...t.preimage.input, ...t.preimage.salt]));
+      const test = blake2b256.hash(Buffer.from([...t.preimage.input, ...t.preimage.salt]));
       if (t.digest.value.bEquals(test)) {
         return right(t);
       } else {
@@ -76,12 +77,15 @@ export class MockHelpers {
     const currentTick = BigInt(999);
 
     const heightOf = (label: string) => {
-      const datum = mapOfDatums[label];
-      if (datum && datum.header && datum.header.event && datum.header.event.height) {
-        return datum.header.event.height;
-      } else {
-        return null;
-      }
+      const dVal = mapOfDatums.get(label);
+
+      if (!dVal || dVal.value.case !== 'header') return none;
+
+      const height = dVal.value.value?.event?.height;
+
+      if (!height) return none;
+
+      return some(height);
     };
 
     const datumable = (k: string): Option<Datum> => {
