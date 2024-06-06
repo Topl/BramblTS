@@ -120,7 +120,7 @@ export class Prover {
     return new Proof({
       value: {
         case: 'threshold',
-        value: new Proof_Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.equalTo, message) })
+        value: new Proof_Threshold({ responses, transactionBind: this._blake2b56ToTxBind(Tokens.threshold, message) })
       }
     });
   }
