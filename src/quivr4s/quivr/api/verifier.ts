@@ -104,7 +104,6 @@ export class Verifier {
 
     const messageResult = Verifier._evaluateBlake2b256Bind(Tokens.digest, wrappedProof, proof.transactionBind, context);
 
-    either.flatMap;
 
     if (either.isLeft(messageResult)) return messageResult;
 
