@@ -1,6 +1,6 @@
 import { resolve } from 'url';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
@@ -10,6 +10,9 @@ export default defineConfig({
     },
   },
   test: {
+    exclude:  [
+      ...configDefaults.exclude
+    ],
     // alias: {
     //   '@/': new URL('./src/', import.meta.url).pathname, 
     // },
@@ -34,6 +37,8 @@ export default defineConfig({
       'src/brambl/syntax/extensions/challenge_extensions.ts',
       'src/brambl/syntax/extensions/proof_extensions.ts',
       'src/brambl/syntax/extensions/datum_extensions.ts',
+      'src/brambl/syntax/extensions/verification_key_extensions.ts',
+      'src/brambl/syntax/extensions/signing_key_extensions.ts',
     ],
     // testTimeout: 100000, // TODO remove after debugging
   },
