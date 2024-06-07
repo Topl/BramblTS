@@ -1,5 +1,4 @@
 import { ImmutableBytes, IoTransaction, SignableBytes, type SpentTransactionOutput } from 'topl_common';
-import { ContainsImmutable } from './contains_immutable.js';
 
 export default class ContainsSignable {
   readonly signableBytes: SignableBytes;
@@ -33,9 +32,10 @@ export default class ContainsSignable {
       return stripped;
     }
 
-    const st = iotx.clone();
-    const updatedInputs = st.inputs.map(stripInput);
-    return ContainsSignable.immutable(ContainsImmutable.apply(updatedInputs).immutableBytes);
+    const updatedIotx = iotx.clone();
+    updatedIotx.inputs = iotx.inputs.map(stripInput);
+    // return ContainsSignable.immutable(ContainsImmutable.apply(updatedInputs).immutableBytes);
+    return ContainsSignable.immutable(updatedIotx.immutableBytes());
   }
 }
 
