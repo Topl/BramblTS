@@ -131,7 +131,7 @@ export class ContainsImmutable {
   }
 
   static number (i: number): ContainsImmutable {
-    if (typeof i === 'undefined')  throw Error("Number passed is undefined")
+    if (typeof i === 'undefined') throw Error('Number passed is undefined');
     const x = i ?? 0;
     const immutableBytes = new ImmutableBytes({ value: x.bToUint8Array() });
     return immutableBytes.immutable();
@@ -1059,11 +1059,19 @@ declare module 'topl_common' {
      * @param b - The `ImmutableBytes` object to be added.
      * @returns A new `ImmutableBytes` instance with the added object.
      */
-    add(b: ImmutableBytes): ImmutableBytes;
+    add?(b: ImmutableBytes): ImmutableBytes;
     /**
      * Converts to a ContainsImmutable instance.
      */
-    immutable(): ContainsImmutable;
+    immutable?(): ContainsImmutable;
+  }
+  interface IoTransaction {
+    immutable?(): ContainsImmutable;
+    /**
+     * Converts the IoTransaction to an ImmutableBytes instance.
+     * @returns An ImmutableBytes instance representing the number.
+     */
+    immutableBytes?(): ImmutableBytes;
   }
 }
 
@@ -1074,6 +1082,15 @@ ImmutableBytes.prototype.add = function (b: ImmutableBytes) {
 ImmutableBytes.prototype.immutable = function () {
   return new ContainsImmutable(this);
 };
+
+IoTransaction.prototype.immutable = function (): ContainsImmutable {
+  return ContainsImmutable.ioTransaction(this);
+};
+
+IoTransaction.prototype.immutableBytes = function () {
+  return ContainsImmutable.ioTransaction(this).immutableBytes;
+};
+
 
 /// experimental extensions via typescript module augmentation on global scope, warnings from extensions_exp.ts apply
 declare global {
