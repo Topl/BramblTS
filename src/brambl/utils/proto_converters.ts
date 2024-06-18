@@ -1,8 +1,14 @@
 // Import statements might need to be adjusted based on your actual project structure and file locations
 import { Ed25519Vk, ExtendedEd25519Sk, ExtendedEd25519Vk, KeyPair, SigningKey, VerificationKey } from 'topl_common';
 import * as xspec from '../../crypto/signing/extended_ed25519/extended_ed25519_spec.js';
+import * as spec from '../../crypto/signing/ed25519/ed25519_spec.js';
 import * as s from '../../crypto/signing/signing.js';
+import { Converters } from './converters.js';
 
+/**
+ * TODO: deprecate this file
+ *  @/deprecated Use Converters instead for a more unified interface
+ */
 export class ProtoConverters {
   static publicKeyToProto (pk: xspec.PublicKey): VerificationKey {
     return new VerificationKey({
@@ -14,6 +20,7 @@ export class ProtoConverters {
         })
       }
     });
+    // return Converters.toProtoVk(pk).union();
   }
 
   static publicKeyFromProto (pbVk: ExtendedEd25519Vk): xspec.PublicKey {

@@ -433,7 +433,7 @@ export class WalletApi extends WalletApiDefinition {
   async saveMnemonic (mnemonic: string[], mnemonicName: string = 'mnemonic'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.saveMnemonic(mnemonic, mnemonicName);
 
-    return isLeft(res) ? left(new FailedToSaveMnemonic(res.left)) : right(undefined);
+    return isLeft(res) ? left(new FailedToSaveMnemonic(res.left)) : right(unit);
   }
 
   async loadWallet (name: string = 'default'): Promise<Either<WalletApiFailure, VaultStore>> {
@@ -445,18 +445,18 @@ export class WalletApi extends WalletApiDefinition {
   async updateWallet (newWallet: VaultStore, name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.updateMainKeyVaultStore(newWallet, name);
 
-    return isLeft(res) ? left(new FailedToUpdateWallet(res.left)) : right(undefined);
+    return isLeft(res) ? left(new FailedToUpdateWallet(res.left)) : right(unit);
   }
 
   async deleteWallet (name: string = 'default'): Promise<Either<WalletApiFailure, Unit>> {
     const res = await this.walletKeyApi.deleteMainKeyVaultStore(name);
 
-    return isLeft(res) ? left(new FailedToDeleteWallet(res.left)) : right(undefined);
+    return isLeft(res) ? left(new FailedToDeleteWallet(res.left)) : right(unit);
   }
 
   async buildMainKeyVaultStore (mainKey: Uint8Array, password: Uint8Array): Promise<VaultStore> {
-    const derivedKey = await this.kdf.deriveKey(password);
-    const cipherText = await this.cipher.encrypt(mainKey, derivedKey);
+    const derivedKey = this.kdf.deriveKey(password);
+    const cipherText = this.cipher.encrypt(mainKey, derivedKey);
     const mac = new Mac(derivedKey, cipherText).value;
 
     return new VaultStore(this.kdf, this.cipher, cipherText, mac);

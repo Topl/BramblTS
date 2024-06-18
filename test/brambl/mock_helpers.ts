@@ -133,7 +133,7 @@ export const mockHeightProposition = Proposer.heightProposer(mockChain, mockMin,
 export const mockHeightProof = Prover.heightProver(fakeMsgBind);
 
 export const mockLockedProposition = Proposer.lockedProposer(null);
-// export const mockLockedProof = Prover.lockedProver();
+export const mockLockedProof = Prover.lockedProver();
 
 export const txDatum = new Datum_IoTransaction({
   event: new Event_IoTransaction({
@@ -195,17 +195,17 @@ export const inPredicateLockFull = new Lock_Predicate({
 //   id: new LockId({ value: sizedEvidence(inLockFull).digest.value })
 // });
 
-// export const inPredicateLockFullAttestation = new Attestation_Predicate({
-//   lock: inPredicateLockFull,
-//   responses: [mockLockedProof, mockDigestProof, mockSignatureProof, mockHeightProof, mockTickProof]
-// });
+export const inPredicateLockFullAttestation = new Attestation_Predicate({
+  lock: inPredicateLockFull,
+  responses: [mockLockedProof, mockDigestProof, mockSignatureProof, mockHeightProof, mockTickProof]
+});
 
-// export const nonEmptyAttestation = new Attestation({
-//   value: {
-//     case: 'predicate',
-//     value: inPredicateLockFullAttestation
-//   }
-// });
+export const nonEmptyAttestation = new Attestation({
+  value: {
+    case: 'predicate',
+    value: inPredicateLockFullAttestation
+  }
+});
 
 export const output = new UnspentTransactionOutput({ address: trivialLockAddress, value: lvlValue });
 
